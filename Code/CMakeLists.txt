@@ -34,6 +34,12 @@ add_sources("Player_uber.cpp"
 		"Components/Player/Player.cpp"
 		"Components/Player/Player.h"
 )
+add_sources("UI_uber.cpp"
+    PROJECTS Game
+    SOURCE_GROUP "Components\\\\UI"
+		"Components/UI/SelectionBox.cpp"
+		"Components/UI/SelectionBox.h"
+)
 
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/CVarOverrides.h")
     add_sources("NoUberFile"

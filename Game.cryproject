@@ -23,6 +23,7 @@
 			{ "guid": "", "type": "EType::Native", "path": "CryScaleformSchematyc" },
 			{ "guid": "", "type": "EType::Native", "path": "CryPerceptionSystem" },
 			{ "guid": "", "type": "EType::Native", "path": "bin/win_x64/Game.dll" },
+			{ "guid": "", "type": "EType::Native", "path": "CryScaleform" },
 			{
 				"guid": "",
 				"type": "EType::Native",
