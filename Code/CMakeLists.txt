@@ -28,11 +28,29 @@ add_sources("Components_uber.cpp"
 		"Components/SpawnPoint.cpp"
 		"Components/SpawnPoint.h"
 )
+add_sources("Controller_uber.cpp"
+    PROJECTS Game
+    SOURCE_GROUP "Components\\\\Controller"
+		"Components/Controller/AIController.cpp"
+		"Components/Controller/AIController.h"
+)
 add_sources("Player_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "Components\\\\Player"
 		"Components/Player/Player.cpp"
 		"Components/Player/Player.h"
+)
+add_sources("Selectables_uber.cpp"
+    PROJECTS Game
+    SOURCE_GROUP "Components\\\\Selectables"
+		"Components/Selectables/Selectable.cpp"
+		"Components/Selectables/Selectable.h"
+)
+add_sources("Units_uber.cpp"
+    PROJECTS Game
+    SOURCE_GROUP "Components\\\\Selectables\\\\Units"
+		"Components/Selectables/Units/BaseUnit.cpp"
+		"Components/Selectables/Units/BaseUnit.h"
 )
 add_sources("UI_uber.cpp"
     PROJECTS Game
