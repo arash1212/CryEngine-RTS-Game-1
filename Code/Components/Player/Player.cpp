@@ -3,6 +3,7 @@
 #include "GamePlugin.h"
 
 #include <Components/UI/SelectionBox.h>
+#include <Utils\MouseUtils.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -34,7 +35,10 @@ void PlayerComponent::Initialize()
 
 	m_defaultPosZ = m_pEntity->GetPos().z;
 
+	//SelectionBox component initialization
 	m_pSelectionBoxComponent = m_pEntity->GetOrCreateComponent<SelectionBoxComponent>();
+	m_pSelectionBoxComponent->SetCameraComponent(m_pCameraComponent);
+
 }
 
 Cry::Entity::EventFlags PlayerComponent::GetEventMask() const
@@ -57,7 +61,7 @@ void PlayerComponent::ProcessEvent(const SEntityEvent& event)
 
 		Move(DeltaTime);
 
-
+		MouseUtils::GetPositionUnderCursor();
 	}break;
 	case Cry::Entity::EEvent::Reset: {
 
@@ -110,6 +114,10 @@ void PlayerComponent::InitInputs()
 	m_pInputComponent->RegisterAction("player", "zoomOut", [this](int activationMode, float value) {this->MouseWheelDown(activationMode, value); });
 	m_pInputComponent->BindAction("player", "zoomOut", eAID_KeyboardMouse, eKI_MouseWheelDown);
 
+	//Selectiom
+	m_pInputComponent->RegisterAction("player", "select", [this](int activationMode, float value) {this->LeftMouseDown(activationMode, value); });
+	m_pInputComponent->BindAction("player", "select", eAID_KeyboardMouse, eKI_Mouse1);
+
 }
 
 void PlayerComponent::MoveForward(int activationMode, float value)
@@ -140,4 +148,17 @@ void PlayerComponent::MouseWheelUp(int activationMode, float value)
 void PlayerComponent::MouseWheelDown(int activationMode, float value)
 {
 	m_currentZoomAmount = CLAMP(m_currentZoomAmount + (value * gEnv->pTimer->GetFrameTime()), 0, m_cameraMaxZoomAmount);
+}
+
+void PlayerComponent::LeftMouseDown(int activationMode, float value)
+{
+	Vec2 mousePos = MouseUtils::GetCursorPosition();
+
+	if (activationMode == eAAM_OnPress) {
+		m_pSelectionBoxComponent->SetBoxInitPosition(mousePos);
+	}
+
+	if (activationMode == eAAM_OnHold) {
+		m_pSelectionBoxComponent->GetEntitiesInsideBox(mousePos);
+	}
 }

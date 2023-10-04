@@ -57,4 +57,5 @@ private:
 	void MoveLeft(int activationMode, float value);
 	void MouseWheelDown(int activationMode, float value);
 	void MouseWheelUp(int activationMode, float value);
+	void LeftMouseDown(int activationMode, float value);
 };

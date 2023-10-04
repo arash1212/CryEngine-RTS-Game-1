@@ -1,5 +1,6 @@
 #pragma once
 
+#include <DefaultComponents/Cameras/CameraComponent.h>
 
 struct IUIElement;
 
@@ -23,5 +24,15 @@ public:
 		desc.SetEditorCategory("UI");
 	}
 private:
+	Cry::DefaultComponents::CCameraComponent* m_pCameraComponent = nullptr;
 	IUIElement* m_pSelectionBoxUIElement;
+
+private:
+	Vec2 m_boxInitPoint = ZERO;
+
+public:
+	DynArray<IEntity*> GetEntitiesInsideBox(Vec2 lastPoint);
+	void SetBoxInitPosition(Vec2 initPoint);
+	void SetCameraComponent(Cry::DefaultComponents::CCameraComponent* cameraComponent);
+
 };

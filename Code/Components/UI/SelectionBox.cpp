@@ -5,6 +5,8 @@
 #include "FlashUI/FlashUI.h"
 #include "FlashUI/FlashUIElement.h"
 
+#include <CryRenderer/IRenderer.h>
+#include <CryEntitySystem/IEntitySystem.h>
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
 #include <CrySchematyc/Env/IEnvRegistrar.h>
@@ -60,4 +62,64 @@ void SelectionBoxComponent::ProcessEvent(const SEntityEvent& event)
 	default:
 		break;
 	}
+}
+
+DynArray<IEntity*> SelectionBoxComponent::GetEntitiesInsideBox(Vec2 lastPoint)
+{
+	DynArray<IEntity*> resultArray;
+
+	f32 width = crymath::abs(lastPoint.x - m_boxInitPoint.x);
+	f32 height = crymath::abs(lastPoint.y - m_boxInitPoint.y);
+
+	f32 minX = lastPoint.x > m_boxInitPoint.x ? m_boxInitPoint.x : lastPoint.x;
+	f32 minY = lastPoint.y > m_boxInitPoint.y ? m_boxInitPoint.y : lastPoint.y;
+	f32 maxX = minX + width;
+	f32 maxY = minY + height;
+
+	int count = 0;
+	IEntityItPtr entityPtr = gEnv->pEntitySystem->GetEntityIterator();
+	entityPtr->MoveFirst();
+	while (!entityPtr->IsEnd())
+	{
+		IEntity* entity = entityPtr->Next();
+		AABB aabb;
+		entity->GetWorldBounds(aabb);
+
+		Vec3 center = aabb.GetCenter();
+		Vec3 min = aabb.min;
+		Vec3 max = aabb.max;
+
+		f32 entityWidth = crymath::abs(max.x - min.x);
+		f32 entityHeight = crymath::abs(max.y - min.y);
+
+		Vec3 centerScreenPos = ZERO;
+		Vec3 minScreenPos = ZERO;
+		Vec3 maxScreenPos = ZERO;
+
+		m_pCameraComponent->GetCamera().Project(center, centerScreenPos);
+		m_pCameraComponent->GetCamera().Project(min, minScreenPos);
+		m_pCameraComponent->GetCamera().Project(max, maxScreenPos);
+
+		if (centerScreenPos.x >= minX && centerScreenPos.x <= maxX && centerScreenPos.y >= minY && centerScreenPos.y <= maxY ||
+			minScreenPos.x >= minX && minScreenPos.x <= maxX && minScreenPos.y >= minY && minScreenPos.y <= maxY ||
+			maxScreenPos.x >= minX && maxScreenPos.x <= maxX && maxScreenPos.y >= minY && maxScreenPos.y <= maxY ||
+			minScreenPos.x + entityWidth >= minX && minScreenPos.x + entityWidth <= maxX && minScreenPos.y + entityHeight >= minY && minScreenPos.y + entityHeight <= maxY) {
+
+			resultArray.append(entity);
+			count++;
+		}
+	}
+
+	CryLog("count : %i", count);;
+	return resultArray;
+}
+
+void SelectionBoxComponent::SetBoxInitPosition(Vec2 initPoint)
+{
+	this->m_boxInitPoint = initPoint;
+}
+
+void SelectionBoxComponent::SetCameraComponent(Cry::DefaultComponents::CCameraComponent* cameraComponent)
+{
+	this->m_pCameraComponent = cameraComponent;
 }
