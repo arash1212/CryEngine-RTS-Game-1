@@ -4,6 +4,7 @@
 
 #include <Components/Selectables/Selectable.h>
 #include <Components/Controller/AIController.h>
+#include <Components/Action/ActionManager.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -46,6 +47,9 @@ void BaseUnitComponent::Initialize()
 
 	//AIController Initializations
 	m_pAIController = m_pEntity->GetOrCreateComponent<AIControllerComponent>();
+
+	//ActionManager Initializations
+	m_pActionManagerComponent = m_pEntity->GetOrCreateComponent<ActionManagerComponent>();
 }
 
 
@@ -69,9 +73,12 @@ void BaseUnitComponent::ProcessEvent(const SEntityEvent& event)
 
 		UpdateAnimations();
 
+		m_pActionManagerComponent->ProcessActions();
+
 	}break;
 	case Cry::Entity::EEvent::Reset: {
 		m_pSelectableComponent->DeSelect();
+		m_pAnimationComponent->ResetCharacter();
 
 	}break;
 	default:
@@ -81,7 +88,6 @@ void BaseUnitComponent::ProcessEvent(const SEntityEvent& event)
 
 void BaseUnitComponent::UpdateAnimations()
 {
-
 	FragmentID currentFragmentId;
 
 	if (!m_pAIController->IsMoving()) {
@@ -107,4 +113,18 @@ void BaseUnitComponent::UpdateAnimations()
 		m_activeFragmentId = currentFragmentId;
 		m_pAnimationComponent->QueueFragmentWithId(m_activeFragmentId);
 	}
+}
+
+/*=============================================================================================================================================
+																	ACTIONS
+==============================================================================================================================================*/
+
+void BaseUnitComponent::MoveTo(Vec3 position)
+{
+	m_pAIController->MoveTo(position);
+}
+
+void BaseUnitComponent::StopMoving()
+{
+	m_pAIController->StopMoving();
 }

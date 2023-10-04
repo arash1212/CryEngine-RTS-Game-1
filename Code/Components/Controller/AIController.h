@@ -3,7 +3,7 @@
 #include <DefaultComponents/Physics/CharacterControllerComponent.h>
 #include <CryAISystem/Components/IEntityNavigationComponent.h>
 
-static constexpr f32 AI_CONTROLLER_DEFAULT_MOVE_SPEED = 5.f;
+static constexpr f32 AI_CONTROLLER_DEFAULT_MOVE_SPEED = 220.f;
 
 class AIControllerComponent final : public IEntityComponent
 {
@@ -23,6 +23,7 @@ public:
 	{
 		desc.SetGUID("{FE13B37C-67FA-4E68-B3D6-A1CF731727FC}"_cry_guid);
 		desc.SetEditorCategory("Controller");
+		desc.AddMember(&AIControllerComponent::m_moveSpeed, 'ms', "movespeed", "Move Speed", "Set Move Speed", AI_CONTROLLER_DEFAULT_MOVE_SPEED);
 	}
 
 private:
@@ -34,7 +35,7 @@ private:
 	f32 m_moveSpeed = AI_CONTROLLER_DEFAULT_MOVE_SPEED;
 
 private:
-	void Move();
+	void Move(f32 DeltaTime);
 
 public:
 	void MoveTo(Vec3 position);

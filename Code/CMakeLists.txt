@@ -22,11 +22,28 @@ add_sources("Code_uber.cpp"
 		"GamePlugin.h"
 		"StdAfx.h"
 )
+add_sources("Actions_uber.cpp"
+    PROJECTS Game
+    SOURCE_GROUP "Actions"
+		"Actions/IBaseAction.h"
+)
+add_sources("Units_uber.cpp"
+    PROJECTS Game
+    SOURCE_GROUP "Actions\\\\Units"
+		"Actions/Units/MoveAction.cpp"
+		"Actions/Units/MoveAction.h"
+)
 add_sources("Components_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "Components"
 		"Components/SpawnPoint.cpp"
 		"Components/SpawnPoint.h"
+)
+add_sources("Action_uber.cpp"
+    PROJECTS Game
+    SOURCE_GROUP "Components\\\\Action"
+		"Components/Action/ActionManager.cpp"
+		"Components/Action/ActionManager.h"
 )
 add_sources("Controller_uber.cpp"
     PROJECTS Game

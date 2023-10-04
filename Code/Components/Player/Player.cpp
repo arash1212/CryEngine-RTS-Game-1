@@ -2,8 +2,14 @@
 #include "Player.h"
 #include "GamePlugin.h"
 
+
 #include <Components/UI/SelectionBox.h>
 #include <Utils\MouseUtils.h>
+#include <Components/Selectables/Selectable.h>
+#include <Components/Selectables/Units/BaseUnit.h>
+
+#include <Components/Action/ActionManager.h>
+#include <Actions/Units/MoveAction.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -118,6 +124,10 @@ void PlayerComponent::InitInputs()
 	m_pInputComponent->RegisterAction("player", "select", [this](int activationMode, float value) {this->LeftMouseDown(activationMode, value); });
 	m_pInputComponent->BindAction("player", "select", eAID_KeyboardMouse, eKI_Mouse1);
 
+	//Command
+	m_pInputComponent->RegisterAction("player", "command", [this](int activationMode, float value) {this->RightMouseDown(activationMode, value); });
+	m_pInputComponent->BindAction("player", "command", eAID_KeyboardMouse, eKI_Mouse2);
+
 }
 
 void PlayerComponent::MoveForward(int activationMode, float value)
@@ -159,6 +169,65 @@ void PlayerComponent::LeftMouseDown(int activationMode, float value)
 	}
 
 	if (activationMode == eAAM_OnHold) {
-		m_pSelectionBoxComponent->GetEntitiesInsideBox(mousePos);
+		DeselectUnits();
+		m_selectedUnits = m_pSelectionBoxComponent->GetEntitiesInsideBox(mousePos);
+		SelectUnits();
+	}
+}
+
+void PlayerComponent::RightMouseDown(int activationMode, float value)
+{
+	Vec3 mousePos = MouseUtils::GetPositionUnderCursor();
+
+	if (activationMode == eAAM_OnRelease) {
+		CommandUnitsToMove(mousePos);
+	}
+}
+
+/*=============================================================================================================================================
+																	ACTIONS
+==============================================================================================================================================*/
+
+void PlayerComponent::DeselectUnits()
+{
+	for (IEntity* entity : m_selectedUnits) {
+		BaseUnitComponent* unit = entity->GetComponent<BaseUnitComponent>();
+		if (unit) {
+			SelectableComponent* selectable = entity->GetComponent<SelectableComponent>();
+			selectable->DeSelect();
+		}
+		else {
+			continue;
+		}
+	}
+
+	m_selectedUnits.clear();
+}
+
+void PlayerComponent::SelectUnits()
+{
+	for (IEntity* entity : m_selectedUnits) {
+		BaseUnitComponent* unit = entity->GetComponent<BaseUnitComponent>();
+		if (unit) {
+			SelectableComponent* selectable = entity->GetComponent<SelectableComponent>();
+			selectable->Select();
+		}
+		else {
+			continue;
+		}
+	}
+}
+
+void PlayerComponent::CommandUnitsToMove(Vec3 position)
+{
+	for (IEntity* entity : m_selectedUnits) {
+		BaseUnitComponent* unit = entity->GetComponent<BaseUnitComponent>();
+		if (unit) {
+			ActionManagerComponent* actionManager = entity->GetComponent<ActionManagerComponent>();
+			actionManager->AddAction(new MoveAction(entity, position));
+		}
+		else {
+			continue;
+		}
 	}
 }

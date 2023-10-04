@@ -22,6 +22,7 @@ namespace
 
 void SelectableComponent::Initialize()
 {
+	//SelectionDecalComponent Initialization
 	m_pSelectionDecalComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CDecalComponent>();
 	m_pSelectionDecalComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), IDENTITY, Vec3(0)));
 	m_pSelectionDecalComponent->SetMaterialFileName("Materials/decals/selection/selectionbox_decal_material_1.mtl");

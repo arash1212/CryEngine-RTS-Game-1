@@ -46,11 +46,13 @@ private:
 	f32 m_defaultPosZ = 0;
 	Vec3 m_movementOffset = ZERO;
 
+	DynArray<IEntity*> m_selectedUnits;
+
 private:
 	void InitInputs();
 	void Move(f32 DeltaTime);
 
-	//Input Handlers
+	//Input Handlers;
 	void MoveForward(int activationMode, float value);
 	void MoveBackward(int activationMode, float value);
 	void MoveRight(int activationMode, float value);
@@ -58,4 +60,10 @@ private:
 	void MouseWheelDown(int activationMode, float value);
 	void MouseWheelUp(int activationMode, float value);
 	void LeftMouseDown(int activationMode, float value);
+	void RightMouseDown(int activationMode, float value);
+
+	//Actions
+	void DeselectUnits();
+	void SelectUnits();
+	void CommandUnitsToMove(Vec3 position);
 };

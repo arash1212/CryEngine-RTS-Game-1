@@ -61,10 +61,12 @@ void AIControllerComponent::ProcessEvent(const SEntityEvent& event)
 
 	}break;
 	case Cry::Entity::EEvent::Update: {
-		//f32 DeltaTime = event.fParam[0];
+		f32 DeltaTime = event.fParam[0];
 
+		Move(DeltaTime);
 	}break;
 	case Cry::Entity::EEvent::Reset: {
+		m_moveToPosition = m_pEntity->GetWorldPos();
 
 	}break;
 	default:
@@ -72,7 +74,7 @@ void AIControllerComponent::ProcessEvent(const SEntityEvent& event)
 	}
 }
 
-void AIControllerComponent::Move()
+void AIControllerComponent::Move(f32 DeltaTime)
 {
 	if (m_moveToPosition == ZERO) {
 		return;
@@ -82,7 +84,7 @@ void AIControllerComponent::Move()
 	Vec3 velocity = m_pNavigationComponent->GetRequestedVelocity();
 
 	m_pEntity->SetRotation(Quat::CreateRotationVDir(velocity));
-	m_pCharacterControllerComponent->SetVelocity(velocity * m_moveSpeed);
+	m_pCharacterControllerComponent->SetVelocity(velocity * (m_moveSpeed * DeltaTime));
 }
 
 void AIControllerComponent::MoveTo(Vec3 position)

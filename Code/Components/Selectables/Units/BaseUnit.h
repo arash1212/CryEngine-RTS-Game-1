@@ -4,6 +4,9 @@
 
 class SelectableComponent;
 class AIControllerComponent;
+class IBaseAction;
+class ActionManager;
+class ActionManagerComponent;
 
 class BaseUnitComponent final : public IEntityComponent
 {
@@ -30,6 +33,7 @@ private:
 	SelectableComponent* m_pSelectableComponent = nullptr;
 	AIControllerComponent* m_pAIController = nullptr;
 
+	ActionManagerComponent* m_pActionManagerComponent = nullptr;
 private:
 	FragmentID m_idleFragmentId;
 	FragmentID m_runFragmentId;
@@ -37,4 +41,9 @@ private:
 
 protected:
 	virtual void UpdateAnimations();
+
+public:
+	//Actions
+	void MoveTo(Vec3 position);
+	void StopMoving();
 };
