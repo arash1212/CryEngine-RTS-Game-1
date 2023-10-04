@@ -3,7 +3,7 @@
 #include <DefaultComponents/Physics/CharacterControllerComponent.h>
 #include <CryAISystem/Components/IEntityNavigationComponent.h>
 
-static constexpr f32 AI_CONTROLLER_DEFAULT_MOVE_SPEED = 220.f;
+static constexpr f32 AI_CONTROLLER_DEFAULT_MOVE_SPEED = 0.4f;
 
 class AIControllerComponent final : public IEntityComponent
 {

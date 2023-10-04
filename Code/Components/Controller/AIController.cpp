@@ -84,7 +84,7 @@ void AIControllerComponent::Move(f32 DeltaTime)
 	Vec3 velocity = m_pNavigationComponent->GetRequestedVelocity();
 
 	m_pEntity->SetRotation(Quat::CreateRotationVDir(velocity));
-	m_pCharacterControllerComponent->SetVelocity(velocity * (m_moveSpeed * DeltaTime));
+	m_pCharacterControllerComponent->SetVelocity(velocity);
 }
 
 void AIControllerComponent::MoveTo(Vec3 position)

@@ -47,6 +47,7 @@ void ActionManagerComponent::ProcessEvent(const SEntityEvent& event)
 
 	}break;
 	case Cry::Entity::EEvent::Reset: {
+		m_actionsQueue.clear();
 
 	}break;
 	default:
@@ -77,5 +78,9 @@ void ActionManagerComponent::ProcessActions()
 
 void ActionManagerComponent::AddAction(IBaseAction* action)
 {
+	//TODO
+	m_pCurrentAction = nullptr;
+	m_actionsQueue.clear();
+
 	m_actionsQueue.push_back(action);
 }

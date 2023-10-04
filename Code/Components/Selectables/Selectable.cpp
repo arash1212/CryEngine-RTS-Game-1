@@ -27,6 +27,8 @@ void SelectableComponent::Initialize()
 	m_pSelectionDecalComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), IDENTITY, Vec3(0)));
 	m_pSelectionDecalComponent->SetMaterialFileName("Materials/decals/selection/selectionbox_decal_material_1.mtl");
 	m_pSelectionDecalComponent->Spawn();
+
+	m_pRenderNode = m_pEntity->GetRenderNode();;
 }
 
 Cry::Entity::EventFlags SelectableComponent::GetEventMask() const
@@ -60,12 +62,16 @@ void SelectableComponent::Select()
 {
 	bIsSelected = true;
 	m_pSelectionDecalComponent->Spawn();
+
+	m_pRenderNode->m_nHUDSilhouettesParam = m_greenColor;
 }
 
 void SelectableComponent::DeSelect()
 {
 	bIsSelected = false;
 	m_pSelectionDecalComponent->Remove();
+
+	m_pRenderNode->m_nHUDSilhouettesParam = m_blackColor;
 }
 
 bool SelectableComponent::IsSelected()
