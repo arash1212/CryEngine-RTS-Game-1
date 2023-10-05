@@ -7,6 +7,7 @@ class AIControllerComponent;
 class IBaseAction;
 class ActionManager;
 class ActionManagerComponent;
+class BaseWeaponComponent;
 
 class BaseUnitComponent final : public IEntityComponent
 {
@@ -36,6 +37,8 @@ private:
 	ActionManagerComponent* m_pActionManagerComponent = nullptr;
 
 	IEntity* m_pTargetEntity = nullptr;
+	BaseWeaponComponent* m_pWeaponComponent = nullptr;
+
 private:
 	FragmentID m_idleFragmentId;
 	FragmentID m_runFragmentId;

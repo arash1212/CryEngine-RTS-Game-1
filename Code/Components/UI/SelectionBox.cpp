@@ -109,8 +109,6 @@ DynArray<IEntity*> SelectionBoxComponent::GetEntitiesInsideBox(Vec2 lastPoint)
 			count++;
 		}
 	}
-
-	CryLog("count : %i", count);;
 	return resultArray;
 }
 

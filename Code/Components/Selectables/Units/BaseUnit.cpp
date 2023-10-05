@@ -6,6 +6,8 @@
 #include <Components/Controller/AIController.h>
 #include <Components/Action/ActionManager.h>
 
+#include <Components/Weapons/BaseWeapon.h>
+
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
 #include <CrySchematyc/Env/IEnvRegistrar.h>
@@ -50,6 +52,9 @@ void BaseUnitComponent::Initialize()
 
 	//ActionManager Initializations
 	m_pActionManagerComponent = m_pEntity->GetOrCreateComponent<ActionManagerComponent>();
+
+	m_pWeaponComponent = m_pEntity->GetOrCreateComponent<BaseWeaponComponent>();
+	m_pWeaponComponent->Draw();
 }
 
 
@@ -142,6 +147,10 @@ void BaseUnitComponent::UpdateAnimations()
 		}
 
 		m_pAIController->LookAt(m_pTargetEntity->GetWorldPos());
+
+		if (m_pWeaponComponent) {
+			m_pWeaponComponent->Fire(m_pTargetEntity->GetWorldPos());
+		}
 	}
 	else {
 		m_pAIController->LookAt(m_pAIController->GetVelocity());

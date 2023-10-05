@@ -22,6 +22,7 @@ namespace
 
 void AIControllerComponent::Initialize()
 {
+	//CharacterController component initialization
 	m_pCharacterControllerComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CCharacterControllerComponent>();
 	m_pCharacterControllerComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), IDENTITY, Vec3(0, 0, 1)));
 

@@ -1,13 +1,186 @@
 {
+    "Asset Browser": {
+        "RecentImportPath": "C:/Users/Arash/Desktop/RTSGame1 Assets/Weapons/AK47/textures/"
+    },
     "AssetFolderModel": {
         "AddedFolders": [
             "Objects/Characters/units",
             "Objects/Characters/units/soldier1",
             "Materials/decals",
-            "Materials/decals/selection"
+            "Materials/decals/selection",
+            "Objects/Weapons/ak47",
+            "Objects/effects",
+            "Objects/effects/bullettracer"
         ]
     },
     "CAssetPicker": {
+        "LayoutMaterial": {
+            "adaptiveLayout": true,
+            "breadcrumbsVisible": true,
+            "detailsView": {
+                "columnData": {
+                    "Favorite": {
+                        "data": "Favorite",
+                        "visible": true,
+                        "visualIndex": 0,
+                        "width": 16
+                    },
+                    "Folder": {
+                        "data": "Folder",
+                        "visible": false,
+                        "visualIndex": 4,
+                        "width": 0
+                    },
+                    "Name": {
+                        "data": "Name",
+                        "visible": true,
+                        "visualIndex": 1,
+                        "width": 208
+                    },
+                    "Status": {
+                        "data": "Status",
+                        "visible": true,
+                        "visualIndex": 3,
+                        "width": 100
+                    },
+                    "Sub Mtl count": {
+                        "data": "Sub Mtl count",
+                        "visible": false,
+                        "visualIndex": 8,
+                        "width": 0
+                    },
+                    "Texture count": {
+                        "data": "Texture count",
+                        "visible": false,
+                        "visualIndex": 9,
+                        "width": 0
+                    },
+                    "Type": {
+                        "data": "Type",
+                        "visible": true,
+                        "visualIndex": 2,
+                        "width": 120
+                    },
+                    "Unique Id": {
+                        "data": "Unique Id",
+                        "visible": false,
+                        "visualIndex": 5,
+                        "width": 0
+                    },
+                    "_filter_string_": {
+                        "data": "_filter_string_",
+                        "visible": false,
+                        "visualIndex": 7,
+                        "width": 0
+                    },
+                    "_thumb_": {
+                        "data": "_thumb_",
+                        "visible": false,
+                        "visualIndex": 6,
+                        "width": 0
+                    }
+                },
+                "columnOrder": [
+                    "Favorite",
+                    "Name",
+                    "Type",
+                    "Status",
+                    "Folder",
+                    "Unique Id",
+                    "_thumb_",
+                    "_filter_string_",
+                    "Sub Mtl count",
+                    "Texture count"
+                ],
+                "headerSortingOrder": {
+                    "sortOrder": 0,
+                    "sortedSection": 1
+                },
+                "version": 1
+            },
+            "editorContent": {
+                "isLocked": true,
+                "toolBarArea": [
+                    {
+                        "items": [
+                            {
+                                "index": 0,
+                                "name": "FileToolBar",
+                                "type": 0,
+                                "visible": false
+                            }
+                        ]
+                    },
+                    {
+                        "items": [
+                        ]
+                    },
+                    {
+                        "items": [
+                        ]
+                    },
+                    {
+                        "items": [
+                            {
+                                "index": 0,
+                                "spacerType": 0,
+                                "type": 1
+                            },
+                            {
+                                "index": 1,
+                                "name": "ViewToolBar",
+                                "type": 0,
+                                "visible": false
+                            },
+                            {
+                                "index": 2,
+                                "spacerType": 1,
+                                "type": 1
+                            },
+                            {
+                                "index": 3,
+                                "name": "View TypeToolBar",
+                                "type": 0,
+                                "visible": false
+                            }
+                        ]
+                    }
+                ],
+                "toolBars": [
+                    {
+                        "area": 0,
+                        "name": "FileToolBar"
+                    },
+                    {
+                        "area": 3,
+                        "name": "View TypeToolBar"
+                    },
+                    {
+                        "area": 3,
+                        "name": "ViewToolBar"
+                    }
+                ]
+            },
+            "filters": {
+                "expanded": false
+            },
+            "foldersSplitter": "AAAA/wAAAAEAAAACAAABAAAAAwAB/////wEAAAABAA==",
+            "foldersView": {
+                "selected": [
+                    "Objects/effects/bullettracer"
+                ]
+            },
+            "mainViewSplitter": "AAAA/wAAAAEAAAAC/////wAAAQAB/////wEAAAABAA==",
+            "recursiveView": false,
+            "showFolders": true,
+            "thumbnailView": {
+                "size": {
+                    "height": 64,
+                    "width": 64
+                }
+            },
+            "viewMode": 1
+        },
         "LayoutTexture": {
             "adaptiveLayout": true,
             "breadcrumbsVisible": true,
@@ -175,10 +348,10 @@
             "foldersSplitter": "AAAA/wAAAAEAAAACAAABAAAAAwAB/////wEAAAABAA==",
             "foldersView": {
                 "selected": [
-                    "Materials/decals/selection"
+                    "Objects/effects/bullettracer"
                 ]
             },
-            "mainViewSplitter": "AAAA/wAAAAEAAAAC/////wAAAQAB/////wEAAAABAA==",
+            "mainViewSplitter": "AAAA/wAAAAEAAAACAAAAOgAAAQAB/////wEAAAABAA==",
             "recursiveView": false,
             "showFolders": true,
             "thumbnailView": {
@@ -195,7 +368,8 @@
         ],
         "history": [
             "/Animations/Mannequin/Preview",
-            "/Animations"
+            "/Animations",
+            "/Objects/Weapons/ak47"
         ]
     },
     "FavoritesHelper": {
@@ -203,6 +377,8 @@
     },
     "Import Mesh": {
         "Recent Files": [
+            "Objects/effects/bullettracer/bullet_tracer_1.cgf.cryasset",
+            "Objects/Weapons/ak47/AK47.cgf.cryasset",
             "Objects/Characters/units/soldier1/soldier_1.cgf.cryasset"
         ]
     },
@@ -218,6 +394,9 @@
     },
     "Material Editor": {
         "Recent Files": [
+            "Objects/effects/bullettracer/bullet_tracer_1.mtl.cryasset",
+            "Materials/bullet.mtl.cryasset",
+            "Objects/Weapons/ak47/AK47.mtl.cryasset",
             "materials/decals/selection/selectionbox_decal_texture_1.mtl.cryasset"
         ]
     }

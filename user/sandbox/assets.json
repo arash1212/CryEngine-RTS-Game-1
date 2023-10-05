@@ -5811,7 +5811,7 @@
 			"type": "Level",
 			"guid": "984fcd77-e594-2b34-fbf5-414a47e0d684",
 			"name": "example",
-			"timestamp": 1696496467,
+			"timestamp": 1696510522,
 			"files": [ "Levels/example/example.level" ],
 			"workFiles": [ ],
 			"source": "",
@@ -5877,14 +5877,6 @@
 					"usageCount": 0
 				},
 				{
-					"path": "%engine%/engineassets/objects/primitive_sphere.cgf",
-					"usageCount": 0
-				},
-				{
-					"path": "%engine%/engineassets/texturemsg/defaultnouvs.dds",
-					"usageCount": 0
-				},
-				{
 					"path": "%engine%/engineassets/texturemsg/defaultsolids.mtl",
 					"usageCount": 0
 				},
@@ -5904,6 +5896,22 @@
 				{ "path": "animations/mannequin/adb/playertags.xml", "usageCount": 0 },
 				{
 					"path": "editor/resourcecache/materials/decals/selection/selectionbox_decal_texture_1.dds",
+					"usageCount": 0
+				},
+				{
+					"path": "editor/resourcecache/objects/weapons/ak47/ak_base_color.dds",
+					"usageCount": 0
+				},
+				{
+					"path": "editor/resourcecache/objects/weapons/ak47/ak_metallic.dds",
+					"usageCount": 0
+				},
+				{
+					"path": "editor/resourcecache/objects/weapons/ak47/ak_mixed_ao.dds",
+					"usageCount": 0
+				},
+				{
+					"path": "editor/resourcecache/objects/weapons/ak47/ak_normal_opengl.dds",
 					"usageCount": 0
 				},
 				{
@@ -6063,6 +6071,24 @@
 					"path": "objects/characters/units/soldier1/soldier_1_rifle_kick.caf",
 					"usageCount": 0
 				},
+				{
+					"path": "objects/effects/bullettracer/bullet_tracer_1.mtl",
+					"usageCount": 0
+				},
+				{
+					"path": "objects/effects/bullettracer/bullet_tracer_1.mtl",
+					"usageCount": 0
+				},
+				{ "path": "objects/weapons/ak47/ak47.cgf", "usageCount": 0 },
+				{ "path": "objects/weapons/ak47/ak47.mtl", "usageCount": 0 },
+				{ "path": "objects/weapons/ak47/ak_base_color.dds", "usageCount": 0 },
+				{ "path": "objects/weapons/ak47/ak_metallic.dds", "usageCount": 0 },
+				{ "path": "objects/weapons/ak47/ak_mixed_ao.dds", "usageCount": 0 },
+				{
+					"path": "objects/weapons/ak47/ak_normal_opengl.dds",
+					"usageCount": 0
+				},
+				{ "path": "scripts/ai/factions.xml", "usageCount": 0 },
 				{
 					"path": "textures/cubemaps/example/environmentprobe1_cm.dds",
 					"usageCount": 0
@@ -6470,7 +6496,7 @@
 			"type": "Character",
 			"guid": "5a46f10f-fbd1-ce00-d1e7-a83a52c9ca56",
 			"name": "soldier_1",
-			"timestamp": 1696450902,
+			"timestamp": 1696505896,
 			"files": [ "Objects/Characters/units/soldier1/soldier_1.cdf" ],
 			"workFiles": [ ],
 			"source": "",
@@ -6484,7 +6510,8 @@
 				{
 					"path": "Objects/Characters/units/soldier1/soldier_1_Mesh.skin",
 					"usageCount": 0
-				}
+				},
+				{ "path": "Objects/Weapons/ak47/AK47.cgf", "usageCount": 0 }
 			]
 		},
 		{
@@ -6994,6 +7021,233 @@
 			"source": "Objects/Characters/units/soldier1/soldier_1.fbx",
 			"metadata": "Objects/Characters/units/soldier1/soldier_1_Rifle_Kick.caf.cryasset",
 			"details": [ ],
+			"dependencies": [ ]
+		},
+		{
+			"type": "Mesh",
+			"guid": "eb44f909-83fd-0434-4d34-cc89275b3091",
+			"name": "bullet_tracer_1",
+			"timestamp": 1696511948,
+			"files": [ "Objects/effects/bullettracer/bullet_tracer_1.cgf" ],
+			"workFiles": [ ],
+			"source": "Objects/effects/bullettracer/bullet_tracer_1.fbx",
+			"metadata": "Objects/effects/bullettracer/bullet_tracer_1.cgf.cryasset",
+			"details": [
+				{ "key": "16BitPrecision", "value": "false" },
+				{ "key": "materialCount", "value": "4" },
+				{ "key": "triangleCount", "value": "24" },
+				{ "key": "vertexCount", "value": "48" }
+			],
+			"dependencies": [
+				{
+					"path": "Objects/effects/bullettracer/bullet_tracer_1.mtl",
+					"usageCount": 1
+				}
+			]
+		},
+		{
+			"type": "Material",
+			"guid": "393527c9-30a6-e8fb-ae2b-1915b08c4a9f",
+			"name": "bullet_tracer_1",
+			"timestamp": 1696512586,
+			"files": [ "Objects/effects/bullettracer/bullet_tracer_1.mtl" ],
+			"workFiles": [ ],
+			"source": "",
+			"metadata": "Objects/effects/bullettracer/bullet_tracer_1.mtl.cryasset",
+			"details": [
+				{ "key": "subMaterialCount", "value": "4" },
+				{ "key": "textureCount", "value": "3" }
+			],
+			"dependencies": [
+				{
+					"path": "Objects/effects/bullettracer/tracer_standard03.dds",
+					"usageCount": 2
+				},
+				{
+					"path": "%ENGINE%/EngineAssets/Textures/white_ddn.dds",
+					"usageCount": 4
+				},
+				{ "path": "%ENGINE%/EngineAssets/Textures/white.dds", "usageCount": 2 }
+			]
+		},
+		{
+			"type": "Texture",
+			"guid": "fed9e1ba-5f8d-41a7-bb1a-0f86a76d2ad6",
+			"name": "tracer_standard03",
+			"timestamp": 1696510408,
+			"files": [ "Objects/effects/bullettracer/tracer_standard03.dds" ],
+			"workFiles": [ ],
+			"source": "Objects/effects/bullettracer/tracer_standard03.tif",
+			"metadata": "Objects/effects/bullettracer/tracer_standard03.dds.cryasset",
+			"details": [
+				{ "key": "height", "value": "32" },
+				{ "key": "mipCount", "value": "4" },
+				{ "key": "width", "value": "128" }
+			],
+			"dependencies": [ ]
+		},
+		{
+			"type": "Character",
+			"guid": "c3c575e0-9ad3-9346-c75c-13530b1f29b9",
+			"name": "AK47",
+			"timestamp": 1696505155,
+			"files": [ "Objects/Weapons/ak47/AK47.cdf" ],
+			"workFiles": [ ],
+			"source": "",
+			"metadata": "Objects/Weapons/ak47/AK47.cdf.cryasset",
+			"details": [ ],
+			"dependencies": [ { "path": "Objects/Weapons/ak47/AK47.chr", "usageCount": 0 } ]
+		},
+		{
+			"type": "Mesh",
+			"guid": "1560444c-95f6-e0c4-fe01-88823bbf6241",
+			"name": "AK47",
+			"timestamp": 1696505131,
+			"files": [ "Objects/Weapons/ak47/AK47.cgf" ],
+			"workFiles": [ ],
+			"source": "Objects/Weapons/ak47/AK47.fbx",
+			"metadata": "Objects/Weapons/ak47/AK47.cgf.cryasset",
+			"details": [
+				{ "key": "16BitPrecision", "value": "false" },
+				{ "key": "materialCount", "value": "2" },
+				{ "key": "triangleCount", "value": "501648" },
+				{ "key": "vertexCount", "value": "321448" }
+			],
+			"dependencies": [ { "path": "Objects/Weapons/ak47/AK47.mtl", "usageCount": 1 } ]
+		},
+		{
+			"type": "Skeleton",
+			"guid": "d8620af8-a40f-cb64-cde5-dba4e76a99ee",
+			"name": "AK47",
+			"timestamp": 1696505145,
+			"files": [
+				"Objects/Weapons/ak47/AK47.chr",
+				"Objects/Weapons/ak47/AK47.chrparams"
+			],
+			"workFiles": [ ],
+			"source": "Objects/Weapons/ak47/AK47.fbx",
+			"metadata": "Objects/Weapons/ak47/AK47.chr.cryasset",
+			"details": [ ],
+			"dependencies": [ ]
+		},
+		{
+			"type": "Material",
+			"guid": "453ef8ea-ebea-ea82-b8f7-6b0448ca0cc0",
+			"name": "AK47",
+			"timestamp": 1696505394,
+			"files": [ "Objects/Weapons/ak47/AK47.mtl" ],
+			"workFiles": [ ],
+			"source": "",
+			"metadata": "Objects/Weapons/ak47/AK47.mtl.cryasset",
+			"details": [
+				{ "key": "subMaterialCount", "value": "2" },
+				{ "key": "textureCount", "value": "6" }
+			],
+			"dependencies": [
+				{ "path": "Objects/Weapons/ak47/ak_base_color.dds", "usageCount": 1 },
+				{
+					"path": "Objects/Weapons/ak47/ak_normal_opengl.dds",
+					"usageCount": 2
+				},
+				{ "path": "Objects/Weapons/ak47/ak_metallic.dds", "usageCount": 1 },
+				{ "path": "Objects/Weapons/ak47/ak_mixed_ao.dds", "usageCount": 1 },
+				{ "path": "%ENGINE%/EngineAssets/Textures/white.dds", "usageCount": 1 },
+				{
+					"path": "%ENGINE%/EngineAssets/Textures/white_ddn.dds",
+					"usageCount": 1
+				}
+			]
+		},
+		{
+			"type": "Animation",
+			"guid": "0096ba81-590a-454f-53ff-d9e93191fbe8",
+			"name": "AK47_Fire",
+			"timestamp": 1696505139,
+			"files": [ "Objects/Weapons/ak47/AK47_Fire.caf" ],
+			"workFiles": [ ],
+			"source": "Objects/Weapons/ak47/AK47.fbx",
+			"metadata": "Objects/Weapons/ak47/AK47_Fire.caf.cryasset",
+			"details": [ ],
+			"dependencies": [ ]
+		},
+		{
+			"type": "Texture",
+			"guid": "a67d0f84-ab89-a1fd-0ea3-0141cafaf8c8",
+			"name": "ak_base_color",
+			"timestamp": 1696505154,
+			"files": [ "Objects/Weapons/ak47/ak_base_color.dds" ],
+			"workFiles": [ ],
+			"source": "Objects/Weapons/ak47/ak_base_color.tif",
+			"metadata": "Objects/Weapons/ak47/ak_base_color.dds.cryasset",
+			"details": [
+				{ "key": "height", "value": "4096" },
+				{ "key": "mipCount", "value": "11" },
+				{ "key": "width", "value": "4096" }
+			],
+			"dependencies": [ ]
+		},
+		{
+			"type": "Texture",
+			"guid": "f4fa3ea5-0ade-4c87-7a04-6a02b981a9e2",
+			"name": "ak_metallic",
+			"timestamp": 1696505330,
+			"files": [ "Objects/Weapons/ak47/ak_metallic.dds" ],
+			"workFiles": [ ],
+			"source": "Objects/Weapons/ak47/ak_metallic.tif",
+			"metadata": "Objects/Weapons/ak47/ak_metallic.dds.cryasset",
+			"details": [
+				{ "key": "height", "value": "4096" },
+				{ "key": "mipCount", "value": "11" },
+				{ "key": "width", "value": "4096" }
+			],
+			"dependencies": [ ]
+		},
+		{
+			"type": "Texture",
+			"guid": "ec2ae09b-344e-67d5-6af4-2245dc005181",
+			"name": "ak_mixed_ao",
+			"timestamp": 1696505271,
+			"files": [ "Objects/Weapons/ak47/ak_mixed_ao.dds" ],
+			"workFiles": [ ],
+			"source": "Objects/Weapons/ak47/ak_mixed_ao.tif",
+			"metadata": "Objects/Weapons/ak47/ak_mixed_ao.dds.cryasset",
+			"details": [
+				{ "key": "height", "value": "4096" },
+				{ "key": "mipCount", "value": "11" },
+				{ "key": "width", "value": "4096" }
+			],
+			"dependencies": [ ]
+		},
+		{
+			"type": "Texture",
+			"guid": "c5a9b934-20ca-174e-9575-a8c5c7ff6f45",
+			"name": "ak_normal_opengl",
+			"timestamp": 1696505256,
+			"files": [ "Objects/Weapons/ak47/ak_normal_opengl.dds" ],
+			"workFiles": [ ],
+			"source": "Objects/Weapons/ak47/ak_normal_opengl.tif",
+			"metadata": "Objects/Weapons/ak47/ak_normal_opengl.dds.cryasset",
+			"details": [
+				{ "key": "height", "value": "4096" },
+				{ "key": "mipCount", "value": "11" },
+				{ "key": "width", "value": "4096" }
+			],
+			"dependencies": [ ]
+		},
+		{
+			"type": "Texture",
+			"guid": "25692adf-13f6-eab5-0f78-bd2cb2363635",
+			"name": "ak_roughness",
+			"timestamp": 1696505311,
+			"files": [ "Objects/Weapons/ak47/ak_roughness.dds" ],
+			"workFiles": [ ],
+			"source": "Objects/Weapons/ak47/ak_roughness.tif",
+			"metadata": "Objects/Weapons/ak47/ak_roughness.dds.cryasset",
+			"details": [
+				{ "key": "height", "value": "4096" },
+				{ "key": "mipCount", "value": "11" },
+				{ "key": "width", "value": "4096" }
+			],
 			"dependencies": [ ]
 		},
 		{
