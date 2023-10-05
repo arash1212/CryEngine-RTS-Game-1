@@ -83,7 +83,6 @@ void AIControllerComponent::Move(f32 DeltaTime)
 	m_pNavigationComponent->NavigateTo(m_moveToPosition);
 	Vec3 velocity = m_pNavigationComponent->GetRequestedVelocity();
 
-	m_pEntity->SetRotation(Quat::CreateRotationVDir(velocity));
 	m_pCharacterControllerComponent->SetVelocity(velocity);
 }
 
@@ -113,6 +112,21 @@ void AIControllerComponent::SetMoveSpeed(f32 speed)
 void AIControllerComponent::StopMoving()
 {
 	this->m_pNavigationComponent->NavigateTo(m_pEntity->GetWorldPos());
+}
+
+void AIControllerComponent::LookAt(Vec3 position)
+{
+	Vec3 dir = position - m_pEntity->GetWorldPos();
+	dir.z = 0;
+	m_pEntity->SetRotation(Quat::CreateRotationVDir(dir));
+}
+
+f32 AIControllerComponent::AngleTo(Vec3 position)
+{
+	Vec3 dir = position - m_pEntity->GetWorldPos();
+	Vec3 forwardVector = m_pEntity->GetForwardDir().normalized();
+	float dot = forwardVector.dot(dir);
+	return crymath::acos(dot);
 }
 
 Vec3 AIControllerComponent::GetVelocity()

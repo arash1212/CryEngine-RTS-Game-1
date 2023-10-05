@@ -75,6 +75,11 @@ void BaseUnitComponent::ProcessEvent(const SEntityEvent& event)
 
 		m_pActionManagerComponent->ProcessActions();
 
+		//testing
+		if (!m_pTargetEntity) {
+			m_pTargetEntity = gEnv->pEntitySystem->FindEntityByName("target");
+		}
+
 	}break;
 	case Cry::Entity::EEvent::Reset: {
 		m_pSelectableComponent->DeSelect();
@@ -94,19 +99,52 @@ void BaseUnitComponent::UpdateAnimations()
 		currentFragmentId = m_idleFragmentId;
 	}
 	else if (m_pAIController->IsMoving()) {
-
-		Vec3 forwardDir = m_pEntity->GetForwardDir();
-		Vec3 rightDir = m_pEntity->GetRightDir();
-		Vec3 velocity = m_pAIController->GetVelocity();
-
-		f32 forwardDot = velocity.dot(forwardDir);
-		f32 rightDot = velocity.dot(rightDir);
-
-		int32 inv = rightDot > 0 ? 1 : -1;
-
 		m_pAnimationComponent->SetMotionParameter(EMotionParamID::eMotionParamID_TravelSpeed, 3);
-		m_pAnimationComponent->SetMotionParameter(EMotionParamID::eMotionParamID_TurnAngle, crymath::acos(forwardDot) * inv);
+
+		Vec3 forwardVector = m_pEntity->GetForwardDir().normalized();
+		Vec3 rightVector = m_pEntity->GetRightDir().normalized();
+		Vec3 velocity = m_pAIController->GetVelocity().normalized();
+
+		float forwardDot = velocity.dot(forwardVector);
+		float rightDot = velocity.dot(rightVector);
+
+		int32 inv = rightDot < 0 ? 1 : -1;
+		m_pAnimationComponent->SetMotionParameter(EMotionParamID::eMotionParamID_TravelAngle, crymath::acos(forwardDot) * inv);
 		currentFragmentId = m_runFragmentId;
+	}
+
+	//TODO : update beshe
+	if (m_pTargetEntity) {
+		Vec3 targetPos = m_pTargetEntity->GetWorldPos();
+		Vec3 currentPos = m_pEntity->GetWorldPos();
+		Vec3 dir = targetPos - currentPos;
+		Vec3 forwardCross = m_pEntity->GetForwardDir().cross(dir.normalized());
+		Vec3 rightCross = m_pEntity->GetRightDir().cross(dir.normalized());
+
+		int32 uInv = 1;
+		f32 diff = 0.2f;
+
+
+		if (targetPos.x > currentPos.x + 2 || targetPos.x < currentPos.x - 2) {
+			if (targetPos.x > currentPos.x) {
+				uInv = -1;
+			}
+			else {
+				diff *= -1;
+			}
+			m_pAnimationComponent->SetMotionParameter(EMotionParamID::eMotionParamID_TurnAngle, (rightCross.x + (diff * 2)) *uInv);
+		}
+		else {
+			if (targetPos.y < currentPos.y) {
+				uInv = -1;
+			}
+			m_pAnimationComponent->SetMotionParameter(EMotionParamID::eMotionParamID_TurnAngle, (forwardCross.x - diff) * uInv);
+		}
+
+		m_pAIController->LookAt(m_pTargetEntity->GetWorldPos());
+	}
+	else {
+		m_pAIController->LookAt(m_pAIController->GetVelocity());
 	}
 
 	if (m_activeFragmentId != currentFragmentId) {

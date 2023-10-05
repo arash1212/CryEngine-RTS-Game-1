@@ -194,11 +194,22 @@
         "favorites": [
         ],
         "history": [
-            "/Animations/Mannequin/Preview"
+            "/Animations/Mannequin/Preview",
+            "/Animations"
         ]
     },
     "FavoritesHelper": {
         "Asset Browser": null
+    },
+    "Import Mesh": {
+        "Recent Files": [
+            "Objects/Characters/units/soldier1/soldier_1.cgf.cryasset"
+        ]
+    },
+    "Import Skeleton": {
+        "Recent Files": [
+            "Objects/Characters/units/soldier1/soldier_1.chr.cryasset"
+        ]
     },
     "Level Editor": {
         "Recent Files": [

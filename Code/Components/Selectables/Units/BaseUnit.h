@@ -34,6 +34,8 @@ private:
 	AIControllerComponent* m_pAIController = nullptr;
 
 	ActionManagerComponent* m_pActionManagerComponent = nullptr;
+
+	IEntity* m_pTargetEntity = nullptr;
 private:
 	FragmentID m_idleFragmentId;
 	FragmentID m_runFragmentId;

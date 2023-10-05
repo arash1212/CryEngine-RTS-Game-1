@@ -5427,8 +5427,8 @@
 			"type": "Animation",
 			"guid": "d5861a50-6837-d6bc-7dac-4037d73a76f0",
 			"name": "stepRotate_lft_180_3p",
-			"timestamp": 1652897361,
-			"files": [ "Animations/motusAnims/stepRotate/stepRotate_lft_180_3p.caf" ],
+			"timestamp": 132973673610360000,
+			"files": [ "animations/motusanims/steprotate/stepRotate_lft_180_3p.caf" ],
 			"workFiles": [ ],
 			"source": "",
 			"metadata": "Animations/motusAnims/stepRotate/stepRotate_lft_180_3p.caf.cryasset",
@@ -5655,8 +5655,8 @@
 			"type": "Animation",
 			"guid": "74df591e-f47c-51be-1f3c-2131e18bc49c",
 			"name": "walkcross_fwd_lft_3p",
-			"timestamp": 1652897362,
-			"files": [ "Animations/motusAnims/strafe/walkcross_fwd_lft_3p.caf" ],
+			"timestamp": 132973673629920000,
+			"files": [ "animations/motusanims/strafe/walkcross_fwd_lft_3p.caf" ],
 			"workFiles": [ ],
 			"source": "",
 			"metadata": "Animations/motusAnims/strafe/walkcross_fwd_lft_3p.caf.cryasset",
@@ -5811,7 +5811,7 @@
 			"type": "Level",
 			"guid": "984fcd77-e594-2b34-fbf5-414a47e0d684",
 			"name": "example",
-			"timestamp": 1696437554,
+			"timestamp": 1696496467,
 			"files": [ "Levels/example/example.level" ],
 			"workFiles": [ ],
 			"source": "",
@@ -5902,7 +5902,6 @@
 					"usageCount": 0
 				},
 				{ "path": "animations/mannequin/adb/playertags.xml", "usageCount": 0 },
-				{ "path": "animations/motusanims/jog_bck_3p.caf", "usageCount": 0 },
 				{
 					"path": "editor/resourcecache/materials/decals/selection/selectionbox_decal_texture_1.dds",
 					"usageCount": 0
@@ -5930,6 +5929,42 @@
 				},
 				{
 					"path": "objects/characters/units/soldier1/soldier_1.mtl",
+					"usageCount": 0
+				},
+				{
+					"path": "objects/characters/units/soldier1/soldier_1_armature_rifle_aim_run_aim_down.caf",
+					"usageCount": 0
+				},
+				{
+					"path": "objects/characters/units/soldier1/soldier_1_armature_rifle_aim_run_aim_forward.caf",
+					"usageCount": 0
+				},
+				{
+					"path": "objects/characters/units/soldier1/soldier_1_armature_rifle_aim_run_aim_left.caf",
+					"usageCount": 0
+				},
+				{
+					"path": "objects/characters/units/soldier1/soldier_1_armature_rifle_aim_run_aim_left_down.caf",
+					"usageCount": 0
+				},
+				{
+					"path": "objects/characters/units/soldier1/soldier_1_armature_rifle_aim_run_aim_left_up.caf",
+					"usageCount": 0
+				},
+				{
+					"path": "objects/characters/units/soldier1/soldier_1_armature_rifle_aim_run_aim_right.caf",
+					"usageCount": 0
+				},
+				{
+					"path": "objects/characters/units/soldier1/soldier_1_armature_rifle_aim_run_aim_right_down.caf",
+					"usageCount": 0
+				},
+				{
+					"path": "objects/characters/units/soldier1/soldier_1_armature_rifle_aim_run_aim_right_up.caf",
+					"usageCount": 0
+				},
+				{
+					"path": "objects/characters/units/soldier1/soldier_1_armature_rifle_aim_run_aim_up.caf",
 					"usageCount": 0
 				},
 				{
@@ -6028,7 +6063,6 @@
 					"path": "objects/characters/units/soldier1/soldier_1_rifle_kick.caf",
 					"usageCount": 0
 				},
-				{ "path": "scripts/ai/factions.xml", "usageCount": 0 },
 				{
 					"path": "textures/cubemaps/example/environmentprobe1_cm.dds",
 					"usageCount": 0
@@ -6434,9 +6468,9 @@
 		},
 		{
 			"type": "Character",
-			"guid": "774cee56-8113-91d9-6582-279e0b9c177e",
+			"guid": "5a46f10f-fbd1-ce00-d1e7-a83a52c9ca56",
 			"name": "soldier_1",
-			"timestamp": 1696430352,
+			"timestamp": 1696450902,
 			"files": [ "Objects/Characters/units/soldier1/soldier_1.cdf" ],
 			"workFiles": [ ],
 			"source": "",
@@ -6455,9 +6489,9 @@
 		},
 		{
 			"type": "Mesh",
-			"guid": "64e00e7c-4c39-2644-9153-2d7770c1b38e",
+			"guid": "7a1f3ac5-4733-52f0-b789-adbb283c137d",
 			"name": "soldier_1",
-			"timestamp": 1696430093,
+			"timestamp": 1696450510,
 			"files": [ "Objects/Characters/units/soldier1/soldier_1.cgf" ],
 			"workFiles": [ ],
 			"source": "Objects/Characters/units/soldier1/soldier_1.fbx",
@@ -6477,9 +6511,9 @@
 		},
 		{
 			"type": "Skeleton",
-			"guid": "f1da2ce3-7a48-8ca1-0cbf-a766365ebf30",
+			"guid": "cc063303-c07d-5007-6470-f271d2a521f3",
 			"name": "soldier_1",
-			"timestamp": 1696430351,
+			"timestamp": 1696450901,
 			"files": [
 				"Objects/Characters/units/soldier1/soldier_1.chr",
 				"Objects/Characters/units/soldier1/soldier_1.chrparams"
@@ -6492,9 +6526,9 @@
 		},
 		{
 			"type": "Material",
-			"guid": "29e1f93b-b45a-e574-bbd7-d095f3059ce6",
+			"guid": "34517355-27f7-4417-9597-586b7d76af4b",
 			"name": "soldier_1",
-			"timestamp": 1696430351,
+			"timestamp": 1696450901,
 			"files": [ "Objects/Characters/units/soldier1/soldier_1.mtl" ],
 			"workFiles": [ ],
 			"source": "",
@@ -6512,10 +6546,136 @@
 			]
 		},
 		{
+			"type": "Animation",
+			"guid": "2d09c614-97dd-7179-3619-eb8ad657f7a1",
+			"name": "soldier_1_Armature_Rifle_Aim_Run_Aim_Down",
+			"timestamp": 1696450583,
+			"files": [
+				"Objects/Characters/units/soldier1/soldier_1_Armature_Rifle_Aim_Run_Aim_Down.caf"
+			],
+			"workFiles": [ ],
+			"source": "Objects/Characters/units/soldier1/soldier_1.fbx",
+			"metadata": "Objects/Characters/units/soldier1/soldier_1_Armature_Rifle_Aim_Run_Aim_Down.caf.cryasset",
+			"details": [ ],
+			"dependencies": [ ]
+		},
+		{
+			"type": "Animation",
+			"guid": "505c68fe-3378-3714-f7c3-f33038a904f2",
+			"name": "soldier_1_Armature_Rifle_Aim_Run_Aim_Forward",
+			"timestamp": 1696450590,
+			"files": [
+				"Objects/Characters/units/soldier1/soldier_1_Armature_Rifle_Aim_Run_Aim_Forward.caf"
+			],
+			"workFiles": [ ],
+			"source": "Objects/Characters/units/soldier1/soldier_1.fbx",
+			"metadata": "Objects/Characters/units/soldier1/soldier_1_Armature_Rifle_Aim_Run_Aim_Forward.caf.cryasset",
+			"details": [ ],
+			"dependencies": [ ]
+		},
+		{
+			"type": "Animation",
+			"guid": "6ae1456b-eced-9966-cb27-294abc7c781d",
+			"name": "soldier_1_Armature_Rifle_Aim_Run_Aim_Left",
+			"timestamp": 1696450597,
+			"files": [
+				"Objects/Characters/units/soldier1/soldier_1_Armature_Rifle_Aim_Run_Aim_Left.caf"
+			],
+			"workFiles": [ ],
+			"source": "Objects/Characters/units/soldier1/soldier_1.fbx",
+			"metadata": "Objects/Characters/units/soldier1/soldier_1_Armature_Rifle_Aim_Run_Aim_Left.caf.cryasset",
+			"details": [ ],
+			"dependencies": [ ]
+		},
+		{
+			"type": "Animation",
+			"guid": "fa8b2864-318b-6229-583c-e769e92291e3",
+			"name": "soldier_1_Armature_Rifle_Aim_Run_Aim_Left_Down",
+			"timestamp": 1696450604,
+			"files": [
+				"Objects/Characters/units/soldier1/soldier_1_Armature_Rifle_Aim_Run_Aim_Left_Down.caf"
+			],
+			"workFiles": [ ],
+			"source": "Objects/Characters/units/soldier1/soldier_1.fbx",
+			"metadata": "Objects/Characters/units/soldier1/soldier_1_Armature_Rifle_Aim_Run_Aim_Left_Down.caf.cryasset",
+			"details": [ ],
+			"dependencies": [ ]
+		},
+		{
+			"type": "Animation",
+			"guid": "86b6e0d8-9c64-f2f9-e5fa-0374e51e9687",
+			"name": "soldier_1_Armature_Rifle_Aim_Run_Aim_Left_Up",
+			"timestamp": 1696450611,
+			"files": [
+				"Objects/Characters/units/soldier1/soldier_1_Armature_Rifle_Aim_Run_Aim_Left_Up.caf"
+			],
+			"workFiles": [ ],
+			"source": "Objects/Characters/units/soldier1/soldier_1.fbx",
+			"metadata": "Objects/Characters/units/soldier1/soldier_1_Armature_Rifle_Aim_Run_Aim_Left_Up.caf.cryasset",
+			"details": [ ],
+			"dependencies": [ ]
+		},
+		{
+			"type": "Animation",
+			"guid": "6b2b3f93-9b43-1beb-6ac6-31970bba48bc",
+			"name": "soldier_1_Armature_Rifle_Aim_Run_Aim_Right",
+			"timestamp": 1696450617,
+			"files": [
+				"Objects/Characters/units/soldier1/soldier_1_Armature_Rifle_Aim_Run_Aim_Right.caf"
+			],
+			"workFiles": [ ],
+			"source": "Objects/Characters/units/soldier1/soldier_1.fbx",
+			"metadata": "Objects/Characters/units/soldier1/soldier_1_Armature_Rifle_Aim_Run_Aim_Right.caf.cryasset",
+			"details": [ ],
+			"dependencies": [ ]
+		},
+		{
+			"type": "Animation",
+			"guid": "1b0075c2-4d0c-17a8-b51f-bdbc4282bc79",
+			"name": "soldier_1_Armature_Rifle_Aim_Run_Aim_Right_Down",
+			"timestamp": 1696450624,
+			"files": [
+				"Objects/Characters/units/soldier1/soldier_1_Armature_Rifle_Aim_Run_Aim_Right_Down.caf"
+			],
+			"workFiles": [ ],
+			"source": "Objects/Characters/units/soldier1/soldier_1.fbx",
+			"metadata": "Objects/Characters/units/soldier1/soldier_1_Armature_Rifle_Aim_Run_Aim_Right_Down.caf.cryasset",
+			"details": [ ],
+			"dependencies": [ ]
+		},
+		{
+			"type": "Animation",
+			"guid": "cd291023-8d6b-c958-68d7-1139101bb717",
+			"name": "soldier_1_Armature_Rifle_Aim_Run_Aim_Right_Up",
+			"timestamp": 1696450632,
+			"files": [
+				"Objects/Characters/units/soldier1/soldier_1_Armature_Rifle_Aim_Run_Aim_Right_Up.caf"
+			],
+			"workFiles": [ ],
+			"source": "Objects/Characters/units/soldier1/soldier_1.fbx",
+			"metadata": "Objects/Characters/units/soldier1/soldier_1_Armature_Rifle_Aim_Run_Aim_Right_Up.caf.cryasset",
+			"details": [ ],
+			"dependencies": [ ]
+		},
+		{
+			"type": "Animation",
+			"guid": "e23451d2-0388-0b43-b588-cb91a78d5223",
+			"name": "soldier_1_Armature_Rifle_Aim_Run_Aim_Up",
+			"timestamp": 1696450639,
+			"files": [
+				"Objects/Characters/units/soldier1/soldier_1_Armature_Rifle_Aim_Run_Aim_Up.caf"
+			],
+			"workFiles": [ ],
+			"source": "Objects/Characters/units/soldier1/soldier_1.fbx",
+			"metadata": "Objects/Characters/units/soldier1/soldier_1_Armature_Rifle_Aim_Run_Aim_Up.caf.cryasset",
+			"details": [ ],
+			"dependencies": [ ]
+		},
+		{
 			"type": "SkinnedMesh",
-			"guid": "6a5218dc-791f-d293-4c18-4ed6f9c4f8d8",
+			"guid": "b230aea2-674b-6b3d-fe25-4995891be881",
 			"name": "soldier_1_Mesh",
-			"timestamp": 1696430103,
+			"timestamp": 1696450525,
 			"files": [ "Objects/Characters/units/soldier1/soldier_1_Mesh.skin" ],
 			"workFiles": [ ],
 			"source": "Objects/Characters/units/soldier1/soldier_1.fbx",
@@ -6536,9 +6696,9 @@
 		},
 		{
 			"type": "Animation",
-			"guid": "f82ae097-a38f-893e-63b6-b6dedbae5c9f",
+			"guid": "1ebb4170-a1f9-de54-0490-6878af7b66d8",
 			"name": "soldier_1_Normal_Idle",
-			"timestamp": 1696430232,
+			"timestamp": 1696450743,
 			"files": [ "Objects/Characters/units/soldier1/soldier_1_Normal_Idle.caf" ],
 			"workFiles": [ ],
 			"source": "Objects/Characters/units/soldier1/soldier_1.fbx",
@@ -6548,9 +6708,9 @@
 		},
 		{
 			"type": "Animation",
-			"guid": "c61e8c17-f5a6-479f-90d1-9b0db442df10",
+			"guid": "f3471905-dca9-5f09-e2f7-1e323f3d7e62",
 			"name": "soldier_1_Normal_Walk_Backward",
-			"timestamp": 1696430238,
+			"timestamp": 1696450750,
 			"files": [
 				"Objects/Characters/units/soldier1/soldier_1_Normal_Walk_Backward.caf"
 			],
@@ -6562,9 +6722,9 @@
 		},
 		{
 			"type": "Animation",
-			"guid": "d1db9449-3a31-19a8-9b05-fd7ac8fc2476",
+			"guid": "4b0e6a12-a15a-98ac-3dc8-52254222cdb8",
 			"name": "soldier_1_Normal_Walk_Forward",
-			"timestamp": 1696430243,
+			"timestamp": 1696450757,
 			"files": [
 				"Objects/Characters/units/soldier1/soldier_1_Normal_Walk_Forward.caf"
 			],
@@ -6576,9 +6736,9 @@
 		},
 		{
 			"type": "Animation",
-			"guid": "b4303d37-4d6a-c1c2-d41e-b93f4d78a031",
+			"guid": "76da102f-5584-939d-9ebb-9fb4198af0c6",
 			"name": "soldier_1_Normal_Walk_Left",
-			"timestamp": 1696430248,
+			"timestamp": 1696450764,
 			"files": [ "Objects/Characters/units/soldier1/soldier_1_Normal_Walk_Left.caf" ],
 			"workFiles": [ ],
 			"source": "Objects/Characters/units/soldier1/soldier_1.fbx",
@@ -6588,9 +6748,9 @@
 		},
 		{
 			"type": "Animation",
-			"guid": "d8ff666c-0a5c-d28e-0a30-32c0eef5a644",
+			"guid": "89c27601-9443-a0f3-14d7-417de78371cf",
 			"name": "soldier_1_Normal_Walk_Right",
-			"timestamp": 1696430253,
+			"timestamp": 1696450770,
 			"files": [ "Objects/Characters/units/soldier1/soldier_1_Normal_Walk_Right.caf" ],
 			"workFiles": [ ],
 			"source": "Objects/Characters/units/soldier1/soldier_1.fbx",
@@ -6600,9 +6760,9 @@
 		},
 		{
 			"type": "Animation",
-			"guid": "0c64552a-5f9f-caf3-2a3e-1443bc359513",
+			"guid": "77556916-b485-70f3-1400-343cfd0b8129",
 			"name": "soldier_1_Rifle_Aim_Fire",
-			"timestamp": 1696430258,
+			"timestamp": 1696450778,
 			"files": [ "Objects/Characters/units/soldier1/soldier_1_Rifle_Aim_Fire.caf" ],
 			"workFiles": [ ],
 			"source": "Objects/Characters/units/soldier1/soldier_1.fbx",
@@ -6612,9 +6772,9 @@
 		},
 		{
 			"type": "Animation",
-			"guid": "d846460a-4fae-9f99-4ea6-af1ccc7e3143",
+			"guid": "ff3068a5-0fb1-43d0-169c-239795465c0e",
 			"name": "soldier_1_Rifle_Aim_Fire_2",
-			"timestamp": 1696430263,
+			"timestamp": 1696450784,
 			"files": [ "Objects/Characters/units/soldier1/soldier_1_Rifle_Aim_Fire_2.caf" ],
 			"workFiles": [ ],
 			"source": "Objects/Characters/units/soldier1/soldier_1.fbx",
@@ -6624,9 +6784,9 @@
 		},
 		{
 			"type": "Animation",
-			"guid": "0640601c-3b44-7c01-5f1d-8f4d9d612745",
+			"guid": "a3d50086-03fb-9414-c8d7-e3c90e24182e",
 			"name": "soldier_1_Rifle_Aim_Run_Aim_Down_001",
-			"timestamp": 1696430269,
+			"timestamp": 1696450791,
 			"files": [
 				"Objects/Characters/units/soldier1/soldier_1_Rifle_Aim_Run_Aim_Down_001.caf"
 			],
@@ -6638,9 +6798,9 @@
 		},
 		{
 			"type": "Animation",
-			"guid": "4c3bccae-9053-0540-12e5-8a2fa7daaf63",
+			"guid": "2d4896df-4ba7-0a82-0db9-6e0d8ee30678",
 			"name": "soldier_1_Rifle_Aim_Run_Aim_Forward_001",
-			"timestamp": 1696430274,
+			"timestamp": 1696450798,
 			"files": [
 				"Objects/Characters/units/soldier1/soldier_1_Rifle_Aim_Run_Aim_Forward_001.caf"
 			],
@@ -6652,9 +6812,9 @@
 		},
 		{
 			"type": "Animation",
-			"guid": "4839deee-f06b-d873-5320-c8820aea9ab0",
+			"guid": "029e089c-ccc5-3a4f-aad6-0620cb310f5d",
 			"name": "soldier_1_Rifle_Aim_Run_Aim_Up",
-			"timestamp": 1696430279,
+			"timestamp": 1696450806,
 			"files": [
 				"Objects/Characters/units/soldier1/soldier_1_Rifle_Aim_Run_Aim_Up.caf"
 			],
@@ -6666,9 +6826,9 @@
 		},
 		{
 			"type": "Animation",
-			"guid": "a23e52b5-8674-2bf8-019e-dc16b691d7e5",
+			"guid": "51f43bde-0439-e95c-3543-165a43a54f7f",
 			"name": "soldier_1_Rifle_Aim_Run_Backward",
-			"timestamp": 1696430284,
+			"timestamp": 1696450812,
 			"files": [
 				"Objects/Characters/units/soldier1/soldier_1_Rifle_Aim_Run_Backward.caf"
 			],
@@ -6680,9 +6840,9 @@
 		},
 		{
 			"type": "Animation",
-			"guid": "f45d7b18-58a5-804e-2016-a29ccd198adf",
+			"guid": "52eb668a-ae1c-85cb-a95b-dc3ceb0f7c41",
 			"name": "soldier_1_rifle_Aim_Run_Forward",
-			"timestamp": 1696430347,
+			"timestamp": 1696450895,
 			"files": [
 				"Objects/Characters/units/soldier1/soldier_1_rifle_Aim_Run_Forward.caf"
 			],
@@ -6694,9 +6854,9 @@
 		},
 		{
 			"type": "Animation",
-			"guid": "8a86fa39-1c92-70f8-7d2e-4a36969b1a80",
+			"guid": "080c89f4-eef4-a5b1-9e8c-e399782435e9",
 			"name": "soldier_1_Rifle_Aim_Run_Idle",
-			"timestamp": 1696430290,
+			"timestamp": 1696450820,
 			"files": [ "Objects/Characters/units/soldier1/soldier_1_Rifle_Aim_Run_Idle.caf" ],
 			"workFiles": [ ],
 			"source": "Objects/Characters/units/soldier1/soldier_1.fbx",
@@ -6706,9 +6866,9 @@
 		},
 		{
 			"type": "Animation",
-			"guid": "66ca02de-2555-9de2-2f3e-d3cc88d60e03",
+			"guid": "6c2157c6-f264-c7d5-a44d-b92c19aeae1f",
 			"name": "soldier_1_Rifle_Aim_Run_Left",
-			"timestamp": 1696430295,
+			"timestamp": 1696450827,
 			"files": [ "Objects/Characters/units/soldier1/soldier_1_Rifle_Aim_Run_Left.caf" ],
 			"workFiles": [ ],
 			"source": "Objects/Characters/units/soldier1/soldier_1.fbx",
@@ -6718,9 +6878,9 @@
 		},
 		{
 			"type": "Animation",
-			"guid": "6d5147a0-79b5-5c44-02f7-8dcbf5377de1",
+			"guid": "cd80f39c-0c77-ac48-e7bb-ce144aca06a3",
 			"name": "soldier_1_Rifle_Aim_Run_Right",
-			"timestamp": 1696430300,
+			"timestamp": 1696450834,
 			"files": [
 				"Objects/Characters/units/soldier1/soldier_1_Rifle_Aim_Run_Right.caf"
 			],
@@ -6732,9 +6892,9 @@
 		},
 		{
 			"type": "Animation",
-			"guid": "8a21da47-df2b-a361-6e14-01205f545d5b",
+			"guid": "7644fa02-a5b6-3de5-4a29-38a61f4f5552",
 			"name": "soldier_1_Rifle_Cover_Sit",
-			"timestamp": 1696430305,
+			"timestamp": 1696450840,
 			"files": [ "Objects/Characters/units/soldier1/soldier_1_Rifle_Cover_Sit.caf" ],
 			"workFiles": [ ],
 			"source": "Objects/Characters/units/soldier1/soldier_1.fbx",
@@ -6744,9 +6904,9 @@
 		},
 		{
 			"type": "Animation",
-			"guid": "a1e1b31c-9787-220c-832a-ef81a505ba38",
+			"guid": "9748c410-3a34-0766-89c4-5f100bcac36a",
 			"name": "soldier_1_Rifle_Crouch_Idle",
-			"timestamp": 1696430310,
+			"timestamp": 1696450847,
 			"files": [ "Objects/Characters/units/soldier1/soldier_1_Rifle_Crouch_Idle.caf" ],
 			"workFiles": [ ],
 			"source": "Objects/Characters/units/soldier1/soldier_1.fbx",
@@ -6756,9 +6916,9 @@
 		},
 		{
 			"type": "Animation",
-			"guid": "dea30941-0c5b-b4b5-749a-8d09ec6bfd50",
+			"guid": "5054df8b-87f3-72c2-1cf4-89b0e1b863e9",
 			"name": "soldier_1_Rifle_Crouch_Walk_Backward",
-			"timestamp": 1696430315,
+			"timestamp": 1696450854,
 			"files": [
 				"Objects/Characters/units/soldier1/soldier_1_Rifle_Crouch_Walk_Backward.caf"
 			],
@@ -6770,9 +6930,9 @@
 		},
 		{
 			"type": "Animation",
-			"guid": "a17908c4-8933-9f8c-1083-3258a4835ade",
+			"guid": "4286ce0e-fe61-4c47-52ce-c8ff8204f1be",
 			"name": "soldier_1_Rifle_Crouch_Walk_Forward",
-			"timestamp": 1696430321,
+			"timestamp": 1696450861,
 			"files": [
 				"Objects/Characters/units/soldier1/soldier_1_Rifle_Crouch_Walk_Forward.caf"
 			],
@@ -6784,9 +6944,9 @@
 		},
 		{
 			"type": "Animation",
-			"guid": "bf7a5f60-cefc-ec55-7233-b5fc7e23b70e",
+			"guid": "1328ac00-0c56-a1fa-3a00-4e672171efeb",
 			"name": "soldier_1_Rifle_Crouch_Walk_Right",
-			"timestamp": 1696430326,
+			"timestamp": 1696450868,
 			"files": [
 				"Objects/Characters/units/soldier1/soldier_1_Rifle_Crouch_Walk_Right.caf"
 			],
@@ -6798,9 +6958,9 @@
 		},
 		{
 			"type": "Animation",
-			"guid": "017c1bab-d9d4-042f-9633-39977b8ee485",
+			"guid": "d3279776-328a-83ef-e564-b77b9bb2fc1b",
 			"name": "soldier_1_Rifle_Hit_Reaction_1",
-			"timestamp": 1696430331,
+			"timestamp": 1696450875,
 			"files": [
 				"Objects/Characters/units/soldier1/soldier_1_Rifle_Hit_Reaction_1.caf"
 			],
@@ -6812,9 +6972,9 @@
 		},
 		{
 			"type": "Animation",
-			"guid": "e0e43be0-240a-16db-f57d-2b7528a97c29",
+			"guid": "025f12ed-cffd-cb74-ecb8-a367cba137a8",
 			"name": "soldier_1_Rifle_Hit_Reaction_2",
-			"timestamp": 1696430336,
+			"timestamp": 1696450882,
 			"files": [
 				"Objects/Characters/units/soldier1/soldier_1_Rifle_Hit_Reaction_2.caf"
 			],
@@ -6826,9 +6986,9 @@
 		},
 		{
 			"type": "Animation",
-			"guid": "e6a04efc-8889-738c-1f33-b614fb1ea1a6",
+			"guid": "56bf2902-88da-302a-f1d1-ea2f6e42c44b",
 			"name": "soldier_1_Rifle_Kick",
-			"timestamp": 1696430341,
+			"timestamp": 1696450889,
 			"files": [ "Objects/Characters/units/soldier1/soldier_1_Rifle_Kick.caf" ],
 			"workFiles": [ ],
 			"source": "Objects/Characters/units/soldier1/soldier_1.fbx",
