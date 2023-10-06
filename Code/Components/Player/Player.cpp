@@ -132,22 +132,22 @@ void PlayerComponent::InitInputs()
 
 void PlayerComponent::MoveForward(int activationMode, float value)
 {
-	m_movementOffset.y = value;
+	m_movementOffset.y = value * m_movementSpeed;
 }
 
 void PlayerComponent::MoveBackward(int activationMode, float value)
 {
-	m_movementOffset.y = -value;
+	m_movementOffset.y = -value * m_movementSpeed;
 }
 
 void PlayerComponent::MoveRight(int activationMode, float value)
 {
-	m_movementOffset.x = value;
+	m_movementOffset.x = value * m_movementSpeed;
 }
 
 void PlayerComponent::MoveLeft(int activationMode, float value)
 {
-	m_movementOffset.x = -value ;
+	m_movementOffset.x = -value * m_movementSpeed;
 }
 
 void PlayerComponent::MouseWheelUp(int activationMode, float value)
@@ -224,7 +224,9 @@ void PlayerComponent::CommandUnitsToMove(Vec3 position)
 		BaseUnitComponent* unit = entity->GetComponent<BaseUnitComponent>();
 		if (unit) {
 			ActionManagerComponent* actionManager = entity->GetComponent<ActionManagerComponent>();
-			actionManager->AddAction(new MoveAction(entity, position));
+			if (actionManager) {
+				actionManager->AddAction(new MoveAction(entity, position));
+			}
 		}
 		else {
 			continue;

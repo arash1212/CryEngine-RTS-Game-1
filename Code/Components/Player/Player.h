@@ -44,6 +44,7 @@ private:
 	f32 m_cameraMaxZoomAmount = PLAYER_CAMERA_MAX_ZOOM_AMOUNT;
 	f32 m_currentZoomAmount = 0;
 	f32 m_defaultPosZ = 0;
+	f32 m_movementSpeed = 2.f;
 	Vec3 m_movementOffset = ZERO;
 
 	DynArray<IEntity*> m_selectedUnits;

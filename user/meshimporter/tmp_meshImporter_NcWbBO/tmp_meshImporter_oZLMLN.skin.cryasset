@@ -1,0 +1,15 @@
+<AssetMetadata version="0" type="SkinnedMesh" guid="089c26b9-b1ba-cff5-9d75-e973138d33a6" source="ak47.fbx">
+ <Files>
+  <File path="tmp_meshImporter_oZLMLN.skin"/>
+ </Files>
+ <Details>
+  <Detail name="materialCount">2</Detail>
+  <Detail name="triangleCount">19926</Detail>
+  <Detail name="vertexCount">17475</Detail>
+  <Detail name="16BitPrecision">false</Detail>
+  <Detail name="bonesCount">6</Detail>
+ </Details>
+ <Dependencies>
+  <Path usageCount="1">./default.mtl</Path>
+ </Dependencies>
+</AssetMetadata>

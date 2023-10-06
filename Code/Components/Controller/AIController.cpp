@@ -122,6 +122,11 @@ void AIControllerComponent::LookAt(Vec3 position)
 	m_pEntity->SetRotation(Quat::CreateRotationVDir(dir));
 }
 
+void AIControllerComponent::LookAtWalkDirection()
+{
+	m_pEntity->SetRotation(Quat::CreateRotationVDir(m_pNavigationComponent->GetRequestedVelocity()));
+}
+
 f32 AIControllerComponent::AngleTo(Vec3 position)
 {
 	Vec3 dir = position - m_pEntity->GetWorldPos();

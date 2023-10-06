@@ -1,6 +1,7 @@
 #pragma once
 
 #include <DefaultComponents/Geometry/AdvancedAnimationComponent.h>
+#include <DefaultComponents/Geometry/AdvancedAnimationComponent.h>
 
 class BaseWeaponComponent final : public IEntityComponent
 {
@@ -23,7 +24,7 @@ public:
 	};
 
 private:
-	Cry::DefaultComponents::CAdvancedAnimationComponent* m_pAnimationComponent = nullptr;
+	//Cry::DefaultComponents::CAdvancedAnimationComponent* m_pAnimationComponent = nullptr;
 	IEntityAudioComponent* m_pAudioComponent = nullptr;
 
 protected:

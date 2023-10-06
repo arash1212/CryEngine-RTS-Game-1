@@ -44,6 +44,7 @@ public:
 	void SetMoveSpeed(f32 speed);
 	void StopMoving();
 	void LookAt(Vec3 position);
+	void LookAtWalkDirection();
 	f32 AngleTo(Vec3 position);
 
 	Vec3 GetVelocity();

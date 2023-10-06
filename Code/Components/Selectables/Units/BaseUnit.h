@@ -8,6 +8,13 @@ class IBaseAction;
 class ActionManager;
 class ActionManagerComponent;
 class BaseWeaponComponent;
+class OwnerInfoComponent;
+
+struct SOwnerInfo;
+
+struct SUnitAttackInfo {
+	f32 m_maxAttackDistance = 20;
+};
 
 class BaseUnitComponent final : public IEntityComponent
 {
@@ -36,8 +43,17 @@ private:
 
 	ActionManagerComponent* m_pActionManagerComponent = nullptr;
 
-	IEntity* m_pTargetEntity = nullptr;
 	BaseWeaponComponent* m_pWeaponComponent = nullptr;
+
+	//Target
+	IEntity* m_pAttackTargetEntity = nullptr;
+	IEntity* m_pRandomAttackTarget = nullptr;
+
+	//AttackInfo
+	SUnitAttackInfo m_pAttackInfo;
+
+	//OwnerShip
+	OwnerInfoComponent* m_pOwnerInfoComponent = nullptr;
 
 private:
 	FragmentID m_idleFragmentId;
@@ -46,9 +62,14 @@ private:
 
 protected:
 	virtual void UpdateAnimations();
+	virtual void Attack();
+	virtual void UpdateLookAtPosition();
 
 public:
 	//Actions
 	void MoveTo(Vec3 position);
 	void StopMoving();
+	void SetTargetEntity(IEntity* target);
+	void FindRandomTarget();
+	SUnitAttackInfo GetAttackInfo();
 };

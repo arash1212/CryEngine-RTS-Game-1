@@ -51,6 +51,18 @@ add_sources("Controller_uber.cpp"
 		"Components/Controller/AIController.cpp"
 		"Components/Controller/AIController.h"
 )
+add_sources("Effects_uber.cpp"
+    PROJECTS Game
+    SOURCE_GROUP "Components\\\\Effects"
+		"Components/Effects/BulletTracer.cpp"
+		"Components/Effects/BulletTracer.h"
+)
+add_sources("Info_uber.cpp"
+    PROJECTS Game
+    SOURCE_GROUP "Components\\\\Info"
+		"Components/Info/OwnerInfo.cpp"
+		"Components/Info/OwnerInfo.h"
+)
 add_sources("Player_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "Components\\\\Player"
@@ -75,10 +87,18 @@ add_sources("UI_uber.cpp"
 		"Components/UI/SelectionBox.cpp"
 		"Components/UI/SelectionBox.h"
 )
+add_sources("Weapons_uber.cpp"
+    PROJECTS Game
+    SOURCE_GROUP "Components\\\\Weapons"
+		"Components/Weapons/BaseWeapon.cpp"
+		"Components/Weapons/BaseWeapon.h"
+)
 add_sources("Utils_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "Utils"
+		"Utils/MathUtils.cpp"
 		"Utils/MouseUtils.cpp"
+		"Utils/MathUtils.h"
 		"Utils/MouseUtils.h"
 )
 

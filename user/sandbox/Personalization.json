@@ -8,9 +8,9 @@
             "Objects/Characters/units/soldier1",
             "Materials/decals",
             "Materials/decals/selection",
-            "Objects/Weapons/ak47",
             "Objects/effects",
-            "Objects/effects/bullettracer"
+            "Objects/effects/bullettracer",
+            "Objects/Weapons/ak47"
         ]
     },
     "CAssetPicker": {
@@ -348,7 +348,7 @@
             "foldersSplitter": "AAAA/wAAAAEAAAACAAABAAAAAwAB/////wEAAAABAA==",
             "foldersView": {
                 "selected": [
-                    "Objects/effects/bullettracer"
+                    "Objects/Weapons/ak47"
                 ]
             },
             "mainViewSplitter": "AAAA/wAAAAEAAAACAAAAOgAAAQAB/////wEAAAABAA==",
@@ -372,19 +372,32 @@
             "/Objects/Weapons/ak47"
         ]
     },
+    "Environment Editor": {
+        "Recent Files": [
+            "Libs/environmentpresets/example.env.cryasset"
+        ]
+    },
     "FavoritesHelper": {
         "Asset Browser": null
     },
+    "Import Animation": {
+        "Recent Files": [
+            "Objects/Weapons/ak47/ak47_Fire.caf.cryasset"
+        ]
+    },
     "Import Mesh": {
         "Recent Files": [
-            "Objects/effects/bullettracer/bullet_tracer_1.cgf.cryasset",
+            "Objects/Weapons/ak47/ak47.cgf.cryasset",
             "Objects/Weapons/ak47/AK47.cgf.cryasset",
+            "Objects/effects/bullettracer/bullet_tracer_1.cgf.cryasset",
             "Objects/Characters/units/soldier1/soldier_1.cgf.cryasset"
         ]
     },
     "Import Skeleton": {
         "Recent Files": [
-            "Objects/Characters/units/soldier1/soldier_1.chr.cryasset"
+            "Objects/Weapons/ak47/ak47.chr.cryasset",
+            "Objects/Characters/units/soldier1/soldier_1.chr.cryasset",
+            "Objects/Weapons/ak47/AK47.chr.cryasset"
         ]
     },
     "Level Editor": {
@@ -394,6 +407,7 @@
     },
     "Material Editor": {
         "Recent Files": [
+            "Objects/Weapons/ak47/ak47.mtl.cryasset",
             "Objects/effects/bullettracer/bullet_tracer_1.mtl.cryasset",
             "Materials/bullet.mtl.cryasset",
             "Objects/Weapons/ak47/AK47.mtl.cryasset",

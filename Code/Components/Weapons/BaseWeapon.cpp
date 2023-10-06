@@ -26,6 +26,20 @@ namespace
 
 void BaseWeaponComponent::Initialize()
 {
+	/*
+	//AnimationComponent Initializations
+	m_pAnimationComponent = m_pEntity->CreateComponent<Cry::DefaultComponents::CAdvancedAnimationComponent>();
+	m_pAnimationComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), Quat::CreateRotationXYZ(Ang3(DEG2RAD(90), 0, DEG2RAD(180))), Vec3(0)));
+	m_pAnimationComponent->SetCharacterFile("Objects/Weapons/ak47/ak47.cdf");
+	m_pAnimationComponent->SetMannequinAnimationDatabaseFile("Animations/Mannequin/ADB/ak47.adb");
+	m_pAnimationComponent->SetControllerDefinitionFile("Animations/Mannequin/ADB/FirstPersonControllerDefinition.xml");
+	m_pAnimationComponent->SetDefaultScopeContextName("ThirdPersonCharacter");
+	m_pAnimationComponent->SetDefaultFragmentName("Idle");
+	m_pAnimationComponent->SetAnimationDrivenMotion(false);
+	m_pAnimationComponent->LoadFromDisk();
+	m_pAnimationComponent->ResetCharacter();
+	*/
+
 	//WeaponAttachment Initialization
 	m_pWeaponAttachment = m_pEntity->GetComponent<Cry::DefaultComponents::CAdvancedAnimationComponent>()->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName(GetAttachmentName());
 
@@ -106,6 +120,10 @@ void BaseWeaponComponent::SpawnProjectile(Vec3 pos)
 {
 	Vec3 origin = m_pWeaponAttachment->GetAttWorldAbsolute().t;
 	Vec3 dir = pos - origin;
+
+	//const IDefaultSkeleton& pDefaultSkeleton = m_pWeaponAttachment->GetIAttachmentObject()->GetICharacterInstance()->GetIDefaultSkeleton();
+	//int32 muzzleBoneID = pDefaultSkeleton.GetJointIDByName("Muzzle");
+	//const ISkeletonPose* pPose = m_pWeaponAttachment->GetIAttachmentObject()->GetICharacterInstance()->GetISkeletonPose();
 
 	SEntitySpawnParams projectileSpawnParams;
 	projectileSpawnParams.vPosition = origin;
