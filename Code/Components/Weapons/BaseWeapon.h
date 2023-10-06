@@ -53,6 +53,5 @@ public:
 	void PutAway();
 	
 	CryAudio::ControlId GetRandomShootSound();
-
 	string GetAttachmentName();
 };

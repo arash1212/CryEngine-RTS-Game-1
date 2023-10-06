@@ -36,6 +36,8 @@ build/
 ### CryEngine ###
 Assets/*
 Editor/*
+user/*
+user/bin/win_x64/Game.pdb
 solutions/
 logbackups/*
 bin/win_x64/Game.pdb
