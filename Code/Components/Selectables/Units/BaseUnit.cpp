@@ -147,8 +147,12 @@ void BaseUnitComponent::Attack()
 	if (targetEntity && distanceToTarget <= m_pAttackInfo.m_maxAttackDistance) {
 		m_pWeaponComponent->Fire(targetEntity->GetWorldPos());
 	}
-	else if (distanceToTarget > m_pAttackInfo.m_maxAttackDistance || !ownerInfo) {
+	else if (targetEntity == m_pRandomAttackTarget && distanceToTarget > m_pAttackInfo.m_maxAttackDistance || !ownerInfo) {
 		m_pRandomAttackTarget = nullptr;
+	}
+	if (targetEntity == m_pAttackTargetEntity && distanceToTarget > m_pAttackInfo.m_maxAttackDistance) {
+		MoveTo(m_pAttackTargetEntity->GetWorldPos());
+		CryLog("move to target!");
 	}
 }
 

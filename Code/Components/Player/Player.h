@@ -66,5 +66,8 @@ private:
 	//Actions
 	void DeselectUnits();
 	void SelectUnits();
+
+	//Commands
 	void CommandUnitsToMove(Vec3 position);
+	void SetUnitsAttackTarget(IEntity* target);
 };

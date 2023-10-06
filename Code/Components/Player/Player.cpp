@@ -180,7 +180,14 @@ void PlayerComponent::RightMouseDown(int activationMode, float value)
 	Vec3 mousePos = MouseUtils::GetPositionUnderCursor();
 
 	if (activationMode == eAAM_OnRelease) {
-		CommandUnitsToMove(mousePos);
+		//TODO : update beshe
+		IEntity* entity = MouseUtils::GeetActorUnderCursor();
+		if (entity) {
+			SetUnitsAttackTarget(entity);
+		}
+		else {
+			CommandUnitsToMove(mousePos);
+		}
 	}
 }
 
@@ -223,10 +230,30 @@ void PlayerComponent::CommandUnitsToMove(Vec3 position)
 	for (IEntity* entity : m_selectedUnits) {
 		BaseUnitComponent* unit = entity->GetComponent<BaseUnitComponent>();
 		if (unit) {
+			unit->SetTargetEntity(nullptr);
+
 			ActionManagerComponent* actionManager = entity->GetComponent<ActionManagerComponent>();
 			if (actionManager) {
 				actionManager->AddAction(new MoveAction(entity, position));
 			}
+		}
+		else {
+			continue;
+		}
+	}
+}
+
+void PlayerComponent::SetUnitsAttackTarget(IEntity* target)
+{
+	for (IEntity* entity : m_selectedUnits) {
+		BaseUnitComponent* unit = entity->GetComponent<BaseUnitComponent>();
+		if (unit) {
+			//ActionManagerComponent* actionManager = entity->GetComponent<ActionManagerComponent>();
+			//if (actionManager) {
+			if (target) {
+				unit->SetTargetEntity(target);
+			}
+			//}
 		}
 		else {
 			continue;
