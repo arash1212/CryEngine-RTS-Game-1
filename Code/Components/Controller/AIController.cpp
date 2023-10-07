@@ -2,6 +2,11 @@
 #include "AIController.h"
 #include "GamePlugin.h"
 
+#include <CryEntitySystem/IEntitySystem.h>
+#include <CryAISystem/IAISystem.h>
+#include <CryAISystem/INavigationSystem.h>
+#include <CryAISystem/NavigationSystem/INavMeshQueryFilter.h>
+
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
 #include <CrySchematyc/Env/IEnvRegistrar.h>
@@ -92,7 +97,7 @@ void AIControllerComponent::MoveTo(Vec3 position)
 	if (position == ZERO) {
 		return;
 	}
-	m_moveToPosition = position;
+	m_moveToPosition = this->SnapToNavmesh(position);
 }
 
 bool AIControllerComponent::IsMoving()
@@ -117,6 +122,10 @@ void AIControllerComponent::StopMoving()
 
 void AIControllerComponent::LookAt(Vec3 position)
 {
+	if (position == ZERO) {
+		return;
+	}
+
 	Vec3 dir = position - m_pEntity->GetWorldPos();
 	dir.z = 0;
 	m_pEntity->SetRotation(Quat::CreateRotationVDir(dir));
@@ -138,4 +147,15 @@ f32 AIControllerComponent::AngleTo(Vec3 position)
 Vec3 AIControllerComponent::GetVelocity()
 {
 	return m_pCharacterControllerComponent->GetVelocity();
+}
+
+Vec3 AIControllerComponent::SnapToNavmesh(Vec3 point)
+{
+	NavigationAgentTypeID agentTypeId = NavigationAgentTypeID::TNavigationID(1);
+	NavigationMeshID navMeshId = gEnv->pAISystem->GetNavigationSystem()->FindEnclosingMeshID(agentTypeId, point);
+	MNM::SOrderedSnappingMetrics snappingMetrics;
+	snappingMetrics.CreateDefault();
+	SAcceptAllQueryTrianglesFilter filter;
+	MNM::SPointOnNavMesh pointOnNavMesh = gEnv->pAISystem->GetNavigationSystem()->SnapToNavMesh(agentTypeId, point, snappingMetrics, &filter, &navMeshId);
+	return pointOnNavMesh.GetWorldPosition();
 }

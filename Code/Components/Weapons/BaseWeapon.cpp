@@ -43,6 +43,10 @@ void BaseWeaponComponent::Initialize()
 	//WeaponAttachment Initialization
 	m_pWeaponAttachment = m_pEntity->GetComponent<Cry::DefaultComponents::CAdvancedAnimationComponent>()->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName(GetAttachmentName());
 
+	//MuzzleFlash Attachment Initializations
+	m_pMuzzleFlashAttachment1 = m_pWeaponAttachment->GetIAttachmentObject()->GetICharacterInstance()->GetIAttachmentManager()->GetInterfaceByName("MuzzleFlash1");
+	m_pMuzzleFlashAttachment1->HideAttachment(false);
+
 	//AudioComponent Initialization
 	m_pAudioComponent = m_pEntity->GetOrCreateComponent<IEntityAudioComponent>();
 
@@ -55,6 +59,14 @@ void BaseWeaponComponent::Initialize()
 	m_shootSounds.Insert(5, CryAudio::StringToId("ak-47-shoot-sound-5"));
 	m_shootSounds.Insert(6, CryAudio::StringToId("ak-47-shoot-sound-6"));
 	m_shootSounds.Insert(6, CryAudio::StringToId("ak-47-shoot-sound-7"));
+
+	/*
+	//MuzzleFlashParticleComponent Initialization
+	m_pMuzzleFlashParticleComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CParticleComponent>();
+	m_pMuzzleFlashParticleComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), Quat::CreateRotationZ(90), Vec3(0)));
+	m_pMuzzleFlashParticleComponent->SetEffectName("Objects/effects/muzzleflash1/muzzleflash_1_particle.pfx");
+	m_pMuzzleFlashParticleComponent->Activate(true);
+	*/
 }
 
 Cry::Entity::EventFlags BaseWeaponComponent::GetEventMask() const
@@ -75,6 +87,9 @@ void BaseWeaponComponent::ProcessEvent(const SEntityEvent& event)
 	case Cry::Entity::EEvent::Update: {
 		f32 DeltaTime = event.fParam[0];
 
+		UpdateMuzzleFlashes();
+
+		//Timers
 		if (m_shotTimePassed < m_timeBetweenShots) {
 			m_shotTimePassed += 0.5f * DeltaTime;
 		}
@@ -83,6 +98,10 @@ void BaseWeaponComponent::ProcessEvent(const SEntityEvent& event)
 		}
 		else {
 			m_shotCount = 0;
+		}
+		
+		if (m_MuzzleFlashDeActivationTimePassed < m_timeBetweenMuzzleFlashDeActivation) {
+			m_MuzzleFlashDeActivationTimePassed += 0.5f * DeltaTime;
 		}
 
 	}break;
@@ -121,12 +140,12 @@ void BaseWeaponComponent::SpawnProjectile(Vec3 pos)
 	Vec3 origin = m_pWeaponAttachment->GetAttWorldAbsolute().t;
 	Vec3 dir = pos - origin;
 
-	//const IDefaultSkeleton& pDefaultSkeleton = m_pWeaponAttachment->GetIAttachmentObject()->GetICharacterInstance()->GetIDefaultSkeleton();
-	//int32 muzzleBoneID = pDefaultSkeleton.GetJointIDByName("Muzzle");
-	//const ISkeletonPose* pPose = m_pWeaponAttachment->GetIAttachmentObject()->GetICharacterInstance()->GetISkeletonPose();
+	const IDefaultSkeleton& pDefaultSkeleton = m_pWeaponAttachment->GetIAttachmentObject()->GetICharacterInstance()->GetIDefaultSkeleton();
+	int32 muzzleBoneID = pDefaultSkeleton.GetJointIDByName("Muzzle");
+	const ISkeletonPose* pPose = m_pWeaponAttachment->GetIAttachmentObject()->GetICharacterInstance()->GetISkeletonPose();
 
 	SEntitySpawnParams projectileSpawnParams;
-	projectileSpawnParams.vPosition = origin;
+	projectileSpawnParams.vPosition = pPose->GetAbsJointByID(muzzleBoneID).t + origin;
 	projectileSpawnParams.qRotation = Quat::CreateRotationVDir(dir.normalized());
 	IEntity* projectileEntity = gEnv->pEntitySystem->SpawnEntity(projectileSpawnParams, true);
 	BulletTracerComponent* bullet = projectileEntity->GetOrCreateComponent<BulletTracerComponent>();
@@ -143,6 +162,9 @@ void BaseWeaponComponent::Fire(Vec3 pos)
 
 		m_shotCount++;
 		m_shotCountResetTimePassed = 0.f;
+
+		//MuzzleFlash
+		m_MuzzleFlashDeActivationTimePassed = 0;
 	}
 }
 
@@ -163,6 +185,14 @@ void BaseWeaponComponent::PutAway()
 	m_pWeaponAttachment->HideAttachment(1);
 }
 
+Vec3 BaseWeaponComponent::GetMuzzlePosition()
+{
+	const IDefaultSkeleton& pDefaultSkeleton = m_pWeaponAttachment->GetIAttachmentObject()->GetICharacterInstance()->GetIDefaultSkeleton();
+	int32 muzzleBoneID = pDefaultSkeleton.GetJointIDByName("Muzzle");
+	const ISkeletonPose* pPose = m_pWeaponAttachment->GetIAttachmentObject()->GetICharacterInstance()->GetISkeletonPose();
+	return  pPose->GetAbsJointByID(muzzleBoneID).t;
+}
+
 string BaseWeaponComponent::GetAttachmentName()
 {
 	return "ak47";
@@ -175,4 +205,19 @@ CryAudio::ControlId BaseWeaponComponent::GetRandomShootSound()
 		randomNum = MathUtils::GetRandomInt(0, m_shootSounds.Size() - 1);
 	}
 	return m_shootSounds.At(randomNum);
+}
+
+void BaseWeaponComponent::UpdateMuzzleFlashes()
+{
+	if (m_MuzzleFlashDeActivationTimePassed >= m_timeBetweenMuzzleFlashDeActivation) {
+		m_pMuzzleFlashAttachment1->HideAttachment(true);
+		bCanChangeMuzzleFlash = true;
+	}
+	else if (bCanChangeMuzzleFlash) {
+		int32 randomInt = MathUtils::GetRandomInt(1, 1);
+		bCanChangeMuzzleFlash = false;
+		if (randomInt == 1) {
+			m_pMuzzleFlashAttachment1->HideAttachment(false);
+		}
+	}
 }

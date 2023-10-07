@@ -62,14 +62,17 @@ private:
 
 protected:
 	virtual void UpdateAnimations();
-	virtual void Attack();
-	virtual void UpdateLookAtPosition();
 
 public:
+	virtual void Attack(IEntity* target);
+	virtual void LookAt(Vec3 position);
+	virtual void AttackRandomTarget();
+
 	//Actions
 	void MoveTo(Vec3 position);
 	void StopMoving();
-	void SetTargetEntity(IEntity* target);
 	void FindRandomTarget();
+
+	void SetTargetEntity(IEntity* target);
 	SUnitAttackInfo GetAttackInfo();
 };

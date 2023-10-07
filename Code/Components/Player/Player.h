@@ -69,5 +69,5 @@ private:
 
 	//Commands
 	void CommandUnitsToMove(Vec3 position);
-	void SetUnitsAttackTarget(IEntity* target);
+	void SetUnitsAttackTarget(IEntity* target); 
 };

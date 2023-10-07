@@ -10,6 +10,7 @@
 
 #include <Components/Action/ActionManager.h>
 #include <Actions/Units/MoveAction.h>
+#include <Actions/Units/AttackAction.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -248,12 +249,12 @@ void PlayerComponent::SetUnitsAttackTarget(IEntity* target)
 	for (IEntity* entity : m_selectedUnits) {
 		BaseUnitComponent* unit = entity->GetComponent<BaseUnitComponent>();
 		if (unit) {
-			//ActionManagerComponent* actionManager = entity->GetComponent<ActionManagerComponent>();
-			//if (actionManager) {
-			if (target) {
-				unit->SetTargetEntity(target);
+			ActionManagerComponent* actionManager = entity->GetComponent<ActionManagerComponent>();
+			if (actionManager) {
+				if (target) {
+					actionManager->AddAction(new AttackAction(entity, target));
+				}
 			}
-			//}
 		}
 		else {
 			continue;

@@ -79,8 +79,11 @@ void ActionManagerComponent::ProcessActions()
 void ActionManagerComponent::AddAction(IBaseAction* action)
 {
 	//TODO
-	m_pCurrentAction = nullptr;
-	m_actionsQueue.clear();
+	if (m_pCurrentAction) {
+		m_pCurrentAction->Cancel();
+		m_pCurrentAction = nullptr;
+	}
 
+	m_actionsQueue.clear();
 	m_actionsQueue.push_back(action);
 }

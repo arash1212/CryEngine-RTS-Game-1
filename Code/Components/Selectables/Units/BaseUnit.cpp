@@ -43,6 +43,8 @@ void BaseUnitComponent::Initialize()
 	m_pAnimationComponent->LoadFromDisk();
 	m_pAnimationComponent->ResetCharacter();
 
+	m_pAnimationComponent->EnableGroundAlignment(true);
+
 	//Animations
 	m_idleFragmentId = m_pAnimationComponent->GetFragmentId("Idle");
 	m_runFragmentId = m_pAnimationComponent->GetFragmentId("Run");
@@ -80,6 +82,7 @@ void BaseUnitComponent::ProcessEvent(const SEntityEvent& event)
 	{
 	case Cry::Entity::EEvent::GameplayStarted: {
 
+
 	}break;
 	case Cry::Entity::EEvent::Update: {
 		//f32 DeltaTime = event.fParam[0];
@@ -89,9 +92,8 @@ void BaseUnitComponent::ProcessEvent(const SEntityEvent& event)
 		m_pActionManagerComponent->ProcessActions();
 
 		//Target/Attack
-		UpdateLookAtPosition();
 		FindRandomTarget();
-		Attack();
+		AttackRandomTarget();
 		
 
 	}break;
@@ -117,6 +119,7 @@ void BaseUnitComponent::UpdateAnimations()
 	else if (m_pAIController->IsMoving()) {
 		m_pAnimationComponent->SetMotionParameter(EMotionParamID::eMotionParamID_TravelSpeed, 3);
 
+		//Run/Walk BlendSpaces
 		Vec3 forwardVector = m_pEntity->GetForwardDir().normalized();
 		Vec3 rightVector = m_pEntity->GetRightDir().normalized();
 		Vec3 velocity = m_pAIController->GetVelocity().normalized();
@@ -128,74 +131,10 @@ void BaseUnitComponent::UpdateAnimations()
 		m_pAnimationComponent->SetMotionParameter(EMotionParamID::eMotionParamID_TravelAngle, crymath::acos(forwardDot) * inv);
 		currentFragmentId = m_runFragmentId;
 	}
+
 	if (m_activeFragmentId != currentFragmentId) {
 		m_activeFragmentId = currentFragmentId;
 		m_pAnimationComponent->QueueFragmentWithId(m_activeFragmentId);
-	}
-}
-
-void BaseUnitComponent::Attack()
-{
-	if (!m_pAttackTargetEntity && !m_pRandomAttackTarget) {
-		return;
-	}
-
-	//Get Target
-	IEntity* targetEntity = m_pAttackTargetEntity ? m_pAttackTargetEntity : m_pRandomAttackTarget;
-	f32 distanceToTarget = m_pEntity->GetWorldPos().GetDistance(targetEntity->GetWorldPos());
-	OwnerInfoComponent* ownerInfo = targetEntity->GetComponent<OwnerInfoComponent>();
-	if (targetEntity && distanceToTarget <= m_pAttackInfo.m_maxAttackDistance) {
-		m_pWeaponComponent->Fire(targetEntity->GetWorldPos());
-	}
-	else if (targetEntity == m_pRandomAttackTarget && distanceToTarget > m_pAttackInfo.m_maxAttackDistance || !ownerInfo) {
-		m_pRandomAttackTarget = nullptr;
-	}
-	if (targetEntity == m_pAttackTargetEntity && distanceToTarget > m_pAttackInfo.m_maxAttackDistance) {
-		MoveTo(m_pAttackTargetEntity->GetWorldPos());
-		CryLog("move to target!");
-	}
-}
-
-void BaseUnitComponent::UpdateLookAtPosition()
-{
-	if (m_pAttackTargetEntity || m_pRandomAttackTarget) {
-		//Get Target
-		IEntity* targetEntity = m_pAttackTargetEntity ? m_pAttackTargetEntity : m_pRandomAttackTarget;
-		if (!targetEntity) {
-			return;
-		}
-
-		Vec3 targetPos = targetEntity->GetWorldPos();
-		Vec3 currentPos = m_pEntity->GetWorldPos();
-		Vec3 dir = targetPos - currentPos;
-		Vec3 forwardCross = m_pEntity->GetForwardDir().cross(dir.normalized());
-		Vec3 rightCross = m_pEntity->GetRightDir().cross(dir.normalized());
-
-		//Look Up/Down
-		int32 uInv = 1;
-		f32 diff = 0.0f;
-		if (targetPos.x > currentPos.x + 2 || targetPos.x < currentPos.x - 2) {
-			if (targetPos.x > currentPos.x) {
-				uInv = -1;
-			}
-			else {
-				diff *= -1;
-			}
-			m_pAnimationComponent->SetMotionParameter(EMotionParamID::eMotionParamID_TurnAngle, (rightCross.x + (diff * 2)) * uInv);
-		}
-		else {
-			if (targetPos.y < currentPos.y) {
-				uInv = -1;
-			}
-			m_pAnimationComponent->SetMotionParameter(EMotionParamID::eMotionParamID_TurnAngle, (forwardCross.x - diff) * uInv);
-		}
-
-		//Look Left/Right
-		//m_pAnimationComponent->SetMotionParameter(EMotionParamID::eMotionParamID_BlendWeight, forwardCross.z);
-		m_pAIController->LookAt(targetEntity->GetWorldPos());
-	}
-	else if (!m_pAttackTargetEntity && !m_pRandomAttackTarget) {
-		m_pAIController->LookAtWalkDirection();
 	}
 }
 
@@ -203,20 +142,77 @@ void BaseUnitComponent::UpdateLookAtPosition()
 																	ACTIONS
 ==============================================================================================================================================*/
 
+void BaseUnitComponent::Attack(IEntity* target)
+{
+	if (!target) {
+		return;
+	}
+
+	m_pAIController->LookAt(target->GetWorldPos());
+	if (m_pWeaponComponent) {
+		m_pWeaponComponent->Fire(target->GetWorldPos());
+	}
+}
+
+void BaseUnitComponent::LookAt(Vec3 position)
+{
+	Vec3 targetPos = position;
+	Vec3 currentPos = m_pEntity->GetWorldPos();
+	Vec3 dir = targetPos - currentPos;
+	Vec3 forwardCross = m_pEntity->GetForwardDir().cross(dir.normalized());
+	Vec3 rightCross = m_pEntity->GetRightDir().cross(dir.normalized());
+
+	//Look Up/Down
+	int32 uInv = 1;
+	f32 diff = 0.0f;
+	if (targetPos.x > currentPos.x + 2 || targetPos.x < currentPos.x - 2) {
+		if (targetPos.x > currentPos.x) {
+			uInv = -1;
+		}
+		else {
+			diff *= -1;
+		}
+		m_pAnimationComponent->SetMotionParameter(EMotionParamID::eMotionParamID_TurnAngle, (rightCross.x + (diff * 2)) * uInv);
+	}
+	else {
+		if (targetPos.y < currentPos.y) {
+			uInv = -1;
+		}
+		m_pAnimationComponent->SetMotionParameter(EMotionParamID::eMotionParamID_TurnAngle, (forwardCross.x - diff) * uInv);
+	}
+
+	//Look Left/Right
+	//m_pAnimationComponent->SetMotionParameter(EMotionParamID::eMotionParamID_BlendWeight, forwardCross.z);
+	m_pAIController->LookAt(position);
+
+}
+
+void BaseUnitComponent::AttackRandomTarget()
+{
+	if (!m_pRandomAttackTarget || m_pAttackTargetEntity) {
+		return;
+	}
+
+	f32 distanceToTarget = m_pEntity->GetWorldPos().GetDistance(m_pRandomAttackTarget->GetWorldPos());
+	if (distanceToTarget < m_pAttackInfo.m_maxAttackDistance) {
+		Attack(m_pRandomAttackTarget);
+	}
+	else {
+		m_pRandomAttackTarget = nullptr;
+	}
+}
+
 void BaseUnitComponent::MoveTo(Vec3 position)
 {
 	m_pAIController->MoveTo(position);
+	if (!m_pRandomAttackTarget && !m_pAttackTargetEntity) {
+		m_pAIController->LookAtWalkDirection();
+	}
 }
 
 void BaseUnitComponent::StopMoving()
 {
 	m_pAIController->StopMoving();
-}
-
-void BaseUnitComponent::SetTargetEntity(IEntity* target)
-{
-	this->m_pRandomAttackTarget = nullptr;
-	this->m_pAttackTargetEntity = target;
 }
 
 void BaseUnitComponent::FindRandomTarget()
@@ -241,6 +237,12 @@ void BaseUnitComponent::FindRandomTarget()
 			m_pRandomAttackTarget = entity;
 		}
 	}
+}
+
+void BaseUnitComponent::SetTargetEntity(IEntity* target)
+{
+	this->m_pRandomAttackTarget = nullptr;
+	this->m_pAttackTargetEntity = target;
 }
 
 SUnitAttackInfo BaseUnitComponent::GetAttackInfo()

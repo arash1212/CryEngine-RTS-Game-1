@@ -36,6 +36,7 @@ private:
 
 private:
 	void Move(f32 DeltaTime);
+	Vec3 SnapToNavmesh(Vec3 point);
 
 public:
 	void MoveTo(Vec3 position);

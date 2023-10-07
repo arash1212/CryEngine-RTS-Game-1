@@ -2,6 +2,7 @@
 
 #include <DefaultComponents/Geometry/AdvancedAnimationComponent.h>
 #include <DefaultComponents/Geometry/AdvancedAnimationComponent.h>
+#include <DefaultComponents/Effects/ParticleComponent.h>
 
 class BaseWeaponComponent final : public IEntityComponent
 {
@@ -25,12 +26,26 @@ public:
 
 private:
 	//Cry::DefaultComponents::CAdvancedAnimationComponent* m_pAnimationComponent = nullptr;
+	//Cry::DefaultComponents::CParticleComponent* m_pMuzzleFlashParticleComponent = nullptr;
 	IEntityAudioComponent* m_pAudioComponent = nullptr;
 
+
+private:
+	//Muzzleflash
+	f32 m_timeBetweenMuzzleFlashDeActivation = 0.02f;
+	f32 m_MuzzleFlashDeActivationTimePassed = 0.f;
+	bool bCanChangeMuzzleFlash = false;
+
+
+
 protected:
+	//Weapon Attachment (used tp active specific weapon attachment on character)
 	IAttachment* m_pWeaponAttachment = nullptr;
 
-	//sounds
+	//MuzzleFlash
+	IAttachment* m_pMuzzleFlashAttachment1 = nullptr;
+
+	//Sounds
 	int32 m_currentShootSoundNumber = 0;
 	Schematyc::CArray<CryAudio::ControlId> m_shootSounds;
 
@@ -38,19 +53,23 @@ protected:
 	IEntity* Raycast(Vec3 to);
 	void SpawnProjectile(Vec3 pos);
 
-	int32 m_maxShotCount = 10;
-	int32 m_shotCount = 0;
 
-	//Timers
+	//Shot Timers/Info
 	f32 m_timeBetweenShots = 0.04f;
 	f32 m_shotTimePassed = 0.f;
 	f32 m_timeBetweenShotCountReset = 0.9f;
 	f32 m_shotCountResetTimePassed = 0.f;
+	int32 m_maxShotCount = 10;
+	int32 m_shotCount = 0;
+
+private:
+	void UpdateMuzzleFlashes();
 
 public:
 	void Fire(Vec3 pos);
 	void Draw();
 	void PutAway();
+	Vec3 GetMuzzlePosition();
 	
 	CryAudio::ControlId GetRandomShootSound();
 	string GetAttachmentName();
