@@ -82,6 +82,7 @@ DynArray<IEntity*> SelectionBoxComponent::GetEntitiesInsideBox(Vec2 lastPoint)
 	while (!entityPtr->IsEnd())
 	{
 		IEntity* entity = entityPtr->Next();
+
 		AABB aabb;
 		entity->GetWorldBounds(aabb);
 
@@ -100,7 +101,8 @@ DynArray<IEntity*> SelectionBoxComponent::GetEntitiesInsideBox(Vec2 lastPoint)
 		m_pCameraComponent->GetCamera().Project(min, minScreenPos);
 		m_pCameraComponent->GetCamera().Project(max, maxScreenPos);
 
-		if (centerScreenPos.x >= minX && centerScreenPos.x <= maxX && centerScreenPos.y >= minY && centerScreenPos.y <= maxY ||
+		if (
+			centerScreenPos.x >= minX && centerScreenPos.x <= maxX && centerScreenPos.y >= minY && centerScreenPos.y <= maxY ||
 			minScreenPos.x >= minX && minScreenPos.x <= maxX && minScreenPos.y >= minY && minScreenPos.y <= maxY ||
 			maxScreenPos.x >= minX && maxScreenPos.x <= maxX && maxScreenPos.y >= minY && maxScreenPos.y <= maxY ||
 			minScreenPos.x + entityWidth >= minX && minScreenPos.x + entityWidth <= maxX && minScreenPos.y + entityHeight >= minY && minScreenPos.y + entityHeight <= maxY) {

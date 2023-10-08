@@ -44,10 +44,16 @@ private:
 	f32 m_cameraMaxZoomAmount = PLAYER_CAMERA_MAX_ZOOM_AMOUNT;
 	f32 m_currentZoomAmount = 0;
 	f32 m_defaultPosZ = 0;
-	f32 m_movementSpeed = 2.f;
+	f32 m_movementSpeed = 620.f;
 	Vec3 m_movementOffset = ZERO;
 
 	DynArray<IEntity*> m_selectedUnits;
+
+
+	//Right click count
+	int32 m_rightClickCount = 0;
+	f32 m_timeBetweenRightClickCountRestart = 0.3f;
+	f32 m_rightClickCountRestartTimePassed = 0.0f;
 
 private:
 	void InitInputs();

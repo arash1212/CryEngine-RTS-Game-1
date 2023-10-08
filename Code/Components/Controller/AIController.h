@@ -49,4 +49,5 @@ public:
 	f32 AngleTo(Vec3 position);
 
 	Vec3 GetVelocity();
+	Cry::DefaultComponents::CCharacterControllerComponent* GetCharacterController();
 };

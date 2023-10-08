@@ -16,7 +16,7 @@ void AttackAction::Execute()
 	f32 distanceToTarget = m_pEntity->GetWorldPos().GetDistance(m_pTarget->GetWorldPos());
 	if (distanceToTarget > unit->GetAttackInfo().m_maxAttackDistance) {
 		unit->SetTargetEntity(m_pTarget);
-		unit->MoveTo(m_pTarget->GetWorldPos());
+		unit->MoveTo(m_pTarget->GetWorldPos(), false);
 	}
 	else {
 		unit->Attack(m_pTarget);
@@ -29,7 +29,7 @@ void AttackAction::Cancel()
 	BaseUnitComponent* unit = m_pEntity->GetComponent<BaseUnitComponent>();
 	if (unit) {
 		unit->SetTargetEntity(nullptr);
-		unit->MoveTo(m_pEntity->GetWorldPos());
+		unit->MoveTo(m_pEntity->GetWorldPos(), false);
 	}
 }
 

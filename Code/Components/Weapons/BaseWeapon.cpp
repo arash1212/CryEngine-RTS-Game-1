@@ -44,8 +44,8 @@ void BaseWeaponComponent::Initialize()
 	m_pWeaponAttachment = m_pEntity->GetComponent<Cry::DefaultComponents::CAdvancedAnimationComponent>()->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName(GetAttachmentName());
 
 	//MuzzleFlash Attachment Initializations
-	m_pMuzzleFlashAttachment1 = m_pWeaponAttachment->GetIAttachmentObject()->GetICharacterInstance()->GetIAttachmentManager()->GetInterfaceByName("MuzzleFlash1");
-	m_pMuzzleFlashAttachment1->HideAttachment(false);
+	//m_pMuzzleFlashAttachment1 = m_pWeaponAttachment->GetIAttachmentObject()->GetICharacterInstance()->GetIAttachmentManager()->GetInterfaceByName("MuzzleFlash1");
+	//m_pMuzzleFlashAttachment1->HideAttachment(true);
 
 	//AudioComponent Initialization
 	m_pAudioComponent = m_pEntity->GetOrCreateComponent<IEntityAudioComponent>();
@@ -59,14 +59,6 @@ void BaseWeaponComponent::Initialize()
 	m_shootSounds.Insert(5, CryAudio::StringToId("ak-47-shoot-sound-5"));
 	m_shootSounds.Insert(6, CryAudio::StringToId("ak-47-shoot-sound-6"));
 	m_shootSounds.Insert(6, CryAudio::StringToId("ak-47-shoot-sound-7"));
-
-	/*
-	//MuzzleFlashParticleComponent Initialization
-	m_pMuzzleFlashParticleComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CParticleComponent>();
-	m_pMuzzleFlashParticleComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), Quat::CreateRotationZ(90), Vec3(0)));
-	m_pMuzzleFlashParticleComponent->SetEffectName("Objects/effects/muzzleflash1/muzzleflash_1_particle.pfx");
-	m_pMuzzleFlashParticleComponent->Activate(true);
-	*/
 }
 
 Cry::Entity::EventFlags BaseWeaponComponent::GetEventMask() const
@@ -137,6 +129,11 @@ IEntity* BaseWeaponComponent::Raycast(Vec3 to)
 
 void BaseWeaponComponent::SpawnProjectile(Vec3 pos)
 {
+	if (!m_pWeaponAttachment) {
+		CryLog("BaseWeaponComponent : (SpawnProjectile) m_pWeaponAttachment is null !.");
+		return;
+	}
+
 	Vec3 origin = m_pWeaponAttachment->GetAttWorldAbsolute().t;
 	Vec3 dir = pos - origin;
 
@@ -209,6 +206,10 @@ CryAudio::ControlId BaseWeaponComponent::GetRandomShootSound()
 
 void BaseWeaponComponent::UpdateMuzzleFlashes()
 {
+	if (!m_pMuzzleFlashAttachment1) {
+		return;
+	}
+
 	if (m_MuzzleFlashDeActivationTimePassed >= m_timeBetweenMuzzleFlashDeActivation) {
 		m_pMuzzleFlashAttachment1->HideAttachment(true);
 		bCanChangeMuzzleFlash = true;

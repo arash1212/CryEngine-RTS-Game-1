@@ -26,7 +26,6 @@ public:
 
 private:
 	//Cry::DefaultComponents::CAdvancedAnimationComponent* m_pAnimationComponent = nullptr;
-	//Cry::DefaultComponents::CParticleComponent* m_pMuzzleFlashParticleComponent = nullptr;
 	IEntityAudioComponent* m_pAudioComponent = nullptr;
 
 

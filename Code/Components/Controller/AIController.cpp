@@ -7,6 +7,8 @@
 #include <CryAISystem/INavigationSystem.h>
 #include <CryAISystem/NavigationSystem/INavMeshQueryFilter.h>
 
+#include <Components/Managers/UnitStateManager.h>
+
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
 #include <CrySchematyc/Env/IEnvRegistrar.h>
@@ -36,8 +38,8 @@ void AIControllerComponent::Initialize()
 	m_pNavigationComponent->SetNavigationAgentType("MediumSizedCharacters");
 	//MovementProperties
 	IEntityNavigationComponent::SMovementProperties m_movementProps;
-	m_movementProps.normalSpeed = 6.f;
-	m_movementProps.minSpeed = 5.5;
+	m_movementProps.normalSpeed = 4.f;
+	m_movementProps.minSpeed = 3.5;
 	m_movementProps.maxSpeed = 7;
 	m_movementProps.lookAheadDistance = 0.5f;
 	m_pNavigationComponent->SetMovementProperties(m_movementProps);
@@ -82,6 +84,10 @@ void AIControllerComponent::ProcessEvent(const SEntityEvent& event)
 
 void AIControllerComponent::Move(f32 DeltaTime)
 {
+	if (!m_pEntity->GetComponent<UnitStateManagerComponent>()) {
+		CryLog("AIControllerComponent : (Move) UnitStateManagerComponent does not exist on entity !");
+		return;
+	}
 	if (m_moveToPosition == ZERO) {
 		return;
 	}
@@ -89,7 +95,11 @@ void AIControllerComponent::Move(f32 DeltaTime)
 	m_pNavigationComponent->NavigateTo(m_moveToPosition);
 	Vec3 velocity = m_pNavigationComponent->GetRequestedVelocity();
 
-	m_pCharacterControllerComponent->SetVelocity(velocity);
+	f32 Speed = 1;
+	if (m_pEntity->GetComponent<UnitStateManagerComponent>()->GetState() == EUnitState::RUN) {
+		Speed = 2;
+	}
+	m_pCharacterControllerComponent->SetVelocity(velocity * Speed);
 }
 
 void AIControllerComponent::MoveTo(Vec3 position)
@@ -147,6 +157,11 @@ f32 AIControllerComponent::AngleTo(Vec3 position)
 Vec3 AIControllerComponent::GetVelocity()
 {
 	return m_pCharacterControllerComponent->GetVelocity();
+}
+
+Cry::DefaultComponents::CCharacterControllerComponent* AIControllerComponent::GetCharacterController()
+{
+	return m_pCharacterControllerComponent;
 }
 
 Vec3 AIControllerComponent::SnapToNavmesh(Vec3 point)

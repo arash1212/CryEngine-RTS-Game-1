@@ -69,6 +69,14 @@ void PlayerComponent::ProcessEvent(const SEntityEvent& event)
 		Move(DeltaTime);
 
 		MouseUtils::GetPositionUnderCursor();
+
+		if (m_rightClickCountRestartTimePassed < m_timeBetweenRightClickCountRestart) {
+			m_rightClickCountRestartTimePassed += 0.5f * DeltaTime;
+		}
+		else {
+			m_rightClickCount = 0;
+		}
+
 	}break;
 	case Cry::Entity::EEvent::Reset: {
 
@@ -133,22 +141,22 @@ void PlayerComponent::InitInputs()
 
 void PlayerComponent::MoveForward(int activationMode, float value)
 {
-	m_movementOffset.y = value * m_movementSpeed;
+	m_movementOffset.y = value * m_movementSpeed * gEnv->pTimer->GetFrameTime();
 }
 
 void PlayerComponent::MoveBackward(int activationMode, float value)
 {
-	m_movementOffset.y = -value * m_movementSpeed;
+	m_movementOffset.y = -value * m_movementSpeed * gEnv->pTimer->GetFrameTime();
 }
 
 void PlayerComponent::MoveRight(int activationMode, float value)
 {
-	m_movementOffset.x = value * m_movementSpeed;
+	m_movementOffset.x = value * m_movementSpeed * gEnv->pTimer->GetFrameTime();
 }
 
 void PlayerComponent::MoveLeft(int activationMode, float value)
 {
-	m_movementOffset.x = -value * m_movementSpeed;
+	m_movementOffset.x = -value * m_movementSpeed * gEnv->pTimer->GetFrameTime();
 }
 
 void PlayerComponent::MouseWheelUp(int activationMode, float value)
@@ -181,12 +189,16 @@ void PlayerComponent::RightMouseDown(int activationMode, float value)
 	Vec3 mousePos = MouseUtils::GetPositionUnderCursor();
 
 	if (activationMode == eAAM_OnRelease) {
+		m_rightClickCount++;
+		m_rightClickCountRestartTimePassed = 0;
+
 		//TODO : update beshe
 		IEntity* entity = MouseUtils::GeetActorUnderCursor();
 		if (entity) {
 			SetUnitsAttackTarget(entity);
 		}
 		else {
+
 			CommandUnitsToMove(mousePos);
 		}
 	}
@@ -235,7 +247,7 @@ void PlayerComponent::CommandUnitsToMove(Vec3 position)
 
 			ActionManagerComponent* actionManager = entity->GetComponent<ActionManagerComponent>();
 			if (actionManager) {
-				actionManager->AddAction(new MoveAction(entity, position));
+				actionManager->AddAction(new MoveAction(entity, position, m_rightClickCount >= 2));
 			}
 		}
 		else {

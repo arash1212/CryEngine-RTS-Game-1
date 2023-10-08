@@ -5,6 +5,7 @@
 #include <Components/Selectables/Selectable.h>
 #include <Components/Controller/AIController.h>
 #include <Components/Action/ActionManager.h>
+#include <Components/Managers/UnitStateManager.h>
 
 #include <CryAnimation/ICryAnimation.h>
 #include <Components/Weapons/BaseWeapon.h>
@@ -33,7 +34,7 @@ void BaseUnitComponent::Initialize()
 {
 	//AnimationComponent Initializations
 	m_pAnimationComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CAdvancedAnimationComponent>();
-	m_pAnimationComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), Quat::CreateRotationXYZ(Ang3(DEG2RAD(90), 0, DEG2RAD(180))), Vec3(0)));
+	m_pAnimationComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), Quat::CreateRotationXYZ(Ang3(DEG2RAD(90), 0, DEG2RAD(-90))), Vec3(0)));
 	m_pAnimationComponent->SetCharacterFile("Objects/Characters/units/soldier1/soldier_1.cdf");
 	m_pAnimationComponent->SetMannequinAnimationDatabaseFile("Animations/Mannequin/ADB/soldier1.adb");
 	m_pAnimationComponent->SetControllerDefinitionFile("Animations/Mannequin/ADB/FirstPersonControllerDefinition.xml");
@@ -48,6 +49,7 @@ void BaseUnitComponent::Initialize()
 	//Animations
 	m_idleFragmentId = m_pAnimationComponent->GetFragmentId("Idle");
 	m_runFragmentId = m_pAnimationComponent->GetFragmentId("Run");
+	m_walkFragmentId = m_pAnimationComponent->GetFragmentId("Walk");
 
 	//AnimationComponent Initializations
 	m_pSelectableComponent = m_pEntity->GetOrCreateComponent<SelectableComponent>();
@@ -65,6 +67,11 @@ void BaseUnitComponent::Initialize()
 	//OwnerComponent Initialization
 	m_pOwnerInfoComponent = m_pEntity->GetOrCreateComponent<OwnerInfoComponent>();
 	m_pOwnerInfoComponent->SetTeam(EPlayerTeam::TEAM6);
+
+	//StateManagerComponent Initialization
+	m_pStateManagerComponent = m_pEntity->GetOrCreateComponent<UnitStateManagerComponent>();
+	m_pStateManagerComponent->SetWalkSpeed(m_walkSpeed);
+	m_pStateManagerComponent->SetRunSpeed(m_runSpeed);
 }
 
 
@@ -81,7 +88,7 @@ void BaseUnitComponent::ProcessEvent(const SEntityEvent& event)
 	switch (event.event)
 	{
 	case Cry::Entity::EEvent::GameplayStarted: {
-
+		m_pStateManagerComponent->SetCharacterController(m_pAIController->GetCharacterController());
 
 	}break;
 	case Cry::Entity::EEvent::Update: {
@@ -111,24 +118,34 @@ void BaseUnitComponent::ProcessEvent(const SEntityEvent& event)
 
 void BaseUnitComponent::UpdateAnimations()
 {
+	if (!m_pStateManagerComponent) {
+		return;
+	}
+
+	/////////////////////////////////////////
+	m_pAnimationComponent->SetMotionParameter(EMotionParamID::eMotionParamID_TravelSpeed, 3);
+
+	//Run/Walk BlendSpaces
+	Vec3 forwardVector = m_pEntity->GetForwardDir().normalized();
+	Vec3 rightVector = m_pEntity->GetRightDir().normalized();
+	Vec3 velocity = m_pAIController->GetVelocity().normalized();
+
+	float forwardDot = velocity.dot(forwardVector);
+	float rightDot = velocity.dot(rightVector);
+
+	int32 inv = rightDot < 0 ? 1 : -1;
+	m_pAnimationComponent->SetMotionParameter(EMotionParamID::eMotionParamID_TravelAngle, crymath::acos(forwardDot) * inv);
+	/////////////////////////////////////////
+
 	//Update Animation
 	FragmentID currentFragmentId;
-	if (!m_pAIController->IsMoving()) {
+	if (m_pStateManagerComponent->GetState() == EUnitState::IDLE) {
 		currentFragmentId = m_idleFragmentId;
 	}
-	else if (m_pAIController->IsMoving()) {
-		m_pAnimationComponent->SetMotionParameter(EMotionParamID::eMotionParamID_TravelSpeed, 3);
-
-		//Run/Walk BlendSpaces
-		Vec3 forwardVector = m_pEntity->GetForwardDir().normalized();
-		Vec3 rightVector = m_pEntity->GetRightDir().normalized();
-		Vec3 velocity = m_pAIController->GetVelocity().normalized();
-
-		float forwardDot = velocity.dot(forwardVector);
-		float rightDot = velocity.dot(rightVector);
-
-		int32 inv = rightDot < 0 ? 1 : -1;
-		m_pAnimationComponent->SetMotionParameter(EMotionParamID::eMotionParamID_TravelAngle, crymath::acos(forwardDot) * inv);
+	else if (m_pStateManagerComponent->GetState() == EUnitState::WALK) {
+		currentFragmentId = m_walkFragmentId;
+	}
+	else if (m_pStateManagerComponent->GetState() == EUnitState::RUN) {
 		currentFragmentId = m_runFragmentId;
 	}
 
@@ -189,7 +206,7 @@ void BaseUnitComponent::LookAt(Vec3 position)
 
 void BaseUnitComponent::AttackRandomTarget()
 {
-	if (!m_pRandomAttackTarget || m_pAttackTargetEntity) {
+	if (!m_pRandomAttackTarget || m_pAttackTargetEntity || IsRunning()) {
 		return;
 	}
 
@@ -202,8 +219,16 @@ void BaseUnitComponent::AttackRandomTarget()
 	}
 }
 
-void BaseUnitComponent::MoveTo(Vec3 position)
+void BaseUnitComponent::MoveTo(Vec3 position, bool run)
 {
+	if (run) {
+		m_currentSpeed = m_runSpeed;
+		CryLog("run");
+	}
+	else {
+		m_currentSpeed = m_walkSpeed;
+	}
+
 	m_pAIController->MoveTo(position);
 	if (!m_pRandomAttackTarget && !m_pAttackTargetEntity) {
 		m_pAIController->LookAtWalkDirection();
@@ -248,4 +273,14 @@ void BaseUnitComponent::SetTargetEntity(IEntity* target)
 SUnitAttackInfo BaseUnitComponent::GetAttackInfo()
 {
 	return m_pAttackInfo;
+}
+
+f32 BaseUnitComponent::GetCurrentSpeed()
+{
+	return m_currentSpeed;
+}
+
+bool BaseUnitComponent::IsRunning()
+{
+	return m_currentSpeed == m_runSpeed;
 }

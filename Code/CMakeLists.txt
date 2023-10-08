@@ -30,7 +30,9 @@ add_sources("Actions_uber.cpp"
 add_sources("Units_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "Actions\\\\Units"
+		"Actions/Units/AttackAction.cpp"
 		"Actions/Units/MoveAction.cpp"
+		"Actions/Units/AttackAction.h"
 		"Actions/Units/MoveAction.h"
 )
 add_sources("Components_uber.cpp"
@@ -62,6 +64,12 @@ add_sources("Info_uber.cpp"
     SOURCE_GROUP "Components\\\\Info"
 		"Components/Info/OwnerInfo.cpp"
 		"Components/Info/OwnerInfo.h"
+)
+add_sources("Managers_uber.cpp"
+    PROJECTS Game
+    SOURCE_GROUP "Components\\\\Managers"
+		"Components/Managers/UnitStateManager.cpp"
+		"Components/Managers/UnitStateManager.h"
 )
 add_sources("Player_uber.cpp"
     PROJECTS Game

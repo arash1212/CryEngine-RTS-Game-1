@@ -4,17 +4,18 @@
 
 #include <Components/Selectables/Units/BaseUnit.h>
 
-MoveAction::MoveAction(IEntity* entity, Vec3 movePosition)
+MoveAction::MoveAction(IEntity* entity, Vec3 movePosition, bool run)
 {
 	this->m_pEntity = entity;
 	this->m_movePosition = movePosition;
+	this->bRun = run;
 }
 
 void MoveAction::Execute()
 {
 	BaseUnitComponent* unit = m_pEntity->GetComponent<BaseUnitComponent>();
 	if (unit) {
-		unit->MoveTo(m_movePosition);
+		unit->MoveTo(m_movePosition, bRun);
 	}
 }
 
