@@ -24,10 +24,14 @@ void MoveAction::Cancel()
 	BaseUnitComponent* unit = m_pEntity->GetComponent<BaseUnitComponent>();
 	if (unit) {
 		unit->StopMoving();
+		bIsDone = true;
 	}
 }
 
 bool MoveAction::IsDone()
 {
-	return m_pEntity->GetWorldPos().GetDistance(m_movePosition) <= 1;
+	if (!bIsDone) {
+		bIsDone = m_pEntity->GetWorldPos().GetDistance(m_movePosition) <= 1;
+	}
+	return bIsDone;
 }

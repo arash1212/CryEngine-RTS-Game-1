@@ -30,10 +30,11 @@ void AttackAction::Cancel()
 	if (unit) {
 		unit->SetTargetEntity(nullptr);
 		unit->MoveTo(m_pEntity->GetWorldPos(), false);
+		bIsDone = true;
 	}
 }
 
 bool AttackAction::IsDone()
 {
-	return false;
+	return bIsDone;
 }

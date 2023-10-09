@@ -2,6 +2,9 @@
 #include "Selectable.h"
 #include "GamePlugin.h"
 
+#include <UIItems/IBaseUIItem.h>
+#include <UIItems/Items/UICancelItem.h>
+
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
 #include <CrySchematyc/Env/IEnvRegistrar.h>
@@ -28,7 +31,10 @@ void SelectableComponent::Initialize()
 	m_pSelectionDecalComponent->SetMaterialFileName("Materials/decals/selection/selectionbox_decal_material_1.mtl");
 	m_pSelectionDecalComponent->Spawn();
 
-	m_pRenderNode = m_pEntity->GetRenderNode();;
+	m_pRenderNode = m_pEntity->GetRenderNode();
+
+	//UIItems
+	m_pAllUIItems.push_back(new UICancelItem(m_pEntity));
 }
 
 Cry::Entity::EventFlags SelectableComponent::GetEventMask() const
@@ -77,4 +83,9 @@ void SelectableComponent::DeSelect()
 bool SelectableComponent::IsSelected()
 {
 	return bIsSelected;
+}
+
+DynArray<IBaseUIItem*> SelectableComponent::GetUIItems()
+{
+	return m_pAllUIItems;
 }

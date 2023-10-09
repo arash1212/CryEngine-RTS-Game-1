@@ -44,8 +44,8 @@ void BaseWeaponComponent::Initialize()
 	m_pWeaponAttachment = m_pEntity->GetComponent<Cry::DefaultComponents::CAdvancedAnimationComponent>()->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName(GetAttachmentName());
 
 	//MuzzleFlash Attachment Initializations
-	//m_pMuzzleFlashAttachment1 = m_pWeaponAttachment->GetIAttachmentObject()->GetICharacterInstance()->GetIAttachmentManager()->GetInterfaceByName("MuzzleFlash1");
-	//m_pMuzzleFlashAttachment1->HideAttachment(true);
+	m_pMuzzleFlashAttachment1 = m_pWeaponAttachment->GetIAttachmentObject()->GetICharacterInstance()->GetIAttachmentManager()->GetInterfaceByName("MuzzleFlash1");
+	m_pMuzzleFlashAttachment1->HideAttachment(true);
 
 	//AudioComponent Initialization
 	m_pAudioComponent = m_pEntity->GetOrCreateComponent<IEntityAudioComponent>();

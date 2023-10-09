@@ -87,3 +87,12 @@ void ActionManagerComponent::AddAction(IBaseAction* action)
 	m_actionsQueue.clear();
 	m_actionsQueue.push_back(action);
 }
+
+void ActionManagerComponent::CancelCurrentAction()
+{
+	if (!m_pCurrentAction) {
+		return;
+	}
+	this->m_pCurrentAction->Cancel();
+	//this->m_actionsQueue.clear();
+}

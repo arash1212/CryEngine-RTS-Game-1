@@ -5,6 +5,8 @@
 #include "FlashUI/FlashUI.h"
 #include "FlashUI/FlashUIElement.h"
 
+#include <Components/UI/Listener/UIElementEventListener.h>
+
 #include <CryRenderer/IRenderer.h>
 #include <CryEntitySystem/IEntitySystem.h>
 #include <CryRenderer/IRenderAuxGeom.h>
@@ -122,4 +124,9 @@ void SelectionBoxComponent::SetBoxInitPosition(Vec2 initPoint)
 void SelectionBoxComponent::SetCameraComponent(Cry::DefaultComponents::CCameraComponent* cameraComponent)
 {
 	this->m_pCameraComponent = cameraComponent;
+}
+
+void SelectionBoxComponent::SetEventListener(IUIElementEventListener* eventListener)
+{
+	this->m_pSelectionBoxUIElement->AddEventListener(eventListener,"selection-box-event-listener");
 }

@@ -59,7 +59,7 @@ void UnitStateManagerComponent::ProcessEvent(const SEntityEvent& event)
 void UnitStateManagerComponent::UpdateState()
 {
 	if (!m_pCharacterControllerComponent) {
-		CryLog("%s UnitStateManagerComponent : (UpdateState) characterControllerComponent is null", m_pEntity->GetName());
+		//CryLog("%s UnitStateManagerComponent : (UpdateState) characterControllerComponent is null", m_pEntity->GetName());
 		return;
 	}
 

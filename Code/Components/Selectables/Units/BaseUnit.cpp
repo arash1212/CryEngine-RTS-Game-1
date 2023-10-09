@@ -219,11 +219,15 @@ void BaseUnitComponent::AttackRandomTarget()
 	}
 }
 
+void BaseUnitComponent::Stop()
+{
+	this->StopMoving();
+}
+
 void BaseUnitComponent::MoveTo(Vec3 position, bool run)
 {
 	if (run) {
 		m_currentSpeed = m_runSpeed;
-		CryLog("run");
 	}
 	else {
 		m_currentSpeed = m_walkSpeed;

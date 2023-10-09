@@ -4,6 +4,8 @@
 #include <DefaultComponents/Input/InputComponent.h>
 
 class SelectionBoxComponent;
+class ActionbarComponent;
+class UIElementEventListener;
 
 static const f32 PLAYER_CAMERA_DEFAULT_HEIGHT = 10.f;
 static const f32 PLAYER_CAMERA_DEFAULT_MOVE_SPEED = 6.5f;
@@ -37,6 +39,10 @@ private:
 	Cry::DefaultComponents::CInputComponent* m_pInputComponent = nullptr;
 	
 	SelectionBoxComponent* m_pSelectionBoxComponent;
+	ActionbarComponent* m_pActionbarComponent;
+
+	//UI
+	UIElementEventListener* m_pUIElementEventListener = nullptr;
 
 private:
 	f32 m_cameraDefaultHeight = PLAYER_CAMERA_DEFAULT_HEIGHT;
@@ -76,4 +82,10 @@ private:
 	//Commands
 	void CommandUnitsToMove(Vec3 position);
 	void SetUnitsAttackTarget(IEntity* target); 
+
+	//Action bar
+	void AddUIItemsToActionbar();
+
+public:
+	void ExecuteActionbarItem(int32 index);
 };

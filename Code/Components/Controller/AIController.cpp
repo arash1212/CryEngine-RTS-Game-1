@@ -127,7 +127,7 @@ void AIControllerComponent::SetMoveSpeed(f32 speed)
 
 void AIControllerComponent::StopMoving()
 {
-	this->m_pNavigationComponent->NavigateTo(m_pEntity->GetWorldPos());
+	this->MoveTo(m_pEntity->GetWorldPos());
 }
 
 void AIControllerComponent::LookAt(Vec3 position)

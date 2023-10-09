@@ -92,14 +92,33 @@ add_sources("Units_uber.cpp"
 add_sources("UI_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "Components\\\\UI"
+		"Components/UI/Actionbar.cpp"
 		"Components/UI/SelectionBox.cpp"
+		"Components/UI/Actionbar.h"
 		"Components/UI/SelectionBox.h"
+)
+add_sources("Listener_uber.cpp"
+    PROJECTS Game
+    SOURCE_GROUP "Components\\\\UI\\\\Listener"
+		"Components/UI/Listener/UIElementEventListener.cpp"
+		"Components/UI/Listener/UIElementEventListener.h"
 )
 add_sources("Weapons_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "Components\\\\Weapons"
 		"Components/Weapons/BaseWeapon.cpp"
 		"Components/Weapons/BaseWeapon.h"
+)
+add_sources("UIItems_uber.cpp"
+    PROJECTS Game
+    SOURCE_GROUP "UIItems"
+		"UIItems/IBaseUIItem.h"
+)
+add_sources("Items_uber.cpp"
+    PROJECTS Game
+    SOURCE_GROUP "UIItems\\\\Items"
+		"UIItems/Items/UICancelItem.cpp"
+		"UIItems/Items/UICancelItem.h"
 )
 add_sources("Utils_uber.cpp"
     PROJECTS Game

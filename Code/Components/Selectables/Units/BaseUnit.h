@@ -81,6 +81,7 @@ public:
 	virtual void AttackRandomTarget();
 
 	//Actions
+	void Stop();
 	void MoveTo(Vec3 position, bool run);
 	void StopMoving();
 	void FindRandomTarget();

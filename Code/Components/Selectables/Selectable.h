@@ -2,6 +2,8 @@
 
 #include "DefaultComponents/Effects/DecalComponent.h"
 
+class IBaseUIItem;
+
 class SelectableComponent final : public IEntityComponent
 {
 
@@ -32,9 +34,13 @@ private:
 	uint32  m_greenColor = (uint32)(int_round(0 * 255.0f) << 24) | (int_round(1 * 255.0f) << 16) | (int_round(0 * 255.0f) << 8) | (int_round(1 * 255.0f));
 	uint32  m_blackColor = 0;
 
+	//UI Actions
+	DynArray< IBaseUIItem*> m_pAllUIItems;
+
 public:
 	void Select();
 	void DeSelect();
 	bool IsSelected();
 
+	DynArray< IBaseUIItem*> GetUIItems();
 };

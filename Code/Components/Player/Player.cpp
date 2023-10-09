@@ -2,8 +2,11 @@
 #include "Player.h"
 #include "GamePlugin.h"
 
-
+#include <UIItems/IBaseUIItem.h>
 #include <Components/UI/SelectionBox.h>
+#include <Components/UI/Actionbar.h>
+#include <Components/UI/Listener/UIElementEventListener.h>
+
 #include <Utils\MouseUtils.h>
 #include <Components/Selectables/Selectable.h>
 #include <Components/Selectables/Units/BaseUnit.h>
@@ -42,9 +45,17 @@ void PlayerComponent::Initialize()
 
 	m_defaultPosZ = m_pEntity->GetPos().z;
 
+	//UIElementEventListener initialization
+	m_pUIElementEventListener = new UIElementEventListener(this);
+
 	//SelectionBox component initialization
 	m_pSelectionBoxComponent = m_pEntity->GetOrCreateComponent<SelectionBoxComponent>();
 	m_pSelectionBoxComponent->SetCameraComponent(m_pCameraComponent);
+	m_pSelectionBoxComponent->SetEventListener(m_pUIElementEventListener);
+
+	//Actionbar component initialization
+	m_pActionbarComponent = m_pEntity->GetOrCreateComponent<ActionbarComponent>();
+	m_pActionbarComponent->SetEventListener(m_pUIElementEventListener);
 
 }
 
@@ -177,10 +188,16 @@ void PlayerComponent::LeftMouseDown(int activationMode, float value)
 		m_pSelectionBoxComponent->SetBoxInitPosition(mousePos);
 	}
 
-	if (activationMode == eAAM_OnHold) {
+	if (activationMode == eAAM_OnRelease) {
+		if (m_pUIElementEventListener->IsMouseOverUI()) {
+			return;
+		}
+
 		DeselectUnits();
 		m_selectedUnits = m_pSelectionBoxComponent->GetEntitiesInsideBox(mousePos);
 		SelectUnits();
+
+		AddUIItemsToActionbar();
 	}
 }
 
@@ -267,6 +284,37 @@ void PlayerComponent::SetUnitsAttackTarget(IEntity* target)
 					actionManager->AddAction(new AttackAction(entity, target));
 				}
 			}
+		}
+		else {
+			continue;
+		}
+	}
+}
+
+void PlayerComponent::AddUIItemsToActionbar()
+{
+	m_pActionbarComponent->Clear();
+	for (IEntity* entity : m_selectedUnits) {
+		SelectableComponent* selectable = entity->GetComponent<SelectableComponent>();
+		if (selectable) {
+			selectable->Select();
+
+			for (IBaseUIItem* uiItem : selectable->GetUIItems()) {
+				m_pActionbarComponent->AddButton(uiItem->GetImagePath());
+			}
+		}
+		else {
+			continue;
+		}
+	}
+}
+
+void PlayerComponent::ExecuteActionbarItem(int32 index)
+{
+	for (IEntity* entity : m_selectedUnits) {
+		SelectableComponent* selectable = entity->GetComponent<SelectableComponent>();
+		if (selectable) {
+			selectable->GetUIItems()[index]->Execute();
 		}
 		else {
 			continue;
