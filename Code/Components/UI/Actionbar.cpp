@@ -33,8 +33,6 @@ void ActionbarComponent::Initialize()
 	m_pActionbarUIElement = gEnv->pFlashUI->GetUIElement("action-bar");
 	if (m_pActionbarUIElement) {
 		m_pActionbarUIElement->SetVisible(true);
-
-		this->AddButton("cancel.png");
 	}
 	else {
 		CryLog("ActionbarComponent : (Initialize) m_pActionbarUIElement is null !");
@@ -78,7 +76,6 @@ void ActionbarComponent::AddButton(string imagePath)
 	args.AddArgument(imagePath);
 
 	m_pActionbarUIElement->CallFunction("addButton", args);
-	CryLog("Button added");
 }
 
 void ActionbarComponent::Clear()

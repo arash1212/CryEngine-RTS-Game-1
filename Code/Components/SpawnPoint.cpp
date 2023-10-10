@@ -3,6 +3,8 @@
 #include "SpawnPoint.h"
 #include "Player/Player.h"
 
+#include <Components/Selectables/Units/Soldier1Unit.h>
+
 #include <CrySchematyc/Reflection/TypeDesc.h>
 #include <CrySchematyc/Utils/EnumFlags.h>
 #include <CrySchematyc/Env/IEnvRegistry.h>

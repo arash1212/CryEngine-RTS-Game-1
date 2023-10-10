@@ -4,6 +4,7 @@
 
 #include <UIItems/IBaseUIItem.h>
 #include <UIItems/Items/UICancelItem.h>
+#include <UIItems/Items/UIChangeStanceItem.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -35,6 +36,7 @@ void SelectableComponent::Initialize()
 
 	//UIItems
 	m_pAllUIItems.push_back(new UICancelItem(m_pEntity));
+	m_pAllUIItems.push_back(new UIChangeStanceItem(m_pEntity));
 }
 
 Cry::Entity::EventFlags SelectableComponent::GetEventMask() const

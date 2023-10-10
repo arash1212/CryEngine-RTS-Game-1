@@ -80,14 +80,16 @@ add_sources("Player_uber.cpp"
 add_sources("Selectables_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "Components\\\\Selectables"
+		"Components/Selectables/IUnit.cpp"
 		"Components/Selectables/Selectable.cpp"
+		"Components/Selectables/IUnit.h"
 		"Components/Selectables/Selectable.h"
 )
 add_sources("Units_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "Components\\\\Selectables\\\\Units"
-		"Components/Selectables/Units/BaseUnit.cpp"
-		"Components/Selectables/Units/BaseUnit.h"
+		"Components/Selectables/Units/Soldier1Unit.cpp"
+		"Components/Selectables/Units/Soldier1Unit.h"
 )
 add_sources("UI_uber.cpp"
     PROJECTS Game
@@ -118,7 +120,9 @@ add_sources("Items_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "UIItems\\\\Items"
 		"UIItems/Items/UICancelItem.cpp"
+		"UIItems/Items/UIChangeStanceItem.cpp"
 		"UIItems/Items/UICancelItem.h"
+		"UIItems/Items/UIChangeStanceItem.h"
 )
 add_sources("Utils_uber.cpp"
     PROJECTS Game

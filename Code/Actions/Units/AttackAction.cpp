@@ -2,7 +2,8 @@
 #include "AttackAction.h"
 #include "GamePlugin.h"
 
-#include <Components/Selectables/Units/BaseUnit.h>
+#include <Components/Selectables/IUnit.h>
+#include <Components/Selectables/Units/Soldier1Unit.h>
 
 AttackAction::AttackAction(IEntity* entity, IEntity* target)
 {
@@ -12,21 +13,23 @@ AttackAction::AttackAction(IEntity* entity, IEntity* target)
 
 void AttackAction::Execute()
 {
-	BaseUnitComponent* unit = m_pEntity->GetComponent<BaseUnitComponent>();
-	f32 distanceToTarget = m_pEntity->GetWorldPos().GetDistance(m_pTarget->GetWorldPos());
-	if (distanceToTarget > unit->GetAttackInfo().m_maxAttackDistance) {
-		unit->SetTargetEntity(m_pTarget);
-		unit->MoveTo(m_pTarget->GetWorldPos(), false);
-	}
-	else {
-		unit->Attack(m_pTarget);
-		unit->LookAt(m_pTarget->GetWorldPos());
+	IUnitComponent* unit = m_pEntity->GetComponent<Soldier1UnitComponent>();
+	if (unit) {
+		f32 distanceToTarget = m_pEntity->GetWorldPos().GetDistance(m_pTarget->GetWorldPos());
+		if (distanceToTarget > unit->GetAttackInfo().m_maxAttackDistance) {
+			unit->SetTargetEntity(m_pTarget);
+			unit->MoveTo(m_pTarget->GetWorldPos(), false);
+		}
+		else {
+			unit->Attack(m_pTarget);
+			unit->LookAt(m_pTarget->GetWorldPos());
+		}
 	}
 }
 
 void AttackAction::Cancel()
 {
-	BaseUnitComponent* unit = m_pEntity->GetComponent<BaseUnitComponent>();
+	Soldier1UnitComponent* unit = m_pEntity->GetComponent<Soldier1UnitComponent>();
 	if (unit) {
 		unit->SetTargetEntity(nullptr);
 		unit->MoveTo(m_pEntity->GetWorldPos(), false);

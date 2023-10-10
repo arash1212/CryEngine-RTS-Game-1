@@ -2,8 +2,6 @@
 #include "UnitStateManager.h"
 #include "GamePlugin.h"
 
-#include <Components/Selectables/Units/BaseUnit.h>
-
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
 #include <CrySchematyc/Env/IEnvRegistrar.h>
@@ -63,18 +61,13 @@ void UnitStateManagerComponent::UpdateState()
 		return;
 	}
 
-	BaseUnitComponent* unit = m_pEntity->GetComponent<BaseUnitComponent>();
-	if (!unit) {
-		return;
-	}
-
 	if (m_pCharacterControllerComponent->IsOnGround() && !m_pCharacterControllerComponent->IsWalking()) {
 		m_pUnitState = EUnitState::IDLE;
 	}
-	else if (m_pCharacterControllerComponent->IsOnGround() && m_pCharacterControllerComponent->IsWalking() && unit->GetCurrentSpeed() == m_walkSpeed) {
+	if (m_pCharacterControllerComponent->IsOnGround() && m_pCharacterControllerComponent->IsWalking() && m_currentSpeed == m_walkSpeed) {
 		m_pUnitState = EUnitState::WALK;
 	}
-	else if (m_pCharacterControllerComponent->IsOnGround() && m_pCharacterControllerComponent->IsWalking() && unit->GetCurrentSpeed() == m_runSpeed) {
+	if (m_pCharacterControllerComponent->IsOnGround() && m_pCharacterControllerComponent->IsWalking() && m_currentSpeed == m_runSpeed) {
 		m_pUnitState = EUnitState::RUN;
 	}
 }
@@ -82,6 +75,11 @@ void UnitStateManagerComponent::UpdateState()
 EUnitState UnitStateManagerComponent::GetState()
 {
 	return m_pUnitState;
+}
+
+EUnitStance UnitStateManagerComponent::GetStance()
+{
+	return m_pUnitStance;
 }
 
 void UnitStateManagerComponent::SetStance(EUnitStance stance)
@@ -99,7 +97,27 @@ void UnitStateManagerComponent::SetWalkSpeed(f32 walkSpeed)
 	this->m_walkSpeed = walkSpeed;
 }
 
+void UnitStateManagerComponent::SetCrouchSpeed(f32 crouchSpeed)
+{
+	this->m_crouchSpeed = crouchSpeed;
+}
+
 void UnitStateManagerComponent::SetRunSpeed(f32 runSpeed)
 {
 	this->m_runSpeed = runSpeed;
+}
+
+void UnitStateManagerComponent::SetProneSpeed(f32 proneSpeed)
+{
+	this->m_proneSpeed = proneSpeed;
+}
+
+void UnitStateManagerComponent::SetCurrentSpeed(f32 currentSpeed)
+{
+	this->m_currentSpeed = currentSpeed;
+}
+
+f32 UnitStateManagerComponent::GetCurrentSpeed()
+{
+	return this->m_currentSpeed;
 }

@@ -2,7 +2,6 @@
 #include "UICancelItem.h"
 #include "GamePlugin.h"
 
-#include <Components/Selectables/Units/BaseUnit.h>
 #include <Components/Action/ActionManager.h>
 
 UICancelItem::UICancelItem(IEntity* entity)

@@ -95,11 +95,8 @@ void AIControllerComponent::Move(f32 DeltaTime)
 	m_pNavigationComponent->NavigateTo(m_moveToPosition);
 	Vec3 velocity = m_pNavigationComponent->GetRequestedVelocity();
 
-	f32 Speed = 1;
-	if (m_pEntity->GetComponent<UnitStateManagerComponent>()->GetState() == EUnitState::RUN) {
-		Speed = 2;
-	}
-	m_pCharacterControllerComponent->SetVelocity(velocity * Speed);
+	UnitStateManagerComponent* stateManager = m_pEntity->GetComponent<UnitStateManagerComponent>();
+	m_pCharacterControllerComponent->SetVelocity(velocity * stateManager->GetCurrentSpeed());
 }
 
 void AIControllerComponent::MoveTo(Vec3 position)

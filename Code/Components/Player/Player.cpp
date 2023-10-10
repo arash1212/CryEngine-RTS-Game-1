@@ -9,7 +9,6 @@
 
 #include <Utils\MouseUtils.h>
 #include <Components/Selectables/Selectable.h>
-#include <Components/Selectables/Units/BaseUnit.h>
 
 #include <Components/Action/ActionManager.h>
 #include <Actions/Units/MoveAction.h>
@@ -90,6 +89,7 @@ void PlayerComponent::ProcessEvent(const SEntityEvent& event)
 
 	}break;
 	case Cry::Entity::EEvent::Reset: {
+		DeselectUnits();
 
 	}break;
 	default:
@@ -228,9 +228,8 @@ void PlayerComponent::RightMouseDown(int activationMode, float value)
 void PlayerComponent::DeselectUnits()
 {
 	for (IEntity* entity : m_selectedUnits) {
-		BaseUnitComponent* unit = entity->GetComponent<BaseUnitComponent>();
-		if (unit) {
-			SelectableComponent* selectable = entity->GetComponent<SelectableComponent>();
+		SelectableComponent* selectable = entity->GetComponent<SelectableComponent>();
+		if (selectable) {
 			selectable->DeSelect();
 		}
 		else {
@@ -244,9 +243,8 @@ void PlayerComponent::DeselectUnits()
 void PlayerComponent::SelectUnits()
 {
 	for (IEntity* entity : m_selectedUnits) {
-		BaseUnitComponent* unit = entity->GetComponent<BaseUnitComponent>();
-		if (unit) {
-			SelectableComponent* selectable = entity->GetComponent<SelectableComponent>();
+		SelectableComponent* selectable = entity->GetComponent<SelectableComponent>();
+		if (selectable) {
 			selectable->Select();
 		}
 		else {
@@ -258,14 +256,9 @@ void PlayerComponent::SelectUnits()
 void PlayerComponent::CommandUnitsToMove(Vec3 position)
 {
 	for (IEntity* entity : m_selectedUnits) {
-		BaseUnitComponent* unit = entity->GetComponent<BaseUnitComponent>();
-		if (unit) {
-			unit->SetTargetEntity(nullptr);
-
-			ActionManagerComponent* actionManager = entity->GetComponent<ActionManagerComponent>();
-			if (actionManager) {
-				actionManager->AddAction(new MoveAction(entity, position, m_rightClickCount >= 2));
-			}
+		ActionManagerComponent* actionManager = entity->GetComponent<ActionManagerComponent>();
+		if (actionManager) {
+			actionManager->AddAction(new MoveAction(entity, position, m_rightClickCount >= 2));
 		}
 		else {
 			continue;
@@ -276,13 +269,10 @@ void PlayerComponent::CommandUnitsToMove(Vec3 position)
 void PlayerComponent::SetUnitsAttackTarget(IEntity* target)
 {
 	for (IEntity* entity : m_selectedUnits) {
-		BaseUnitComponent* unit = entity->GetComponent<BaseUnitComponent>();
-		if (unit) {
-			ActionManagerComponent* actionManager = entity->GetComponent<ActionManagerComponent>();
-			if (actionManager) {
-				if (target) {
-					actionManager->AddAction(new AttackAction(entity, target));
-				}
+		ActionManagerComponent* actionManager = entity->GetComponent<ActionManagerComponent>();
+		if (actionManager) {
+			if (target) {
+				actionManager->AddAction(new AttackAction(entity, target));
 			}
 		}
 		else {

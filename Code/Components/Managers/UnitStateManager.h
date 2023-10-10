@@ -43,17 +43,26 @@ private:
 
 private:
 	f32 m_walkSpeed = 0.f;
+	f32 m_crouchSpeed = 0.f;
 	f32 m_runSpeed = 0.f;
+	f32 m_proneSpeed = 0.f;
+	f32 m_currentSpeed = 0.f;
 
 private:
 	void UpdateState();
 
 public:
 	EUnitState GetState();
+	EUnitStance GetStance();
 	void SetStance(EUnitStance stance);
 
 	//
 	void SetCharacterController(Cry::DefaultComponents::CCharacterControllerComponent* characterControllerComponent);
 	void SetWalkSpeed(f32 walkSpeed);
+	void SetCrouchSpeed(f32 crouchSpeed);
 	void SetRunSpeed(f32 runSpeed);
+	void SetProneSpeed(f32 proneSpeed);
+
+	void SetCurrentSpeed(f32 currentSpeed);
+	f32 GetCurrentSpeed();
 };

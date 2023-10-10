@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "BaseUnit.h"
+#include "Soldier1Unit.h"
 #include "GamePlugin.h"
 
 #include <Components/Selectables/Selectable.h>
@@ -17,29 +17,31 @@
 #include <CrySchematyc/Env/IEnvRegistrar.h>
 #include <CryCore/StaticInstanceList.h>
 
+
 namespace
 {
-	static void RegisterBaseUnitComponent(Schematyc::IEnvRegistrar& registrar)
+	static void RegisterUnitComponent(Schematyc::IEnvRegistrar& registrar)
 	{
 		Schematyc::CEnvRegistrationScope scope = registrar.Scope(IEntity::GetEntityScopeGUID());
 		{
-			Schematyc::CEnvRegistrationScope componentScope = scope.Register(SCHEMATYC_MAKE_ENV_COMPONENT(BaseUnitComponent));
+			Schematyc::CEnvRegistrationScope componentScope = scope.Register(SCHEMATYC_MAKE_ENV_COMPONENT(Soldier1UnitComponent));
 		}
 	}
 
-	CRY_STATIC_AUTO_REGISTER_FUNCTION(&RegisterBaseUnitComponent);
+	CRY_STATIC_AUTO_REGISTER_FUNCTION(&RegisterUnitComponent);
 }
 
-void BaseUnitComponent::Initialize()
+
+void Soldier1UnitComponent::Initialize()
 {
 	//AnimationComponent Initializations
 	m_pAnimationComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CAdvancedAnimationComponent>();
-	m_pAnimationComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), Quat::CreateRotationXYZ(Ang3(DEG2RAD(90), 0, DEG2RAD(-90))), Vec3(0)));
+	m_pAnimationComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), Quat::CreateRotationXYZ(Ang3(DEG2RAD(90), 0, DEG2RAD(-96))), Vec3(0)));
 	m_pAnimationComponent->SetCharacterFile("Objects/Characters/units/soldier1/soldier_1.cdf");
 	m_pAnimationComponent->SetMannequinAnimationDatabaseFile("Animations/Mannequin/ADB/soldier1.adb");
 	m_pAnimationComponent->SetControllerDefinitionFile("Animations/Mannequin/ADB/FirstPersonControllerDefinition.xml");
 	m_pAnimationComponent->SetDefaultScopeContextName("ThirdPersonCharacter");
-	m_pAnimationComponent->SetDefaultFragmentName("Idle");
+	m_pAnimationComponent->SetDefaultFragmentName("Walk");
 	m_pAnimationComponent->SetAnimationDrivenMotion(false);
 	m_pAnimationComponent->LoadFromDisk();
 	m_pAnimationComponent->ResetCharacter();
@@ -50,6 +52,8 @@ void BaseUnitComponent::Initialize()
 	m_idleFragmentId = m_pAnimationComponent->GetFragmentId("Idle");
 	m_runFragmentId = m_pAnimationComponent->GetFragmentId("Run");
 	m_walkFragmentId = m_pAnimationComponent->GetFragmentId("Walk");
+	m_crouchFragmentId = m_pAnimationComponent->GetFragmentId("Crouch");
+	m_proneFragmentId = m_pAnimationComponent->GetFragmentId("Prone");
 
 	//AnimationComponent Initializations
 	m_pSelectableComponent = m_pEntity->GetOrCreateComponent<SelectableComponent>();
@@ -71,11 +75,13 @@ void BaseUnitComponent::Initialize()
 	//StateManagerComponent Initialization
 	m_pStateManagerComponent = m_pEntity->GetOrCreateComponent<UnitStateManagerComponent>();
 	m_pStateManagerComponent->SetWalkSpeed(m_walkSpeed);
+	m_pStateManagerComponent->SetCrouchSpeed(m_crouchSpeed);
 	m_pStateManagerComponent->SetRunSpeed(m_runSpeed);
+	m_pStateManagerComponent->SetProneSpeed(m_proneSpeed);
 }
 
 
-Cry::Entity::EventFlags BaseUnitComponent::GetEventMask() const
+Cry::Entity::EventFlags Soldier1UnitComponent::GetEventMask() const
 {
 	return
 		Cry::Entity::EEvent::GameplayStarted |
@@ -83,7 +89,7 @@ Cry::Entity::EventFlags BaseUnitComponent::GetEventMask() const
 		Cry::Entity::EEvent::Reset;
 }
 
-void BaseUnitComponent::ProcessEvent(const SEntityEvent& event)
+void Soldier1UnitComponent::ProcessEvent(const SEntityEvent& event)
 {
 	switch (event.event)
 	{
@@ -102,6 +108,10 @@ void BaseUnitComponent::ProcessEvent(const SEntityEvent& event)
 		FindRandomTarget();
 		AttackRandomTarget();
 		
+		//StateManager currentSpeed
+		if (m_pStateManagerComponent) {
+			m_pStateManagerComponent->SetCurrentSpeed(m_currentSpeed);
+		}
 
 	}break;
 	case Cry::Entity::EEvent::Reset: {
@@ -109,6 +119,8 @@ void BaseUnitComponent::ProcessEvent(const SEntityEvent& event)
 		m_pAnimationComponent->ResetCharacter();
 		m_pAttackTargetEntity = nullptr;
 		m_pRandomAttackTarget = nullptr;
+		m_currentSpeed = BASE_UNIT_DEFAULT_WALK_SPEED;
+		m_pStateManagerComponent->SetStance(EUnitStance::STANDING);
 
 	}break;
 	default:
@@ -116,14 +128,14 @@ void BaseUnitComponent::ProcessEvent(const SEntityEvent& event)
 	}
 }
 
-void BaseUnitComponent::UpdateAnimations()
+void Soldier1UnitComponent::UpdateAnimations()
 {
 	if (!m_pStateManagerComponent) {
 		return;
 	}
 
 	/////////////////////////////////////////
-	m_pAnimationComponent->SetMotionParameter(EMotionParamID::eMotionParamID_TravelSpeed, 3);
+	m_pAnimationComponent->SetMotionParameter(EMotionParamID::eMotionParamID_TravelSpeed, m_pAIController->IsMoving() ? 3.f : 0.f);
 
 	//Run/Walk BlendSpaces
 	Vec3 forwardVector = m_pEntity->GetForwardDir().normalized();
@@ -138,14 +150,24 @@ void BaseUnitComponent::UpdateAnimations()
 	/////////////////////////////////////////
 
 	//Update Animation
+	//Idle
 	FragmentID currentFragmentId;
-	if (m_pStateManagerComponent->GetState() == EUnitState::IDLE) {
-		currentFragmentId = m_idleFragmentId;
-	}
-	else if (m_pStateManagerComponent->GetState() == EUnitState::WALK) {
+	if (m_pStateManagerComponent->GetStance() == EUnitStance::STANDING && m_pStateManagerComponent->GetState() != EUnitState::RUN) {
 		currentFragmentId = m_walkFragmentId;
 	}
-	else if (m_pStateManagerComponent->GetState() == EUnitState::RUN) {
+
+	//Walk
+	else if ( m_pStateManagerComponent->GetStance()==EUnitStance::CROUCH && m_pStateManagerComponent->GetState() != EUnitState::RUN) {
+		currentFragmentId = m_crouchFragmentId;
+	}
+
+	//Prone
+	else if(m_pStateManagerComponent->GetStance() == EUnitStance::PRONE && m_pStateManagerComponent->GetState() != EUnitState::RUN) {
+		currentFragmentId = m_proneFragmentId;
+	}
+
+	//Run
+	else {
 		currentFragmentId = m_runFragmentId;
 	}
 
@@ -159,29 +181,35 @@ void BaseUnitComponent::UpdateAnimations()
 																	ACTIONS
 ==============================================================================================================================================*/
 
-void BaseUnitComponent::Attack(IEntity* target)
+void Soldier1UnitComponent::Attack(IEntity* target)
 {
 	if (!target) {
 		return;
 	}
 
-	m_pAIController->LookAt(target->GetWorldPos());
+	LookAt(target->GetWorldPos());
 	if (m_pWeaponComponent) {
 		m_pWeaponComponent->Fire(target->GetWorldPos());
 	}
 }
 
-void BaseUnitComponent::LookAt(Vec3 position)
+void Soldier1UnitComponent::LookAt(Vec3 position)
 {
+	ISkeletonPose* pPose = m_pAnimationComponent->GetCharacter()->GetISkeletonPose();
+	IDefaultSkeleton& pDefaultSkeleton = m_pAnimationComponent->GetCharacter()->GetIDefaultSkeleton();
+	int headId = pDefaultSkeleton.GetJointIDByName("miamorig:Head");
+	Vec3 headPos = m_pEntity->GetWorldPos() + pPose->GetAbsJointByID(headId).t;
+
 	Vec3 targetPos = position;
-	Vec3 currentPos = m_pEntity->GetWorldPos();
+	Vec3 currentPos = headPos;
 	Vec3 dir = targetPos - currentPos;
 	Vec3 forwardCross = m_pEntity->GetForwardDir().cross(dir.normalized());
 	Vec3 rightCross = m_pEntity->GetRightDir().cross(dir.normalized());
 
 	//Look Up/Down
 	int32 uInv = 1;
-	f32 diff = 0.0f;
+	f32 diff = 0.2f;
+	
 	if (targetPos.x > currentPos.x + 2 || targetPos.x < currentPos.x - 2) {
 		if (targetPos.x > currentPos.x) {
 			uInv = -1;
@@ -204,7 +232,7 @@ void BaseUnitComponent::LookAt(Vec3 position)
 
 }
 
-void BaseUnitComponent::AttackRandomTarget()
+void Soldier1UnitComponent::AttackRandomTarget()
 {
 	if (!m_pRandomAttackTarget || m_pAttackTargetEntity || IsRunning()) {
 		return;
@@ -213,24 +241,33 @@ void BaseUnitComponent::AttackRandomTarget()
 	f32 distanceToTarget = m_pEntity->GetWorldPos().GetDistance(m_pRandomAttackTarget->GetWorldPos());
 	if (distanceToTarget < m_pAttackInfo.m_maxAttackDistance) {
 		Attack(m_pRandomAttackTarget);
+		LookAt(m_pRandomAttackTarget->GetWorldPos());
 	}
 	else {
 		m_pRandomAttackTarget = nullptr;
 	}
 }
 
-void BaseUnitComponent::Stop()
+void Soldier1UnitComponent::Stop()
 {
 	this->StopMoving();
 }
 
-void BaseUnitComponent::MoveTo(Vec3 position, bool run)
+void Soldier1UnitComponent::MoveTo(Vec3 position, bool run)
 {
 	if (run) {
 		m_currentSpeed = m_runSpeed;
 	}
 	else {
-		m_currentSpeed = m_walkSpeed;
+		if (m_pStateManagerComponent->GetStance() == EUnitStance::PRONE) {
+			m_currentSpeed = m_proneSpeed;
+		}
+		else if (m_pStateManagerComponent->GetStance() == EUnitStance::CROUCH) {
+			m_currentSpeed = m_crouchSpeed;
+		}
+		else {
+			m_currentSpeed = m_walkSpeed;
+		}
 	}
 
 	m_pAIController->MoveTo(position);
@@ -239,12 +276,12 @@ void BaseUnitComponent::MoveTo(Vec3 position, bool run)
 	}
 }
 
-void BaseUnitComponent::StopMoving()
+void Soldier1UnitComponent::StopMoving()
 {
 	m_pAIController->StopMoving();
 }
 
-void BaseUnitComponent::FindRandomTarget()
+void Soldier1UnitComponent::FindRandomTarget()
 {
 	if (m_pRandomAttackTarget || m_pAttackTargetEntity) {
 		return;
@@ -268,23 +305,23 @@ void BaseUnitComponent::FindRandomTarget()
 	}
 }
 
-void BaseUnitComponent::SetTargetEntity(IEntity* target)
+void Soldier1UnitComponent::SetTargetEntity(IEntity* target)
 {
 	this->m_pRandomAttackTarget = nullptr;
 	this->m_pAttackTargetEntity = target;
 }
 
-SUnitAttackInfo BaseUnitComponent::GetAttackInfo()
+SUnitAttackInfo Soldier1UnitComponent::GetAttackInfo()
 {
 	return m_pAttackInfo;
 }
 
-f32 BaseUnitComponent::GetCurrentSpeed()
+f32 Soldier1UnitComponent::GetCurrentSpeed()
 {
 	return m_currentSpeed;
 }
 
-bool BaseUnitComponent::IsRunning()
+bool Soldier1UnitComponent::IsRunning()
 {
 	return m_currentSpeed == m_runSpeed;
 }

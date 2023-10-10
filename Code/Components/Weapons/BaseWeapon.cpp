@@ -137,12 +137,12 @@ void BaseWeaponComponent::SpawnProjectile(Vec3 pos)
 	Vec3 origin = m_pWeaponAttachment->GetAttWorldAbsolute().t;
 	Vec3 dir = pos - origin;
 
-	const IDefaultSkeleton& pDefaultSkeleton = m_pWeaponAttachment->GetIAttachmentObject()->GetICharacterInstance()->GetIDefaultSkeleton();
-	int32 muzzleBoneID = pDefaultSkeleton.GetJointIDByName("Muzzle");
-	const ISkeletonPose* pPose = m_pWeaponAttachment->GetIAttachmentObject()->GetICharacterInstance()->GetISkeletonPose();
+	//const IDefaultSkeleton& pDefaultSkeleton = m_pWeaponAttachment->GetIAttachmentObject()->GetICharacterInstance()->GetIDefaultSkeleton();
+	//int32 muzzleBoneID = pDefaultSkeleton.GetJointIDByName("Muzzle");
+	//const ISkeletonPose* pPose = m_pWeaponAttachment->GetIAttachmentObject()->GetICharacterInstance()->GetISkeletonPose();
 
 	SEntitySpawnParams projectileSpawnParams;
-	projectileSpawnParams.vPosition = pPose->GetAbsJointByID(muzzleBoneID).t + origin;
+	projectileSpawnParams.vPosition = origin;
 	projectileSpawnParams.qRotation = Quat::CreateRotationVDir(dir.normalized());
 	IEntity* projectileEntity = gEnv->pEntitySystem->SpawnEntity(projectileSpawnParams, true);
 	BulletTracerComponent* bullet = projectileEntity->GetOrCreateComponent<BulletTracerComponent>();

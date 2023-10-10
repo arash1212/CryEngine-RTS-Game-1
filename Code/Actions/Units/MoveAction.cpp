@@ -2,7 +2,8 @@
 #include "MoveAction.h"
 #include "GamePlugin.h"
 
-#include <Components/Selectables/Units/BaseUnit.h>
+#include <Components/Selectables/Units/Soldier1Unit.h>
+#include <Components/Controller/AIController.h>
 
 MoveAction::MoveAction(IEntity* entity, Vec3 movePosition, bool run)
 {
@@ -13,7 +14,7 @@ MoveAction::MoveAction(IEntity* entity, Vec3 movePosition, bool run)
 
 void MoveAction::Execute()
 {
-	BaseUnitComponent* unit = m_pEntity->GetComponent<BaseUnitComponent>();
+	Soldier1UnitComponent* unit = m_pEntity->GetComponent<Soldier1UnitComponent>();
 	if (unit) {
 		unit->MoveTo(m_movePosition, bRun);
 	}
@@ -21,9 +22,9 @@ void MoveAction::Execute()
 
 void MoveAction::Cancel()
 {
-	BaseUnitComponent* unit = m_pEntity->GetComponent<BaseUnitComponent>();
+	Soldier1UnitComponent* unit = m_pEntity->GetComponent<Soldier1UnitComponent>();
 	if (unit) {
-		unit->StopMoving();
+		unit->MoveTo(m_pEntity->GetWorldPos(), false);
 		bIsDone = true;
 	}
 }
