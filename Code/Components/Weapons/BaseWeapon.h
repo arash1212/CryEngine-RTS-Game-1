@@ -56,10 +56,6 @@ protected:
 	//Shot Timers/Info
 	f32 m_timeBetweenShots = 0.04f;
 	f32 m_shotTimePassed = 0.f;
-	f32 m_timeBetweenShotCountReset = 0.9f;
-	f32 m_shotCountResetTimePassed = 0.f;
-	int32 m_maxShotCount = 10;
-	int32 m_shotCount = 0;
 
 private:
 	void UpdateMuzzleFlashes();

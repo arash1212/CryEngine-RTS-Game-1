@@ -80,16 +80,18 @@ add_sources("Player_uber.cpp"
 add_sources("Selectables_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "Components\\\\Selectables"
-		"Components/Selectables/IUnit.cpp"
+		"Components/Selectables/Attacker.cpp"
 		"Components/Selectables/Selectable.cpp"
-		"Components/Selectables/IUnit.h"
+		"Components/Selectables/Attacker.h"
 		"Components/Selectables/Selectable.h"
 )
 add_sources("Units_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "Components\\\\Selectables\\\\Units"
 		"Components/Selectables/Units/Soldier1Unit.cpp"
+		"Components/Selectables/Units/Zombie1Unit.cpp"
 		"Components/Selectables/Units/Soldier1Unit.h"
+		"Components/Selectables/Units/Zombie1Unit.h"
 )
 add_sources("UI_uber.cpp"
     PROJECTS Game

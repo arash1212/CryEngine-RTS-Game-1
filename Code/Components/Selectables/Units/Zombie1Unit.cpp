@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "Soldier1Unit.h"
+#include "Zombie1Unit.h"
 #include "GamePlugin.h"
 
 #include <Components/Selectables/Attacker.h>
@@ -22,25 +22,25 @@
 
 namespace
 {
-	static void RegisterUnitComponent(Schematyc::IEnvRegistrar& registrar)
+	static void RegisterZombie1UnitComponent(Schematyc::IEnvRegistrar& registrar)
 	{
 		Schematyc::CEnvRegistrationScope scope = registrar.Scope(IEntity::GetEntityScopeGUID());
 		{
-			Schematyc::CEnvRegistrationScope componentScope = scope.Register(SCHEMATYC_MAKE_ENV_COMPONENT(Soldier1UnitComponent));
+			Schematyc::CEnvRegistrationScope componentScope = scope.Register(SCHEMATYC_MAKE_ENV_COMPONENT(Zombie1UnitComponent));
 		}
 	}
 
-	CRY_STATIC_AUTO_REGISTER_FUNCTION(&RegisterUnitComponent);
+	CRY_STATIC_AUTO_REGISTER_FUNCTION(&RegisterZombie1UnitComponent);
 }
 
 
-void Soldier1UnitComponent::Initialize()
+void Zombie1UnitComponent::Initialize()
 {
 	//AnimationComponent Initializations
 	m_pAnimationComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CAdvancedAnimationComponent>();
-	m_pAnimationComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), Quat::CreateRotationXYZ(Ang3(DEG2RAD(90), 0, DEG2RAD(-96))), Vec3(0)));
-	m_pAnimationComponent->SetCharacterFile("Objects/Characters/units/soldier1/soldier_1.cdf");
-	m_pAnimationComponent->SetMannequinAnimationDatabaseFile("Animations/Mannequin/ADB/soldier1.adb");
+	m_pAnimationComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), Quat::CreateRotationXYZ(Ang3(DEG2RAD(90), 0, DEG2RAD(180))), Vec3(0)));
+	m_pAnimationComponent->SetCharacterFile("objects/characters/units/zombie1/zombie1.cdf");
+	m_pAnimationComponent->SetMannequinAnimationDatabaseFile("Animations/Mannequin/ADB/zombie1.adb");
 	m_pAnimationComponent->SetControllerDefinitionFile("Animations/Mannequin/ADB/FirstPersonControllerDefinition.xml");
 	m_pAnimationComponent->SetDefaultScopeContextName("ThirdPersonCharacter");
 	m_pAnimationComponent->SetDefaultFragmentName("Walk");
@@ -54,8 +54,12 @@ void Soldier1UnitComponent::Initialize()
 	m_idleFragmentId = m_pAnimationComponent->GetFragmentId("Idle");
 	m_runFragmentId = m_pAnimationComponent->GetFragmentId("Run");
 	m_walkFragmentId = m_pAnimationComponent->GetFragmentId("Walk");
-	m_crouchFragmentId = m_pAnimationComponent->GetFragmentId("Crouch");
-	m_proneFragmentId = m_pAnimationComponent->GetFragmentId("Prone");
+
+	m_attack1FragmentId = m_pAnimationComponent->GetFragmentId("Attack1");
+	m_attack2FragmentId = m_pAnimationComponent->GetFragmentId("Attack2");
+	m_attack3FragmentId = m_pAnimationComponent->GetFragmentId("Attack3");
+	//m_crouchFragmentId = m_pAnimationComponent->GetFragmentId("Crouch");
+	//m_proneFragmentId = m_pAnimationComponent->GetFragmentId("Prone");
 
 	//AnimationComponent Initializations
 	m_pSelectableComponent = m_pEntity->GetOrCreateComponent<SelectableComponent>();
@@ -66,10 +70,6 @@ void Soldier1UnitComponent::Initialize()
 	//ActionManager Initializations
 	m_pActionManagerComponent = m_pEntity->GetOrCreateComponent<ActionManagerComponent>();
 
-	//WeaponComponent Initialization
-	m_pWeaponComponent = m_pEntity->GetOrCreateComponent<BaseWeaponComponent>();
-	m_pWeaponComponent->Draw();
-
 	//OwnerComponent Initialization
 	m_pOwnerInfoComponent = m_pEntity->GetOrCreateComponent<OwnerInfoComponent>();
 	m_pOwnerInfoComponent->SetTeam(EPlayerTeam::TEAM6);
@@ -77,13 +77,26 @@ void Soldier1UnitComponent::Initialize()
 	//StateManagerComponent Initialization
 	m_pStateManagerComponent = m_pEntity->GetOrCreateComponent<UnitStateManagerComponent>();
 
-	//Attacker
+	//////////AttackerComponent Initializations
 	m_pAttackerComponent = m_pEntity->GetOrCreateComponent<AttackerComponent>();
 	m_pAttackerComponent->SetIsHumanoid(true);
+	m_pAttackerComponent->SetTimeBetweenAttack(0.7f);
+	//attack info
+	SUnitAttackInfo attackInfo;
+	attackInfo.m_maxAttackDistance = 2.f;
+	m_pAttackerComponent->SetAttackInfo(attackInfo);
+	//attack animations
+	DynArray<FragmentID> attackAnimations;
+	attackAnimations.append(m_attack1FragmentId);
+	attackAnimations.append(m_attack2FragmentId);
+	attackAnimations.append(m_attack3FragmentId);
+	m_pAttackerComponent->SetAttackAnimations(attackAnimations);
+
+
 }
 
 
-Cry::Entity::EventFlags Soldier1UnitComponent::GetEventMask() const
+Cry::Entity::EventFlags Zombie1UnitComponent::GetEventMask() const
 {
 	return
 		Cry::Entity::EEvent::GameplayStarted |
@@ -91,7 +104,7 @@ Cry::Entity::EventFlags Soldier1UnitComponent::GetEventMask() const
 		Cry::Entity::EEvent::Reset;
 }
 
-void Soldier1UnitComponent::ProcessEvent(const SEntityEvent& event)
+void Zombie1UnitComponent::ProcessEvent(const SEntityEvent& event)
 {
 	switch (event.event)
 	{
@@ -121,9 +134,9 @@ void Soldier1UnitComponent::ProcessEvent(const SEntityEvent& event)
 																	ANIMATIONS
 ==============================================================================================================================================*/
 
-void Soldier1UnitComponent::UpdateAnimations()
+void Zombie1UnitComponent::UpdateAnimations()
 {
-	if (!m_pStateManagerComponent) {
+	if (!m_pStateManagerComponent || !m_pAttackerComponent) {
 		return;
 	}
 
@@ -143,20 +156,16 @@ void Soldier1UnitComponent::UpdateAnimations()
 	/////////////////////////////////////////
 
 	//Update Animation
-	//Idle
 	FragmentID currentFragmentId;
+
+	//To update activeFragmentId after attacking
+	if(m_pAttackerComponent->IsUpdatedAnimation()){
+		m_activeFragmentId = m_attack1FragmentId;
+		m_pAttackerComponent->SetUpdatedAnimation(false);
+	}
+
 	if (m_pStateManagerComponent->GetStance() == EUnitStance::STANDING && m_pStateManagerComponent->GetState() != EUnitState::RUN) {
 		currentFragmentId = m_walkFragmentId;
-	}
-
-	//Walk
-	else if ( m_pStateManagerComponent->GetStance()==EUnitStance::CROUCH && m_pStateManagerComponent->GetState() != EUnitState::RUN) {
-		currentFragmentId = m_crouchFragmentId;
-	}
-
-	//Prone
-	else if(m_pStateManagerComponent->GetStance() == EUnitStance::PRONE && m_pStateManagerComponent->GetState() != EUnitState::RUN) {
-		currentFragmentId = m_proneFragmentId;
 	}
 
 	//Run
@@ -169,7 +178,3 @@ void Soldier1UnitComponent::UpdateAnimations()
 		m_pAnimationComponent->QueueFragmentWithId(m_activeFragmentId);
 	}
 }
-
-/*=============================================================================================================================================
-																	ACTIONS
-==============================================================================================================================================*/

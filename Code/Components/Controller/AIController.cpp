@@ -84,7 +84,8 @@ void AIControllerComponent::ProcessEvent(const SEntityEvent& event)
 
 void AIControllerComponent::Move(f32 DeltaTime)
 {
-	if (!m_pEntity->GetComponent<UnitStateManagerComponent>()) {
+	UnitStateManagerComponent* stateManager = m_pEntity->GetComponent<UnitStateManagerComponent>();
+	if (!stateManager) {
 		CryLog("AIControllerComponent : (Move) UnitStateManagerComponent does not exist on entity !");
 		return;
 	}
@@ -94,16 +95,21 @@ void AIControllerComponent::Move(f32 DeltaTime)
 
 	m_pNavigationComponent->NavigateTo(m_moveToPosition);
 	Vec3 velocity = m_pNavigationComponent->GetRequestedVelocity();
-
-	UnitStateManagerComponent* stateManager = m_pEntity->GetComponent<UnitStateManagerComponent>();
-	m_pCharacterControllerComponent->SetVelocity(velocity * stateManager->GetCurrentSpeed());
+	m_pCharacterControllerComponent->SetVelocity(velocity.normalized() * stateManager->GetCurrentSpeed());
 }
 
-void AIControllerComponent::MoveTo(Vec3 position)
+void AIControllerComponent::MoveTo(Vec3 position, bool run)
 {
 	if (position == ZERO) {
 		return;
 	}
+
+	UnitStateManagerComponent* stateManager = m_pEntity->GetComponent<UnitStateManagerComponent>();
+	if (!stateManager) {
+		CryLog("AIControllerComponent : (MoveTo) UnitStateManagerComponent does not exist on entity !");
+		return;
+	}
+
 	m_moveToPosition = this->SnapToNavmesh(position);
 }
 
@@ -124,7 +130,7 @@ void AIControllerComponent::SetMoveSpeed(f32 speed)
 
 void AIControllerComponent::StopMoving()
 {
-	this->MoveTo(m_pEntity->GetWorldPos());
+	this->MoveTo(m_pEntity->GetWorldPos(), false);
 }
 
 void AIControllerComponent::LookAt(Vec3 position)

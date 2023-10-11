@@ -44,8 +44,10 @@ void BaseWeaponComponent::Initialize()
 	m_pWeaponAttachment = m_pEntity->GetComponent<Cry::DefaultComponents::CAdvancedAnimationComponent>()->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName(GetAttachmentName());
 
 	//MuzzleFlash Attachment Initializations
-	m_pMuzzleFlashAttachment1 = m_pWeaponAttachment->GetIAttachmentObject()->GetICharacterInstance()->GetIAttachmentManager()->GetInterfaceByName("MuzzleFlash1");
-	m_pMuzzleFlashAttachment1->HideAttachment(true);
+	if (m_pWeaponAttachment) {
+		m_pMuzzleFlashAttachment1 = m_pWeaponAttachment->GetIAttachmentObject()->GetICharacterInstance()->GetIAttachmentManager()->GetInterfaceByName("MuzzleFlash1");
+		m_pMuzzleFlashAttachment1->HideAttachment(true);
+	}
 
 	//AudioComponent Initialization
 	m_pAudioComponent = m_pEntity->GetOrCreateComponent<IEntityAudioComponent>();
@@ -84,12 +86,6 @@ void BaseWeaponComponent::ProcessEvent(const SEntityEvent& event)
 		//Timers
 		if (m_shotTimePassed < m_timeBetweenShots) {
 			m_shotTimePassed += 0.5f * DeltaTime;
-		}
-		if (m_shotCountResetTimePassed < m_timeBetweenShotCountReset) {
-			m_shotCountResetTimePassed += 0.5f * DeltaTime;
-		}
-		else {
-			m_shotCount = 0;
 		}
 		
 		if (m_MuzzleFlashDeActivationTimePassed < m_timeBetweenMuzzleFlashDeActivation) {
@@ -151,14 +147,11 @@ void BaseWeaponComponent::SpawnProjectile(Vec3 pos)
 
 void BaseWeaponComponent::Fire(Vec3 pos)
 {
-	if (m_shotTimePassed >= m_timeBetweenShots && m_shotCount < m_maxShotCount) {
+	if (m_shotTimePassed >= m_timeBetweenShots) {
 		//Raycast(pos);
 		SpawnProjectile(pos);
 		m_shotTimePassed = 0;
 		m_pAudioComponent->ExecuteTrigger(GetRandomShootSound());
-
-		m_shotCount++;
-		m_shotCountResetTimePassed = 0.f;
 
 		//MuzzleFlash
 		m_MuzzleFlashDeActivationTimePassed = 0;

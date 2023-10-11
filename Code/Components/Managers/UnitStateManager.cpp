@@ -22,6 +22,8 @@ namespace
 
 void UnitStateManagerComponent::Initialize()
 {
+	//CharacterControllerComponent Initialization
+	m_pCharacterControllerComponent = m_pEntity->GetComponent<Cry::DefaultComponents::CCharacterControllerComponent>();
 }
 
 Cry::Entity::EventFlags UnitStateManagerComponent::GetEventMask() const
@@ -44,9 +46,11 @@ void UnitStateManagerComponent::ProcessEvent(const SEntityEvent& event)
 
 		UpdateState();
 
+		UpdateCurrentSpeed();
+
 	}break;
 	case Cry::Entity::EEvent::Reset: {
-
+		m_currentSpeed = m_walkSpeed;
 
 	}break;
 	default:
@@ -72,9 +76,42 @@ void UnitStateManagerComponent::UpdateState()
 	}
 }
 
+void UnitStateManagerComponent::UpdateCurrentSpeed()
+{
+	if (!m_pCharacterControllerComponent) {
+		return;
+	}
+
+	//f32 speed = crymath::abs(m_pCharacterControllerComponent->GetVelocity().GetLength());
+	if (m_pUnitStance == EUnitStance::STANDING) {
+		if (m_currentSpeed == m_runSpeed && m_pUnitState != EUnitState::IDLE) {
+			m_currentSpeed = m_runSpeed;
+		}
+		else {
+			m_currentSpeed = m_walkSpeed;
+		}
+	}
+	else if (m_pUnitStance == EUnitStance::CROUCH) {
+		m_currentSpeed = m_crouchSpeed;
+	}
+	else if (m_pUnitStance == EUnitStance::PRONE) {
+		m_currentSpeed = m_proneSpeed;
+	}
+}
+
 EUnitState UnitStateManagerComponent::GetState()
 {
 	return m_pUnitState;
+}
+
+void UnitStateManagerComponent::SetState(EUnitState state)
+{
+	if (state == EUnitState::RUN) {
+		m_currentSpeed = m_runSpeed;
+	}else if (state == EUnitState::WALK) {
+		m_currentSpeed = m_walkSpeed;
+	}
+	this->m_pUnitState = state;
 }
 
 EUnitStance UnitStateManagerComponent::GetStance()
@@ -97,6 +134,11 @@ void UnitStateManagerComponent::SetWalkSpeed(f32 walkSpeed)
 	this->m_walkSpeed = walkSpeed;
 }
 
+f32 UnitStateManagerComponent::GetWalkSpeed()
+{
+	return m_walkSpeed;
+}
+
 void UnitStateManagerComponent::SetCrouchSpeed(f32 crouchSpeed)
 {
 	this->m_crouchSpeed = crouchSpeed;
@@ -105,6 +147,11 @@ void UnitStateManagerComponent::SetCrouchSpeed(f32 crouchSpeed)
 void UnitStateManagerComponent::SetRunSpeed(f32 runSpeed)
 {
 	this->m_runSpeed = runSpeed;
+}
+
+f32 UnitStateManagerComponent::GetRunSpeed()
+{
+	return m_runSpeed;
 }
 
 void UnitStateManagerComponent::SetProneSpeed(f32 proneSpeed)
@@ -120,4 +167,9 @@ void UnitStateManagerComponent::SetCurrentSpeed(f32 currentSpeed)
 f32 UnitStateManagerComponent::GetCurrentSpeed()
 {
 	return this->m_currentSpeed;
+}
+
+bool UnitStateManagerComponent::IsRunning()
+{
+	return m_currentSpeed == m_runSpeed;
 }

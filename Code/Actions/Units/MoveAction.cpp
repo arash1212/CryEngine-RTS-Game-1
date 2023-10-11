@@ -2,8 +2,9 @@
 #include "MoveAction.h"
 #include "GamePlugin.h"
 
-#include <Components/Selectables/Units/Soldier1Unit.h>
+#include <Components/Selectables/Attacker.h>
 #include <Components/Controller/AIController.h>
+#include <Components/Managers/UnitStateManager.h>
 
 MoveAction::MoveAction(IEntity* entity, Vec3 movePosition, bool run)
 {
@@ -14,17 +15,23 @@ MoveAction::MoveAction(IEntity* entity, Vec3 movePosition, bool run)
 
 void MoveAction::Execute()
 {
-	Soldier1UnitComponent* unit = m_pEntity->GetComponent<Soldier1UnitComponent>();
-	if (unit) {
-		unit->MoveTo(m_movePosition, bRun);
+	AIControllerComponent* controller = m_pEntity->GetComponent<AIControllerComponent>();
+	AttackerComponent* attacker = m_pEntity->GetComponent<AttackerComponent>();
+	//UnitStateManagerComponent* stateManager = m_pEntity->GetComponent<UnitStateManagerComponent>();
+	if (controller) {
+		controller->MoveTo(m_movePosition, bRun);
+
+		if (!attacker || !attacker->IsAttacking()) {
+			controller->LookAtWalkDirection();
+		}
 	}
 }
 
 void MoveAction::Cancel()
 {
-	Soldier1UnitComponent* unit = m_pEntity->GetComponent<Soldier1UnitComponent>();
-	if (unit) {
-		unit->MoveTo(m_pEntity->GetWorldPos(), false);
+	AIControllerComponent* controller = m_pEntity->GetComponent<AIControllerComponent>();
+	if (controller) {
+		controller->MoveTo(m_pEntity->GetWorldPos(), false);
 		bIsDone = true;
 	}
 }

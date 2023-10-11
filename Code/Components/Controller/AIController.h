@@ -39,7 +39,7 @@ private:
 	Vec3 SnapToNavmesh(Vec3 point);
 
 public:
-	void MoveTo(Vec3 position);
+	void MoveTo(Vec3 position, bool run);
 	bool IsMoving();
 	bool IsOnGround();
 	void SetMoveSpeed(f32 speed);

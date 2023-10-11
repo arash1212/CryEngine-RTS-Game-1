@@ -7,19 +7,18 @@ class AIControllerComponent;
 class IBaseAction;
 class ActionManager;
 class ActionManagerComponent;
-class BaseWeaponComponent;
 class OwnerInfoComponent;
 class UnitStateManagerComponent;
 class AttackerComponent;
 
 struct SOwnerInfo;
 
-class Soldier1UnitComponent final : public IEntityComponent
+class Zombie1UnitComponent final : public IEntityComponent
 {
 
 public:
-	Soldier1UnitComponent() = default;
-	virtual ~Soldier1UnitComponent() = default;
+	Zombie1UnitComponent() = default;
+	virtual ~Zombie1UnitComponent() = default;
 
 	// IEntityComponent
 	virtual void Initialize() override;
@@ -28,11 +27,12 @@ public:
 	virtual void ProcessEvent(const SEntityEvent& event) override;
 
 	// Reflect type to set a unique identifier for this component
-	static void ReflectType(Schematyc::CTypeDesc<Soldier1UnitComponent>& desc)
+	static void ReflectType(Schematyc::CTypeDesc<Zombie1UnitComponent>& desc)
 	{
-		desc.SetGUID("{47E06D6D-0DFE-4605-80D4-BB858719EE2A}"_cry_guid);
+		desc.SetGUID("{263AE3B2-702A-4D26-8DF1-8AF91AFF8EE3}"_cry_guid);
 		desc.SetEditorCategory("Units");
 	}
+
 
 
 private:
@@ -40,7 +40,6 @@ private:
 	SelectableComponent* m_pSelectableComponent = nullptr;
 	AIControllerComponent* m_pAIController = nullptr;
 	ActionManagerComponent* m_pActionManagerComponent = nullptr;
-	BaseWeaponComponent* m_pWeaponComponent = nullptr;
 	UnitStateManagerComponent* m_pStateManagerComponent = nullptr;
 	AttackerComponent* m_pAttackerComponent = nullptr;
 
@@ -52,12 +51,16 @@ private:
 	FragmentID m_idleFragmentId;
 	FragmentID m_runFragmentId;
 	FragmentID m_walkFragmentId;
-	FragmentID m_crouchFragmentId;
-	FragmentID m_proneFragmentId;
+	FragmentID m_attack1FragmentId;
+	FragmentID m_attack2FragmentId;
+	FragmentID m_attack3FragmentId;
+	//FragmentID m_crouchFragmentId;
+	//FragmentID m_proneFragmentId;
 	FragmentID m_activeFragmentId;
+	FragmentID m_testFragmentId;
 
 protected:
-	 void UpdateAnimations();
+	void UpdateAnimations();
 
 public:
 };
