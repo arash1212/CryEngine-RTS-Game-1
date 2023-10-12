@@ -14,6 +14,8 @@
 
 #include <Components/Info/OwnerInfo.h>
 
+#include <Components/Selectables/UnitAnimation.h>
+
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
 #include <CrySchematyc/Env/IEnvRegistrar.h>
@@ -50,22 +52,15 @@ void Zombie1UnitComponent::Initialize()
 
 	m_pAnimationComponent->EnableGroundAlignment(true);
 
-	//Animations
-	m_idleFragmentId = m_pAnimationComponent->GetFragmentId("Idle");
-	m_runFragmentId = m_pAnimationComponent->GetFragmentId("Run");
-	m_walkFragmentId = m_pAnimationComponent->GetFragmentId("Walk");
-
-	m_attack1FragmentId = m_pAnimationComponent->GetFragmentId("Attack1");
-	m_attack2FragmentId = m_pAnimationComponent->GetFragmentId("Attack2");
-	m_attack3FragmentId = m_pAnimationComponent->GetFragmentId("Attack3");
-	//m_crouchFragmentId = m_pAnimationComponent->GetFragmentId("Crouch");
-	//m_proneFragmentId = m_pAnimationComponent->GetFragmentId("Prone");
-
-	//AnimationComponent Initializations
-	m_pSelectableComponent = m_pEntity->GetOrCreateComponent<SelectableComponent>();
+	//StateManagerComponent Initialization
+	m_pStateManagerComponent = m_pEntity->GetOrCreateComponent<UnitStateManagerComponent>();
+	m_pStateManagerComponent->SetWalkSpeed(5.f);
 
 	//AIController Initializations
 	m_pAIController = m_pEntity->GetOrCreateComponent<AIControllerComponent>();
+
+	//AnimationComponent Initializations
+	m_pSelectableComponent = m_pEntity->GetOrCreateComponent<SelectableComponent>();
 
 	//ActionManager Initializations
 	m_pActionManagerComponent = m_pEntity->GetOrCreateComponent<ActionManagerComponent>();
@@ -74,27 +69,18 @@ void Zombie1UnitComponent::Initialize()
 	m_pOwnerInfoComponent = m_pEntity->GetOrCreateComponent<OwnerInfoComponent>();
 	m_pOwnerInfoComponent->SetTeam(EPlayerTeam::TEAM6);
 
-	//StateManagerComponent Initialization
-	m_pStateManagerComponent = m_pEntity->GetOrCreateComponent<UnitStateManagerComponent>();
-	m_pStateManagerComponent->SetWalkSpeed(5.f);
+	//AttackerComponent Initialization
+	m_pUnitAnimationComponent = m_pEntity->GetOrCreateComponent<UnitAnimationComponent>();
 
 	//////////AttackerComponent Initializations
 	m_pAttackerComponent = m_pEntity->GetOrCreateComponent<AttackerComponent>();
-	m_pAttackerComponent->SetIsMelee(true);
+	m_pAttackerComponent->SetIsRanged(false);
 	m_pAttackerComponent->SetIsHumanoid(true);
 	m_pAttackerComponent->SetTimeBetweenAttack(0.7f);
 	//attack info
 	SUnitAttackInfo attackInfo;
 	attackInfo.m_maxAttackDistance = 2.3f;
 	m_pAttackerComponent->SetAttackInfo(attackInfo);
-	//attack animations
-	DynArray<FragmentID> attackAnimations;
-	attackAnimations.append(m_attack1FragmentId);
-	attackAnimations.append(m_attack2FragmentId);
-	attackAnimations.append(m_attack3FragmentId);
-	m_pAttackerComponent->SetAttackAnimations(attackAnimations);
-
-
 }
 
 
@@ -116,10 +102,6 @@ void Zombie1UnitComponent::ProcessEvent(const SEntityEvent& event)
 	case Cry::Entity::EEvent::Update: {
 		//f32 DeltaTime = event.fParam[0];
 
-		UpdateAnimations();
-
-		m_pActionManagerComponent->ProcessActions();
-
 	}break;
 	case Cry::Entity::EEvent::Reset: {
 		m_pAnimationComponent->ResetCharacter();
@@ -130,65 +112,3 @@ void Zombie1UnitComponent::ProcessEvent(const SEntityEvent& event)
 	}
 }
 
-/*=============================================================================================================================================
-																	ANIMATIONS
-==============================================================================================================================================*/
-
-void Zombie1UnitComponent::UpdateAnimations()
-{
-	if (!m_pStateManagerComponent || !m_pAttackerComponent) {
-		return;
-	}
-
-	/////////////////////////////////////////
-	m_pAnimationComponent->SetMotionParameter(EMotionParamID::eMotionParamID_TravelSpeed, m_pAIController->IsMoving() ? 3.f : 0.f);
-
-	//Run/Walk BlendSpaces
-	Vec3 forwardVector = m_pEntity->GetForwardDir().normalized();
-	Vec3 rightVector = m_pEntity->GetRightDir().normalized();
-	Vec3 velocity = m_pAIController->GetVelocity().normalized();
-
-	float forwardDot = velocity.dot(forwardVector);
-	float rightDot = velocity.dot(rightVector);
-
-	int32 inv = rightDot < 0 ? 1 : -1;
-	m_pAnimationComponent->SetMotionParameter(EMotionParamID::eMotionParamID_TravelAngle, crymath::acos(forwardDot) * inv);
-	/////////////////////////////////////////
-
-	//Update Animation
-	FragmentID currentFragmentId;
-
-	//To update activeFragmentId after attacking
-	if(m_pAttackerComponent->IsUpdatedAnimation()){
-		m_activeFragmentId = m_attack1FragmentId;
-		m_pAttackerComponent->SetUpdatedAnimation(false);
-	}
-
-	//Update Animation
-	//Idle
-	if (m_pStateManagerComponent->GetStance() == EUnitStance::WALKING) {
-		currentFragmentId = m_walkFragmentId;
-	}
-
-	/*
-	//Walk
-	else if (m_pStateManagerComponent->GetStance() == EUnitStance::CROUCH) {
-		currentFragmentId = m_crouchFragmentId;
-	}
-
-	//Prone
-	else if (m_pStateManagerComponent->GetStance() == EUnitStance::PRONE) {
-		currentFragmentId = m_proneFragmentId;
-	}
-	*/
-
-	//Run
-	else if (m_pStateManagerComponent->GetStance() == EUnitStance::RUNNING) {
-		currentFragmentId = m_runFragmentId;
-	}
-
-	if (m_activeFragmentId != currentFragmentId) {
-		m_activeFragmentId = currentFragmentId;
-		m_pAnimationComponent->QueueFragmentWithId(m_activeFragmentId);
-	}
-}

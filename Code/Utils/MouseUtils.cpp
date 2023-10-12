@@ -80,3 +80,16 @@ IEntity* MouseUtils::GeetActorUnderCursor()
 
 	return nullptr;
 }
+
+bool MouseUtils::IsMouseInsideViewPort()
+{
+	IHardwareMouse* pHardwareMouse = gEnv->pHardwareMouse;
+
+	Vec2 currentPos;
+	pHardwareMouse->GetHardwareMouseClientPosition(&currentPos.x, &currentPos.y);
+
+	int32 vHeight = gEnv->pRenderer->GetHeight();
+	int32 vWidth = gEnv->pRenderer->GetWidth();
+
+	return currentPos.x >= 0 && currentPos.x <= vWidth && currentPos.y >= 0 && currentPos.y <= vHeight;
+}

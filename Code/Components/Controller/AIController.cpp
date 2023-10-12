@@ -151,7 +151,9 @@ Vec3 AIControllerComponent::SnapToNavmesh(Vec3 point)
 
 void AIControllerComponent::StopMoving()
 {
-	this->MoveTo(m_pEntity->GetWorldPos(), false);
+	this->m_moveToPosition = m_pEntity->GetWorldPos();
+	this->m_pCharacterControllerComponent->SetVelocity(ZERO);
+	//this->MoveTo(m_pEntity->GetWorldPos(), false);
 }
 
 void AIControllerComponent::LookAtWalkDirection()

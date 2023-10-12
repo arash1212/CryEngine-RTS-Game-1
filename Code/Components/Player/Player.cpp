@@ -182,6 +182,10 @@ void PlayerComponent::MouseWheelDown(int activationMode, float value)
 
 void PlayerComponent::LeftMouseDown(int activationMode, float value)
 {
+	if (!MouseUtils::IsMouseInsideViewPort()) {
+		return;
+	}
+
 	Vec2 mousePos = MouseUtils::GetCursorPosition();
 
 	if (activationMode == eAAM_OnPress) {
@@ -203,6 +207,10 @@ void PlayerComponent::LeftMouseDown(int activationMode, float value)
 
 void PlayerComponent::RightMouseDown(int activationMode, float value)
 {
+	if (!MouseUtils::IsMouseInsideViewPort()) {
+		return;
+	}
+
 	Vec3 mousePos = MouseUtils::GetPositionUnderCursor();
 
 	if (activationMode == eAAM_OnRelease) {

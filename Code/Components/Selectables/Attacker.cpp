@@ -6,6 +6,7 @@
 #include <Components/Managers/UnitStateManager.h>
 #include <Components/Controller/AIController.h>
 #include <Components/Weapons/BaseWeapon.h>
+#include <Components/Selectables/UnitAnimation.h>
 
 #include <Utils/MathUtils.h>
 
@@ -34,14 +35,17 @@ void AttackerComponent::Initialize()
 	//AnimationComponent Initialization
 	m_pAnimationComponent = m_pEntity->GetComponent<Cry::DefaultComponents::CAdvancedAnimationComponent>();
 
-	//tateManagerComponent Initialization
-	m_pStateManagerComponent = m_pEntity->GetComponent<UnitStateManagerComponent>();
-	
 	//AIController Initialization
 	m_pAIController = m_pEntity->GetComponent<AIControllerComponent>();
 
+	//tateManagerComponent Initialization
+	m_pStateManagerComponent = m_pEntity->GetComponent<UnitStateManagerComponent>();
+
 	//WeaponComponent Initialization
 	m_pWeaponComponent = m_pEntity->GetComponent<BaseWeaponComponent>();
+
+	//UnitAnimationComponent Initialization
+	m_pUnitAnimationComponent = m_pEntity->GetOrCreateComponent<UnitAnimationComponent>();
 }
 
 
@@ -99,26 +103,14 @@ void AttackerComponent::Attack(IEntity* target)
 		return;
 	}
 
-	//Fire Weapon
-	if (!bIsMelee && m_pWeaponComponent) {
+	//If attacker is ranged unit
+	if (bIsRanged && m_pWeaponComponent) {
 		m_pWeaponComponent->Fire(target->GetWorldPos());
 	}
 
-	/*
-	FragmentID id = m_pAttackAnimations[0];
-	CryCharAnimationParams animationParams;
-	animationParams.m_nLayerID = 1;
-	animationParams.m_fPlaybackWeight = 0.3f;
-	m_pAnimationComponent->GetCharacter()->GetISkeletonAnim()->StartAnimationById(id, animationParams);
-	*/
-
-	//Play Attack Animation
-	if (m_pAttackAnimations.size() > 0 && bIsMelee) {
-		FragmentID attackingFragmentId = m_pAttackAnimations[MathUtils::GetRandomInt(0, m_pAttackAnimations.size())];
-		m_pAnimationComponent->GetActionController()->Flush();
-		IActionPtr action = new TAction<SAnimationContext>(30U, attackingFragmentId);
-		m_pAnimationComponent->QueueCustomFragment(*action);
-		bUpdatedAnimation = true;
+	//If attacker is not ranged unit
+	if (!bIsRanged) {
+		m_pUnitAnimationComponent->PlayRandomAttackAnimation();
 	}
 
 	m_attackTimePassed = 0;
@@ -189,30 +181,22 @@ void AttackerComponent::LookAt(Vec3 position)
 		Vec3 headPos = m_pEntity->GetWorldPos() + pPose->GetAbsJointByID(headId).t;
 
 		Vec3 targetPos = position;
-		Vec3 currentPos = headPos;
+		Vec3 currentPos = m_pEntity->GetWorldPos();
 		Vec3 dir = targetPos - currentPos;
 		Vec3 forwardCross = m_pEntity->GetForwardDir().cross(dir.normalized());
 		Vec3 rightCross = m_pEntity->GetRightDir().cross(dir.normalized());
 
 		//Look Up/Down
-		int32 uInv = 1;
+		f32 dot = m_pEntity->GetForwardDir().normalized().dot(dir.normalized());
 		f32 diff = 0.2f;
+		int32 uInv = 1;
+		if (targetPos.z < currentPos.z) {
+			uInv = -1;
+		}
+		f32 ac = crymath::acos(dot) * uInv;
+		ac -= diff;
+		m_pAnimationComponent->SetMotionParameter(EMotionParamID::eMotionParamID_TurnAngle, ac);
 
-		if (targetPos.x > currentPos.x + 2 || targetPos.x < currentPos.x - 2) {
-			if (targetPos.x > currentPos.x) {
-				uInv = -1;
-			}
-			else {
-				diff *= -1;
-			}
-			m_pAnimationComponent->SetMotionParameter(EMotionParamID::eMotionParamID_TurnAngle, (rightCross.x + (diff * 2)) * uInv);
-		}
-		else {
-			if (targetPos.y < currentPos.y) {
-				uInv = -1;
-			}
-			m_pAnimationComponent->SetMotionParameter(EMotionParamID::eMotionParamID_TurnAngle, (forwardCross.x - diff) * uInv);
-		}
 
 		//Look Left/Right
 		//m_pAnimationComponent->SetMotionParameter(EMotionParamID::eMotionParamID_BlendWeight, forwardCross.z);
@@ -256,17 +240,6 @@ void AttackerComponent::SetTargetEntity(IEntity* target)
 	this->m_pAttackTargetEntity = target;
 }
 
-bool AttackerComponent::IsUpdatedAnimation()
-{
-	return bUpdatedAnimation;
-}
-
-void AttackerComponent::SetUpdatedAnimation(bool updatedAnimation)
-{
-	this->bUpdatedAnimation = updatedAnimation;
-}
-
-
 IEntity* AttackerComponent::GetAttackTarget()
 {
 	return m_pAttackTargetEntity;
@@ -302,19 +275,14 @@ void AttackerComponent::SetTimeBetweenAttack(f32 timeBetweenAttacks)
 	this->m_timeBetweenAttacks = timeBetweenAttacks;
 }
 
-void AttackerComponent::SetAttackAnimations(DynArray<FragmentID> attackAnimations)
+void AttackerComponent::SetIsRanged(bool isRanged)
 {
-	this->m_pAttackAnimations = attackAnimations;
+	this->bIsRanged = isRanged;
 }
 
-void AttackerComponent::SetIsMelee(bool isMelee)
+bool AttackerComponent::IsRanged()
 {
-	this->bIsMelee = isMelee;
-}
-
-bool AttackerComponent::IsMelee()
-{
-	return bIsMelee;
+	return bIsRanged;
 }
 
 void AttackerComponent::SetIsFollower(bool isFollower)

@@ -78,8 +78,10 @@ add_sources("Selectables_uber.cpp"
     SOURCE_GROUP "Components\\\\Selectables"
 		"Components/Selectables/Attacker.cpp"
 		"Components/Selectables/Selectable.cpp"
+		"Components/Selectables/UnitAnimation.cpp"
 		"Components/Selectables/Attacker.h"
 		"Components/Selectables/Selectable.h"
+		"Components/Selectables/UnitAnimation.h"
 )
 add_sources("Units_uber.cpp"
     PROJECTS Game

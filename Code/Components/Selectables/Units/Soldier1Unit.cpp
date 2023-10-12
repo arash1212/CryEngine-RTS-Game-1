@@ -14,6 +14,8 @@
 
 #include <Components/Info/OwnerInfo.h>
 
+#include <Components/Selectables/UnitAnimation.h>
+
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
 #include <CrySchematyc/Env/IEnvRegistrar.h>
@@ -50,20 +52,14 @@ void Soldier1UnitComponent::Initialize()
 
 	m_pAnimationComponent->EnableGroundAlignment(true);
 
-	//Animations
-	m_idleFragmentId = m_pAnimationComponent->GetFragmentId("Idle");
-	m_runFragmentId = m_pAnimationComponent->GetFragmentId("Run");
-	m_walkFragmentId = m_pAnimationComponent->GetFragmentId("Walk");
-	m_crouchFragmentId = m_pAnimationComponent->GetFragmentId("Crouch");
-	m_proneFragmentId = m_pAnimationComponent->GetFragmentId("Prone");
-
-	m_attack1FragmentId = m_pAnimationComponent->GetFragmentId("Attack1");
-
-	//AnimationComponent Initializations
-	m_pSelectableComponent = m_pEntity->GetOrCreateComponent<SelectableComponent>();
+	//StateManagerComponent Initialization
+	m_pStateManagerComponent = m_pEntity->GetOrCreateComponent<UnitStateManagerComponent>();
 
 	//AIController Initializations
 	m_pAIController = m_pEntity->GetOrCreateComponent<AIControllerComponent>();
+
+	//AnimationComponent Initializations
+	m_pSelectableComponent = m_pEntity->GetOrCreateComponent<SelectableComponent>();
 
 	//ActionManager Initializations
 	m_pActionManagerComponent = m_pEntity->GetOrCreateComponent<ActionManagerComponent>();
@@ -76,17 +72,13 @@ void Soldier1UnitComponent::Initialize()
 	m_pOwnerInfoComponent = m_pEntity->GetOrCreateComponent<OwnerInfoComponent>();
 	m_pOwnerInfoComponent->SetTeam(EPlayerTeam::TEAM6);
 
-	//StateManagerComponent Initialization
-	m_pStateManagerComponent = m_pEntity->GetOrCreateComponent<UnitStateManagerComponent>();
+	//UnitAnimationComponent Initialization
+	m_pUnitAnimationComponent = m_pEntity->GetOrCreateComponent<UnitAnimationComponent>();
 
-	//Attacker
+	//AttackerComponent Initialization
 	m_pAttackerComponent = m_pEntity->GetOrCreateComponent<AttackerComponent>();
-	m_pAttackerComponent->SetIsMelee(false);
+	m_pAttackerComponent->SetIsRanged(true);
 	m_pAttackerComponent->SetIsHumanoid(true);
-	//attack animations
-	DynArray<FragmentID> attackAnimations;
-	attackAnimations.append(m_attack1FragmentId);
-	m_pAttackerComponent->SetAttackAnimations(attackAnimations);
 }
 
 
@@ -108,10 +100,6 @@ void Soldier1UnitComponent::ProcessEvent(const SEntityEvent& event)
 	case Cry::Entity::EEvent::Update: {
 		//f32 DeltaTime = event.fParam[0];
 
-		UpdateAnimations();
-
-		m_pActionManagerComponent->ProcessActions();
-
 	}break;
 	case Cry::Entity::EEvent::Reset: {
 		m_pAnimationComponent->ResetCharacter();
@@ -121,60 +109,3 @@ void Soldier1UnitComponent::ProcessEvent(const SEntityEvent& event)
 		break;
 	}
 }
-
-/*=============================================================================================================================================
-																	ANIMATIONS
-==============================================================================================================================================*/
-
-void Soldier1UnitComponent::UpdateAnimations()
-{
-	if (!m_pStateManagerComponent) {
-		return;
-	}
-
-	/////////////////////////////////////////
-	m_pAnimationComponent->SetMotionParameter(EMotionParamID::eMotionParamID_TravelSpeed, m_pAIController->IsMoving() ? 3.f : 0.f);
-
-	//Run/Walk BlendSpaces
-	Vec3 forwardVector = m_pEntity->GetForwardDir().normalized();
-	Vec3 rightVector = m_pEntity->GetRightDir().normalized();
-	Vec3 velocity = m_pAIController->GetVelocity().normalized();
-
-	float forwardDot = velocity.dot(forwardVector);
-	float rightDot = velocity.dot(rightVector);
-
-	int32 inv = rightDot < 0 ? 1 : -1;
-	m_pAnimationComponent->SetMotionParameter(EMotionParamID::eMotionParamID_TravelAngle, crymath::acos(forwardDot) * inv);
-	/////////////////////////////////////////
-
-	//Update Animation
-	//Idle
-	FragmentID currentFragmentId;
-	if (m_pStateManagerComponent->GetStance() == EUnitStance::WALKING) {
-		currentFragmentId = m_walkFragmentId;
-	}
-
-	//Walk
-	else if ( m_pStateManagerComponent->GetStance()==EUnitStance::CROUCH) {
-		currentFragmentId = m_crouchFragmentId;
-	}
-
-	//Prone
-	else if(m_pStateManagerComponent->GetStance() == EUnitStance::PRONE) {
-		currentFragmentId = m_proneFragmentId;
-	}
-
-	//Run
-	else if (m_pStateManagerComponent->GetStance() == EUnitStance::RUNNING) {
-		currentFragmentId = m_runFragmentId;
-	}
-
-	if (m_activeFragmentId != currentFragmentId) {
-		m_activeFragmentId = currentFragmentId;
-		m_pAnimationComponent->QueueFragmentWithId(m_activeFragmentId);
-	}
-}
-
-/*=============================================================================================================================================
-																	ACTIONS
-==============================================================================================================================================*/

@@ -59,7 +59,7 @@ void AttackAction::Cancel()
 	}
 
 	m_pAttackerComponent->SetTargetEntity(nullptr);
-	m_pAiControllerComponent->MoveTo(m_pEntity->GetWorldPos(), false);
+	m_pAiControllerComponent->StopMoving();
 	bIsDone = true;
 }
 

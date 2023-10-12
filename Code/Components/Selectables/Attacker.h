@@ -6,6 +6,7 @@ class OwnerInfoComponent;
 class UnitStateManagerComponent;
 class AIControllerComponent;
 class BaseWeaponComponent;
+class UnitAnimationComponent;
 
 struct SUnitAttackInfo {
 public:
@@ -38,6 +39,7 @@ private:
 	UnitStateManagerComponent* m_pStateManagerComponent = nullptr;
 	AIControllerComponent* m_pAIController = nullptr;
 	BaseWeaponComponent* m_pWeaponComponent = nullptr;
+	UnitAnimationComponent* m_pUnitAnimationComponent = nullptr;
 
 	//Target
 	IEntity* m_pAttackTargetEntity = nullptr;
@@ -45,12 +47,10 @@ private:
 
 	//AttackInfo
 	SUnitAttackInfo m_pAttackInfo;
-	DynArray<FragmentID> m_pAttackAnimations;
 
 private:
 	bool bIsHumanoid = false;
-	bool bUpdatedAnimation = false;
-	bool bIsMelee = false;
+	bool bIsRanged = false;
 	bool bIsFollower = true;
 
 	//Timers
@@ -63,17 +63,16 @@ private:
 	int32 m_maxAttackCount = 10;
 	int32 m_attackCount = 0;
 
+private:
+	void FindRandomTarget();
+	void AttackRandomTarget();
+
 public:
 	void Attack(IEntity* target);
-	void AttackRandomTarget();
-	void FindRandomTarget();
 	void LookAt(Vec3 position);
 
 	bool IsAttacking();
 	bool CanAttack();
-
-	bool IsUpdatedAnimation();
-	void SetUpdatedAnimation(bool updatedAnimation);
 
 	SUnitAttackInfo GetAttackInfo();
 	void SetAttackInfo(SUnitAttackInfo attackInfo);
@@ -91,10 +90,8 @@ public:
 
 	void SetTimeBetweenAttack(f32 timeBetweenAttacks);
 
-	void SetAttackAnimations(DynArray<FragmentID> attackAnimations);
-
-	void SetIsMelee(bool isMelee);
-	bool IsMelee();
+	void SetIsRanged(bool isRanged);
+	bool IsRanged();
 
 	void SetIsFollower(bool isFollower);
 	bool IsFollower();

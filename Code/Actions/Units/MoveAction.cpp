@@ -51,7 +51,7 @@ void MoveAction::Cancel()
 		return;
 	}
 
-	m_pAiControllerComponent->MoveTo(m_pEntity->GetWorldPos(), false);
+	m_pAiControllerComponent->StopMoving();
 	bIsDone = true;
 }
 

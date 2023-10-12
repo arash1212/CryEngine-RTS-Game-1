@@ -45,6 +45,8 @@ void ActionManagerComponent::ProcessEvent(const SEntityEvent& event)
 	case Cry::Entity::EEvent::Update: {
 		//f32 DeltaTime = event.fParam[0];
 
+		this->ProcessActions();
+
 	}break;
 	case Cry::Entity::EEvent::Reset: {
 		m_actionsQueue.clear();

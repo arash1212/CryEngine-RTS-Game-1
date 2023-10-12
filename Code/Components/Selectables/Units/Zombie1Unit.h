@@ -10,6 +10,7 @@ class ActionManagerComponent;
 class OwnerInfoComponent;
 class UnitStateManagerComponent;
 class AttackerComponent;
+class UnitAnimationComponent;
 
 struct SOwnerInfo;
 
@@ -42,25 +43,12 @@ private:
 	ActionManagerComponent* m_pActionManagerComponent = nullptr;
 	UnitStateManagerComponent* m_pStateManagerComponent = nullptr;
 	AttackerComponent* m_pAttackerComponent = nullptr;
+	UnitAnimationComponent* m_pUnitAnimationComponent = nullptr;
 
 	//OwnerShip
 	OwnerInfoComponent* m_pOwnerInfoComponent = nullptr;
 
 private:
-	//Animations
-	FragmentID m_idleFragmentId;
-	FragmentID m_runFragmentId;
-	FragmentID m_walkFragmentId;
-	FragmentID m_attack1FragmentId;
-	FragmentID m_attack2FragmentId;
-	FragmentID m_attack3FragmentId;
-	//FragmentID m_crouchFragmentId;
-	//FragmentID m_proneFragmentId;
-	FragmentID m_activeFragmentId;
-	FragmentID m_testFragmentId;
-
-protected:
-	void UpdateAnimations();
 
 public:
 };
