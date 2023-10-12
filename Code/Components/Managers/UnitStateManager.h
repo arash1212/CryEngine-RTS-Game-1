@@ -4,20 +4,20 @@
 
 enum class EUnitState {
 	IDLE,
-	RUN,
-	WALK,
-	PRONE
+	WALKING,
+	RUNNING
 };
 
 enum class EUnitStance {
-	STANDING,
+	WALKING,
 	CROUCH,
-	PRONE
+	PRONE,
+	RUNNING
 };
 
 static constexpr f32 BASE_DEFAULT_PRONE_SPEED = 1.0f;
 static constexpr f32 BASE_DEFAULT_CROUCH_SPEED = 3.f;
-static constexpr f32 BASE_DEFAULT_WALK_SPEED = 5.f;
+static constexpr f32 BASE_DEFAULT_WALK_SPEED = 4.f;
 static constexpr f32 BASE_DEFAULT_RUN_SPEED = 6.5f;
 
 class UnitStateManagerComponent final : public IEntityComponent
@@ -47,8 +47,8 @@ public:
 private:
 	Cry::DefaultComponents::CCharacterControllerComponent* m_pCharacterControllerComponent = nullptr;
 
-	EUnitState m_pUnitState;
-	EUnitStance m_pUnitStance;
+	EUnitState m_pUnitState = EUnitState::IDLE;
+	EUnitStance m_pUnitStance = EUnitStance::WALKING;
 
 private:
 	f32 m_proneSpeed = BASE_DEFAULT_PRONE_SPEED;
@@ -58,25 +58,36 @@ private:
 	f32 m_currentSpeed = BASE_DEFAULT_WALK_SPEED;
 
 private:
-	void UpdateState();
+	//void UpdateState();
 	void UpdateCurrentSpeed();
 
 public:
-	EUnitState GetState();
+
+	/*
 	void SetState(EUnitState state);
+	EUnitState GetState();
+	*/
+
 	EUnitStance GetStance();
 	void SetStance(EUnitStance stance);
 
 	//
 	void SetCharacterController(Cry::DefaultComponents::CCharacterControllerComponent* characterControllerComponent);
+
 	void SetWalkSpeed(f32 walkSpeed);
 	f32 GetWalkSpeed();
+
 	void SetCrouchSpeed(f32 crouchSpeed);
+	f32 GetCrouchSpeed();
+
 	void SetRunSpeed(f32 runSpeed);
 	f32 GetRunSpeed();
+
 	void SetProneSpeed(f32 proneSpeed);
+	f32 GetProneSpeed();
 
 	void SetCurrentSpeed(f32 currentSpeed);
 	f32 GetCurrentSpeed();
+
 	bool IsRunning();
 };

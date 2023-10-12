@@ -18,7 +18,7 @@ public:
 	static void ReflectType(Schematyc::CTypeDesc<ActionManagerComponent>& desc)
 	{
 		desc.SetGUID("{46472D1E-5011-4CAC-9E72-FA1CC73ED44A}"_cry_guid);
-		desc.SetEditorCategory("Action");
+		desc.SetEditorCategory("Managers");
 	}
 
 protected:
@@ -28,7 +28,6 @@ protected:
 public:
 	void ProcessActions();
 	void AddAction(IBaseAction* action);
-
 	void CancelCurrentAction();
 
 };

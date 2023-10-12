@@ -10,6 +10,7 @@ class BaseWeaponComponent;
 struct SUnitAttackInfo {
 public:
 	f32 m_maxAttackDistance = 20.f;
+	f32 m_detectionDistance = 30.f;
 };
 
 class AttackerComponent final : public IEntityComponent
@@ -31,6 +32,7 @@ public:
 		desc.SetGUID("{3DB1B862-DB6E-4BA5-AB7A-097245E5080B}"_cry_guid);
 		desc.SetEditorCategory("Units");
 	}
+
 private:
 	Cry::DefaultComponents::CAdvancedAnimationComponent* m_pAnimationComponent = nullptr;
 	UnitStateManagerComponent* m_pStateManagerComponent = nullptr;
@@ -47,13 +49,17 @@ private:
 
 private:
 	bool bIsHumanoid = false;
-
 	bool bUpdatedAnimation = false;
+	bool bIsMelee = false;
+	bool bIsFollower = true;
 
+	//Timers
 	f32 m_timeBetweenAttacks = 0.04f;
 	f32 m_attackTimePassed = 0.f;
 	f32 m_timeBetweenAttackCountReset = 0.9f;
 	f32 m_attackCountResetTimePassed = 0.f;
+
+	//Attack Count
 	int32 m_maxAttackCount = 10;
 	int32 m_attackCount = 0;
 
@@ -63,6 +69,9 @@ public:
 	void FindRandomTarget();
 	void LookAt(Vec3 position);
 
+	bool IsAttacking();
+	bool CanAttack();
+
 	bool IsUpdatedAnimation();
 	void SetUpdatedAnimation(bool updatedAnimation);
 
@@ -70,6 +79,7 @@ public:
 	void SetAttackInfo(SUnitAttackInfo attackInfo);
 
 	void SetTargetEntity(IEntity* target);
+
 	IEntity* GetAttackTarget();
 	void SetAttackTarget(IEntity* attacktTarget);
 
@@ -81,7 +91,11 @@ public:
 
 	void SetTimeBetweenAttack(f32 timeBetweenAttacks);
 
-	bool IsAttacking();
-
 	void SetAttackAnimations(DynArray<FragmentID> attackAnimations);
+
+	void SetIsMelee(bool isMelee);
+	bool IsMelee();
+
+	void SetIsFollower(bool isFollower);
+	bool IsFollower();
 };

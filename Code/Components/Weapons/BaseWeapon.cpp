@@ -130,12 +130,8 @@ void BaseWeaponComponent::SpawnProjectile(Vec3 pos)
 		return;
 	}
 
-	Vec3 origin = m_pWeaponAttachment->GetAttWorldAbsolute().t;
+	Vec3 origin = this->GetMuzzlePosition();
 	Vec3 dir = pos - origin;
-
-	//const IDefaultSkeleton& pDefaultSkeleton = m_pWeaponAttachment->GetIAttachmentObject()->GetICharacterInstance()->GetIDefaultSkeleton();
-	//int32 muzzleBoneID = pDefaultSkeleton.GetJointIDByName("Muzzle");
-	//const ISkeletonPose* pPose = m_pWeaponAttachment->GetIAttachmentObject()->GetICharacterInstance()->GetISkeletonPose();
 
 	SEntitySpawnParams projectileSpawnParams;
 	projectileSpawnParams.vPosition = origin;
@@ -177,10 +173,7 @@ void BaseWeaponComponent::PutAway()
 
 Vec3 BaseWeaponComponent::GetMuzzlePosition()
 {
-	const IDefaultSkeleton& pDefaultSkeleton = m_pWeaponAttachment->GetIAttachmentObject()->GetICharacterInstance()->GetIDefaultSkeleton();
-	int32 muzzleBoneID = pDefaultSkeleton.GetJointIDByName("Muzzle");
-	const ISkeletonPose* pPose = m_pWeaponAttachment->GetIAttachmentObject()->GetICharacterInstance()->GetISkeletonPose();
-	return  pPose->GetAbsJointByID(muzzleBoneID).t;
+	return   m_pWeaponAttachment->GetIAttachmentObject()->GetICharacterInstance()->GetIAttachmentManager()->GetInterfaceByName("Muzzle")->GetAttWorldAbsolute().t;
 }
 
 string BaseWeaponComponent::GetAttachmentName()

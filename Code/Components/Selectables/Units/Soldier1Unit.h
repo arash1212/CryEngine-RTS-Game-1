@@ -54,6 +54,7 @@ private:
 	FragmentID m_walkFragmentId;
 	FragmentID m_crouchFragmentId;
 	FragmentID m_proneFragmentId;
+	FragmentID m_attack1FragmentId;
 	FragmentID m_activeFragmentId;
 
 protected:

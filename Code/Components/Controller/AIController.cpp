@@ -33,7 +33,7 @@ void AIControllerComponent::Initialize()
 	m_pCharacterControllerComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CCharacterControllerComponent>();
 	m_pCharacterControllerComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), IDENTITY, Vec3(0, 0, 1)));
 
-	//Navigation component initialization
+	//Navigation component initializations
 	m_pNavigationComponent = m_pEntity->GetOrCreateComponent<IEntityNavigationComponent>();
 	m_pNavigationComponent->SetNavigationAgentType("MediumSizedCharacters");
 	//MovementProperties
@@ -48,6 +48,9 @@ void AIControllerComponent::Initialize()
 	IEntityNavigationComponent::SCollisionAvoidanceProperties collisionAvoidanceProps;
 	collisionAvoidanceProps.radius = 0.1f;
 	m_pNavigationComponent->SetCollisionAvoidanceProperties(collisionAvoidanceProps);
+
+	//StateManager initialization
+	m_pStateManager = m_pEntity->GetComponent<UnitStateManagerComponent>();
 
 	//
 	m_moveToPosition = m_pEntity->GetWorldPos();
@@ -84,8 +87,7 @@ void AIControllerComponent::ProcessEvent(const SEntityEvent& event)
 
 void AIControllerComponent::Move(f32 DeltaTime)
 {
-	UnitStateManagerComponent* stateManager = m_pEntity->GetComponent<UnitStateManagerComponent>();
-	if (!stateManager) {
+	if (!m_pStateManager) {
 		CryLog("AIControllerComponent : (Move) UnitStateManagerComponent does not exist on entity !");
 		return;
 	}
@@ -95,7 +97,7 @@ void AIControllerComponent::Move(f32 DeltaTime)
 
 	m_pNavigationComponent->NavigateTo(m_moveToPosition);
 	Vec3 velocity = m_pNavigationComponent->GetRequestedVelocity();
-	m_pCharacterControllerComponent->SetVelocity(velocity.normalized() * stateManager->GetCurrentSpeed());
+	m_pCharacterControllerComponent->SetVelocity(velocity.normalized() * m_pStateManager->GetCurrentSpeed());
 }
 
 void AIControllerComponent::MoveTo(Vec3 position, bool run)
@@ -103,14 +105,58 @@ void AIControllerComponent::MoveTo(Vec3 position, bool run)
 	if (position == ZERO) {
 		return;
 	}
-
-	UnitStateManagerComponent* stateManager = m_pEntity->GetComponent<UnitStateManagerComponent>();
-	if (!stateManager) {
+	if (!m_pStateManager) {
 		CryLog("AIControllerComponent : (MoveTo) UnitStateManagerComponent does not exist on entity !");
 		return;
 	}
 
+	/*
+	//Set state to run
+	if (run) {
+		m_pStateManager->SetStance(EUnitStance::RUNNING);
+	}*/
+
 	m_moveToPosition = this->SnapToNavmesh(position);
+}
+
+void AIControllerComponent::LookAt(Vec3 position)
+{
+	if (position == ZERO) {
+		return;
+	}
+
+	Vec3 dir = position - m_pEntity->GetWorldPos();
+	dir.z = 0;
+	m_pEntity->SetRotation(Quat::CreateRotationVDir(dir));
+}
+
+f32 AIControllerComponent::AngleTo(Vec3 position)
+{
+	Vec3 dir = position - m_pEntity->GetWorldPos();
+	Vec3 forwardVector = m_pEntity->GetForwardDir().normalized();
+	float dot = forwardVector.dot(dir);
+	return crymath::acos(dot);
+}
+
+Vec3 AIControllerComponent::SnapToNavmesh(Vec3 point)
+{
+	NavigationAgentTypeID agentTypeId = NavigationAgentTypeID::TNavigationID(1);
+	NavigationMeshID navMeshId = gEnv->pAISystem->GetNavigationSystem()->FindEnclosingMeshID(agentTypeId, point);
+	MNM::SOrderedSnappingMetrics snappingMetrics;
+	snappingMetrics.CreateDefault();
+	SAcceptAllQueryTrianglesFilter filter;
+	MNM::SPointOnNavMesh pointOnNavMesh = gEnv->pAISystem->GetNavigationSystem()->SnapToNavMesh(agentTypeId, point, snappingMetrics, &filter, &navMeshId);
+	return pointOnNavMesh.GetWorldPosition();
+}
+
+void AIControllerComponent::StopMoving()
+{
+	this->MoveTo(m_pEntity->GetWorldPos(), false);
+}
+
+void AIControllerComponent::LookAtWalkDirection()
+{
+	m_pEntity->SetRotation(Quat::CreateRotationVDir(m_pNavigationComponent->GetRequestedVelocity()));
 }
 
 bool AIControllerComponent::IsMoving()
@@ -128,35 +174,6 @@ void AIControllerComponent::SetMoveSpeed(f32 speed)
 	this->m_moveSpeed = speed;
 }
 
-void AIControllerComponent::StopMoving()
-{
-	this->MoveTo(m_pEntity->GetWorldPos(), false);
-}
-
-void AIControllerComponent::LookAt(Vec3 position)
-{
-	if (position == ZERO) {
-		return;
-	}
-
-	Vec3 dir = position - m_pEntity->GetWorldPos();
-	dir.z = 0;
-	m_pEntity->SetRotation(Quat::CreateRotationVDir(dir));
-}
-
-void AIControllerComponent::LookAtWalkDirection()
-{
-	m_pEntity->SetRotation(Quat::CreateRotationVDir(m_pNavigationComponent->GetRequestedVelocity()));
-}
-
-f32 AIControllerComponent::AngleTo(Vec3 position)
-{
-	Vec3 dir = position - m_pEntity->GetWorldPos();
-	Vec3 forwardVector = m_pEntity->GetForwardDir().normalized();
-	float dot = forwardVector.dot(dir);
-	return crymath::acos(dot);
-}
-
 Vec3 AIControllerComponent::GetVelocity()
 {
 	return m_pCharacterControllerComponent->GetVelocity();
@@ -165,15 +182,4 @@ Vec3 AIControllerComponent::GetVelocity()
 Cry::DefaultComponents::CCharacterControllerComponent* AIControllerComponent::GetCharacterController()
 {
 	return m_pCharacterControllerComponent;
-}
-
-Vec3 AIControllerComponent::SnapToNavmesh(Vec3 point)
-{
-	NavigationAgentTypeID agentTypeId = NavigationAgentTypeID::TNavigationID(1);
-	NavigationMeshID navMeshId = gEnv->pAISystem->GetNavigationSystem()->FindEnclosingMeshID(agentTypeId, point);
-	MNM::SOrderedSnappingMetrics snappingMetrics;
-	snappingMetrics.CreateDefault();
-	SAcceptAllQueryTrianglesFilter filter;
-	MNM::SPointOnNavMesh pointOnNavMesh = gEnv->pAISystem->GetNavigationSystem()->SnapToNavMesh(agentTypeId, point, snappingMetrics, &filter, &navMeshId);
-	return pointOnNavMesh.GetWorldPosition();
 }

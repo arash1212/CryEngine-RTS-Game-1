@@ -2,6 +2,10 @@
 
 #include <Actions/IBaseAction.h>
 
+class AIControllerComponent;
+class AttackerComponent;
+class UnitStateManagerComponent;
+
 class AttackAction : public IBaseAction {
 
 public:
@@ -9,6 +13,10 @@ public:
 
 private:
 	IEntity* m_pTarget = nullptr;
+	AIControllerComponent* m_pAiControllerComponent = nullptr;
+	AttackerComponent* m_pAttackerComponent = nullptr;
+	UnitStateManagerComponent* m_pStateManagerComponent = nullptr;
+
 
 public:
 	virtual void Execute();

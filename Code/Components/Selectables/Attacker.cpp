@@ -80,6 +80,8 @@ void AttackerComponent::ProcessEvent(const SEntityEvent& event)
 
 	}break;
 	case Cry::Entity::EEvent::Reset: {
+		m_pAttackTargetEntity = nullptr;
+		m_pRandomAttackTarget = nullptr;
 
 	}break;
 	default:
@@ -98,20 +100,20 @@ void AttackerComponent::Attack(IEntity* target)
 	}
 
 	//Fire Weapon
-	if (m_pWeaponComponent) {
+	if (!bIsMelee && m_pWeaponComponent) {
 		m_pWeaponComponent->Fire(target->GetWorldPos());
 	}
 
 	/*
-	FragmentID id = m_pAnimationComponent->GetFragmentId("Run");
+	FragmentID id = m_pAttackAnimations[0];
 	CryCharAnimationParams animationParams;
 	animationParams.m_nLayerID = 1;
-	animationParams.m_fPlaybackWeight = 0.7f;
+	animationParams.m_fPlaybackWeight = 0.3f;
 	m_pAnimationComponent->GetCharacter()->GetISkeletonAnim()->StartAnimationById(id, animationParams);
 	*/
 
 	//Play Attack Animation
-	if (m_pAttackAnimations.size() > 0) {
+	if (m_pAttackAnimations.size() > 0 && bIsMelee) {
 		FragmentID attackingFragmentId = m_pAttackAnimations[MathUtils::GetRandomInt(0, m_pAttackAnimations.size())];
 		m_pAnimationComponent->GetActionController()->Flush();
 		IActionPtr action = new TAction<SAnimationContext>(30U, attackingFragmentId);
@@ -131,12 +133,23 @@ void AttackerComponent::AttackRandomTarget()
 		return;
 	}
 
+	//Attack RandomAttackTarget if it's in unit's Attack range
 	f32 distanceToTarget = m_pEntity->GetWorldPos().GetDistance(m_pRandomAttackTarget->GetWorldPos());
 	if (distanceToTarget < m_pAttackInfo.m_maxAttackDistance) {
 		Attack(m_pRandomAttackTarget);
 	}
+
 	else {
-		m_pRandomAttackTarget = nullptr;
+		//If is not a follwer empty randomAttackTarget
+		if (!bIsFollower) {
+			m_pRandomAttackTarget = nullptr;
+		}
+
+		//If is a follwer follow random target if it's not in unit attack range
+		else {
+			this->m_pAIController->MoveTo(m_pRandomAttackTarget->GetWorldPos(), true);
+			this->LookAt(m_pRandomAttackTarget->GetWorldPos());
+		}
 	}
 }
 
@@ -154,16 +167,18 @@ void AttackerComponent::FindRandomTarget()
 		IEntity* entity = entityItPtr->Next();
 		f32 distanceToTarget = m_pEntity->GetWorldPos().GetDistance(entity->GetWorldPos());
 		OwnerInfoComponent* entityOwnerInfo = entity->GetComponent<OwnerInfoComponent>();
-		if (!entityOwnerInfo || distanceToTarget > m_pAttackInfo.m_maxAttackDistance) {
+
+		//Ignore entity if it's not in detection range
+		if (!entityOwnerInfo || distanceToTarget > m_pAttackInfo.m_detectionDistance) {
 			continue;
 		}
 
+		//set entity entity as randomAttackTarget if it's team is not same as this unit's team
 		if (entityOwnerInfo->GetInfo().m_pTeam != m_pEntity->GetComponent<OwnerInfoComponent>()->GetInfo().m_pTeam) {
 			m_pRandomAttackTarget = entity;
 		}
 	}
 }
-
 
 void AttackerComponent::LookAt(Vec3 position)
 {
@@ -205,6 +220,42 @@ void AttackerComponent::LookAt(Vec3 position)
 	}
 }
 
+bool AttackerComponent::IsAttacking()
+{
+	if (!m_pAttackTargetEntity && !m_pRandomAttackTarget) {
+		return false;
+	}
+	IEntity* target = m_pAttackTargetEntity ? m_pAttackTargetEntity : m_pRandomAttackTarget;
+
+	f32 distanceToTarget = m_pEntity->GetWorldPos().GetDistance(target->GetWorldPos());
+	if (distanceToTarget > m_pAttackInfo.m_maxAttackDistance) {
+		return false;
+	}
+
+	return true;
+}
+
+bool AttackerComponent::CanAttack()
+{
+	if (!m_pAttackTargetEntity && !m_pRandomAttackTarget) {
+		return false;
+	}
+	IEntity* target = m_pAttackTargetEntity ? m_pAttackTargetEntity : m_pRandomAttackTarget;
+
+	f32 distanceToTarget = m_pEntity->GetWorldPos().GetDistance(target->GetWorldPos());
+	if (distanceToTarget > m_pAttackInfo.m_maxAttackDistance) {
+		return false;
+	}
+
+	return true;
+}
+
+void AttackerComponent::SetTargetEntity(IEntity* target)
+{
+	this->m_pRandomAttackTarget = nullptr;
+	this->m_pAttackTargetEntity = target;
+}
+
 bool AttackerComponent::IsUpdatedAnimation()
 {
 	return bUpdatedAnimation;
@@ -215,11 +266,6 @@ void AttackerComponent::SetUpdatedAnimation(bool updatedAnimation)
 	this->bUpdatedAnimation = updatedAnimation;
 }
 
-void AttackerComponent::SetTargetEntity(IEntity* target)
-{
-	this->m_pRandomAttackTarget = nullptr;
-	this->m_pAttackTargetEntity = target;
-}
 
 IEntity* AttackerComponent::GetAttackTarget()
 {
@@ -256,24 +302,29 @@ void AttackerComponent::SetTimeBetweenAttack(f32 timeBetweenAttacks)
 	this->m_timeBetweenAttacks = timeBetweenAttacks;
 }
 
-bool AttackerComponent::IsAttacking()
-{
-	if (!m_pAttackTargetEntity && !m_pRandomAttackTarget) {
-		return false;
-	}
-	IEntity* target = m_pAttackTargetEntity ? m_pAttackTargetEntity : m_pRandomAttackTarget;
-
-	f32 distanceToTarget = m_pEntity->GetWorldPos().GetDistance(target->GetWorldPos());
-	if (distanceToTarget > m_pAttackInfo.m_maxAttackDistance) {
-		return false;
-	}
-
-	return true;
-}
-
 void AttackerComponent::SetAttackAnimations(DynArray<FragmentID> attackAnimations)
 {
 	this->m_pAttackAnimations = attackAnimations;
+}
+
+void AttackerComponent::SetIsMelee(bool isMelee)
+{
+	this->bIsMelee = isMelee;
+}
+
+bool AttackerComponent::IsMelee()
+{
+	return bIsMelee;
+}
+
+void AttackerComponent::SetIsFollower(bool isFollower)
+{
+	this->bIsFollower = isFollower;
+}
+
+bool AttackerComponent::IsFollower()
+{
+	return bIsFollower;
 }
 
 SUnitAttackInfo AttackerComponent::GetAttackInfo()

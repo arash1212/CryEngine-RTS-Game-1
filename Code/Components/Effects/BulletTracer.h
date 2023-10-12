@@ -21,16 +21,20 @@ public:
 		desc.SetGUID("{C77E11BF-E791-4050-A309-3BA25A9E85E8}"_cry_guid);
 		desc.SetEditorCategory("Effects");
 	}
+
 private:
 	Cry::DefaultComponents::CStaticMeshComponent* m_pMeshComponent = nullptr;
 
 	IEntity* m_pOwner = nullptr;
+
 private:
 	f32 m_timeBetweenDestroy = 5.0f;
 	f32 m_destroyTimePassed = 0.f;
+
 private :
 	void Move();
 	void Destroy();
+	void CheckCollision(const EventPhysCollision* physCollision);
 
 public:
 	void SetOwner(IEntity* owner);

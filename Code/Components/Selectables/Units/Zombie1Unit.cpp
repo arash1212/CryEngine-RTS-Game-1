@@ -6,7 +6,7 @@
 
 #include <Components/Selectables/Selectable.h>
 #include <Components/Controller/AIController.h>
-#include <Components/Action/ActionManager.h>
+#include <Components/Managers/ActionManager.h>
 #include <Components/Managers/UnitStateManager.h>
 
 #include <CryAnimation/ICryAnimation.h>
@@ -76,14 +76,16 @@ void Zombie1UnitComponent::Initialize()
 
 	//StateManagerComponent Initialization
 	m_pStateManagerComponent = m_pEntity->GetOrCreateComponent<UnitStateManagerComponent>();
+	m_pStateManagerComponent->SetWalkSpeed(5.f);
 
 	//////////AttackerComponent Initializations
 	m_pAttackerComponent = m_pEntity->GetOrCreateComponent<AttackerComponent>();
+	m_pAttackerComponent->SetIsMelee(true);
 	m_pAttackerComponent->SetIsHumanoid(true);
 	m_pAttackerComponent->SetTimeBetweenAttack(0.7f);
 	//attack info
 	SUnitAttackInfo attackInfo;
-	attackInfo.m_maxAttackDistance = 2.f;
+	attackInfo.m_maxAttackDistance = 2.3f;
 	m_pAttackerComponent->SetAttackInfo(attackInfo);
 	//attack animations
 	DynArray<FragmentID> attackAnimations;
@@ -120,9 +122,7 @@ void Zombie1UnitComponent::ProcessEvent(const SEntityEvent& event)
 
 	}break;
 	case Cry::Entity::EEvent::Reset: {
-		m_pSelectableComponent->DeSelect();
 		m_pAnimationComponent->ResetCharacter();
-		m_pStateManagerComponent->SetStance(EUnitStance::STANDING);
 
 	}break;
 	default:
@@ -164,12 +164,26 @@ void Zombie1UnitComponent::UpdateAnimations()
 		m_pAttackerComponent->SetUpdatedAnimation(false);
 	}
 
-	if (m_pStateManagerComponent->GetStance() == EUnitStance::STANDING && m_pStateManagerComponent->GetState() != EUnitState::RUN) {
+	//Update Animation
+	//Idle
+	if (m_pStateManagerComponent->GetStance() == EUnitStance::WALKING) {
 		currentFragmentId = m_walkFragmentId;
 	}
 
+	/*
+	//Walk
+	else if (m_pStateManagerComponent->GetStance() == EUnitStance::CROUCH) {
+		currentFragmentId = m_crouchFragmentId;
+	}
+
+	//Prone
+	else if (m_pStateManagerComponent->GetStance() == EUnitStance::PRONE) {
+		currentFragmentId = m_proneFragmentId;
+	}
+	*/
+
 	//Run
-	else {
+	else if (m_pStateManagerComponent->GetStance() == EUnitStance::RUNNING) {
 		currentFragmentId = m_runFragmentId;
 	}
 

@@ -11,29 +11,48 @@ MoveAction::MoveAction(IEntity* entity, Vec3 movePosition, bool run)
 	this->m_pEntity = entity;
 	this->m_movePosition = movePosition;
 	this->bRun = run;
+	this->m_pAttackerComponent = m_pEntity->GetComponent<AttackerComponent>();
+	this->m_pAiControllerComponent = m_pEntity->GetComponent<AIControllerComponent>();
+	this->m_pStateManagerComponent = m_pEntity->GetComponent<UnitStateManagerComponent>();
+
+	//Change unit stance accoriding to run input
+	if (m_pStateManagerComponent) {
+		if (run) {
+			m_pStateManagerComponent->SetStance(EUnitStance::RUNNING);
+		}
+		if (!run && m_pStateManagerComponent->GetStance() == EUnitStance::RUNNING) {
+			m_pStateManagerComponent->SetStance(EUnitStance::WALKING);
+		}
+	}
 }
 
 void MoveAction::Execute()
 {
-	AIControllerComponent* controller = m_pEntity->GetComponent<AIControllerComponent>();
-	AttackerComponent* attacker = m_pEntity->GetComponent<AttackerComponent>();
-	//UnitStateManagerComponent* stateManager = m_pEntity->GetComponent<UnitStateManagerComponent>();
-	if (controller) {
-		controller->MoveTo(m_movePosition, bRun);
+	if (!m_pAiControllerComponent) {
+		CryLog("MoveAction : (Cancel) AiController is null");
+		bIsDone = true;
+		return;
+	}
 
-		if (!attacker || !attacker->IsAttacking()) {
-			controller->LookAtWalkDirection();
+	if (m_pAiControllerComponent) {
+		m_pAiControllerComponent->MoveTo(m_movePosition, bRun);
+
+		if (!m_pAttackerComponent || !m_pAttackerComponent->IsAttacking()) {
+			m_pAiControllerComponent->LookAtWalkDirection();
 		}
 	}
 }
 
 void MoveAction::Cancel()
 {
-	AIControllerComponent* controller = m_pEntity->GetComponent<AIControllerComponent>();
-	if (controller) {
-		controller->MoveTo(m_pEntity->GetWorldPos(), false);
+	if (!m_pAiControllerComponent) {
+		CryLog("MoveAction : (Cancel) AiController is null");
 		bIsDone = true;
+		return;
 	}
+
+	m_pAiControllerComponent->MoveTo(m_pEntity->GetWorldPos(), false);
+	bIsDone = true;
 }
 
 bool MoveAction::IsDone()

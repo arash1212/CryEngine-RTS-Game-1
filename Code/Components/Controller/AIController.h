@@ -3,6 +3,8 @@
 #include <DefaultComponents/Physics/CharacterControllerComponent.h>
 #include <CryAISystem/Components/IEntityNavigationComponent.h>
 
+class UnitStateManagerComponent;
+
 static constexpr f32 AI_CONTROLLER_DEFAULT_MOVE_SPEED = 0.4f;
 
 class AIControllerComponent final : public IEntityComponent
@@ -29,6 +31,7 @@ public:
 private:
 	Cry::DefaultComponents::CCharacterControllerComponent* m_pCharacterControllerComponent = nullptr;
 	IEntityNavigationComponent* m_pNavigationComponent = nullptr;
+	UnitStateManagerComponent* m_pStateManager = nullptr;
 
 private:
 	Vec3 m_moveToPosition = ZERO;
@@ -40,13 +43,14 @@ private:
 
 public:
 	void MoveTo(Vec3 position, bool run);
-	bool IsMoving();
-	bool IsOnGround();
-	void SetMoveSpeed(f32 speed);
-	void StopMoving();
 	void LookAt(Vec3 position);
 	void LookAtWalkDirection();
 	f32 AngleTo(Vec3 position);
+	void StopMoving();
+
+	bool IsMoving();
+	bool IsOnGround();
+	void SetMoveSpeed(f32 speed);
 
 	Vec3 GetVelocity();
 	Cry::DefaultComponents::CCharacterControllerComponent* GetCharacterController();

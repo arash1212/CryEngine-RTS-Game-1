@@ -41,12 +41,6 @@ add_sources("Components_uber.cpp"
 		"Components/SpawnPoint.cpp"
 		"Components/SpawnPoint.h"
 )
-add_sources("Action_uber.cpp"
-    PROJECTS Game
-    SOURCE_GROUP "Components\\\\Action"
-		"Components/Action/ActionManager.cpp"
-		"Components/Action/ActionManager.h"
-)
 add_sources("Controller_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "Components\\\\Controller"
@@ -68,7 +62,9 @@ add_sources("Info_uber.cpp"
 add_sources("Managers_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "Components\\\\Managers"
+		"Components/Managers/ActionManager.cpp"
 		"Components/Managers/UnitStateManager.cpp"
+		"Components/Managers/ActionManager.h"
 		"Components/Managers/UnitStateManager.h"
 )
 add_sources("Player_uber.cpp"

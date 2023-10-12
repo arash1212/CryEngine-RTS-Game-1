@@ -4,39 +4,63 @@
 
 #include <Components/Selectables/Attacker.h>
 #include <Components/Controller/AIController.h>
+#include <Components/Managers/UnitStateManager.h>
 
 AttackAction::AttackAction(IEntity* entity, IEntity* target)
 {
 	this->m_pEntity = entity;
 	this->m_pTarget = target;
+	this->m_pAttackerComponent = m_pEntity->GetComponent<AttackerComponent>();
+	this->m_pAiControllerComponent = m_pEntity->GetComponent<AIControllerComponent>();
+	this->m_pStateManagerComponent = m_pEntity->GetComponent<UnitStateManagerComponent>();
+
+	//Set Unit stance to walking if it's running
+	if (m_pStateManagerComponent&& m_pStateManagerComponent->GetStance()==EUnitStance::RUNNING) {
+		m_pStateManagerComponent->SetStance(EUnitStance::WALKING);
+	}
 }
 
 void AttackAction::Execute()
 {
-	AttackerComponent* attacker = m_pEntity->GetComponent<AttackerComponent>();
-	AIControllerComponent* pAiController = m_pEntity->GetComponent<AIControllerComponent>();
-	if (attacker) {
-		f32 distanceToTarget = m_pEntity->GetWorldPos().GetDistance(m_pTarget->GetWorldPos());
-		if (distanceToTarget > attacker->GetAttackInfo().m_maxAttackDistance) {
-			attacker->SetTargetEntity(m_pTarget);
-			pAiController->MoveTo(m_pTarget->GetWorldPos(), false);
-			pAiController->LookAtWalkDirection();
-		}
-		else {
-			attacker->Attack(m_pTarget);
-			attacker->LookAt(m_pTarget->GetWorldPos());
-		}
+	if (!m_pAttackerComponent) {
+		CryLog("AttackAction : (Execute) AttackerComponent is null");
+		bIsDone = true;
+		return;
+	}
+	if (!m_pAiControllerComponent) {
+		CryLog("AttackAction : (Execute) AiControllerComponent is null");
+		bIsDone = true;
+		return;
+	}
+
+	this->m_pAttackerComponent->SetTargetEntity(m_pTarget);
+
+	if (m_pAttackerComponent->CanAttack()) {
+		m_pAttackerComponent->Attack(m_pTarget);
+		m_pAttackerComponent->LookAt(m_pTarget->GetWorldPos());
+	}
+	else {
+		m_pAiControllerComponent->MoveTo(m_pTarget->GetWorldPos(), false);
+		m_pAiControllerComponent->LookAtWalkDirection();
 	}
 }
 
 void AttackAction::Cancel()
 {
-	AttackerComponent* attacker = m_pEntity->GetComponent<AttackerComponent>();
-	if (attacker) {
-		attacker->SetTargetEntity(nullptr);
-		//unit->MoveTo(m_pEntity->GetWorldPos(), false);
+	if (!m_pAttackerComponent) {
+		CryLog("AttackAction : (Cancel) AttackerComponent is null");
 		bIsDone = true;
+		return;
 	}
+	if (!m_pAiControllerComponent) {
+		CryLog("AttackAction : (Cancel) AiControllerComponent is null");
+		bIsDone = true;
+		return;
+	}
+
+	m_pAttackerComponent->SetTargetEntity(nullptr);
+	m_pAiControllerComponent->MoveTo(m_pEntity->GetWorldPos(), false);
+	bIsDone = true;
 }
 
 bool AttackAction::IsDone()

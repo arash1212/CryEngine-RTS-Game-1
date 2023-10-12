@@ -44,13 +44,12 @@ void UnitStateManagerComponent::ProcessEvent(const SEntityEvent& event)
 	case Cry::Entity::EEvent::Update: {
 		//f32 DeltaTime = event.fParam[0];
 
-		UpdateState();
-
 		UpdateCurrentSpeed();
 
 	}break;
 	case Cry::Entity::EEvent::Reset: {
 		m_currentSpeed = m_walkSpeed;
+		m_pUnitStance = EUnitStance::WALKING;
 
 	}break;
 	default:
@@ -58,6 +57,7 @@ void UnitStateManagerComponent::ProcessEvent(const SEntityEvent& event)
 	}
 }
 
+/*
 void UnitStateManagerComponent::UpdateState()
 {
 	if (!m_pCharacterControllerComponent) {
@@ -69,12 +69,13 @@ void UnitStateManagerComponent::UpdateState()
 		m_pUnitState = EUnitState::IDLE;
 	}
 	if (m_pCharacterControllerComponent->IsOnGround() && m_pCharacterControllerComponent->IsWalking() && m_currentSpeed == m_walkSpeed) {
-		m_pUnitState = EUnitState::WALK;
+		m_pUnitState = EUnitState::WALKING;
 	}
 	if (m_pCharacterControllerComponent->IsOnGround() && m_pCharacterControllerComponent->IsWalking() && m_currentSpeed == m_runSpeed) {
-		m_pUnitState = EUnitState::RUN;
+		m_pUnitState = EUnitState::RUNNING;
 	}
 }
+*/
 
 void UnitStateManagerComponent::UpdateCurrentSpeed()
 {
@@ -83,13 +84,8 @@ void UnitStateManagerComponent::UpdateCurrentSpeed()
 	}
 
 	//f32 speed = crymath::abs(m_pCharacterControllerComponent->GetVelocity().GetLength());
-	if (m_pUnitStance == EUnitStance::STANDING) {
-		if (m_currentSpeed == m_runSpeed && m_pUnitState != EUnitState::IDLE) {
-			m_currentSpeed = m_runSpeed;
-		}
-		else {
-			m_currentSpeed = m_walkSpeed;
-		}
+	if (m_pUnitStance == EUnitStance::WALKING) {
+		m_currentSpeed = m_walkSpeed;
 	}
 	else if (m_pUnitStance == EUnitStance::CROUCH) {
 		m_currentSpeed = m_crouchSpeed;
@@ -97,22 +93,22 @@ void UnitStateManagerComponent::UpdateCurrentSpeed()
 	else if (m_pUnitStance == EUnitStance::PRONE) {
 		m_currentSpeed = m_proneSpeed;
 	}
+	else if (m_pUnitStance == EUnitStance::RUNNING) {
+		m_currentSpeed = m_runSpeed;
+	}
+}
+
+/*
+void UnitStateManagerComponent::SetState(EUnitState state)
+{
+	this->m_pUnitState = state;
 }
 
 EUnitState UnitStateManagerComponent::GetState()
 {
 	return m_pUnitState;
 }
-
-void UnitStateManagerComponent::SetState(EUnitState state)
-{
-	if (state == EUnitState::RUN) {
-		m_currentSpeed = m_runSpeed;
-	}else if (state == EUnitState::WALK) {
-		m_currentSpeed = m_walkSpeed;
-	}
-	this->m_pUnitState = state;
-}
+*/
 
 EUnitStance UnitStateManagerComponent::GetStance()
 {
@@ -144,6 +140,11 @@ void UnitStateManagerComponent::SetCrouchSpeed(f32 crouchSpeed)
 	this->m_crouchSpeed = crouchSpeed;
 }
 
+f32 UnitStateManagerComponent::GetCrouchSpeed()
+{
+	return m_crouchSpeed;
+}
+
 void UnitStateManagerComponent::SetRunSpeed(f32 runSpeed)
 {
 	this->m_runSpeed = runSpeed;
@@ -157,6 +158,11 @@ f32 UnitStateManagerComponent::GetRunSpeed()
 void UnitStateManagerComponent::SetProneSpeed(f32 proneSpeed)
 {
 	this->m_proneSpeed = proneSpeed;
+}
+
+f32 UnitStateManagerComponent::GetProneSpeed()
+{
+	return m_proneSpeed;
 }
 
 void UnitStateManagerComponent::SetCurrentSpeed(f32 currentSpeed)

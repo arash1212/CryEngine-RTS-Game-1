@@ -6,7 +6,7 @@
 
 #include <Components/Selectables/Selectable.h>
 #include <Components/Controller/AIController.h>
-#include <Components/Action/ActionManager.h>
+#include <Components/Managers/ActionManager.h>
 #include <Components/Managers/UnitStateManager.h>
 
 #include <CryAnimation/ICryAnimation.h>
@@ -38,7 +38,7 @@ void Soldier1UnitComponent::Initialize()
 {
 	//AnimationComponent Initializations
 	m_pAnimationComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CAdvancedAnimationComponent>();
-	m_pAnimationComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), Quat::CreateRotationXYZ(Ang3(DEG2RAD(90), 0, DEG2RAD(-96))), Vec3(0)));
+	m_pAnimationComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), Quat::CreateRotationXYZ(Ang3(DEG2RAD(90), 0, DEG2RAD(180))), Vec3(0)));
 	m_pAnimationComponent->SetCharacterFile("Objects/Characters/units/soldier1/soldier_1.cdf");
 	m_pAnimationComponent->SetMannequinAnimationDatabaseFile("Animations/Mannequin/ADB/soldier1.adb");
 	m_pAnimationComponent->SetControllerDefinitionFile("Animations/Mannequin/ADB/FirstPersonControllerDefinition.xml");
@@ -56,6 +56,8 @@ void Soldier1UnitComponent::Initialize()
 	m_walkFragmentId = m_pAnimationComponent->GetFragmentId("Walk");
 	m_crouchFragmentId = m_pAnimationComponent->GetFragmentId("Crouch");
 	m_proneFragmentId = m_pAnimationComponent->GetFragmentId("Prone");
+
+	m_attack1FragmentId = m_pAnimationComponent->GetFragmentId("Attack1");
 
 	//AnimationComponent Initializations
 	m_pSelectableComponent = m_pEntity->GetOrCreateComponent<SelectableComponent>();
@@ -79,7 +81,12 @@ void Soldier1UnitComponent::Initialize()
 
 	//Attacker
 	m_pAttackerComponent = m_pEntity->GetOrCreateComponent<AttackerComponent>();
+	m_pAttackerComponent->SetIsMelee(false);
 	m_pAttackerComponent->SetIsHumanoid(true);
+	//attack animations
+	DynArray<FragmentID> attackAnimations;
+	attackAnimations.append(m_attack1FragmentId);
+	m_pAttackerComponent->SetAttackAnimations(attackAnimations);
 }
 
 
@@ -107,9 +114,7 @@ void Soldier1UnitComponent::ProcessEvent(const SEntityEvent& event)
 
 	}break;
 	case Cry::Entity::EEvent::Reset: {
-		m_pSelectableComponent->DeSelect();
 		m_pAnimationComponent->ResetCharacter();
-		m_pStateManagerComponent->SetStance(EUnitStance::STANDING);
 
 	}break;
 	default:
@@ -145,22 +150,22 @@ void Soldier1UnitComponent::UpdateAnimations()
 	//Update Animation
 	//Idle
 	FragmentID currentFragmentId;
-	if (m_pStateManagerComponent->GetStance() == EUnitStance::STANDING && m_pStateManagerComponent->GetState() != EUnitState::RUN) {
+	if (m_pStateManagerComponent->GetStance() == EUnitStance::WALKING) {
 		currentFragmentId = m_walkFragmentId;
 	}
 
 	//Walk
-	else if ( m_pStateManagerComponent->GetStance()==EUnitStance::CROUCH && m_pStateManagerComponent->GetState() != EUnitState::RUN) {
+	else if ( m_pStateManagerComponent->GetStance()==EUnitStance::CROUCH) {
 		currentFragmentId = m_crouchFragmentId;
 	}
 
 	//Prone
-	else if(m_pStateManagerComponent->GetStance() == EUnitStance::PRONE && m_pStateManagerComponent->GetState() != EUnitState::RUN) {
+	else if(m_pStateManagerComponent->GetStance() == EUnitStance::PRONE) {
 		currentFragmentId = m_proneFragmentId;
 	}
 
 	//Run
-	else {
+	else if (m_pStateManagerComponent->GetStance() == EUnitStance::RUNNING) {
 		currentFragmentId = m_runFragmentId;
 	}
 

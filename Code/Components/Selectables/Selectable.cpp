@@ -32,6 +32,7 @@ void SelectableComponent::Initialize()
 	m_pSelectionDecalComponent->SetMaterialFileName("Materials/decals/selection/selectionbox_decal_material_1.mtl");
 	m_pSelectionDecalComponent->Spawn();
 
+	//RenderNode Initialization
 	m_pRenderNode = m_pEntity->GetRenderNode();
 
 	//UIItems
@@ -59,6 +60,7 @@ void SelectableComponent::ProcessEvent(const SEntityEvent& event)
 
 	}break;
 	case Cry::Entity::EEvent::Reset: {
+		this->DeSelect();
 
 	}break;
 	default:
