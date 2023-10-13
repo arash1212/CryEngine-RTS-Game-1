@@ -7,6 +7,7 @@ class UnitStateManagerComponent;
 class AIControllerComponent;
 class BaseWeaponComponent;
 class UnitAnimationComponent;
+class ActionManagerComponent;
 
 struct SUnitAttackInfo {
 public:
@@ -32,6 +33,9 @@ public:
 	{
 		desc.SetGUID("{3DB1B862-DB6E-4BA5-AB7A-097245E5080B}"_cry_guid);
 		desc.SetEditorCategory("Units");
+		desc.AddMember(&AttackerComponent::bIsHumanoid, 'ish', "ishumanoid", "Is Humanoid", "Set if is Humanoid", false);
+		desc.AddMember(&AttackerComponent::bIsRanged, 'isr', "isranged", "Is Ranged", "Set if is Ranged", false);
+		desc.AddMember(&AttackerComponent::bIsFollower, 'isf', "isfollower", "Is Follower", "Set if is Follower (follows random target ?)", false);
 	}
 
 private:
@@ -40,6 +44,7 @@ private:
 	AIControllerComponent* m_pAIController = nullptr;
 	BaseWeaponComponent* m_pWeaponComponent = nullptr;
 	UnitAnimationComponent* m_pUnitAnimationComponent = nullptr;
+	ActionManagerComponent* m_pActionManagerComponent = nullptr;
 
 	//Target
 	IEntity* m_pAttackTargetEntity = nullptr;

@@ -14,6 +14,8 @@
 #include <Actions/Units/MoveAction.h>
 #include <Actions/Units/AttackAction.h>
 
+#include <Components/BaseBuilding/BaseBuilding.h>
+
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
 #include <CrySchematyc/Env/IEnvRegistrar.h>
@@ -56,6 +58,11 @@ void PlayerComponent::Initialize()
 	m_pActionbarComponent = m_pEntity->GetOrCreateComponent<ActionbarComponent>();
 	m_pActionbarComponent->SetEventListener(m_pUIElementEventListener);
 
+	//BaseBuildingComponent initialization
+	m_pBaseBuildingComponent = m_pEntity->GetOrCreateComponent<BaseBuildingComponent>();
+
+	//Set player entity name
+	m_pEntity->SetName(PLAYER_ENTITY_NAME);
 }
 
 Cry::Entity::EventFlags PlayerComponent::GetEventMask() const
@@ -197,11 +204,18 @@ void PlayerComponent::LeftMouseDown(int activationMode, float value)
 			return;
 		}
 
+		//Selections
 		DeselectUnits();
 		m_selectedUnits = m_pSelectionBoxComponent->GetEntitiesInsideBox(mousePos);
 		SelectUnits();
 
+		//Actionbar
 		AddUIItemsToActionbar();
+
+		//Building
+		if(m_pBaseBuildingComponent) {
+			m_pBaseBuildingComponent->PlaceBuilding(MouseUtils::GetPositionUnderCursor());
+		}
 	}
 }
 

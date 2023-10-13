@@ -41,6 +41,20 @@ add_sources("Components_uber.cpp"
 		"Components/SpawnPoint.cpp"
 		"Components/SpawnPoint.h"
 )
+add_sources("BaseBuilding_uber.cpp"
+    PROJECTS Game
+    SOURCE_GROUP "Components\\\\BaseBuilding"
+		"Components/BaseBuilding/BaseBuilding.cpp"
+		"Components/BaseBuilding/Building.cpp"
+		"Components/BaseBuilding/BaseBuilding.h"
+		"Components/BaseBuilding/Building.h"
+)
+add_sources("Buildings_uber.cpp"
+    PROJECTS Game
+    SOURCE_GROUP "Components\\\\BaseBuilding\\\\Buildings"
+		"Components/BaseBuilding/Buildings/HQ1Building.cpp"
+		"Components/BaseBuilding/Buildings/HQ1Building.h"
+)
 add_sources("Controller_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "Components\\\\Controller"
@@ -123,6 +137,12 @@ add_sources("Items_uber.cpp"
 		"UIItems/Items/UIChangeStanceItem.cpp"
 		"UIItems/Items/UICancelItem.h"
 		"UIItems/Items/UIChangeStanceItem.h"
+)
+add_sources("Buildings_uber.cpp"
+    PROJECTS Game
+    SOURCE_GROUP "UIItems\\\\Items\\\\Buildings"
+		"UIItems/Items/Buildings/UIHQ1BuildItem.cpp"
+		"UIItems/Items/Buildings/UIHQ1BuildItem.h"
 )
 add_sources("Utils_uber.cpp"
     PROJECTS Game

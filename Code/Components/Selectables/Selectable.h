@@ -22,6 +22,7 @@ public:
 	{
 		desc.SetGUID("{1A76CDAA-E5DE-4397-BBCC-78E718A3EB4A}"_cry_guid);
 		desc.SetEditorCategory("Units");
+		desc.AddMember(&SelectableComponent::bIsSelected, 'iss', "isselected", "Is Selected", "Set if is selected", false);
 	}
 
 private:

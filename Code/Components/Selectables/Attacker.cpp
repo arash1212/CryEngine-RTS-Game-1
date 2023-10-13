@@ -7,6 +7,7 @@
 #include <Components/Controller/AIController.h>
 #include <Components/Weapons/BaseWeapon.h>
 #include <Components/Selectables/UnitAnimation.h>
+#include <Components/Managers/ActionManager.h>
 
 #include <Utils/MathUtils.h>
 
@@ -46,6 +47,9 @@ void AttackerComponent::Initialize()
 
 	//UnitAnimationComponent Initialization
 	m_pUnitAnimationComponent = m_pEntity->GetOrCreateComponent<UnitAnimationComponent>();
+
+	//ActionManager Initializations
+	m_pActionManagerComponent = m_pEntity->GetComponent<ActionManagerComponent>();
 }
 
 
@@ -81,6 +85,8 @@ void AttackerComponent::ProcessEvent(const SEntityEvent& event)
 		else {
 			m_attackCount = 0;
 		}
+
+		//TODO : ATTACK ANIMATION EVENT (FOR NOT RANGED)
 
 	}break;
 	case Cry::Entity::EEvent::Reset: {
@@ -121,13 +127,12 @@ void AttackerComponent::Attack(IEntity* target)
 
 void AttackerComponent::AttackRandomTarget()
 {
-	if (!m_pRandomAttackTarget || m_pAttackTargetEntity || m_pStateManagerComponent->IsRunning()) {
+	if (!m_pRandomAttackTarget || m_pAttackTargetEntity || m_pStateManagerComponent->IsRunning() || m_pActionManagerComponent->IsProcessingAnAction()) {
 		return;
 	}
 
 	//Attack RandomAttackTarget if it's in unit's Attack range
-	f32 distanceToTarget = m_pEntity->GetWorldPos().GetDistance(m_pRandomAttackTarget->GetWorldPos());
-	if (distanceToTarget < m_pAttackInfo.m_maxAttackDistance) {
+	if (CanAttack()) {
 		Attack(m_pRandomAttackTarget);
 	}
 
@@ -147,7 +152,8 @@ void AttackerComponent::AttackRandomTarget()
 
 void AttackerComponent::FindRandomTarget()
 {
-	if (m_pRandomAttackTarget || m_pAttackTargetEntity) {
+	if (m_pRandomAttackTarget || m_pAttackTargetEntity || m_pActionManagerComponent->IsProcessingAnAction()) {
+		m_pRandomAttackTarget = nullptr;
 		return;
 	}
 

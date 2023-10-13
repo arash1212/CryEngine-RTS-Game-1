@@ -98,3 +98,11 @@ void ActionManagerComponent::CancelCurrentAction()
 	this->m_pCurrentAction->Cancel();
 	//this->m_actionsQueue.clear();
 }
+
+bool ActionManagerComponent::IsProcessingAnAction()
+{
+	if (!m_pCurrentAction || m_actionsQueue.empty()) {
+		return false;
+	}
+	return true;
+}

@@ -29,5 +29,5 @@ public:
 	void ProcessActions();
 	void AddAction(IBaseAction* action);
 	void CancelCurrentAction();
-
+	bool IsProcessingAnAction();
 };

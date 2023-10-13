@@ -6,10 +6,12 @@
 class SelectionBoxComponent;
 class ActionbarComponent;
 class UIElementEventListener;
+class BaseBuildingComponent;
 
 static const f32 PLAYER_CAMERA_DEFAULT_HEIGHT = 10.f;
 static const f32 PLAYER_CAMERA_DEFAULT_MOVE_SPEED = 6.5f;
 static const f32 PLAYER_CAMERA_MAX_ZOOM_AMOUNT = 5.f;
+static const string PLAYER_ENTITY_NAME = "PlayerEntity";
 
 class PlayerComponent final : public IEntityComponent
 {
@@ -40,6 +42,7 @@ private:
 	
 	SelectionBoxComponent* m_pSelectionBoxComponent;
 	ActionbarComponent* m_pActionbarComponent;
+	BaseBuildingComponent* m_pBaseBuildingComponent = nullptr;
 
 	//UI
 	UIElementEventListener* m_pUIElementEventListener = nullptr;
