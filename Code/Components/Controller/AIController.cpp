@@ -88,7 +88,7 @@ void AIControllerComponent::ProcessEvent(const SEntityEvent& event)
 void AIControllerComponent::Move(f32 DeltaTime)
 {
 	if (!m_pStateManager) {
-		CryLog("AIControllerComponent : (Move) UnitStateManagerComponent does not exist on entity !");
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "AIControllerComponent : (Move) UnitStateManagerComponent does not exist on entity !");
 		return;
 	}
 	if (m_moveToPosition == ZERO) {
@@ -106,7 +106,7 @@ void AIControllerComponent::MoveTo(Vec3 position, bool run)
 		return;
 	}
 	if (!m_pStateManager) {
-		CryLog("AIControllerComponent : (MoveTo) UnitStateManagerComponent does not exist on entity !");
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "AIControllerComponent : (MoveTo) UnitStateManagerComponent does not exist on entity !");
 		return;
 	}
 

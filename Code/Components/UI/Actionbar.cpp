@@ -35,7 +35,7 @@ void ActionbarComponent::Initialize()
 		m_pActionbarUIElement->SetVisible(true);
 	}
 	else {
-		CryLog("ActionbarComponent : (Initialize) m_pActionbarUIElement is null !");
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ActionbarComponent : (Initialize) m_pActionbarUIElement is null !");
 	}
 }
 
@@ -68,7 +68,7 @@ void ActionbarComponent::ProcessEvent(const SEntityEvent& event)
 void ActionbarComponent::AddButton(string imagePath)
 {
 	if (!m_pActionbarUIElement) {
-		CryLog("ActionbarComponent : (AddButton) ActionbarUIElement is null !");
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ActionbarComponent : (AddButton) ActionbarUIElement is null !");
 		return;
 	}
 
@@ -81,7 +81,7 @@ void ActionbarComponent::AddButton(string imagePath)
 void ActionbarComponent::Clear()
 {
 	if (!m_pActionbarUIElement) {
-		CryLog("ActionbarComponent : (Clear) ActionbarUIElement is null !");
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ActionbarComponent : (Clear) ActionbarUIElement is null !");
 		return;
 	}
 

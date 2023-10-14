@@ -61,6 +61,9 @@ void PlayerComponent::Initialize()
 	//BaseBuildingComponent initialization
 	m_pBaseBuildingComponent = m_pEntity->GetOrCreateComponent<BaseBuildingComponent>();
 
+	//ListenerComponent initialization
+	m_pListenerComp = m_pEntity->GetOrCreateComponent<Cry::Audio::DefaultComponents::CListenerComponent>();
+
 	//Set player entity name
 	m_pEntity->SetName(PLAYER_ENTITY_NAME);
 }
@@ -85,7 +88,7 @@ void PlayerComponent::ProcessEvent(const SEntityEvent& event)
 
 		Move(DeltaTime);
 
-		MouseUtils::GetPositionUnderCursor();
+		CheckSelectablesMouseOver();
 
 		if (m_rightClickCountRestartTimePassed < m_timeBetweenRightClickCountRestart) {
 			m_rightClickCountRestartTimePassed += 0.5f * DeltaTime;
@@ -204,18 +207,31 @@ void PlayerComponent::LeftMouseDown(int activationMode, float value)
 			return;
 		}
 
-		//Selections
+		//////////////////////////Selection
 		DeselectUnits();
-		m_selectedUnits = m_pSelectionBoxComponent->GetEntitiesInsideBox(mousePos);
-		SelectUnits();
+
+		//Single selection
+		IEntity* entity = MouseUtils::GetActorUnderCursor();
+		if (entity) {
+			m_selectedUnits.push_back(entity);
+			SelectUnits();
+		}
+
+		//Box/Multiple Selection
+		else {
+			m_selectedUnits = m_pSelectionBoxComponent->GetEntitiesInsideBox(mousePos);
+			SelectUnits();
+		}
+		//////////////////////////
 
 		//Actionbar
 		AddUIItemsToActionbar();
 
-		//Building
-		if(m_pBaseBuildingComponent) {
+		///////////////////////////Building
+		if (m_pBaseBuildingComponent && m_pBaseBuildingComponent->HasBuildingAssigned()) {
 			m_pBaseBuildingComponent->PlaceBuilding(MouseUtils::GetPositionUnderCursor());
 		}
+		///////////////////////////
 	}
 }
 
@@ -227,17 +243,20 @@ void PlayerComponent::RightMouseDown(int activationMode, float value)
 
 	Vec3 mousePos = MouseUtils::GetPositionUnderCursor();
 
+	if (activationMode == eAAM_OnPress) {
+		m_pBaseBuildingComponent->CancelAssignedBuilding();
+	}
+
 	if (activationMode == eAAM_OnRelease) {
 		m_rightClickCount++;
 		m_rightClickCountRestartTimePassed = 0;
 
 		//TODO : update beshe
-		IEntity* entity = MouseUtils::GeetActorUnderCursor();
+		IEntity* entity = MouseUtils::GetActorUnderCursor();
 		if (entity) {
 			SetUnitsAttackTarget(entity);
 		}
 		else {
-
 			CommandUnitsToMove(mousePos);
 		}
 	}
@@ -318,6 +337,29 @@ void PlayerComponent::AddUIItemsToActionbar()
 		else {
 			continue;
 		}
+	}
+}
+
+void PlayerComponent::CheckSelectablesMouseOver()
+{
+	//Turn highligh color to green on entity if it's selectable
+	IEntity* entity = MouseUtils::GetActorUnderCursor();
+	if (entity) {
+		SelectableComponent* selectable = entity->GetComponent<SelectableComponent>();
+		if (selectable) {
+			m_pEntityUnderCursor = entity;
+			selectable->HighLightGreen();
+		}
+	}
+
+	//Turn highligh color back to black on entity if mouse is not over anyomore
+	else if (!entity && m_pEntityUnderCursor || entity && entity != m_pEntityUnderCursor) {
+		SelectableComponent* selectable = m_pEntityUnderCursor->GetComponent<SelectableComponent>();
+		if (selectable->IsSelected()) {
+			return;
+		}
+		selectable->HighLightBlack();
+		m_pEntityUnderCursor = nullptr;
 	}
 }
 

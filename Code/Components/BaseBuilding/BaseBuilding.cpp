@@ -78,7 +78,7 @@ void BaseBuildingComponent::ProcessEvent(const SEntityEvent& event)
 
 void BaseBuildingComponent::UpdateBuildingPosition()
 {
-	if (!m_pBuildingEntity || MouseUtils::GeetActorUnderCursor() || !MouseUtils::IsMouseInsideViewPort()) {
+	if (!m_pBuildingEntity || MouseUtils::GetActorUnderCursor() || !MouseUtils::IsMouseInsideViewPort()) {
 		return;
 	}
 
@@ -100,10 +100,22 @@ IEntity* BaseBuildingComponent::AssignBuilding()
 	return m_pBuildingEntity;
 }
 
+void BaseBuildingComponent::CancelAssignedBuilding()
+{
+	if (!HasBuildingAssigned()) {
+		return;
+	}
+	if (!m_pBuildingEntity) {
+		return;
+	}
+	gEnv->pEntitySystem->RemoveEntity(m_pBuildingEntity->GetId());
+	m_pBuildingEntity = nullptr;
+}
+
 void BaseBuildingComponent::PlaceBuilding(Vec3 at)
 {
 	if (!m_pBuildingEntity) {
-		CryLog("BaseBuildingComponent : (PlaceBuilding) m_pBuildingEntity is null !");
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "BaseBuildingComponent : (PlaceBuilding) m_pBuildingEntity is null .!");
 		return;
 	}
 	BuildingComponent* building = m_pBuildingEntity->GetComponent<BuildingComponent>();
@@ -118,4 +130,9 @@ void BaseBuildingComponent::PlaceBuilding(Vec3 at)
 
 	m_pBuildingEntity->GetComponent<BuildingComponent>()->Place(at);
 	m_pBuildingEntity = nullptr;
+}
+
+bool BaseBuildingComponent::HasBuildingAssigned()
+{
+	return m_pBuildingEntity != nullptr;
 }

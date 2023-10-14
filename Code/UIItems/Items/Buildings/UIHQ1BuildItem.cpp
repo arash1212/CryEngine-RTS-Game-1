@@ -17,13 +17,13 @@ UIHQ1BuildItem::UIHQ1BuildItem(IEntity* entity)
 void UIHQ1BuildItem::Execute()
 {
 	if (!m_pEntity) {
-		CryLog("UICancelAction : (Execute) m_pEntity is null !");
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "UICancelAction : (Execute) m_pEntity is null !");
 		return;
 	}
 
 	IEntity* m_pPlayerEntity = gEnv->pEntitySystem->FindEntityByName(PLAYER_ENTITY_NAME);
 	if (!m_pPlayerEntity) {
-		CryLog("UICancelAction : (Execute) m_pPlayerEntity is null !");
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "UICancelAction : (Execute) m_pPlayerEntity is null !");
 		return;
 	}
 

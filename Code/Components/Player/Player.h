@@ -2,15 +2,16 @@
 
 #include <DefaultComponents/Cameras/CameraComponent.h>
 #include <DefaultComponents/Input/InputComponent.h>
+#include <DefaultComponents/Audio/ListenerComponent.h>
 
 class SelectionBoxComponent;
 class ActionbarComponent;
 class UIElementEventListener;
 class BaseBuildingComponent;
 
-static const f32 PLAYER_CAMERA_DEFAULT_HEIGHT = 10.f;
+static const f32 PLAYER_CAMERA_DEFAULT_HEIGHT = 20.f;
 static const f32 PLAYER_CAMERA_DEFAULT_MOVE_SPEED = 6.5f;
-static const f32 PLAYER_CAMERA_MAX_ZOOM_AMOUNT = 5.f;
+static const f32 PLAYER_CAMERA_MAX_ZOOM_AMOUNT = 10.f;
 static const string PLAYER_ENTITY_NAME = "PlayerEntity";
 
 class PlayerComponent final : public IEntityComponent
@@ -39,6 +40,7 @@ public:
 private:
 	Cry::DefaultComponents::CCameraComponent* m_pCameraComponent = nullptr;
 	Cry::DefaultComponents::CInputComponent* m_pInputComponent = nullptr;
+	Cry::Audio::DefaultComponents::CListenerComponent* m_pListenerComp = nullptr;
 	
 	SelectionBoxComponent* m_pSelectionBoxComponent;
 	ActionbarComponent* m_pActionbarComponent;
@@ -46,6 +48,8 @@ private:
 
 	//UI
 	UIElementEventListener* m_pUIElementEventListener = nullptr;
+
+	IEntity* m_pEntityUnderCursor = nullptr;
 
 private:
 	f32 m_cameraDefaultHeight = PLAYER_CAMERA_DEFAULT_HEIGHT;
@@ -88,6 +92,9 @@ private:
 
 	//Action bar
 	void AddUIItemsToActionbar();
+
+	//
+	void CheckSelectablesMouseOver();
 
 public:
 	void ExecuteActionbarItem(int32 index);

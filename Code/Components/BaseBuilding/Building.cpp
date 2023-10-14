@@ -10,6 +10,12 @@
 #include <Components/Managers/ActionManager.h>
 #include <Components/Player/Player.h>
 
+#include <Components/Selectables/Selectable.h>
+#include <UIItems/IBaseUIItem.h>
+#include <UIItems/Items/UICancelItem.h>
+#include <UIItems/Items/UIChangeStanceItem.h>
+#include <UIItems/Items/Buildings/UIHQ1BuildItem.h>
+
 #include <Utils/MathUtils.h>
 
 #include <CryGame/IGameFramework.h>
@@ -56,7 +62,7 @@ void BuildingComponent::Initialize()
 	f32 height = max.y - min.y;
 
 	//DecalComponent
-	m_pDecalComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CDecalComponent>();
+	m_pDecalComponent = m_pEntity->CreateComponent<Cry::DefaultComponents::CDecalComponent>();
 	m_pDecalComponent->SetTransformMatrix(Matrix34::Create(Vec3(width + 2, height + 2, 3), IDENTITY, Vec3(0)));
 	m_pDecalComponent->SetMaterialFileName("Materials/buildings/building_green_material.mtl");
 	m_pDecalComponent->SetSortPriority(50);
@@ -128,7 +134,19 @@ void BuildingComponent::Place(Vec3 at)
 
 	m_pEntity->RemoveComponent<Cry::DefaultComponents::CDecalComponent>();
 
+	//SelectableComponent
+	m_pSelectableComponent = m_pEntity->GetOrCreateComponent<SelectableComponent>();
+	m_pSelectableComponent->SetDecalSize(Vec3(8));
+	m_pSelectableComponent->DeSelect();
+
+	//TODO
+	for (IBaseUIItem* item : m_pAllUIItems) {
+		m_pSelectableComponent->AddUIItem(item);
+	}
+
 	m_pAnimationComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), IDENTITY, Vec3(0, 0, -5)));
+
+	PlacementCheck();
 
 	//Physicalize
 	SEntityPhysicalizeParams physParams;
@@ -176,29 +194,47 @@ bool BuildingComponent::CanBePlaced()
 		return false;
 	}
 
-	//TODO:update beshe (performance)  && min / max az koja biad
+	//TODO:update beshe (performance)
 	AABB aabb;
 	m_pEntity->GetWorldBounds(aabb);
-	Vec3 min = Vec3(aabb.min.x - 2, aabb.min.y - 2, aabb.min.z);
-	Vec3 max = Vec3(aabb.max.x + 6.6f, aabb.max.y + 4, aabb.max.z);
-	AABB newAAbb = AABB(min, max);
 
 	IPersistantDebug* pd = gEnv->pGameFramework->GetIPersistantDebug();
-
 	IEntityItPtr entityItPtr = gEnv->pEntitySystem->GetEntityIterator();
 	entityItPtr->MoveFirst();
 	while (!entityItPtr->IsEnd())
 	{
 		IEntity* pPlayer = gEnv->pEntitySystem->FindEntityByName(PLAYER_ENTITY_NAME);
-
 		IEntity* other = entityItPtr->Next();
+		if (other == m_pEntity || other == pPlayer) {
+			continue;
+		}
+
 		AABB otherAABB;
 		other->GetWorldBounds(otherAABB);
-		if (newAAbb.IsIntersectBox(otherAABB) && other != m_pEntity && !other->GetComponent<Cry::DefaultComponents::CEnvironmentProbeComponent>() && other != pPlayer) {
-			pd->AddAABB(newAAbb.min, newAAbb.max, ColorF(1, 0, 0), 2);
+		if (aabb.IsIntersectBox(otherAABB) && !other->GetComponent<Cry::DefaultComponents::CEnvironmentProbeComponent>() ) {
+			pd->AddAABB(aabb.min, aabb.max, ColorF(1, 0, 0), 2);
 			return false;
 		}
 	}
-	pd->AddAABB(newAAbb.min, newAAbb.max, ColorF(0, 1, 0), 2);
+	pd->AddAABB(aabb.min, aabb.max, ColorF(0, 1, 0), 2);
 	return true;
+}
+
+void BuildingComponent::SetPathToTrussMesh(string path)
+{
+	this->m_pathToTrussMesh = path;
+}
+
+void BuildingComponent::AddUIItem(IBaseUIItem* item)
+{
+	this->m_pAllUIItems.append(item);
+}
+
+void BuildingComponent::PlacementCheck()
+{
+	m_pTrussMeshComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CStaticMeshComponent>();
+	m_pTrussMeshComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), IDENTITY, Vec3(0)));
+	m_pTrussMeshComponent->SetFilePath(m_pathToTrussMesh);
+	m_pTrussMeshComponent->LoadFromDisk();
+	m_pTrussMeshComponent->ResetObject();
 }

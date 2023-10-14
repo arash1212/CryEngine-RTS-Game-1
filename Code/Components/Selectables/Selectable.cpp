@@ -30,16 +30,13 @@ void SelectableComponent::Initialize()
 	//SelectionDecalComponent Initialization
 	m_pSelectionDecalComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CDecalComponent>();
 	m_pSelectionDecalComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), IDENTITY, Vec3(0)));
-	m_pSelectionDecalComponent->SetMaterialFileName("Materials/decals/selection/selectionbox_decal_material_1.mtl");
-	m_pSelectionDecalComponent->Spawn();
+	m_pSelectionDecalComponent->SetMaterialFileName(SELECTION_UNIT_DECAL_MATERIAL);
+	m_pSelectionDecalComponent->SetSortPriority(60);
+	m_pSelectionDecalComponent->SetDepth(10);
+	//m_pSelectionDecalComponent->Spawn();
 
 	//RenderNode Initialization
 	m_pRenderNode = m_pEntity->GetRenderNode();
-
-	//UIItems
-	m_pAllUIItems.push_back(new UICancelItem(m_pEntity));
-	m_pAllUIItems.push_back(new UIChangeStanceItem(m_pEntity));
-	m_pAllUIItems.push_back(new UIHQ1BuildItem(m_pEntity));
 }
 
 Cry::Entity::EventFlags SelectableComponent::GetEventMask() const
@@ -60,9 +57,10 @@ void SelectableComponent::ProcessEvent(const SEntityEvent& event)
 	case Cry::Entity::EEvent::Update: {
 		//f32 DeltaTime = event.fParam[0];
 
+
 	}break;
 	case Cry::Entity::EEvent::Reset: {
-		this->DeSelect();
+		DeSelect();
 
 	}break;
 	default:
@@ -74,16 +72,14 @@ void SelectableComponent::Select()
 {
 	bIsSelected = true;
 	m_pSelectionDecalComponent->Spawn();
-
-	m_pRenderNode->m_nHUDSilhouettesParam = m_greenColor;
+	HighLightGreen();
 }
 
 void SelectableComponent::DeSelect()
 {
 	bIsSelected = false;
 	m_pSelectionDecalComponent->Remove();
-
-	m_pRenderNode->m_nHUDSilhouettesParam = m_blackColor;
+	HighLightBlack();
 }
 
 bool SelectableComponent::IsSelected()
@@ -91,7 +87,27 @@ bool SelectableComponent::IsSelected()
 	return bIsSelected;
 }
 
+void SelectableComponent::AddUIItem(IBaseUIItem* item)
+{
+	this->m_pAllUIItems.append(item);
+}
+
 DynArray<IBaseUIItem*> SelectableComponent::GetUIItems()
 {
 	return m_pAllUIItems;
+}
+
+void SelectableComponent::SetDecalSize(Vec3 size)
+{
+	m_pSelectionDecalComponent->SetTransformMatrix(Matrix34::Create(size, IDENTITY, Vec3(0)));
+}
+
+void SelectableComponent::HighLightGreen()
+{
+	m_pRenderNode->m_nHUDSilhouettesParam = m_greenColor;
+}
+
+void SelectableComponent::HighLightBlack()
+{
+	m_pRenderNode->m_nHUDSilhouettesParam = m_blackColor;
 }

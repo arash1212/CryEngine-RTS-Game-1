@@ -9,6 +9,12 @@
 #include <Components/Selectables/UnitAnimation.h>
 #include <Components/Managers/ActionManager.h>
 
+#include <Components/Selectables/Selectable.h>
+#include <UIItems/IBaseUIItem.h>
+#include <UIItems/Items/UICancelItem.h>
+#include <UIItems/Items/UIChangeStanceItem.h>
+#include <UIItems/Items/Buildings/UIHQ1BuildItem.h>
+
 #include <Components/BaseBuilding/Building.h>
 
 #include <Utils/MathUtils.h>
@@ -49,11 +55,23 @@ void HQ1BuildingComponent::Initialize()
 
 	//BoxComponent Initialization
 	m_pBboxComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CBoxPrimitiveComponent>();
-	m_pBboxComponent->m_size = Vec3(6.7f, 4.2f, 3.f);
+	m_pBboxComponent->m_size = Vec3(5.f, 2.8f, 2.0f);
 	m_pBboxComponent->m_bReactToCollisions = true;
 
 	//BuildingComponent initialization
 	m_pBuildingComponent = m_pEntity->GetOrCreateComponent<BuildingComponent>();
+	m_pBuildingComponent->SetPathToTrussMesh(HQ_BUILDING_1_TRUSS_MODEL_PATH);
+	//UIItems
+	m_pBuildingComponent->AddUIItem(new UICancelItem(m_pEntity));
+
+	//Update bounding box
+	AABB aabb;
+	m_pEntity->GetLocalBounds(aabb);
+	Vec3 min = Vec3(aabb.min.x - 2, aabb.min.y - 2, aabb.min.z);
+	Vec3 max = Vec3(aabb.max.x + 6.6f, aabb.max.y + 4, aabb.max.z);
+	AABB newAABB = AABB(min, max);
+	m_pEntity->SetLocalBounds(newAABB, true);
+
 }
 
 
@@ -75,7 +93,7 @@ void HQ1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 	case Cry::Entity::EEvent::Update: {
 		//f32 DeltaTime = event.fParam[0];
 
-		PlacementCheck();
+
 
 	}break;
 	case Cry::Entity::EEvent::Reset: {
@@ -83,22 +101,5 @@ void HQ1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 	}break;
 	default:
 		break;
-	}
-}
-
-void HQ1BuildingComponent::PlacementCheck()
-{
-	if (bIsPlacementCheckDone) {
-		return;
-	}
-
-	if (m_pBuildingComponent->IsPlaced()) {
-		//trussMsehComponent Initialization
-		m_pTrussMeshComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CStaticMeshComponent>();
-		m_pTrussMeshComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), IDENTITY, Vec3(0)));
-		m_pTrussMeshComponent->SetFilePath(HQ_BUILDING_1_TRUSS_MODEL_PATH);
-		m_pTrussMeshComponent->LoadFromDisk();
-		m_pTrussMeshComponent->ResetObject();
-		bIsPlacementCheckDone = true;
 	}
 }

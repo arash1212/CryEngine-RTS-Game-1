@@ -12,11 +12,9 @@ UIChangeStanceItem::UIChangeStanceItem(IEntity* entity)
 void UIChangeStanceItem::Execute()
 {
 	if (!m_pEntity) {
-		CryLog("UICancelAction : (Execute) m_pEntity is null !");
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "UICancelAction : (Execute) m_pEntity is null !");
 		return;
 	}
-
-	//If entity is a Unit
 	UnitStateManagerComponent* stateManager = m_pEntity->GetComponent<UnitStateManagerComponent>();
 	if (stateManager) {
 		EUnitStance stance = stateManager->GetStance();

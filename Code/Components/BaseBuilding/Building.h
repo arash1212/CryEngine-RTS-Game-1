@@ -6,6 +6,9 @@
 #include <DefaultComponents/Lights/EnvironmentProbeComponent.h>
 #include <DefaultComponents/Effects/DecalComponent.h>
 
+class SelectableComponent;
+class IBaseUIItem;
+
 struct SBuildingInfo {
 public:
 	f32 m_maxBuildAmount = 20.f;
@@ -36,6 +39,8 @@ private:
 	Cry::DefaultComponents::CStaticMeshComponent* m_pTrussMeshComponent = nullptr;
 	Cry::DefaultComponents::CBoxPrimitiveComponent* m_pBboxComponent = nullptr;
 	Cry::DefaultComponents::CDecalComponent* m_pDecalComponent = nullptr;
+
+	SelectableComponent* m_pSelectableComponent = nullptr;
 	SBuildingInfo m_pBuildingInfo;
 
 private:
@@ -46,8 +51,14 @@ private:
 	f32 m_timeBetweenBuilds = 1.f;
 	f32 m_builtTimePassed = 0.f;
 
+	string m_pathToTrussMesh = "";
+
+	//UI Actions
+	DynArray< IBaseUIItem*> m_pAllUIItems;
+
 private:
 	void UpdateMaterial();
+	void PlacementCheck();
 
 public:
 	void Place(Vec3 at);
@@ -56,4 +67,8 @@ public:
 
 	bool IsPlaced();
 	bool CanBePlaced();
+
+	void SetPathToTrussMesh(string path);
+
+	void AddUIItem(IBaseUIItem* item);
 };

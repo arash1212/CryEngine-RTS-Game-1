@@ -51,7 +51,7 @@ Vec3 MouseUtils::GetPositionUnderCursor()
 	return ZERO;
 }
 
-IEntity* MouseUtils::GeetActorUnderCursor()
+IEntity* MouseUtils::GetActorUnderCursor()
 {
 	IHardwareMouse* pHardwareMouse = gEnv->pHardwareMouse;
 

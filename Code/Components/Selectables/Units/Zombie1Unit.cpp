@@ -5,6 +5,11 @@
 #include <Components/Selectables/Attacker.h>
 
 #include <Components/Selectables/Selectable.h>
+#include <UIItems/IBaseUIItem.h>
+#include <UIItems/Items/UICancelItem.h>
+#include <UIItems/Items/UIChangeStanceItem.h>
+#include <UIItems/Items/Buildings/UIHQ1BuildItem.h>
+
 #include <Components/Controller/AIController.h>
 #include <Components/Managers/ActionManager.h>
 #include <Components/Managers/UnitStateManager.h>
@@ -59,8 +64,10 @@ void Zombie1UnitComponent::Initialize()
 	//AIController Initializations
 	m_pAIController = m_pEntity->GetOrCreateComponent<AIControllerComponent>();
 
-	//AnimationComponent Initializations
+	//SelectableComponent Initializations
 	m_pSelectableComponent = m_pEntity->GetOrCreateComponent<SelectableComponent>();
+	//UIItems
+	m_pSelectableComponent->AddUIItem(new UICancelItem(m_pEntity));
 
 	//ActionManager Initializations
 	m_pActionManagerComponent = m_pEntity->GetOrCreateComponent<ActionManagerComponent>();

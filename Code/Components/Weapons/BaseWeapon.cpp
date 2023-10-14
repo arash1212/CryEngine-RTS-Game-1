@@ -126,7 +126,7 @@ IEntity* BaseWeaponComponent::Raycast(Vec3 to)
 void BaseWeaponComponent::SpawnProjectile(Vec3 pos)
 {
 	if (!m_pWeaponAttachment) {
-		CryLog("BaseWeaponComponent : (SpawnProjectile) m_pWeaponAttachment is null !.");
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "BaseWeaponComponent : (SpawnProjectile) m_pWeaponAttachment is null !.");
 		return;
 	}
 

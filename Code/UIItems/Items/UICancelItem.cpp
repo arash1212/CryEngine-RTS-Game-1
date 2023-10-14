@@ -12,11 +12,9 @@ UICancelItem::UICancelItem(IEntity* entity)
 void UICancelItem::Execute()
 {
 	if (!m_pEntity) {
-		CryLog("UICancelAction : (Execute) m_pEntity is null !");
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "UICancelAction : (Execute) m_pEntity is null !");
 		return;
 	}
-	
-	//If entity is a Unit
 	ActionManagerComponent* actionManager = m_pEntity->GetComponent<ActionManagerComponent>();
 	if (actionManager) {
 		actionManager->CancelCurrentAction();

@@ -35,7 +35,7 @@ void SelectionBoxComponent::Initialize()
 		m_pSelectionBoxUIElement->SetVisible(true);
 	}
 	else {
-		CryLog("SelectionBoxComponent : (Initialize) m_pSelectionBoxUIElement is null !");
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "SelectionBoxComponent : (Initialize) m_pSelectionBoxUIElement is null !");
 	}
 }
 

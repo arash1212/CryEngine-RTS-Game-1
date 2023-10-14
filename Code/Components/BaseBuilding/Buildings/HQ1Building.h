@@ -5,6 +5,7 @@
 #include <DefaultComponents/Physics/BoxPrimitiveComponent.h>
 
 class BuildingComponent;
+class SelectableComponent;
 
 static string HQ_BUILDING_1_MODEL_PATH = "Objects/buildings/hq1/hq1.cdf";
 static string HQ_BUILDING_1_TRUSS_MODEL_PATH = "Objects/buildings/hq1/truss/hq1_truss.cgf";
@@ -34,12 +35,11 @@ private:
 	Cry::DefaultComponents::CAdvancedAnimationComponent* m_pAnimationComponent = nullptr;
 	Cry::DefaultComponents::CStaticMeshComponent* m_pTrussMeshComponent = nullptr;
 	Cry::DefaultComponents::CBoxPrimitiveComponent* m_pBboxComponent = nullptr;
+
+	SelectableComponent* m_pSelectableComponent = nullptr;
 	BuildingComponent* m_pBuildingComponent = nullptr;
 
 private:
-	bool bIsPlacementCheckDone = false;
 
-private:
-	void PlacementCheck();
 
 };

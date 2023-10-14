@@ -4,6 +4,8 @@
 
 class IBaseUIItem;
 
+static const string SELECTION_UNIT_DECAL_MATERIAL = "Materials/decals/selection/unit_selection_decal_material_1.mtl";
+
 class SelectableComponent final : public IEntityComponent
 {
 
@@ -31,7 +33,7 @@ private:
 	IRenderNode* m_pRenderNode = nullptr;
 
 private:
-	bool bIsSelected = false;
+	bool bIsSelected = false;;
 
 	//Highligh Colors
 	uint32  m_greenColor = (uint32)(int_round(0 * 255.0f) << 24) | (int_round(1 * 255.0f) << 16) | (int_round(0 * 255.0f) << 8) | (int_round(1 * 255.0f));
@@ -40,10 +42,17 @@ private:
 	//UI Actions
 	DynArray< IBaseUIItem*> m_pAllUIItems;
 
+private:
+
 public:
 	void Select();
 	void DeSelect();
 	bool IsSelected();
 
+	void AddUIItem(IBaseUIItem* item);
 	DynArray< IBaseUIItem*> GetUIItems();
+	void SetDecalSize(Vec3 size);
+
+	void HighLightGreen();
+	void HighLightBlack();
 };

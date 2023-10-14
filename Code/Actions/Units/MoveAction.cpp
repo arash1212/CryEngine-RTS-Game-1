@@ -29,7 +29,7 @@ MoveAction::MoveAction(IEntity* entity, Vec3 movePosition, bool run)
 void MoveAction::Execute()
 {
 	if (!m_pAiControllerComponent) {
-		CryLog("MoveAction : (Cancel) AiController is null");
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "MoveAction : (Cancel) AiController is null");
 		bIsDone = true;
 		return;
 	}
@@ -46,7 +46,7 @@ void MoveAction::Execute()
 void MoveAction::Cancel()
 {
 	if (!m_pAiControllerComponent) {
-		CryLog("MoveAction : (Cancel) AiController is null");
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "MoveAction : (Cancel) AiController is null");
 		bIsDone = true;
 		return;
 	}

@@ -22,13 +22,13 @@ AttackAction::AttackAction(IEntity* entity, IEntity* target)
 
 void AttackAction::Execute()
 {
-	if (!m_pAttackerComponent) {
-		CryLog("AttackAction : (Execute) AttackerComponent is null");
+	if (!m_pAttackerComponent){
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "AttackAction : (Execute) AttackerComponent is null");
 		bIsDone = true;
 		return;
 	}
 	if (!m_pAiControllerComponent) {
-		CryLog("AttackAction : (Execute) AiControllerComponent is null");
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "AttackAction : (Execute) AiControllerComponent is null");
 		bIsDone = true;
 		return;
 	}
@@ -48,12 +48,12 @@ void AttackAction::Execute()
 void AttackAction::Cancel()
 {
 	if (!m_pAttackerComponent) {
-		CryLog("AttackAction : (Cancel) AttackerComponent is null");
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "AttackAction : (Cancel) AttackerComponent is null");
 		bIsDone = true;
 		return;
 	}
 	if (!m_pAiControllerComponent) {
-		CryLog("AttackAction : (Cancel) AiControllerComponent is null");
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "AttackAction : (Cancel) AiControllerComponent is null");
 		bIsDone = true;
 		return;
 	}
