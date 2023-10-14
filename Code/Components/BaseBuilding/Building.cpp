@@ -57,14 +57,13 @@ void BuildingComponent::Initialize()
 	m_pEntity->GetWorldBounds(aabb);
 	Vec3 min = aabb.min;
 	Vec3 max = aabb.max;
-
 	f32 width = max.x - min.x;
 	f32 height = max.y - min.y;
 
-	//DecalComponent
+	//DecalComponent(Placement) Initialization
 	m_pDecalComponent = m_pEntity->CreateComponent<Cry::DefaultComponents::CDecalComponent>();
 	m_pDecalComponent->SetTransformMatrix(Matrix34::Create(Vec3(width + 2, height + 2, 3), IDENTITY, Vec3(0)));
-	m_pDecalComponent->SetMaterialFileName("Materials/buildings/building_green_material.mtl");
+	m_pDecalComponent->SetMaterialFileName(BUILDING_PLACEMENT_GREEN_DECAL_MATERIAL);
 	m_pDecalComponent->SetSortPriority(50);
 	m_pDecalComponent->SetDepth(10);
 	m_pDecalComponent->Spawn();
@@ -119,10 +118,10 @@ void BuildingComponent::UpdateMaterial()
 	}
 
 	if (CanBePlaced()) {
-		m_pDecalComponent->SetMaterialFileName("Materials/buildings/building_green_material.mtl");
+		m_pDecalComponent->SetMaterialFileName(BUILDING_PLACEMENT_GREEN_DECAL_MATERIAL);
 	}
 	else {
-		m_pDecalComponent->SetMaterialFileName("Materials/buildings/building_red_material.mtl");
+		m_pDecalComponent->SetMaterialFileName(BUILDING_PLACEMENT_RED_DECAL_MATERIAL);
 	}
 }
 
@@ -133,16 +132,6 @@ void BuildingComponent::Place(Vec3 at)
 	bIsPlaced = true;
 
 	m_pEntity->RemoveComponent<Cry::DefaultComponents::CDecalComponent>();
-
-	//SelectableComponent
-	m_pSelectableComponent = m_pEntity->GetOrCreateComponent<SelectableComponent>();
-	m_pSelectableComponent->SetDecalSize(Vec3(8));
-	m_pSelectableComponent->DeSelect();
-
-	//TODO
-	for (IBaseUIItem* item : m_pAllUIItems) {
-		m_pSelectableComponent->AddUIItem(item);
-	}
 
 	m_pAnimationComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), IDENTITY, Vec3(0, 0, -5)));
 
@@ -161,6 +150,7 @@ void BuildingComponent::Build()
 		return;
 	}
 
+	//
 	if (m_currentBuiltAmount < m_pBuildingInfo.m_maxBuildAmount) {
 		if (m_builtTimePassed >= m_timeBetweenBuilds) {
 			m_currentBuiltAmount += 2.f;
@@ -171,10 +161,21 @@ void BuildingComponent::Build()
 			m_pAnimationComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), IDENTITY, currentPos));
 		}
 	}
+
+	//if is built
 	else {
 		bIsBuilt = true;
 		m_pEntity->RemoveComponent<Cry::DefaultComponents::CStaticMeshComponent>();
 		m_pAnimationComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), IDENTITY, Vec3(0)));
+
+		//Add SelectableComponent 
+		m_pSelectableComponent = m_pEntity->GetOrCreateComponent<SelectableComponent>();
+		m_pSelectableComponent->SetDecalSize(Vec3(8));
+		m_pSelectableComponent->DeSelect();
+		//Add UI items
+		for (IBaseUIItem* item : m_pAllUIItems) {
+			m_pSelectableComponent->AddUIItem(item);
+		}
 	}
 }
 
@@ -194,12 +195,14 @@ bool BuildingComponent::CanBePlaced()
 		return false;
 	}
 
-	//TODO:update beshe (performance)
 	AABB aabb;
 	m_pEntity->GetWorldBounds(aabb);
-
 	IPersistantDebug* pd = gEnv->pGameFramework->GetIPersistantDebug();
 	IEntityItPtr entityItPtr = gEnv->pEntitySystem->GetEntityIterator();
+
+	//DynArray<IPhysicalEntity**> pEntities;
+	//CryLog("size %i : ", gEnv->pPhysicalWorld->GetEntitiesInBox(aabb.min, aabb.max, *pEntities.data(), ent_rigid | ent_sleeping_rigid | ent_water | ent_living | ent_static));
+
 	entityItPtr->MoveFirst();
 	while (!entityItPtr->IsEnd())
 	{

@@ -76,7 +76,7 @@ void AttackerComponent::ProcessEvent(const SEntityEvent& event)
 		AttackRandomTarget();
 
 		//Timers
-		if (m_attackTimePassed < m_timeBetweenAttacks) {
+		if (m_attackTimePassed < m_pAttackInfo.m_timeBetweenAttacks) {
 			m_attackTimePassed += 0.5f * DeltaTime;
 		}
 		if (m_attackCountResetTimePassed < m_timeBetweenAttackCountReset) {
@@ -105,18 +105,27 @@ void AttackerComponent::Attack(IEntity* target)
 	if (!target) {
 		return;
 	}
-	if (m_attackTimePassed < m_timeBetweenAttacks || m_attackCount >= m_maxAttackCount) {
+	if (m_attackTimePassed < m_pAttackInfo.m_timeBetweenAttacks || m_attackCount >= m_maxAttackCount) {
 		return;
 	}
 
-	//If attacker is ranged unit
-	if (bIsRanged && m_pWeaponComponent) {
-		m_pWeaponComponent->Fire(target->GetWorldPos());
-	}
+	//Depending on this unit's attack type preform an attack 
+	switch (m_pAttackInfo.m_pAttackType)
+	{
 
-	//If attacker is not ranged unit
-	if (!bIsRanged) {
-		m_pUnitAnimationComponent->PlayRandomAttackAnimation();
+	//If attacker is ranged unit
+	case EAttackType::RANGED: {
+		PerformRangedAttack(target);
+	}break;
+
+
+	//If attacker is melee unit
+	case EAttackType::MELEE: {
+		PerformMeleeAttack(target);
+	}break;
+
+	default:
+		break;
 	}
 
 	m_attackTimePassed = 0;
@@ -138,7 +147,7 @@ void AttackerComponent::AttackRandomTarget()
 
 	else {
 		//If is not a follwer empty randomAttackTarget
-		if (!bIsFollower) {
+		if (!m_pAttackInfo.bIsFollower) {
 			m_pRandomAttackTarget = nullptr;
 		}
 
@@ -148,6 +157,16 @@ void AttackerComponent::AttackRandomTarget()
 			this->LookAt(m_pRandomAttackTarget->GetWorldPos());
 		}
 	}
+}
+
+void AttackerComponent::PerformMeleeAttack(IEntity* target)
+{
+	m_pUnitAnimationComponent->PlayRandomAttackAnimation();
+}
+
+void AttackerComponent::PerformRangedAttack(IEntity* target)
+{
+	m_pWeaponComponent->Fire(target->GetWorldPos());
 }
 
 void AttackerComponent::FindRandomTarget()
@@ -180,7 +199,7 @@ void AttackerComponent::FindRandomTarget()
 
 void AttackerComponent::LookAt(Vec3 position)
 {
-	if (bIsHumanoid) {
+	if (m_pAttackInfo.bIsHumanoid) {
 		ISkeletonPose* pPose = m_pAnimationComponent->GetCharacter()->GetISkeletonPose();
 		IDefaultSkeleton& pDefaultSkeleton = m_pAnimationComponent->GetCharacter()->GetIDefaultSkeleton();
 		int headId = pDefaultSkeleton.GetJointIDByName("miamorig:Head");
@@ -244,61 +263,6 @@ void AttackerComponent::SetTargetEntity(IEntity* target)
 {
 	this->m_pRandomAttackTarget = nullptr;
 	this->m_pAttackTargetEntity = target;
-}
-
-IEntity* AttackerComponent::GetAttackTarget()
-{
-	return m_pAttackTargetEntity;
-}
-
-void AttackerComponent::SetAttackTarget(IEntity* attacktTarget)
-{
-	this->m_pAttackTargetEntity = attacktTarget;
-}
-
-IEntity* AttackerComponent::GetRandomAttackTarget()
-{
-	return m_pRandomAttackTarget;
-}
-
-void AttackerComponent::SetRandomAttackTarget(IEntity* randomTarget)
-{
-	this->m_pRandomAttackTarget = randomTarget;
-}
-
-void AttackerComponent::SetIsHumanoid(bool isHumanoid)
-{
-	this->bIsHumanoid = isHumanoid;
-}
-
-bool AttackerComponent::IsHumanoid()
-{
-	return bIsHumanoid;
-}
-
-void AttackerComponent::SetTimeBetweenAttack(f32 timeBetweenAttacks)
-{
-	this->m_timeBetweenAttacks = timeBetweenAttacks;
-}
-
-void AttackerComponent::SetIsRanged(bool isRanged)
-{
-	this->bIsRanged = isRanged;
-}
-
-bool AttackerComponent::IsRanged()
-{
-	return bIsRanged;
-}
-
-void AttackerComponent::SetIsFollower(bool isFollower)
-{
-	this->bIsFollower = isFollower;
-}
-
-bool AttackerComponent::IsFollower()
-{
-	return bIsFollower;
 }
 
 SUnitAttackInfo AttackerComponent::GetAttackInfo()

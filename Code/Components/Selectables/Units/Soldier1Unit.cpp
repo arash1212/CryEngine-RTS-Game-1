@@ -86,8 +86,11 @@ void Soldier1UnitComponent::Initialize()
 
 	//AttackerComponent Initialization
 	m_pAttackerComponent = m_pEntity->GetOrCreateComponent<AttackerComponent>();
-	m_pAttackerComponent->SetIsRanged(true);
-	m_pAttackerComponent->SetIsHumanoid(true);
+	//attack info
+	SUnitAttackInfo pAttckInfo;
+	pAttckInfo.m_pAttackType = EAttackType::RANGED;
+	pAttckInfo.bIsHumanoid = true;
+	m_pAttackerComponent->SetAttackInfo(pAttckInfo);
 }
 
 

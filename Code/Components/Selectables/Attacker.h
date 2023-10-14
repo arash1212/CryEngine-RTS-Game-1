@@ -9,11 +9,21 @@ class BaseWeaponComponent;
 class UnitAnimationComponent;
 class ActionManagerComponent;
 
+enum class EAttackType {
+	RANGED,
+	MELEE
+};
+
 struct SUnitAttackInfo {
 public:
 	f32 m_maxAttackDistance = 20.f;
-	f32 m_detectionDistance = 30.f;
+	f32 m_detectionDistance = 30.f; //Used to find "RandomAttackTarget"
+	bool bIsHumanoid = false;
+	bool bIsFollower = true; //Follows "RandomAttackTarget" or not if it's not in this unit's attack range.
+	EAttackType m_pAttackType = EAttackType::RANGED;
+	f32 m_timeBetweenAttacks = 0.04f;
 };
+
 
 class AttackerComponent final : public IEntityComponent
 {
@@ -33,9 +43,11 @@ public:
 	{
 		desc.SetGUID("{3DB1B862-DB6E-4BA5-AB7A-097245E5080B}"_cry_guid);
 		desc.SetEditorCategory("Units");
+		/*
 		desc.AddMember(&AttackerComponent::bIsHumanoid, 'ish', "ishumanoid", "Is Humanoid", "Set if is Humanoid", false);
 		desc.AddMember(&AttackerComponent::bIsRanged, 'isr', "isranged", "Is Ranged", "Set if is Ranged", false);
 		desc.AddMember(&AttackerComponent::bIsFollower, 'isf', "isfollower", "Is Follower", "Set if is Follower (follows random target ?)", false);
+		*/
 	}
 
 private:
@@ -54,12 +66,8 @@ private:
 	SUnitAttackInfo m_pAttackInfo;
 
 private:
-	bool bIsHumanoid = false;
-	bool bIsRanged = false;
-	bool bIsFollower = true;
 
 	//Timers
-	f32 m_timeBetweenAttacks = 0.04f;
 	f32 m_attackTimePassed = 0.f;
 	f32 m_timeBetweenAttackCountReset = 0.9f;
 	f32 m_attackCountResetTimePassed = 0.f;
@@ -72,6 +80,10 @@ private:
 	void FindRandomTarget();
 	void AttackRandomTarget();
 
+	//Attack types
+	void PerformMeleeAttack(IEntity* target);
+	void PerformRangedAttack(IEntity* target);
+
 public:
 	void Attack(IEntity* target);
 	void LookAt(Vec3 position);
@@ -83,21 +95,4 @@ public:
 	void SetAttackInfo(SUnitAttackInfo attackInfo);
 
 	void SetTargetEntity(IEntity* target);
-
-	IEntity* GetAttackTarget();
-	void SetAttackTarget(IEntity* attacktTarget);
-
-	IEntity* GetRandomAttackTarget();
-	void SetRandomAttackTarget(IEntity* randomTarget);
-
-	void SetIsHumanoid(bool isHumanoid);
-	bool IsHumanoid();
-
-	void SetTimeBetweenAttack(f32 timeBetweenAttacks);
-
-	void SetIsRanged(bool isRanged);
-	bool IsRanged();
-
-	void SetIsFollower(bool isFollower);
-	bool IsFollower();
 };

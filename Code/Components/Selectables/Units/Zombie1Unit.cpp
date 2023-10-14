@@ -81,13 +81,14 @@ void Zombie1UnitComponent::Initialize()
 
 	//////////AttackerComponent Initializations
 	m_pAttackerComponent = m_pEntity->GetOrCreateComponent<AttackerComponent>();
-	m_pAttackerComponent->SetIsRanged(false);
-	m_pAttackerComponent->SetIsHumanoid(true);
-	m_pAttackerComponent->SetTimeBetweenAttack(0.7f);
 	//attack info
-	SUnitAttackInfo attackInfo;
-	attackInfo.m_maxAttackDistance = 2.3f;
-	m_pAttackerComponent->SetAttackInfo(attackInfo);
+	SUnitAttackInfo pAttckInfo;
+	pAttckInfo.m_pAttackType = EAttackType::MELEE;
+	pAttckInfo.bIsFollower = true;
+	pAttckInfo.bIsHumanoid = true;
+	pAttckInfo.m_timeBetweenAttacks = 0.7f;
+	pAttckInfo.m_maxAttackDistance = 2.3f;
+	m_pAttackerComponent->SetAttackInfo(pAttckInfo);
 }
 
 

@@ -207,6 +207,14 @@ void PlayerComponent::LeftMouseDown(int activationMode, float value)
 			return;
 		}
 
+		///////////////////////////Building
+		if (m_pBaseBuildingComponent && m_pBaseBuildingComponent->HasBuildingAssigned()) {
+			m_pBaseBuildingComponent->PlaceBuilding(MouseUtils::GetPositionUnderCursor());
+			return;
+		}
+		///////////////////////////
+
+
 		//////////////////////////Selection
 		DeselectUnits();
 
@@ -226,12 +234,6 @@ void PlayerComponent::LeftMouseDown(int activationMode, float value)
 
 		//Actionbar
 		AddUIItemsToActionbar();
-
-		///////////////////////////Building
-		if (m_pBaseBuildingComponent && m_pBaseBuildingComponent->HasBuildingAssigned()) {
-			m_pBaseBuildingComponent->PlaceBuilding(MouseUtils::GetPositionUnderCursor());
-		}
-		///////////////////////////
 	}
 }
 
@@ -243,14 +245,17 @@ void PlayerComponent::RightMouseDown(int activationMode, float value)
 
 	Vec3 mousePos = MouseUtils::GetPositionUnderCursor();
 
-	if (activationMode == eAAM_OnPress) {
-		m_pBaseBuildingComponent->CancelAssignedBuilding();
-	}
-
 	if (activationMode == eAAM_OnRelease) {
+		///////////////////////////Building
+		if (m_pBaseBuildingComponent->HasBuildingAssigned()) {
+			m_pBaseBuildingComponent->CancelAssignedBuilding();
+			return;
+		}
+		///////////////////////////
+
+		///////////////////////////Commands
 		m_rightClickCount++;
 		m_rightClickCountRestartTimePassed = 0;
-
 		//TODO : update beshe
 		IEntity* entity = MouseUtils::GetActorUnderCursor();
 		if (entity) {
@@ -259,6 +264,7 @@ void PlayerComponent::RightMouseDown(int activationMode, float value)
 		else {
 			CommandUnitsToMove(mousePos);
 		}
+		///////////////////////////
 	}
 }
 

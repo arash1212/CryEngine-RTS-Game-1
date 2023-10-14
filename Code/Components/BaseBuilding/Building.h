@@ -14,6 +14,9 @@ public:
 	f32 m_maxBuildAmount = 20.f;
 };
 
+static const string BUILDING_PLACEMENT_GREEN_DECAL_MATERIAL = "Materials/buildings/building_placement_green_material.mtl";
+static const string BUILDING_PLACEMENT_RED_DECAL_MATERIAL = "Materials/buildings/building_placement_red_material.mtl";
+
 class BuildingComponent final : public IEntityComponent
 {
 
