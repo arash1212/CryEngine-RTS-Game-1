@@ -6,17 +6,19 @@ class AIControllerComponent;
 class AttackerComponent;
 class UnitStateManagerComponent;
 
-class AttackAction : public IBaseAction {
+class UnitMoveAction : public IBaseAction {
 
 public:
-	AttackAction(IEntity* entity, IEntity* target);
+	UnitMoveAction(IEntity* entity, Vec3 movePosition, bool run);
 
 private:
-	IEntity* m_pTarget = nullptr;
 	AIControllerComponent* m_pAiControllerComponent = nullptr;
 	AttackerComponent* m_pAttackerComponent = nullptr;
 	UnitStateManagerComponent* m_pStateManagerComponent = nullptr;
 
+private:
+	Vec3 m_movePosition = ZERO;
+	bool bRun = false;
 
 public:
 	virtual void Execute();

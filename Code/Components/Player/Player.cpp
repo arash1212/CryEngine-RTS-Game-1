@@ -12,8 +12,8 @@
 #include <Components/Selectables/Engineer.h>
 
 #include <Components/Managers/ActionManager.h>
-#include <Actions/Units/MoveAction.h>
-#include <Actions/Units/AttackAction.h>
+#include <Actions/Units/UnitMoveAction.h>
+#include <Actions/Units/UnitAttackAction.h>
 #include <Actions/Units/UnitBuildAction.h>
 #include <Components/Info/OwnerInfo.h>
 #include <Components/BaseBuilding/Building.h>
@@ -340,7 +340,7 @@ void PlayerComponent::CommandUnitsToMove(Vec3 position)
 			f32 width = aabb.max.x - aabb.min.x;
 			f32 height = aabb.max.y - aabb.min.y;
 			Vec3 pos = Vec3(position.x + ((column * width) + 0.8f), position.y - ((row * height) + 0.8f), position.z);
-			actionManager->AddAction(new MoveAction(m_selectedUnits[i], pos, m_rightClickCount >= 2));
+			actionManager->AddAction(new UnitMoveAction(m_selectedUnits[i], pos, m_rightClickCount >= 2));
 		}
 		else {
 			continue;
@@ -354,7 +354,7 @@ void PlayerComponent::SetUnitsAttackTarget(IEntity* target)
 		ActionManagerComponent* actionManager = entity->GetComponent<ActionManagerComponent>();
 		if (actionManager) {
 			if (target) {
-				actionManager->AddAction(new AttackAction(entity, target));
+				actionManager->AddAction(new UnitAttackAction(entity, target));
 			}
 		}
 		else {

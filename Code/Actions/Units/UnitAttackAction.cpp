@@ -1,12 +1,12 @@
 #include "StdAfx.h"
-#include "AttackAction.h"
+#include "UnitAttackAction.h"
 #include "GamePlugin.h"
 
 #include <Components/Selectables/Attacker.h>
 #include <Components/Controller/AIController.h>
 #include <Components/Managers/UnitStateManager.h>
 
-AttackAction::AttackAction(IEntity* entity, IEntity* target)
+UnitAttackAction::UnitAttackAction(IEntity* entity, IEntity* target)
 {
 	this->m_pEntity = entity;
 	this->m_pTarget = target;
@@ -20,7 +20,7 @@ AttackAction::AttackAction(IEntity* entity, IEntity* target)
 	}
 }
 
-void AttackAction::Execute()
+void UnitAttackAction::Execute()
 {
 	if (!m_pAttackerComponent){
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "AttackAction : (Execute) AttackerComponent is null");
@@ -45,7 +45,7 @@ void AttackAction::Execute()
 	}
 }
 
-void AttackAction::Cancel()
+void UnitAttackAction::Cancel()
 {
 	if (!m_pAttackerComponent) {
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "AttackAction : (Cancel) AttackerComponent is null");
@@ -63,7 +63,7 @@ void AttackAction::Cancel()
 	bIsDone = true;
 }
 
-bool AttackAction::IsDone()
+bool UnitAttackAction::IsDone()
 {
 	return bIsDone;
 }

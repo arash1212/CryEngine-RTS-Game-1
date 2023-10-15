@@ -1,12 +1,12 @@
 #include "StdAfx.h"
-#include "MoveAction.h"
+#include "UnitMoveAction.h"
 #include "GamePlugin.h"
 
 #include <Components/Selectables/Attacker.h>
 #include <Components/Controller/AIController.h>
 #include <Components/Managers/UnitStateManager.h>
 
-MoveAction::MoveAction(IEntity* entity, Vec3 movePosition, bool run)
+UnitMoveAction::UnitMoveAction(IEntity* entity, Vec3 movePosition, bool run)
 {
 	this->m_pEntity = entity;
 	this->m_movePosition = movePosition;
@@ -26,7 +26,7 @@ MoveAction::MoveAction(IEntity* entity, Vec3 movePosition, bool run)
 	}
 }
 
-void MoveAction::Execute()
+void UnitMoveAction::Execute()
 {
 	if (!m_pAiControllerComponent) {
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "MoveAction : (Cancel) AiController is null");
@@ -43,7 +43,7 @@ void MoveAction::Execute()
 	}
 }
 
-void MoveAction::Cancel()
+void UnitMoveAction::Cancel()
 {
 	if (!m_pAiControllerComponent) {
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "MoveAction : (Cancel) AiController is null");
@@ -55,7 +55,7 @@ void MoveAction::Cancel()
 	bIsDone = true;
 }
 
-bool MoveAction::IsDone()
+bool UnitMoveAction::IsDone()
 {
 	if (!bIsDone) {
 		bIsDone = m_pEntity->GetWorldPos().GetDistance(m_movePosition) <= 1;

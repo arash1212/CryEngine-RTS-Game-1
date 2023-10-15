@@ -36,12 +36,12 @@ add_sources("Train_uber.cpp"
 add_sources("Units_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "Actions\\\\Units"
-		"Actions/Units/AttackAction.cpp"
-		"Actions/Units/MoveAction.cpp"
+		"Actions/Units/UnitAttackAction.cpp"
 		"Actions/Units/UnitBuildAction.cpp"
-		"Actions/Units/AttackAction.h"
-		"Actions/Units/MoveAction.h"
+		"Actions/Units/UnitMoveAction.cpp"
+		"Actions/Units/UnitAttackAction.h"
 		"Actions/Units/UnitBuildAction.h"
+		"Actions/Units/UnitMoveAction.h"
 )
 add_sources("Components_uber.cpp"
     PROJECTS Game
