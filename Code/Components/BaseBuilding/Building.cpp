@@ -87,17 +87,10 @@ void BuildingComponent::ProcessEvent(const SEntityEvent& event)
 
 	}break;
 	case Cry::Entity::EEvent::Update: {
-		f32 DeltaTime = event.fParam[0];
-
-		//TODO : hazf beshe
-		Build();	
+		//f32 DeltaTime = event.fParam[0];
 
 		UpdateMaterial();
 
-		//Timers
-		if (m_builtTimePassed < m_timeBetweenBuilds) {
-			m_builtTimePassed += 0.5f * DeltaTime;
-		}
 	}break;
 	case Cry::Entity::EEvent::PhysicsCollision: {
 		CryLog("collision building");
@@ -127,15 +120,25 @@ void BuildingComponent::UpdateMaterial()
 
 void BuildingComponent::Place(Vec3 at)
 {
-	m_pEntity->SetPos(at);
+	if (!CanBePlaced()) {
+		return;
+	}
 
 	bIsPlaced = true;
+	m_pEntity->SetPos(at);
 
+	//Remove placement decal 
 	m_pEntity->RemoveComponent<Cry::DefaultComponents::CDecalComponent>();
 
+	//Move building mesh down after placement
 	m_pAnimationComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), IDENTITY, Vec3(0, 0, -5)));
 
-	PlacementCheck();
+	//PlaceTruss
+	m_pTrussMeshComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CStaticMeshComponent>();
+	m_pTrussMeshComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), IDENTITY, Vec3(0)));
+	m_pTrussMeshComponent->SetFilePath(m_pathToTrussMesh);
+	m_pTrussMeshComponent->LoadFromDisk();
+	m_pTrussMeshComponent->ResetObject();
 
 	//Physicalize
 	SEntityPhysicalizeParams physParams;
@@ -150,16 +153,13 @@ void BuildingComponent::Build()
 		return;
 	}
 
-	//
+	//build
 	if (m_currentBuiltAmount < m_pBuildingInfo.m_maxBuildAmount) {
-		if (m_builtTimePassed >= m_timeBetweenBuilds) {
-			m_currentBuiltAmount += 2.f;
-			m_builtTimePassed = 0;
+		m_currentBuiltAmount += 2.f;
 
-			Vec3 currentPos = m_pAnimationComponent->GetTransformMatrix().GetTranslation();
-			currentPos.z += 0.5f;
-			m_pAnimationComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), IDENTITY, currentPos));
-		}
+		Vec3 currentPos = m_pAnimationComponent->GetTransformMatrix().GetTranslation();
+		currentPos.z += 0.5f;
+		m_pAnimationComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), IDENTITY, currentPos));
 	}
 
 	//if is built
@@ -172,6 +172,7 @@ void BuildingComponent::Build()
 		m_pSelectableComponent = m_pEntity->GetOrCreateComponent<SelectableComponent>();
 		m_pSelectableComponent->SetDecalSize(Vec3(8));
 		m_pSelectableComponent->DeSelect();
+		m_pSelectableComponent->SetIsBuilding(true);
 		//Add UI items
 		for (IBaseUIItem* item : m_pAllUIItems) {
 			m_pSelectableComponent->AddUIItem(item);
@@ -223,6 +224,11 @@ bool BuildingComponent::CanBePlaced()
 	return true;
 }
 
+bool BuildingComponent::IsBuilt()
+{
+	return bIsBuilt;
+}
+
 void BuildingComponent::SetPathToTrussMesh(string path)
 {
 	this->m_pathToTrussMesh = path;
@@ -231,13 +237,4 @@ void BuildingComponent::SetPathToTrussMesh(string path)
 void BuildingComponent::AddUIItem(IBaseUIItem* item)
 {
 	this->m_pAllUIItems.append(item);
-}
-
-void BuildingComponent::PlacementCheck()
-{
-	m_pTrussMeshComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CStaticMeshComponent>();
-	m_pTrussMeshComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), IDENTITY, Vec3(0)));
-	m_pTrussMeshComponent->SetFilePath(m_pathToTrussMesh);
-	m_pTrussMeshComponent->LoadFromDisk();
-	m_pTrussMeshComponent->ResetObject();
 }

@@ -42,7 +42,7 @@ private:
 	Vec3 SnapToNavmesh(Vec3 point);
 
 public:
-	void MoveTo(Vec3 position, bool run);
+	bool MoveTo(Vec3 position, bool run);
 	void LookAt(Vec3 position);
 	void LookAtWalkDirection();
 	f32 AngleTo(Vec3 position);

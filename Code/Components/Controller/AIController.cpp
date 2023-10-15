@@ -100,23 +100,22 @@ void AIControllerComponent::Move(f32 DeltaTime)
 	m_pCharacterControllerComponent->SetVelocity(velocity.normalized() * m_pStateManager->GetCurrentSpeed());
 }
 
-void AIControllerComponent::MoveTo(Vec3 position, bool run)
+bool AIControllerComponent::MoveTo(Vec3 position, bool run)
 {
 	if (position == ZERO) {
-		return;
+		return false;
 	}
 	if (!m_pStateManager) {
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "AIControllerComponent : (MoveTo) UnitStateManagerComponent does not exist on entity !");
-		return;
+		return false;
+	}
+	if (!m_pNavigationComponent->IsDestinationReachable(position)) {
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "AIControllerComponent : (MoveTo) Destination is not reachable !");
+		return false;
 	}
 
-	/*
-	//Set state to run
-	if (run) {
-		m_pStateManager->SetStance(EUnitStance::RUNNING);
-	}*/
-
 	m_moveToPosition = this->SnapToNavmesh(position);
+	return true;
 }
 
 void AIControllerComponent::LookAt(Vec3 position)

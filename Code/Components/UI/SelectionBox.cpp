@@ -6,6 +6,7 @@
 #include "FlashUI/FlashUIElement.h"
 
 #include <Components/UI/Listener/UIElementEventListener.h>
+#include <Components/Selectables/Selectable.h>
 
 #include <CryRenderer/IRenderer.h>
 #include <CryEntitySystem/IEntitySystem.h>
@@ -84,6 +85,10 @@ DynArray<IEntity*> SelectionBoxComponent::GetEntitiesInsideBox(Vec2 lastPoint)
 	while (!entityPtr->IsEnd())
 	{
 		IEntity* entity = entityPtr->Next();
+		SelectableComponent* selectable = entity->GetComponent<SelectableComponent>();
+		if (!selectable || selectable && selectable->IsBuilding()) {
+			continue;
+		}
 
 		AABB aabb;
 		entity->GetWorldBounds(aabb);

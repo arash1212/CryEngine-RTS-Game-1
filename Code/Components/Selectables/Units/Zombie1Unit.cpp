@@ -67,7 +67,6 @@ void Zombie1UnitComponent::Initialize()
 	//SelectableComponent Initializations
 	m_pSelectableComponent = m_pEntity->GetOrCreateComponent<SelectableComponent>();
 	//UIItems
-	m_pSelectableComponent->AddUIItem(new UICancelItem(m_pEntity));
 
 	//ActionManager Initializations
 	m_pActionManagerComponent = m_pEntity->GetOrCreateComponent<ActionManagerComponent>();

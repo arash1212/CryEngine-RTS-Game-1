@@ -8,8 +8,9 @@ class SelectionBoxComponent;
 class ActionbarComponent;
 class UIElementEventListener;
 class BaseBuildingComponent;
+class OwnerInfoComponent;
 
-static const f32 PLAYER_CAMERA_DEFAULT_HEIGHT = 20.f;
+static const f32 PLAYER_CAMERA_DEFAULT_HEIGHT = 14.f;
 static const f32 PLAYER_CAMERA_DEFAULT_MOVE_SPEED = 6.5f;
 static const f32 PLAYER_CAMERA_MAX_ZOOM_AMOUNT = 10.f;
 static const string PLAYER_ENTITY_NAME = "PlayerEntity";
@@ -45,6 +46,7 @@ private:
 	SelectionBoxComponent* m_pSelectionBoxComponent;
 	ActionbarComponent* m_pActionbarComponent;
 	BaseBuildingComponent* m_pBaseBuildingComponent = nullptr;
+	OwnerInfoComponent* m_pOwnerInfoComponent = nullptr;
 
 	//UI
 	UIElementEventListener* m_pUIElementEventListener = nullptr;
@@ -65,7 +67,7 @@ private:
 
 	//Right click count
 	int32 m_rightClickCount = 0;
-	f32 m_timeBetweenRightClickCountRestart = 0.3f;
+	f32 m_timeBetweenRightClickCountRestart = 0.15f;
 	f32 m_rightClickCountRestartTimePassed = 0.0f;
 
 private:
@@ -89,6 +91,7 @@ private:
 	//Commands
 	void CommandUnitsToMove(Vec3 position);
 	void SetUnitsAttackTarget(IEntity* target); 
+	void AssignBuildingToEngineers(IEntity* buildingEntity);
 
 	//Action bar
 	void AddUIItemsToActionbar();

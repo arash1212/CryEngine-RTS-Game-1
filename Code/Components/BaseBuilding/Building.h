@@ -51,8 +51,6 @@ private:
 	bool bIsBuilt = false;
 
 	f32 m_currentBuiltAmount = 0.f;
-	f32 m_timeBetweenBuilds = 1.f;
-	f32 m_builtTimePassed = 0.f;
 
 	string m_pathToTrussMesh = "";
 
@@ -61,7 +59,6 @@ private:
 
 private:
 	void UpdateMaterial();
-	void PlacementCheck();
 
 public:
 	void Place(Vec3 at);
@@ -70,6 +67,8 @@ public:
 
 	bool IsPlaced();
 	bool CanBePlaced();
+
+	bool IsBuilt();
 
 	void SetPathToTrussMesh(string path);
 

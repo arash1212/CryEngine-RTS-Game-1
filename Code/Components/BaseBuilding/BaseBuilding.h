@@ -35,6 +35,6 @@ public:
 	IEntity* AssignBuilding();
 	void CancelAssignedBuilding();
 
-	void PlaceBuilding(Vec3 at);
+	IEntity* PlaceBuilding(Vec3 at);
 	bool HasBuildingAssigned();
 };

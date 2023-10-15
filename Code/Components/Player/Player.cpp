@@ -9,10 +9,14 @@
 
 #include <Utils\MouseUtils.h>
 #include <Components/Selectables/Selectable.h>
+#include <Components/Selectables/Engineer.h>
 
 #include <Components/Managers/ActionManager.h>
 #include <Actions/Units/MoveAction.h>
 #include <Actions/Units/AttackAction.h>
+#include <Actions/Units/UnitBuildAction.h>
+#include <Components/Info/OwnerInfo.h>
+#include <Components/BaseBuilding/Building.h>
 
 #include <Components/BaseBuilding/BaseBuilding.h>
 
@@ -63,6 +67,10 @@ void PlayerComponent::Initialize()
 
 	//ListenerComponent initialization
 	m_pListenerComp = m_pEntity->GetOrCreateComponent<Cry::Audio::DefaultComponents::CListenerComponent>();
+
+	//OwnerInfoComponent initialization
+	m_pOwnerInfoComponent = m_pEntity->GetOrCreateComponent<OwnerInfoComponent>();
+	m_pOwnerInfoComponent->SetIsPlayer(true);
 
 	//Set player entity name
 	m_pEntity->SetName(PLAYER_ENTITY_NAME);
@@ -209,7 +217,10 @@ void PlayerComponent::LeftMouseDown(int activationMode, float value)
 
 		///////////////////////////Building
 		if (m_pBaseBuildingComponent && m_pBaseBuildingComponent->HasBuildingAssigned()) {
-			m_pBaseBuildingComponent->PlaceBuilding(MouseUtils::GetPositionUnderCursor());
+			IEntity* buildingEntity = m_pBaseBuildingComponent->PlaceBuilding(MouseUtils::GetPositionUnderCursor());
+			if (buildingEntity) {
+				AssignBuildingToEngineers(buildingEntity);
+			}
 			return;
 		}
 		///////////////////////////
@@ -259,7 +270,17 @@ void PlayerComponent::RightMouseDown(int activationMode, float value)
 		//TODO : update beshe
 		IEntity* entity = MouseUtils::GetActorUnderCursor();
 		if (entity) {
-			SetUnitsAttackTarget(entity);
+			if (m_pOwnerInfoComponent->IsEntityHostile(entity)) {
+				SetUnitsAttackTarget(entity);
+				return;
+			}
+
+			//
+			BuildingComponent* building = entity->GetComponent<BuildingComponent>();
+			if (building && !building->IsBuilt()) {
+				AssignBuildingToEngineers(entity);
+				return;
+			}
 		}
 		else {
 			CommandUnitsToMove(mousePos);
@@ -302,10 +323,24 @@ void PlayerComponent::SelectUnits()
 
 void PlayerComponent::CommandUnitsToMove(Vec3 position)
 {
-	for (IEntity* entity : m_selectedUnits) {
-		ActionManagerComponent* actionManager = entity->GetComponent<ActionManagerComponent>();
+	int32 row = 0, column = 0;
+	for (int32 i = 0; i < m_selectedUnits.size(); i++) {
+		ActionManagerComponent* actionManager = m_selectedUnits[i]->GetComponent<ActionManagerComponent>();
 		if (actionManager) {
-			actionManager->AddAction(new MoveAction(entity, position, m_rightClickCount >= 2));
+			if (i != 0) {
+				column++;
+			}
+			if (i != 0 && i % 5 == 0) {
+				row++;
+				column = 0;
+			}
+
+			AABB aabb;
+			m_selectedUnits[i]->GetWorldBounds(aabb);
+			f32 width = aabb.max.x - aabb.min.x;
+			f32 height = aabb.max.y - aabb.min.y;
+			Vec3 pos = Vec3(position.x + ((column * width) + 0.8f), position.y - ((row * height) + 0.8f), position.z);
+			actionManager->AddAction(new MoveAction(m_selectedUnits[i], pos, m_rightClickCount >= 2));
 		}
 		else {
 			continue;
@@ -328,20 +363,48 @@ void PlayerComponent::SetUnitsAttackTarget(IEntity* target)
 	}
 }
 
-void PlayerComponent::AddUIItemsToActionbar()
+void PlayerComponent::AssignBuildingToEngineers(IEntity* buildingEntity)
 {
-	m_pActionbarComponent->Clear();
 	for (IEntity* entity : m_selectedUnits) {
-		SelectableComponent* selectable = entity->GetComponent<SelectableComponent>();
-		if (selectable) {
-			selectable->Select();
-
-			for (IBaseUIItem* uiItem : selectable->GetUIItems()) {
-				m_pActionbarComponent->AddButton(uiItem->GetImagePath());
+		if (!entity->GetComponent<EngineerComponent>()) {
+			continue;
+		}
+		ActionManagerComponent* actionManager = entity->GetComponent<ActionManagerComponent>();
+		if (actionManager) {
+			if (buildingEntity) {
+				actionManager->AddAction(new UnitBuildAction(entity, buildingEntity));
 			}
 		}
 		else {
 			continue;
+		}
+	}
+}
+
+void PlayerComponent::AddUIItemsToActionbar()
+{
+	m_pActionbarComponent->Clear();
+	if (m_selectedUnits.size() <= 0) {
+		return;
+	}
+
+	//TODO : UPDATE BESHE
+	if (m_selectedUnits.size() > 1) {
+		SelectableComponent* selectable = m_selectedUnits[0]->GetComponent<SelectableComponent>();
+		if (selectable) {
+			for (IBaseUIItem* uiItem : selectable->GetGeneralUIItems()) {
+				m_pActionbarComponent->AddButton(uiItem->GetImagePath());
+			}
+			return;
+		}
+	}
+
+	if (m_selectedUnits.size() == 1) {
+		SelectableComponent* selectable = m_selectedUnits[0]->GetComponent<SelectableComponent>();
+		if (selectable) {
+			for (IBaseUIItem* uiItem : selectable->GetAllUIItems()) {
+				m_pActionbarComponent->AddButton(uiItem->GetImagePath());
+			}
 		}
 	}
 }
@@ -374,7 +437,7 @@ void PlayerComponent::ExecuteActionbarItem(int32 index)
 	for (IEntity* entity : m_selectedUnits) {
 		SelectableComponent* selectable = entity->GetComponent<SelectableComponent>();
 		if (selectable) {
-			selectable->GetUIItems()[index]->Execute();
+			selectable->GetAllUIItems()[index]->Execute();
 		}
 		else {
 			continue;

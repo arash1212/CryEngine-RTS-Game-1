@@ -65,3 +65,22 @@ void OwnerInfoComponent::SetFaction(EPlayerFaction faction)
 {
 	this->m_pOwnerInfo.m_pFaction = faction;
 }
+
+bool OwnerInfoComponent::IsEntityHostile(IEntity* entity)
+{
+	OwnerInfoComponent* otherOwner = entity->GetComponent<OwnerInfoComponent>();
+	if (!otherOwner) {
+		return false;
+	}
+	return otherOwner->GetInfo().m_pTeam != this->m_pOwnerInfo.m_pTeam && !bIsPlayer;
+}
+
+bool OwnerInfoComponent::IsPlayer()
+{
+	return bIsPlayer;
+}
+
+void OwnerInfoComponent::SetIsPlayer(bool isPlayer)
+{
+	this->bIsPlayer = isPlayer;
+}

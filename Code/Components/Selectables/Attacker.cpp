@@ -186,11 +186,11 @@ void AttackerComponent::FindRandomTarget()
 		OwnerInfoComponent* entityOwnerInfo = entity->GetComponent<OwnerInfoComponent>();
 
 		//Ignore entity if it's not in detection range
-		if (!entityOwnerInfo || distanceToTarget > m_pAttackInfo.m_detectionDistance) {
+		if (!entityOwnerInfo || distanceToTarget > m_pAttackInfo.m_detectionDistance || entityOwnerInfo->IsPlayer()) {
 			continue;
 		}
 
-		//set entity entity as randomAttackTarget if it's team is not same as this unit's team
+		//set entity as randomAttackTarget if it's team is not same as this unit's team
 		if (entityOwnerInfo->GetInfo().m_pTeam != m_pEntity->GetComponent<OwnerInfoComponent>()->GetInfo().m_pTeam) {
 			m_pRandomAttackTarget = entity;
 		}

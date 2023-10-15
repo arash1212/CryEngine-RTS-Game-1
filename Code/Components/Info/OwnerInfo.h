@@ -43,9 +43,14 @@ public:
 
 private:
 	SOwnerInfo m_pOwnerInfo;
+	bool bIsPlayer = false;
 
 public:
 	SOwnerInfo GetInfo();
 	void SetTeam(EPlayerTeam team);
 	void SetFaction(EPlayerFaction faction);
+
+	bool IsEntityHostile(IEntity* entity);
+	bool IsPlayer();
+	void SetIsPlayer(bool isPlayer);
 };

@@ -37,6 +37,10 @@ void SelectableComponent::Initialize()
 
 	//RenderNode Initialization
 	m_pRenderNode = m_pEntity->GetRenderNode();
+
+	//GeneralUIItems
+	AddGeneralUIItem(new UIChangeStanceItem(m_pEntity));
+	AddGeneralUIItem(new UICancelItem(m_pEntity));
 }
 
 Cry::Entity::EventFlags SelectableComponent::GetEventMask() const
@@ -52,6 +56,7 @@ void SelectableComponent::ProcessEvent(const SEntityEvent& event)
 	switch (event.event)
 	{
 	case Cry::Entity::EEvent::GameplayStarted: {
+		DeSelect();
 
 	}break;
 	case Cry::Entity::EEvent::Update: {
@@ -87,14 +92,38 @@ bool SelectableComponent::IsSelected()
 	return bIsSelected;
 }
 
-void SelectableComponent::AddUIItem(IBaseUIItem* item)
+void SelectableComponent::SetIsBuilding(bool isBuilding)
 {
-	this->m_pAllUIItems.append(item);
+	this->bIsBuilding = isBuilding;
+	if (bIsBuilding) {
+		m_pGeneralUIItems.clear();
+		AddGeneralUIItem(new UICancelItem(m_pEntity));
+	}
 }
 
-DynArray<IBaseUIItem*> SelectableComponent::GetUIItems()
+bool SelectableComponent::IsBuilding()
 {
-	return m_pAllUIItems;
+	return bIsBuilding;
+}
+
+void SelectableComponent::AddUIItem(IBaseUIItem* item)
+{
+	this->m_pUnitSpecificUIItems.append(item);
+}
+
+void SelectableComponent::AddGeneralUIItem(IBaseUIItem* item)
+{
+	this->m_pGeneralUIItems.append(item);
+}
+
+DynArray<IBaseUIItem*> SelectableComponent::GetAllUIItems()
+{
+	return m_pUnitSpecificUIItems + m_pGeneralUIItems;
+}
+
+DynArray<IBaseUIItem*> SelectableComponent::GetGeneralUIItems()
+{
+	return m_pGeneralUIItems;
 }
 
 void SelectableComponent::SetDecalSize(Vec3 size)

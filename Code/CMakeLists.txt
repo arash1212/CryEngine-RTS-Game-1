@@ -32,8 +32,10 @@ add_sources("Units_uber.cpp"
     SOURCE_GROUP "Actions\\\\Units"
 		"Actions/Units/AttackAction.cpp"
 		"Actions/Units/MoveAction.cpp"
+		"Actions/Units/UnitBuildAction.cpp"
 		"Actions/Units/AttackAction.h"
 		"Actions/Units/MoveAction.h"
+		"Actions/Units/UnitBuildAction.h"
 )
 add_sources("Components_uber.cpp"
     PROJECTS Game
@@ -91,17 +93,21 @@ add_sources("Selectables_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "Components\\\\Selectables"
 		"Components/Selectables/Attacker.cpp"
+		"Components/Selectables/Engineer.cpp"
 		"Components/Selectables/Selectable.cpp"
 		"Components/Selectables/UnitAnimation.cpp"
 		"Components/Selectables/Attacker.h"
+		"Components/Selectables/Engineer.h"
 		"Components/Selectables/Selectable.h"
 		"Components/Selectables/UnitAnimation.h"
 )
 add_sources("Units_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "Components\\\\Selectables\\\\Units"
+		"Components/Selectables/Units/Engineer1Unit.cpp"
 		"Components/Selectables/Units/Soldier1Unit.cpp"
 		"Components/Selectables/Units/Zombie1Unit.cpp"
+		"Components/Selectables/Units/Engineer1Unit.h"
 		"Components/Selectables/Units/Soldier1Unit.h"
 		"Components/Selectables/Units/Zombie1Unit.h"
 )

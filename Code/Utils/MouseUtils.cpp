@@ -44,7 +44,7 @@ Vec3 MouseUtils::GetPositionUnderCursor()
 	if (gEnv->pPhysicalWorld->RayWorldIntersection(p1, dir, objTypes, flags, &hit, 1)) {
 		if (hit.pCollider) {
 			pd->Begin("mousePosTest", true);
-			pd->AddSphere(hit.pt, 0.4f, ColorF(1, 0, 0), 1);
+			pd->AddSphere(hit.pt, 0.4f, ColorF(0, 1, 0), 1);
 			return hit.pt;
 		}
 	}

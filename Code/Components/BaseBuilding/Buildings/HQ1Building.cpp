@@ -16,7 +16,6 @@
 #include <UIItems/Items/Buildings/UIHQ1BuildItem.h>
 
 #include <Components/BaseBuilding/Building.h>
-
 #include <Utils/MathUtils.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
@@ -62,7 +61,6 @@ void HQ1BuildingComponent::Initialize()
 	m_pBuildingComponent = m_pEntity->GetOrCreateComponent<BuildingComponent>();
 	m_pBuildingComponent->SetPathToTrussMesh(HQ_BUILDING_1_TRUSS_MODEL_PATH);
 	//UIItems
-	m_pBuildingComponent->AddUIItem(new UICancelItem(m_pEntity));
 
 	//Update bounding box
 	AABB aabb;

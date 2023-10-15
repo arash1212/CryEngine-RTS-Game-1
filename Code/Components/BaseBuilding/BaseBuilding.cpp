@@ -112,24 +112,27 @@ void BaseBuildingComponent::CancelAssignedBuilding()
 	m_pBuildingEntity = nullptr;
 }
 
-void BaseBuildingComponent::PlaceBuilding(Vec3 at)
+IEntity* BaseBuildingComponent::PlaceBuilding(Vec3 at)
 {
 	if (!m_pBuildingEntity) {
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "BaseBuildingComponent : (PlaceBuilding) m_pBuildingEntity is null .!");
-		return;
+		return nullptr;
 	}
 	BuildingComponent* building = m_pBuildingEntity->GetComponent<BuildingComponent>();
 	if (!building) {
-		return;
+		return nullptr;
 	}
 	if (!building->CanBePlaced()) {
-		return;
+		return nullptr;
 	}
 
 	m_pAudioComponent->ExecuteTrigger(m_buildingPlacementSound);
 
 	m_pBuildingEntity->GetComponent<BuildingComponent>()->Place(at);
+	IEntity* buildingTemp = m_pBuildingEntity;
 	m_pBuildingEntity = nullptr;
+
+	return buildingTemp;
 }
 
 bool BaseBuildingComponent::HasBuildingAssigned()

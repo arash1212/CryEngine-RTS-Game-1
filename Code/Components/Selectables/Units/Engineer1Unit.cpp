@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "Soldier1Unit.h"
+#include "Engineer1Unit.h"
 #include "GamePlugin.h"
 
 #include <Components/Selectables/Attacker.h>
@@ -13,6 +13,7 @@
 #include <Components/Controller/AIController.h>
 #include <Components/Managers/ActionManager.h>
 #include <Components/Managers/UnitStateManager.h>
+#include <Components/Selectables/Engineer.h>
 
 #include <CryAnimation/ICryAnimation.h>
 #include <Components/Weapons/BaseWeapon.h>
@@ -29,25 +30,25 @@
 
 namespace
 {
-	static void RegisterSoldier1UnitComponent(Schematyc::IEnvRegistrar& registrar)
+	static void RegisterEngineer1UnitComponent(Schematyc::IEnvRegistrar& registrar)
 	{
 		Schematyc::CEnvRegistrationScope scope = registrar.Scope(IEntity::GetEntityScopeGUID());
 		{
-			Schematyc::CEnvRegistrationScope componentScope = scope.Register(SCHEMATYC_MAKE_ENV_COMPONENT(Soldier1UnitComponent));
+			Schematyc::CEnvRegistrationScope componentScope = scope.Register(SCHEMATYC_MAKE_ENV_COMPONENT(Engineer1UnitComponent));
 		}
 	}
 
-	CRY_STATIC_AUTO_REGISTER_FUNCTION(&RegisterSoldier1UnitComponent);
+	CRY_STATIC_AUTO_REGISTER_FUNCTION(&RegisterEngineer1UnitComponent);
 }
 
 
-void Soldier1UnitComponent::Initialize()
+void Engineer1UnitComponent::Initialize()
 {
 	//AnimationComponent Initializations
 	m_pAnimationComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CAdvancedAnimationComponent>();
 	m_pAnimationComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), Quat::CreateRotationXYZ(Ang3(DEG2RAD(90), 0, DEG2RAD(180))), Vec3(0)));
-	m_pAnimationComponent->SetCharacterFile("Objects/Characters/units/soldier1/soldier_1.cdf");
-	m_pAnimationComponent->SetMannequinAnimationDatabaseFile("Animations/Mannequin/ADB/soldier1.adb");
+	m_pAnimationComponent->SetCharacterFile("Objects/Characters/units/engineer1/engineer1.cdf");
+	m_pAnimationComponent->SetMannequinAnimationDatabaseFile("Animations/Mannequin/ADB/engineer1.adb");
 	m_pAnimationComponent->SetControllerDefinitionFile("Animations/Mannequin/ADB/FirstPersonControllerDefinition.xml");
 	m_pAnimationComponent->SetDefaultScopeContextName("ThirdPersonCharacter");
 	m_pAnimationComponent->SetDefaultFragmentName("Walk");
@@ -59,6 +60,7 @@ void Soldier1UnitComponent::Initialize()
 
 	//StateManagerComponent Initialization
 	m_pStateManagerComponent = m_pEntity->GetOrCreateComponent<UnitStateManagerComponent>();
+	m_pStateManagerComponent->SetWalkSpeed(5.f);
 
 	//AIController Initializations
 	m_pAIController = m_pEntity->GetOrCreateComponent<AIControllerComponent>();
@@ -66,32 +68,40 @@ void Soldier1UnitComponent::Initialize()
 	//SelectableComponent Initializations
 	m_pSelectableComponent = m_pEntity->GetOrCreateComponent<SelectableComponent>();
 	//UIItems
+	m_pSelectableComponent->AddUIItem(new UIHQ1BuildItem(m_pEntity));
 
 	//ActionManager Initializations
 	m_pActionManagerComponent = m_pEntity->GetOrCreateComponent<ActionManagerComponent>();
-
-	//WeaponComponent Initialization
-	m_pWeaponComponent = m_pEntity->GetOrCreateComponent<BaseWeaponComponent>();
-	m_pWeaponComponent->Draw();
 
 	//OwnerComponent Initialization
 	m_pOwnerInfoComponent = m_pEntity->GetOrCreateComponent<OwnerInfoComponent>();
 	m_pOwnerInfoComponent->SetTeam(EPlayerTeam::TEAM6);
 
-	//UnitAnimationComponent Initialization
+	//AttackerComponent Initialization
 	m_pUnitAnimationComponent = m_pEntity->GetOrCreateComponent<UnitAnimationComponent>();
 
-	//AttackerComponent Initialization
+	//////////AttackerComponent Initializations
 	m_pAttackerComponent = m_pEntity->GetOrCreateComponent<AttackerComponent>();
 	//attack info
 	SUnitAttackInfo pAttckInfo;
-	pAttckInfo.m_pAttackType = EAttackType::RANGED;
+	pAttckInfo.m_pAttackType = EAttackType::MELEE;
+	pAttckInfo.bIsFollower = true;
 	pAttckInfo.bIsHumanoid = true;
+	pAttckInfo.m_timeBetweenAttacks = 0.7f;
+	pAttckInfo.m_maxAttackDistance = 2.3f;
 	m_pAttackerComponent->SetAttackInfo(pAttckInfo);
+
+	//EngineerComponent Initializations
+	m_pEngineerComponent = m_pEntity->GetOrCreateComponent<EngineerComponent>();
+	//engineer info
+	SEngineerInfo engineerInfo;
+	engineerInfo.m_maxBuildDistance = 5.f;
+	engineerInfo.m_timeBetweenBuilds = 1.f;
+	m_pEngineerComponent->SetEngineerInfo(engineerInfo);
 }
 
 
-Cry::Entity::EventFlags Soldier1UnitComponent::GetEventMask() const
+Cry::Entity::EventFlags Engineer1UnitComponent::GetEventMask() const
 {
 	return
 		Cry::Entity::EEvent::GameplayStarted |
@@ -99,7 +109,7 @@ Cry::Entity::EventFlags Soldier1UnitComponent::GetEventMask() const
 		Cry::Entity::EEvent::Reset;
 }
 
-void Soldier1UnitComponent::ProcessEvent(const SEntityEvent& event)
+void Engineer1UnitComponent::ProcessEvent(const SEntityEvent& event)
 {
 	switch (event.event)
 	{
@@ -118,3 +128,4 @@ void Soldier1UnitComponent::ProcessEvent(const SEntityEvent& event)
 		break;
 	}
 }
+
