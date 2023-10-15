@@ -24,10 +24,14 @@ public:
 protected:
 	std::deque<IBaseAction*> m_actionsQueue;
 	IBaseAction* m_pCurrentAction;
+	bool bIsBuilding = false;
 
 public:
 	void ProcessActions();
 	void AddAction(IBaseAction* action);
 	void CancelCurrentAction();
 	bool IsProcessingAnAction();
+
+	bool IsBuilding();
+	void SetIsBuilding(bool isBuilding);
 };

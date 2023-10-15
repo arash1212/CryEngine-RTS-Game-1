@@ -214,6 +214,11 @@ void PlayerComponent::LeftMouseDown(int activationMode, float value)
 		if (m_pUIElementEventListener->IsMouseOverUI()) {
 			return;
 		}
+		//TODO :
+		if (!bIsLeftClickWorks) {
+			bIsLeftClickWorks = true;
+			return;
+		}
 
 		///////////////////////////Building
 		if (m_pBaseBuildingComponent && m_pBaseBuildingComponent->HasBuildingAssigned()) {
@@ -434,12 +439,20 @@ void PlayerComponent::CheckSelectablesMouseOver()
 
 void PlayerComponent::ExecuteActionbarItem(int32 index)
 {
+	bIsLeftClickWorks = false;
 	for (IEntity* entity : m_selectedUnits) {
 		SelectableComponent* selectable = entity->GetComponent<SelectableComponent>();
-		if (selectable) {
-			selectable->GetAllUIItems()[index]->Execute();
+		if (!selectable) {
+			return;
 		}
-		else {
+
+		if (m_selectedUnits.size() > 1) {
+			selectable->GetGeneralUIItems()[index]->Execute();
+			continue;
+		}
+
+		if (m_selectedUnits.size() == 1) {
+			selectable->GetAllUIItems()[index]->Execute();
 			continue;
 		}
 	}

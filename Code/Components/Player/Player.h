@@ -70,6 +70,9 @@ private:
 	f32 m_timeBetweenRightClickCountRestart = 0.15f;
 	f32 m_rightClickCountRestartTimePassed = 0.0f;
 
+	//
+	bool bIsLeftClickWorks = false;
+
 private:
 	void InitInputs();
 	void Move(f32 DeltaTime);

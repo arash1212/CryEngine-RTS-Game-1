@@ -81,12 +81,11 @@ void ActionManagerComponent::ProcessActions()
 void ActionManagerComponent::AddAction(IBaseAction* action)
 {
 	//TODO
-	if (m_pCurrentAction) {
+	if (!bIsBuilding && m_pCurrentAction) {
 		m_pCurrentAction->Cancel();
 		m_pCurrentAction = nullptr;
+		m_actionsQueue.clear();
 	}
-
-	m_actionsQueue.clear();
 	m_actionsQueue.push_back(action);
 }
 
@@ -105,4 +104,14 @@ bool ActionManagerComponent::IsProcessingAnAction()
 		return false;
 	}
 	return true;
+}
+
+bool ActionManagerComponent::IsBuilding()
+{
+	return bIsBuilding;
+}
+
+void ActionManagerComponent::SetIsBuilding(bool isBuilding)
+{
+	this->bIsBuilding = isBuilding;
 }
