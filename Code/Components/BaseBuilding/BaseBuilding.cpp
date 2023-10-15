@@ -15,7 +15,7 @@
 #include <Utils/MouseUtils.h>
 
 #include <Components/BaseBuilding/Building.h>
-#include <Components\BaseBuilding\Buildings\HQ1Building.h>
+#include <Components/BaseBuilding/Buildings/HQ1Building.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>

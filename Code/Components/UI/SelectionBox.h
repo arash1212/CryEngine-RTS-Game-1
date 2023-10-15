@@ -36,5 +36,7 @@ public:
 	void SetBoxInitPosition(Vec2 initPoint);
 	void SetCameraComponent(Cry::DefaultComponents::CCameraComponent* cameraComponent);
 
+	Vec2 GetInitPosition();
+	bool IsBoxSelectionTriggered(Vec2 currentPoint);
 	void SetEventListener(IUIElementEventListener* eventListener);
 };

@@ -85,8 +85,8 @@ private:
 	void RightMouseDown(int activationMode, float value);
 
 	//Actions
-	void DeselectUnits();
-	void SelectUnits();
+	void DeselectSelectables();
+	void SelectSelectables();
 
 	//Commands
 	void CommandUnitsToMove(Vec3 position);

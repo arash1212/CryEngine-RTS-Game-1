@@ -107,7 +107,7 @@ void PlayerComponent::ProcessEvent(const SEntityEvent& event)
 
 	}break;
 	case Cry::Entity::EEvent::Reset: {
-		DeselectUnits();
+		DeselectSelectables();
 
 	}break;
 	default:
@@ -227,19 +227,19 @@ void PlayerComponent::LeftMouseDown(int activationMode, float value)
 
 
 		//////////////////////////Selection
-		DeselectUnits();
+		DeselectSelectables();
 
 		//Single selection
 		IEntity* entity = MouseUtils::GetActorUnderCursor();
-		if (entity) {
+		if (entity && !m_pSelectionBoxComponent->IsBoxSelectionTriggered(mousePos)) {
 			m_selectedUnits.push_back(entity);
-			SelectUnits();
+			SelectSelectables();
 		}
 
 		//Box/Multiple Selection
-		else {
+		else if (m_pSelectionBoxComponent->IsBoxSelectionTriggered(mousePos)) {
 			m_selectedUnits = m_pSelectionBoxComponent->GetEntitiesInsideBox(mousePos);
-			SelectUnits();
+			SelectSelectables();
 		}
 		//////////////////////////
 
@@ -293,7 +293,7 @@ void PlayerComponent::RightMouseDown(int activationMode, float value)
 																	ACTIONS
 ==============================================================================================================================================*/
 
-void PlayerComponent::DeselectUnits()
+void PlayerComponent::DeselectSelectables()
 {
 	for (IEntity* entity : m_selectedUnits) {
 		SelectableComponent* selectable = entity->GetComponent<SelectableComponent>();
@@ -308,7 +308,7 @@ void PlayerComponent::DeselectUnits()
 	m_selectedUnits.clear();
 }
 
-void PlayerComponent::SelectUnits()
+void PlayerComponent::SelectSelectables()
 {
 	for (IEntity* entity : m_selectedUnits) {
 		SelectableComponent* selectable = entity->GetComponent<SelectableComponent>();

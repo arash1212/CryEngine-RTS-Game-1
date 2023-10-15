@@ -97,7 +97,6 @@ void SelectableComponent::SetIsBuilding(bool isBuilding)
 	this->bIsBuilding = isBuilding;
 	if (bIsBuilding) {
 		m_pGeneralUIItems.clear();
-		AddGeneralUIItem(new UICancelItem(m_pEntity));
 	}
 }
 

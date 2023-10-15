@@ -27,6 +27,12 @@ add_sources("Actions_uber.cpp"
     SOURCE_GROUP "Actions"
 		"Actions/IBaseAction.h"
 )
+add_sources("Train_uber.cpp"
+    PROJECTS Game
+    SOURCE_GROUP "Actions\\\\Train"
+		"Actions/Train/TrainEngineer1Action.cpp"
+		"Actions/Train/TrainEngineer1Action.h"
+)
 add_sources("Units_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "Actions\\\\Units"
@@ -149,6 +155,12 @@ add_sources("Buildings_uber.cpp"
     SOURCE_GROUP "UIItems\\\\Items\\\\Buildings"
 		"UIItems/Items/Buildings/UIHQ1BuildItem.cpp"
 		"UIItems/Items/Buildings/UIHQ1BuildItem.h"
+)
+add_sources("TrainUnits_uber.cpp"
+    PROJECTS Game
+    SOURCE_GROUP "UIItems\\\\Items\\\\Buildings\\\\TrainUnits"
+		"UIItems/Items/Buildings/TrainUnits/UITrainEngineer1Item.cpp"
+		"UIItems/Items/Buildings/TrainUnits/UITrainEngineer1Item.h"
 )
 add_sources("Utils_uber.cpp"
     PROJECTS Game

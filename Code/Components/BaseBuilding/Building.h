@@ -5,6 +5,7 @@
 #include <DefaultComponents/Physics/BoxPrimitiveComponent.h>
 #include <DefaultComponents/Lights/EnvironmentProbeComponent.h>
 #include <DefaultComponents/Effects/DecalComponent.h>
+class ActionManagerComponent;
 
 class SelectableComponent;
 class IBaseUIItem;
@@ -43,8 +44,12 @@ private:
 	Cry::DefaultComponents::CBoxPrimitiveComponent* m_pBboxComponent = nullptr;
 	Cry::DefaultComponents::CDecalComponent* m_pDecalComponent = nullptr;
 
+	ActionManagerComponent* m_pActionManagerComponent = nullptr;
+
 	SelectableComponent* m_pSelectableComponent = nullptr;
 	SBuildingInfo m_pBuildingInfo;
+
+	IAttachment* m_pExitPointAttachment = nullptr;
 
 private:
 	bool bIsPlaced = false;
@@ -73,4 +78,6 @@ public:
 	void SetPathToTrussMesh(string path);
 
 	void AddUIItem(IBaseUIItem* item);
+
+	Vec3 GetExitPoint();
 };

@@ -14,6 +14,7 @@
 #include <UIItems/Items/UICancelItem.h>
 #include <UIItems/Items/UIChangeStanceItem.h>
 #include <UIItems/Items/Buildings/UIHQ1BuildItem.h>
+#include<UIItems/Items/Buildings/TrainUnits/UITrainEngineer1Item.h>
 
 #include <Components/BaseBuilding/Building.h>
 #include <Utils/MathUtils.h>
@@ -61,6 +62,7 @@ void HQ1BuildingComponent::Initialize()
 	m_pBuildingComponent = m_pEntity->GetOrCreateComponent<BuildingComponent>();
 	m_pBuildingComponent->SetPathToTrussMesh(HQ_BUILDING_1_TRUSS_MODEL_PATH);
 	//UIItems
+	m_pBuildingComponent->AddUIItem(new UITrainEngineer1Item(m_pEntity));
 
 	//Update bounding box
 	AABB aabb;

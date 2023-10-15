@@ -67,6 +67,12 @@ void BuildingComponent::Initialize()
 	m_pDecalComponent->SetSortPriority(50);
 	m_pDecalComponent->SetDepth(10);
 	m_pDecalComponent->Spawn();
+
+	//ActionManager Initializations
+	m_pActionManagerComponent = m_pEntity->GetOrCreateComponent<ActionManagerComponent>();
+
+	//ExitPointAttachment Initialization
+	m_pExitPointAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("exitPoint");
 }
 
 
@@ -237,4 +243,13 @@ void BuildingComponent::SetPathToTrussMesh(string path)
 void BuildingComponent::AddUIItem(IBaseUIItem* item)
 {
 	this->m_pAllUIItems.append(item);
+}
+
+Vec3 BuildingComponent::GetExitPoint()
+{
+	//TODO : Fix beshe
+	//m_pExitPointAttachment->GetAttWorldAbsolute().t
+	Vec3 pos = m_pEntity->GetWorldPos();
+	pos.y -= 5;
+	return pos;
 }

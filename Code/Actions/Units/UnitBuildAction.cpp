@@ -63,9 +63,10 @@ void UnitBuildAction::Cancel()
 {
 	this->m_pEngineerComponent->CancelBuildingAssigned();
 	this->m_pAiControllerComponent->StopMoving();
+	bIsDone = true;
 }
 
 bool UnitBuildAction::IsDone()
 {
-	return this->m_pBuildingComponent->IsBuilt();
+	return this->m_pBuildingComponent->IsBuilt() || bIsDone;
 }

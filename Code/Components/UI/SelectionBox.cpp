@@ -131,6 +131,31 @@ void SelectionBoxComponent::SetCameraComponent(Cry::DefaultComponents::CCameraCo
 	this->m_pCameraComponent = cameraComponent;
 }
 
+Vec2 SelectionBoxComponent::GetInitPosition()
+{
+	return m_boxInitPoint;
+}
+
+bool SelectionBoxComponent::IsBoxSelectionTriggered(Vec2 currentPoint)
+{
+	bool result = false;
+	if (m_boxInitPoint.x > currentPoint.x) {
+		result = currentPoint.x <= m_boxInitPoint.x - 30;
+	}
+	else if (m_boxInitPoint.x < currentPoint.x) {
+		result = currentPoint.x >= m_boxInitPoint.x + 30;
+	}
+
+	if (m_boxInitPoint.y > currentPoint.y) {
+		result = currentPoint.y <= m_boxInitPoint.y - 30;
+	}
+	else if (m_boxInitPoint.y < currentPoint.y) {
+		result = currentPoint.y >= m_boxInitPoint.y + 30;
+	}
+
+	return result;
+}
+
 void SelectionBoxComponent::SetEventListener(IUIElementEventListener* eventListener)
 {
 	this->m_pSelectionBoxUIElement->AddEventListener(eventListener,"selection-box-event-listener");
