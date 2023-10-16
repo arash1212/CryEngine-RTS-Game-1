@@ -143,6 +143,8 @@ void AttackerComponent::AttackRandomTarget()
 	//Attack RandomAttackTarget if it's in unit's Attack range
 	if (CanAttack()) {
 		Attack(m_pRandomAttackTarget);
+		this->LookAt(m_pRandomAttackTarget->GetWorldPos());
+		this->m_pAIController->StopMoving();
 	}
 
 	else {
@@ -154,7 +156,7 @@ void AttackerComponent::AttackRandomTarget()
 		//If is a follwer follow random target if it's not in unit attack range
 		else {
 			this->m_pAIController->MoveTo(m_pRandomAttackTarget->GetWorldPos(), true);
-			this->LookAt(m_pRandomAttackTarget->GetWorldPos());
+			this->m_pAIController->LookAtWalkDirection();
 		}
 	}
 }
