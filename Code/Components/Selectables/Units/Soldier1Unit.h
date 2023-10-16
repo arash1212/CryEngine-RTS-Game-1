@@ -12,8 +12,10 @@ class OwnerInfoComponent;
 class UnitStateManagerComponent;
 class AttackerComponent;
 class UnitAnimationComponent;
+class CostComponent;
 
 struct SOwnerInfo;
+struct SResourceInfo;
 
 class Soldier1UnitComponent final : public IEntityComponent
 {
@@ -45,9 +47,11 @@ private:
 	UnitStateManagerComponent* m_pStateManagerComponent = nullptr;
 	AttackerComponent* m_pAttackerComponent = nullptr;
 	UnitAnimationComponent* m_pUnitAnimationComponent = nullptr;
+	CostComponent* m_pCostComponent = nullptr;
 
 	//OwnerShip
 	OwnerInfoComponent* m_pOwnerInfoComponent = nullptr;
 
 public:
+	static SResourceInfo GetCost();
 };

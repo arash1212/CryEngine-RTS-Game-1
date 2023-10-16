@@ -72,8 +72,12 @@ void BuildingComponent::Initialize()
 	m_pActionManagerComponent = m_pEntity->GetOrCreateComponent<ActionManagerComponent>();
 	m_pActionManagerComponent->SetIsBuilding(true);
 
+	//OwnerInfoComponent Initialization
+	m_pOwnerInfoComponent = m_pEntity->GetOrCreateComponent<OwnerInfoComponent>();
+
 	//ExitPointAttachment Initialization
 	m_pExitPointAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("exitPoint");
+
 }
 
 
@@ -216,7 +220,7 @@ bool BuildingComponent::CanBePlaced()
 	{
 		IEntity* pPlayer = gEnv->pEntitySystem->FindEntityByName(PLAYER_ENTITY_NAME);
 		IEntity* other = entityItPtr->Next();
-		if (other == m_pEntity || other == pPlayer) {
+		if (!other || other == m_pEntity || other == pPlayer) {
 			continue;
 		}
 
@@ -234,6 +238,24 @@ bool BuildingComponent::CanBePlaced()
 bool BuildingComponent::IsBuilt()
 {
 	return bIsBuilt;
+}
+
+void BuildingComponent::SetBuilt()
+{
+	m_currentBuiltAmount = m_pBuildingInfo.m_maxBuildAmount;
+
+	bIsPlaced = true;
+
+	//Remove placement decal 
+	m_pEntity->RemoveComponent<Cry::DefaultComponents::CDecalComponent>();
+
+	//Physicalize
+	SEntityPhysicalizeParams physParams;
+	physParams.type = PE_STATIC;
+	physParams.mass = 38000.f;
+	m_pEntity->Physicalize(physParams);
+
+	Build();
 }
 
 void BuildingComponent::SetPathToTrussMesh(string path)

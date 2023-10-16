@@ -6,6 +6,9 @@
 
 class BuildingComponent;
 class SelectableComponent;
+class CostComponent;
+
+struct SResourceInfo;
 
 static string HQ_BUILDING_1_MODEL_PATH = "Objects/buildings/hq1/hq1.cdf";
 static string HQ_BUILDING_1_TRUSS_MODEL_PATH = "Objects/buildings/hq1/truss/hq1_truss.cgf";
@@ -38,8 +41,10 @@ private:
 
 	SelectableComponent* m_pSelectableComponent = nullptr;
 	BuildingComponent* m_pBuildingComponent = nullptr;
+	CostComponent* m_pCostComponent = nullptr;
 
 private:
 
-
+public:
+	static SResourceInfo GetCost();
 };

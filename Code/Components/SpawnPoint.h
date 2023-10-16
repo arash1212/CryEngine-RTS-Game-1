@@ -27,4 +27,5 @@ private:
 
 private:
 	void SpawnPlayer();
+	void SpawnPlayerHQBuilding(IEntity* owner);
 };

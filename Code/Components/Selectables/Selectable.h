@@ -29,7 +29,6 @@ public:
 
 private:
 	Cry::DefaultComponents::CDecalComponent* m_pSelectionDecalComponent = nullptr;
-
 	IRenderNode* m_pRenderNode = nullptr;
 
 private:

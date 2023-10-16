@@ -18,6 +18,9 @@
 
 #include <Components/BaseBuilding/Building.h>
 #include <Utils/MathUtils.h>
+#include <Components/Selectables/Cost.h>
+
+#include <Components/Managers/ResourceManager.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -72,6 +75,9 @@ void HQ1BuildingComponent::Initialize()
 	AABB newAABB = AABB(min, max);
 	m_pEntity->SetLocalBounds(newAABB, true);
 
+	//CostComponent Initializations
+	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
+	m_pCostComponent->SetCost(HQ1BuildingComponent::GetCost());
 }
 
 
@@ -102,4 +108,12 @@ void HQ1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 	default:
 		break;
 	}
+}
+
+SResourceInfo HQ1BuildingComponent::GetCost()
+{
+	SResourceInfo cost;
+	cost.m_moneyAmount = 500;
+	cost.m_oilAmount = 200;
+	return cost;
 }

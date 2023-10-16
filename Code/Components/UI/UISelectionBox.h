@@ -5,12 +5,12 @@
 struct IUIElement;
 struct IUIElementEventListener;
 
-class SelectionBoxComponent final : public IEntityComponent
+class UISelectionBoxComponent final : public IEntityComponent
 {
 
 public:
-	SelectionBoxComponent() = default;
-	virtual ~SelectionBoxComponent() = default;
+	UISelectionBoxComponent() = default;
+	virtual ~UISelectionBoxComponent() = default;
 
 	// IEntityComponent
 	virtual void Initialize() override;
@@ -19,7 +19,7 @@ public:
 	virtual void ProcessEvent(const SEntityEvent& event) override;
 
 	// Reflect type to set a unique identifier for this component
-	static void ReflectType(Schematyc::CTypeDesc<SelectionBoxComponent>& desc)
+	static void ReflectType(Schematyc::CTypeDesc<UISelectionBoxComponent>& desc)
 	{
 		desc.SetGUID("{6944C2C8-8517-4DFF-9B91-8EEE288ED474}"_cry_guid);
 		desc.SetEditorCategory("UI");

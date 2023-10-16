@@ -7,6 +7,8 @@
 #include <Components/Controller/AIController.h>
 #include <Components/Managers/UnitStateManager.h>
 #include <Components/Selectables/UnitAnimation.h>
+#include <Components/Managers/ResourceManager.h>
+#include <Components/Selectables/Cost.h>
 
 UnitBuildAction::UnitBuildAction(IEntity* entity, IEntity* buildiingEntity)
 {

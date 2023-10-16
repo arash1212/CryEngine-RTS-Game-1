@@ -20,6 +20,9 @@
 #include <Components/Info/OwnerInfo.h>
 
 #include <Components/Selectables/UnitAnimation.h>
+#include <Components/Selectables/Cost.h>
+
+#include <Components/Managers/ResourceManager.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -88,6 +91,10 @@ void Soldier1UnitComponent::Initialize()
 	pAttckInfo.m_pAttackType = EAttackType::RANGED;
 	pAttckInfo.bIsHumanoid = true;
 	m_pAttackerComponent->SetAttackInfo(pAttckInfo);
+
+	//CostComponent Initializations
+	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
+	m_pCostComponent->SetCost(Soldier1UnitComponent::GetCost());
 }
 
 
@@ -117,4 +124,12 @@ void Soldier1UnitComponent::ProcessEvent(const SEntityEvent& event)
 	default:
 		break;
 	}
+}
+
+SResourceInfo Soldier1UnitComponent::GetCost()
+{
+	SResourceInfo cost;
+	cost.m_moneyAmount = 120;
+	cost.m_oilAmount = 60;
+	return cost;
 }

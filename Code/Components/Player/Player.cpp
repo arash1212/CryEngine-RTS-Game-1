@@ -3,8 +3,8 @@
 #include "GamePlugin.h"
 
 #include <UIItems/IBaseUIItem.h>
-#include <Components/UI/SelectionBox.h>
-#include <Components/UI/Actionbar.h>
+#include <Components/UI/UISelectionBox.h>
+#include <Components/UI/UIActionbar.h>
 #include <Components/UI/Listener/UIElementEventListener.h>
 
 #include <Utils\MouseUtils.h>
@@ -17,8 +17,11 @@
 #include <Actions/Units/UnitBuildAction.h>
 #include <Components/Info/OwnerInfo.h>
 #include <Components/BaseBuilding/Building.h>
+#include <Components/Managers/ResourceManager.h>
 
 #include <Components/BaseBuilding/BaseBuilding.h>
+
+#include <Components/UI/UIResourcesPanel.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -54,13 +57,13 @@ void PlayerComponent::Initialize()
 	m_pUIElementEventListener = new UIElementEventListener(this);
 
 	//SelectionBox component initialization
-	m_pSelectionBoxComponent = m_pEntity->GetOrCreateComponent<SelectionBoxComponent>();
-	m_pSelectionBoxComponent->SetCameraComponent(m_pCameraComponent);
-	m_pSelectionBoxComponent->SetEventListener(m_pUIElementEventListener);
+	m_pUISelectionBoxComponent = m_pEntity->GetOrCreateComponent<UISelectionBoxComponent>();
+	m_pUISelectionBoxComponent->SetCameraComponent(m_pCameraComponent);
+	m_pUISelectionBoxComponent->SetEventListener(m_pUIElementEventListener);
 
 	//Actionbar component initialization
-	m_pActionbarComponent = m_pEntity->GetOrCreateComponent<ActionbarComponent>();
-	m_pActionbarComponent->SetEventListener(m_pUIElementEventListener);
+	m_pUIActionbarComponent = m_pEntity->GetOrCreateComponent<UIActionbarComponent>();
+	m_pUIActionbarComponent->SetEventListener(m_pUIElementEventListener);
 
 	//BaseBuildingComponent initialization
 	m_pBaseBuildingComponent = m_pEntity->GetOrCreateComponent<BaseBuildingComponent>();
@@ -71,6 +74,16 @@ void PlayerComponent::Initialize()
 	//OwnerInfoComponent initialization
 	m_pOwnerInfoComponent = m_pEntity->GetOrCreateComponent<OwnerInfoComponent>();
 	m_pOwnerInfoComponent->SetIsPlayer(true);
+
+	//ResouecesPanelComponent initialization
+	m_pResouecesPanelComponent = m_pEntity->GetOrCreateComponent<UIResourcesPanelComponent>();
+	m_pResouecesPanelComponent->SetEventListener(m_pUIElementEventListener);
+
+	//ResourceManagerComponent initialization
+	m_pResourceManagerComponent = m_pEntity->GetOrCreateComponent<ResourceManagerComponent>();
+
+	//Update Resource Panel
+	m_pResouecesPanelComponent->UpdatePanel();
 
 	//Set player entity name
 	m_pEntity->SetName(PLAYER_ENTITY_NAME);
@@ -207,7 +220,7 @@ void PlayerComponent::LeftMouseDown(int activationMode, float value)
 	Vec2 mousePos = MouseUtils::GetCursorPosition();
 
 	if (activationMode == eAAM_OnPress) {
-		m_pSelectionBoxComponent->SetBoxInitPosition(mousePos);
+		m_pUISelectionBoxComponent->SetBoxInitPosition(mousePos);
 	}
 
 	if (activationMode == eAAM_OnRelease) {
@@ -236,14 +249,14 @@ void PlayerComponent::LeftMouseDown(int activationMode, float value)
 
 		//Single selection
 		IEntity* entity = MouseUtils::GetActorUnderCursor();
-		if (entity && !m_pSelectionBoxComponent->IsBoxSelectionTriggered(mousePos)) {
+		if (entity && !m_pUISelectionBoxComponent->IsBoxSelectionTriggered(mousePos)) {
 			m_selectedUnits.push_back(entity);
 			SelectSelectables();
 		}
 
 		//Box/Multiple Selection
-		else if (m_pSelectionBoxComponent->IsBoxSelectionTriggered(mousePos)) {
-			m_selectedUnits = m_pSelectionBoxComponent->GetEntitiesInsideBox(mousePos);
+		else if (m_pUISelectionBoxComponent->IsBoxSelectionTriggered(mousePos)) {
+			m_selectedUnits = m_pUISelectionBoxComponent->GetEntitiesInsideBox(mousePos);
 			SelectSelectables();
 		}
 		//////////////////////////
@@ -388,7 +401,7 @@ void PlayerComponent::AssignBuildingToEngineers(IEntity* buildingEntity)
 
 void PlayerComponent::AddUIItemsToActionbar()
 {
-	m_pActionbarComponent->Clear();
+	m_pUIActionbarComponent->Clear();
 	if (m_selectedUnits.size() <= 0) {
 		return;
 	}
@@ -398,7 +411,7 @@ void PlayerComponent::AddUIItemsToActionbar()
 		SelectableComponent* selectable = m_selectedUnits[0]->GetComponent<SelectableComponent>();
 		if (selectable) {
 			for (IBaseUIItem* uiItem : selectable->GetGeneralUIItems()) {
-				m_pActionbarComponent->AddButton(uiItem->GetImagePath());
+				m_pUIActionbarComponent->AddButton(uiItem->GetImagePath());
 			}
 			return;
 		}
@@ -408,7 +421,7 @@ void PlayerComponent::AddUIItemsToActionbar()
 		SelectableComponent* selectable = m_selectedUnits[0]->GetComponent<SelectableComponent>();
 		if (selectable) {
 			for (IBaseUIItem* uiItem : selectable->GetAllUIItems()) {
-				m_pActionbarComponent->AddButton(uiItem->GetImagePath());
+				m_pUIActionbarComponent->AddButton(uiItem->GetImagePath());
 			}
 		}
 	}

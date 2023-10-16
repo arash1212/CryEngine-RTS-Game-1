@@ -21,6 +21,9 @@
 #include <Components/Info/OwnerInfo.h>
 
 #include <Components/Selectables/UnitAnimation.h>
+#include <Components/Selectables/Cost.h>
+
+#include <Components/Managers/ResourceManager.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -95,9 +98,13 @@ void Engineer1UnitComponent::Initialize()
 	m_pEngineerComponent = m_pEntity->GetOrCreateComponent<EngineerComponent>();
 	//engineer info
 	SEngineerInfo engineerInfo;
-	engineerInfo.m_maxBuildDistance = 5.f;
+	engineerInfo.m_maxBuildDistance = 8.f;
 	engineerInfo.m_timeBetweenBuilds = 1.f;
 	m_pEngineerComponent->SetEngineerInfo(engineerInfo);
+
+	//CostComponent Initializations
+	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
+	m_pCostComponent->SetCost(Engineer1UnitComponent::GetCost());
 }
 
 
@@ -127,5 +134,13 @@ void Engineer1UnitComponent::ProcessEvent(const SEntityEvent& event)
 	default:
 		break;
 	}
+}
+
+SResourceInfo Engineer1UnitComponent::GetCost()
+{
+	SResourceInfo cost;
+	cost.m_moneyAmount = 60;
+	cost.m_oilAmount = 20;
+	return cost;
 }
 

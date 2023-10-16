@@ -4,11 +4,13 @@
 #include <DefaultComponents/Input/InputComponent.h>
 #include <DefaultComponents/Audio/ListenerComponent.h>
 
-class SelectionBoxComponent;
-class ActionbarComponent;
+class UISelectionBoxComponent;
+class UIActionbarComponent;
 class UIElementEventListener;
 class BaseBuildingComponent;
 class OwnerInfoComponent;
+class UIResourcesPanelComponent;
+class ResourceManagerComponent;
 
 static const f32 PLAYER_CAMERA_DEFAULT_HEIGHT = 14.f;
 static const f32 PLAYER_CAMERA_DEFAULT_MOVE_SPEED = 6.5f;
@@ -43,10 +45,12 @@ private:
 	Cry::DefaultComponents::CInputComponent* m_pInputComponent = nullptr;
 	Cry::Audio::DefaultComponents::CListenerComponent* m_pListenerComp = nullptr;
 	
-	SelectionBoxComponent* m_pSelectionBoxComponent;
-	ActionbarComponent* m_pActionbarComponent;
+	UISelectionBoxComponent* m_pUISelectionBoxComponent;
+	UIActionbarComponent* m_pUIActionbarComponent;
 	BaseBuildingComponent* m_pBaseBuildingComponent = nullptr;
 	OwnerInfoComponent* m_pOwnerInfoComponent = nullptr;
+	UIResourcesPanelComponent* m_pResouecesPanelComponent = nullptr;
+	ResourceManagerComponent* m_pResourceManagerComponent = nullptr;
 
 	//UI
 	UIElementEventListener* m_pUIElementEventListener = nullptr;

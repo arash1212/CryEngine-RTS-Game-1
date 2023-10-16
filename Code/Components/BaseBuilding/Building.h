@@ -5,10 +5,11 @@
 #include <DefaultComponents/Physics/BoxPrimitiveComponent.h>
 #include <DefaultComponents/Lights/EnvironmentProbeComponent.h>
 #include <DefaultComponents/Effects/DecalComponent.h>
-class ActionManagerComponent;
 
+class ActionManagerComponent;
 class SelectableComponent;
 class IBaseUIItem;
+class OwnerInfoComponent;
 
 struct SBuildingInfo {
 public:
@@ -45,8 +46,8 @@ private:
 	Cry::DefaultComponents::CDecalComponent* m_pDecalComponent = nullptr;
 
 	ActionManagerComponent* m_pActionManagerComponent = nullptr;
-
 	SelectableComponent* m_pSelectableComponent = nullptr;
+	OwnerInfoComponent* m_pOwnerInfoComponent = nullptr;
 	SBuildingInfo m_pBuildingInfo;
 
 	IAttachment* m_pExitPointAttachment = nullptr;
@@ -74,6 +75,7 @@ public:
 	bool CanBePlaced();
 
 	bool IsBuilt();
+	void SetBuilt();
 
 	void SetPathToTrussMesh(string path);
 

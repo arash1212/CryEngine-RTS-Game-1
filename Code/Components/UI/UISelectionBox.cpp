@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "SelectionBox.h"
+#include "UISelectionBox.h"
 #include "GamePlugin.h"
 
 #include "FlashUI/FlashUI.h"
@@ -17,18 +17,18 @@
 
 namespace
 {
-	static void RegisterSelectionBoxComponent(Schematyc::IEnvRegistrar& registrar)
+	static void RegisterUISelectionBoxComponent(Schematyc::IEnvRegistrar& registrar)
 	{
 		Schematyc::CEnvRegistrationScope scope = registrar.Scope(IEntity::GetEntityScopeGUID());
 		{
-			Schematyc::CEnvRegistrationScope componentScope = scope.Register(SCHEMATYC_MAKE_ENV_COMPONENT(SelectionBoxComponent));
+			Schematyc::CEnvRegistrationScope componentScope = scope.Register(SCHEMATYC_MAKE_ENV_COMPONENT(UISelectionBoxComponent));
 		}
 	}
 
-	CRY_STATIC_AUTO_REGISTER_FUNCTION(&RegisterSelectionBoxComponent);
+	CRY_STATIC_AUTO_REGISTER_FUNCTION(&RegisterUISelectionBoxComponent);
 }
 
-void SelectionBoxComponent::Initialize()
+void UISelectionBoxComponent::Initialize()
 {
 	//Initialize SelectionBoxUIElement and set it visible
 	m_pSelectionBoxUIElement = gEnv->pFlashUI->GetUIElement("selection-box");
@@ -36,11 +36,11 @@ void SelectionBoxComponent::Initialize()
 		m_pSelectionBoxUIElement->SetVisible(true);
 	}
 	else {
-		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "SelectionBoxComponent : (Initialize) m_pSelectionBoxUIElement is null !");
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "UISelectionBoxComponent : (Initialize) m_pSelectionBoxUIElement is null !");
 	}
 }
 
-Cry::Entity::EventFlags SelectionBoxComponent::GetEventMask() const
+Cry::Entity::EventFlags UISelectionBoxComponent::GetEventMask() const
 {
 	return
 		Cry::Entity::EEvent::GameplayStarted |
@@ -48,7 +48,7 @@ Cry::Entity::EventFlags SelectionBoxComponent::GetEventMask() const
 		Cry::Entity::EEvent::Reset;
 }
 
-void SelectionBoxComponent::ProcessEvent(const SEntityEvent& event)
+void UISelectionBoxComponent::ProcessEvent(const SEntityEvent& event)
 {
 	switch (event.event)
 	{
@@ -67,7 +67,7 @@ void SelectionBoxComponent::ProcessEvent(const SEntityEvent& event)
 	}
 }
 
-DynArray<IEntity*> SelectionBoxComponent::GetEntitiesInsideBox(Vec2 lastPoint)
+DynArray<IEntity*> UISelectionBoxComponent::GetEntitiesInsideBox(Vec2 lastPoint)
 {
 	DynArray<IEntity*> resultArray;
 
@@ -121,22 +121,22 @@ DynArray<IEntity*> SelectionBoxComponent::GetEntitiesInsideBox(Vec2 lastPoint)
 	return resultArray;
 }
 
-void SelectionBoxComponent::SetBoxInitPosition(Vec2 initPoint)
+void UISelectionBoxComponent::SetBoxInitPosition(Vec2 initPoint)
 {
 	this->m_boxInitPoint = initPoint;
 }
 
-void SelectionBoxComponent::SetCameraComponent(Cry::DefaultComponents::CCameraComponent* cameraComponent)
+void UISelectionBoxComponent::SetCameraComponent(Cry::DefaultComponents::CCameraComponent* cameraComponent)
 {
 	this->m_pCameraComponent = cameraComponent;
 }
 
-Vec2 SelectionBoxComponent::GetInitPosition()
+Vec2 UISelectionBoxComponent::GetInitPosition()
 {
 	return m_boxInitPoint;
 }
 
-bool SelectionBoxComponent::IsBoxSelectionTriggered(Vec2 currentPoint)
+bool UISelectionBoxComponent::IsBoxSelectionTriggered(Vec2 currentPoint)
 {
 	bool result = false;
 	if (m_boxInitPoint.x > currentPoint.x) {
@@ -156,7 +156,7 @@ bool SelectionBoxComponent::IsBoxSelectionTriggered(Vec2 currentPoint)
 	return result;
 }
 
-void SelectionBoxComponent::SetEventListener(IUIElementEventListener* eventListener)
+void UISelectionBoxComponent::SetEventListener(IUIElementEventListener* eventListener)
 {
 	this->m_pSelectionBoxUIElement->AddEventListener(eventListener,"selection-box-event-listener");
 }

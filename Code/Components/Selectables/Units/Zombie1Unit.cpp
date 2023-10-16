@@ -20,6 +20,9 @@
 #include <Components/Info/OwnerInfo.h>
 
 #include <Components/Selectables/UnitAnimation.h>
+#include <Components/Selectables/Cost.h>
+
+#include <Components/Managers/ResourceManager.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -88,6 +91,10 @@ void Zombie1UnitComponent::Initialize()
 	pAttckInfo.m_timeBetweenAttacks = 0.7f;
 	pAttckInfo.m_maxAttackDistance = 2.3f;
 	m_pAttackerComponent->SetAttackInfo(pAttckInfo);
+
+	/////////CostComponent Initializations
+	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
+	m_pCostComponent->SetCost(Zombie1UnitComponent::GetCost());
 }
 
 
@@ -117,5 +124,13 @@ void Zombie1UnitComponent::ProcessEvent(const SEntityEvent& event)
 	default:
 		break;
 	}
+}
+
+SResourceInfo Zombie1UnitComponent::GetCost()
+{
+	SResourceInfo cost;
+	cost.m_moneyAmount = 20;
+	cost.m_oilAmount = 0;
+	return cost;
 }
 

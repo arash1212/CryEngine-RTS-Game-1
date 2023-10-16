@@ -120,10 +120,12 @@ add_sources("Units_uber.cpp"
 add_sources("UI_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "Components\\\\UI"
-		"Components/UI/Actionbar.cpp"
-		"Components/UI/SelectionBox.cpp"
-		"Components/UI/Actionbar.h"
-		"Components/UI/SelectionBox.h"
+		"Components/UI/UIActionbar.cpp"
+		"Components/UI/UIResourcesPanel.cpp"
+		"Components/UI/UISelectionBox.cpp"
+		"Components/UI/UIActionbar.h"
+		"Components/UI/UIResourcesPanel.h"
+		"Components/UI/UISelectionBox.h"
 )
 add_sources("Listener_uber.cpp"
     PROJECTS Game

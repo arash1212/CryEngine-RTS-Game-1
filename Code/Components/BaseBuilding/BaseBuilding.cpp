@@ -16,6 +16,8 @@
 
 #include <Components/BaseBuilding/Building.h>
 #include <Components/BaseBuilding/Buildings/HQ1Building.h>
+#include <Components/Managers/ResourceManager.h>
+#include <Components/Selectables/Cost.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -92,10 +94,14 @@ IEntity* BaseBuildingComponent::AssignBuilding()
 		gEnv->pEntitySystem->RemoveEntity(m_pBuildingEntity->GetId());
 		m_pBuildingEntity = nullptr;
 	}
+	IEntity* owner = m_pEntity->GetComponent<OwnerInfoComponent>()->GetOwner();
+	if (!owner) {
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "BaseBuildingComponent : (AssignBuilding) Player owner is null !");
+		return nullptr;
+	}
 
 	SEntitySpawnParams buildingEntitySpawnParams;
 	buildingEntitySpawnParams.vPosition = m_pEntity->GetWorldPos();
-	//buildingEntitySpawnParams.qRotation = ;
 	m_pBuildingEntity = gEnv->pEntitySystem->SpawnEntity(buildingEntitySpawnParams, true);
 	return m_pBuildingEntity;
 }
@@ -108,6 +114,11 @@ void BaseBuildingComponent::CancelAssignedBuilding()
 	if (!m_pBuildingEntity) {
 		return;
 	}
+	ResourceManagerComponent* resourceManager = m_pEntity->GetComponent<ResourceManagerComponent>();
+	if (!resourceManager) {
+		return;
+	}
+	resourceManager->RefundResources(m_pBuildingEntity->GetComponent<CostComponent>()->GetCost());
 	gEnv->pEntitySystem->RemoveEntity(m_pBuildingEntity->GetId());
 	m_pBuildingEntity = nullptr;
 }
@@ -115,7 +126,7 @@ void BaseBuildingComponent::CancelAssignedBuilding()
 IEntity* BaseBuildingComponent::PlaceBuilding(Vec3 at)
 {
 	if (!m_pBuildingEntity) {
-		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "BaseBuildingComponent : (PlaceBuilding) m_pBuildingEntity is null .!");
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "BaseBuildingComponent : (PlaceBuilding) m_pBuildingEntity is null !");
 		return nullptr;
 	}
 	BuildingComponent* building = m_pBuildingEntity->GetComponent<BuildingComponent>();

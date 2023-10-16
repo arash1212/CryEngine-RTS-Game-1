@@ -4,6 +4,9 @@
 #include "Player/Player.h"
 
 #include <Components/Selectables/Units/Soldier1Unit.h>
+#include <Components/BaseBuilding/Building.h>
+#include <Components/BaseBuilding/Buildings/HQ1Building.h>
+#include <Components/Info/OwnerInfo.h>
 
 #include <CrySchematyc/Reflection/TypeDesc.h>
 #include <CrySchematyc/Utils/EnumFlags.h>
@@ -65,4 +68,18 @@ void SpawnPointComponent::SpawnPlayer()
 	IEntity* pPlayerEntity = gEnv->pEntitySystem->SpawnEntity(pPlayerSpawnParams);
 
 	pPlayerEntity->GetOrCreateComponent<PlayerComponent>();
+	pPlayerEntity->GetComponent<OwnerInfoComponent>()->SetOwner(pPlayerEntity);
+
+	SpawnPlayerHQBuilding(pPlayerEntity);
+}
+
+void SpawnPointComponent::SpawnPlayerHQBuilding(IEntity* owner)
+{
+	SEntitySpawnParams pHQBuildingSpawnParams;
+	pHQBuildingSpawnParams.vPosition = m_pEntity->GetWorldPos();
+	IEntity* pHqBuildingEntity = gEnv->pEntitySystem->SpawnEntity(pHQBuildingSpawnParams);
+
+	pHqBuildingEntity->GetOrCreateComponent<HQ1BuildingComponent>();
+	pHqBuildingEntity->GetComponent<OwnerInfoComponent>()->SetOwner(owner);
+	pHqBuildingEntity->GetComponent<BuildingComponent>()->SetBuilt();
 }

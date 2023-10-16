@@ -1,5 +1,17 @@
 #pragma once
 
+class PlayerComponent;
+
+enum class EPlayer {
+	PLAYER1,
+	PLAYER2,
+	PLAYER3,
+	PLAYER4,
+	PLAYER5,
+	PLAYER6,
+	FERAL
+};
+
 enum class EPlayerTeam {
 	TEAM1,
 	TEAM2,
@@ -17,6 +29,7 @@ enum class EPlayerFaction {
 
 struct SOwnerInfo {
 public:
+	EPlayer m_pPlayer = EPlayer::PLAYER1;
 	EPlayerTeam m_pTeam = EPlayerTeam::TEAM1;
 	EPlayerFaction m_pFaction = EPlayerFaction::FACTION1;
 };
@@ -42,6 +55,8 @@ public:
 	}
 
 private:
+	IEntity* m_pOwner = nullptr;
+private:
 	SOwnerInfo m_pOwnerInfo;
 	bool bIsPlayer = false;
 
@@ -53,4 +68,7 @@ public:
 	bool IsEntityHostile(IEntity* entity);
 	bool IsPlayer();
 	void SetIsPlayer(bool isPlayer);
+
+	void SetOwner(IEntity* owner);
+	IEntity* GetOwner();
 };

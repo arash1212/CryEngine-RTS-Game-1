@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "Actionbar.h"
+#include "UIActionbar.h"
 #include "GamePlugin.h"
 
 #include <FlashUI/FlashUIElement.h>
@@ -16,18 +16,18 @@
 
 namespace
 {
-	static void RegisterActionbarComponent(Schematyc::IEnvRegistrar& registrar)
+	static void RegisterUIActionbarComponent(Schematyc::IEnvRegistrar& registrar)
 	{
 		Schematyc::CEnvRegistrationScope scope = registrar.Scope(IEntity::GetEntityScopeGUID());
 		{
-			Schematyc::CEnvRegistrationScope componentScope = scope.Register(SCHEMATYC_MAKE_ENV_COMPONENT(ActionbarComponent));
+			Schematyc::CEnvRegistrationScope componentScope = scope.Register(SCHEMATYC_MAKE_ENV_COMPONENT(UIActionbarComponent));
 		}
 	}
 
-	CRY_STATIC_AUTO_REGISTER_FUNCTION(&RegisterActionbarComponent);
+	CRY_STATIC_AUTO_REGISTER_FUNCTION(&RegisterUIActionbarComponent);
 }
 
-void ActionbarComponent::Initialize()
+void UIActionbarComponent::Initialize()
 {
 	//Initialize ActionbarUIElement and set it visible
 	m_pActionbarUIElement = gEnv->pFlashUI->GetUIElement("action-bar");
@@ -39,7 +39,7 @@ void ActionbarComponent::Initialize()
 	}
 }
 
-Cry::Entity::EventFlags ActionbarComponent::GetEventMask() const
+Cry::Entity::EventFlags UIActionbarComponent::GetEventMask() const
 {
 	return
 		Cry::Entity::EEvent::GameplayStarted |
@@ -47,7 +47,7 @@ Cry::Entity::EventFlags ActionbarComponent::GetEventMask() const
 		Cry::Entity::EEvent::Reset;
 }
 
-void ActionbarComponent::ProcessEvent(const SEntityEvent& event)
+void UIActionbarComponent::ProcessEvent(const SEntityEvent& event)
 {
 	switch (event.event)
 	{
@@ -65,7 +65,7 @@ void ActionbarComponent::ProcessEvent(const SEntityEvent& event)
 	}
 }
 
-void ActionbarComponent::AddButton(string imagePath)
+void UIActionbarComponent::AddButton(string imagePath)
 {
 	if (!m_pActionbarUIElement) {
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ActionbarComponent : (AddButton) ActionbarUIElement is null !");
@@ -78,7 +78,7 @@ void ActionbarComponent::AddButton(string imagePath)
 	m_pActionbarUIElement->CallFunction("addButton", args);
 }
 
-void ActionbarComponent::Clear()
+void UIActionbarComponent::Clear()
 {
 	if (!m_pActionbarUIElement) {
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ActionbarComponent : (Clear) ActionbarUIElement is null !");
@@ -88,7 +88,7 @@ void ActionbarComponent::Clear()
 	m_pActionbarUIElement->CallFunction("clear");
 }
 
-void ActionbarComponent::SetEventListener(IUIElementEventListener* eventListener)
+void UIActionbarComponent::SetEventListener(IUIElementEventListener* eventListener)
 {
 	this->m_pActionbarUIElement->AddEventListener(eventListener, "actionbar-event-listener");
 }

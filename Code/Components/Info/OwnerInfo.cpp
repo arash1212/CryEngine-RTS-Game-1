@@ -84,3 +84,21 @@ void OwnerInfoComponent::SetIsPlayer(bool isPlayer)
 {
 	this->bIsPlayer = isPlayer;
 }
+
+void OwnerInfoComponent::SetOwner(IEntity* owner)
+{
+	OwnerInfoComponent* ownerInfo = owner->GetComponent<OwnerInfoComponent>();
+	if (!ownerInfo) {
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "OwnerInfoComponent : (SetOwner) pOwnerInfo is null !");
+		return;
+	}
+	this->m_pOwner = owner;
+	this->m_pOwnerInfo.m_pPlayer = ownerInfo->GetInfo().m_pPlayer;
+	this->m_pOwnerInfo.m_pTeam = ownerInfo->GetInfo().m_pTeam;
+	this->m_pOwnerInfo.m_pFaction = ownerInfo->GetInfo().m_pFaction;
+}
+
+IEntity* OwnerInfoComponent::GetOwner()
+{
+	return m_pOwner;
+}
