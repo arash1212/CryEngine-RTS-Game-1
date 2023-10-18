@@ -9,6 +9,8 @@
 #include <UIItems/Items/UICancelItem.h>
 #include <UIItems/Items/UIChangeStanceItem.h>
 #include <UIItems/Items/Buildings/UIHQ1BuildItem.h>
+#include <UIItems/Items/Buildings/UIBarracks1BuildItem.h>
+#include <UIItems/Items/Buildings/UIWarehouse1BuildItem.h>
 
 #include <Components/Controller/AIController.h>
 #include <Components/Managers/ActionManager.h>
@@ -24,6 +26,7 @@
 #include <Components/Selectables/Cost.h>
 
 #include <Components/Managers/ResourceManager.h>
+#include <Components/Selectables/ResourceCollector.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -72,6 +75,8 @@ void Engineer1UnitComponent::Initialize()
 	m_pSelectableComponent = m_pEntity->GetOrCreateComponent<SelectableComponent>();
 	//UIItems
 	m_pSelectableComponent->AddUIItem(new UIHQ1BuildItem(m_pEntity));
+	m_pSelectableComponent->AddUIItem(new UIBarracks1BuildItem(m_pEntity));
+	m_pSelectableComponent->AddUIItem(new UIWarehouse1BuildItem(m_pEntity));
 
 	//ActionManager Initializations
 	m_pActionManagerComponent = m_pEntity->GetOrCreateComponent<ActionManagerComponent>();
@@ -105,6 +110,13 @@ void Engineer1UnitComponent::Initialize()
 	//CostComponent Initializations
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
 	m_pCostComponent->SetCost(Engineer1UnitComponent::GetCost());
+
+	//ResourceCollectorComponent Initialization
+	m_pResourceCollectorComponent = m_pEntity->GetOrCreateComponent<ResourceCollectorComponent>();
+
+	//**************************************Resource Attchments
+	//OilBarrelAttachment Initialization
+	m_pOilBarrelAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("oilBarrel");
 }
 
 
@@ -125,11 +137,36 @@ void Engineer1UnitComponent::ProcessEvent(const SEntityEvent& event)
 	}break;
 	case Cry::Entity::EEvent::Update: {
 		//f32 DeltaTime = event.fParam[0];
+		UpdateResourceAttachment();
 
 	}break;
 	case Cry::Entity::EEvent::Reset: {
 		m_pAnimationComponent->ResetCharacter();
 
+	}break;
+	default:
+		break;
+	}
+}
+
+void Engineer1UnitComponent::UpdateResourceAttachment()
+{
+	if (!m_pResourceCollectorComponent) {
+		return;
+	}
+	EResourceType pResourceType = m_pResourceCollectorComponent->GetCurrentResourceType();
+	if (m_pResourceCollectorComponent->GetAmountOfResourceCollected() <= 0) {
+		m_pOilBarrelAttachment->HideAttachment(true);
+		return;
+	}
+	
+	switch (pResourceType)
+	{
+	case EResourceType::Money: {
+		m_pOilBarrelAttachment->HideAttachment(true);
+	}break;
+	case EResourceType::OIL: {
+		m_pOilBarrelAttachment->HideAttachment(false);
 	}break;
 	default:
 		break;

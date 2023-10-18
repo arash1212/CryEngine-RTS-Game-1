@@ -1,23 +1,23 @@
 #include "StdAfx.h"
-#include "UIHQ1BuildItem.h"
+#include "UIWarehouse1BuildItem.h"
 #include "GamePlugin.h"
 
 #include <Components/Player/Player.h>
 #include <CryEntitySystem/IEntitySystem.h>
 #include <Components/BaseBuilding/BaseBuilding.h>
-#include <Components/BaseBuilding/Buildings/HQ1Building.h>
+#include <Components/BaseBuilding/Buildings/Warehouse1Building.h>
 #include <Components/Info/OwnerInfo.h>
 
 #include <Components/Managers/ActionManager.h>
 #include <Components/Managers/ResourceManager.h>
 #include <Components/Selectables/Cost.h>
 
-UIHQ1BuildItem::UIHQ1BuildItem(IEntity* entity)
+UIWarehouse1BuildItem::UIWarehouse1BuildItem(IEntity* entity)
 {
 	this->m_pEntity = entity;
 }
 
-void UIHQ1BuildItem::Execute()
+void UIWarehouse1BuildItem::Execute()
 {
 	if (!m_pEntity) {
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "UICancelAction : (Execute) m_pEntity is null !");
@@ -50,8 +50,8 @@ void UIHQ1BuildItem::Execute()
 		BaseBuildingComponent* baseBuildingComponent = m_pPlayerEntity->GetComponent<BaseBuildingComponent>();
 		IEntity* pBuildingEntity = baseBuildingComponent->AssignBuilding();
 		if (pBuildingEntity) {
-			pBuildingEntity->GetOrCreateComponent<HQ1BuildingComponent>();
-			if (!resourceManager->RequsetResources(HQ1BuildingComponent::GetCost())) {
+			pBuildingEntity->GetOrCreateComponent<Warehouse1BuildingComponent>();
+			if (!resourceManager->RequsetResources(Warehouse1BuildingComponent::GetCost())) {
 				baseBuildingComponent->CancelBuilding();
 				return;
 			}
@@ -60,7 +60,7 @@ void UIHQ1BuildItem::Execute()
 	}
 }
 
-string UIHQ1BuildItem::GetImagePath()
+string UIWarehouse1BuildItem::GetImagePath()
 {
-	return "hq_1_Icon.png";
+	return "warehouse_1_Icon.png";
 }

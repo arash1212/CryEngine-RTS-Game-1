@@ -111,14 +111,24 @@ void BaseBuildingComponent::CancelAssignedBuilding()
 	if (!HasBuildingAssigned()) {
 		return;
 	}
-	if (!m_pBuildingEntity) {
+	ResourceManagerComponent* resourceManager = m_pEntity->GetComponent<ResourceManagerComponent>();
+	if (!resourceManager) {
+		return;
+	}
+	resourceManager->RefundResources(m_pBuildingEntity->GetComponent<CostComponent>()->GetCost());
+	gEnv->pEntitySystem->RemoveEntity(m_pBuildingEntity->GetId());
+	m_pBuildingEntity = nullptr;
+}
+
+void BaseBuildingComponent::CancelBuilding()
+{
+	if (!HasBuildingAssigned()) {
 		return;
 	}
 	ResourceManagerComponent* resourceManager = m_pEntity->GetComponent<ResourceManagerComponent>();
 	if (!resourceManager) {
 		return;
 	}
-	resourceManager->RefundResources(m_pBuildingEntity->GetComponent<CostComponent>()->GetCost());
 	gEnv->pEntitySystem->RemoveEntity(m_pBuildingEntity->GetId());
 	m_pBuildingEntity = nullptr;
 }

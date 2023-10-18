@@ -54,6 +54,7 @@ void UITrainEngineer1Item::Execute()
 		return;
 	}
 	if (actionManager) {
+		CryLog("engineer action added");
 		actionManager->AddAction(new TrainEngineer1Action(m_pEntity, building->GetExitPoint()));
 	}
 }

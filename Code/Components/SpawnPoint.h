@@ -24,6 +24,8 @@ public:
 		desc.SetComponentFlags({ IEntityComponent::EFlags::Transform, IEntityComponent::EFlags::Socket, IEntityComponent::EFlags::Attach });
 	}
 private:
+	IEntity* m_pPlayerEntity = nullptr;
+	IEntity* pHqBuildingEntity = nullptr;
 
 private:
 	void SpawnPlayer();

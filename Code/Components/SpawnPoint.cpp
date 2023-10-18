@@ -65,19 +65,19 @@ void SpawnPointComponent::SpawnPlayer()
 {
 	SEntitySpawnParams pPlayerSpawnParams;
 	pPlayerSpawnParams.vPosition = m_pEntity->GetWorldPos();
-	IEntity* pPlayerEntity = gEnv->pEntitySystem->SpawnEntity(pPlayerSpawnParams);
+	m_pPlayerEntity = gEnv->pEntitySystem->SpawnEntity(pPlayerSpawnParams);
 
-	pPlayerEntity->GetOrCreateComponent<PlayerComponent>();
-	pPlayerEntity->GetComponent<OwnerInfoComponent>()->SetOwner(pPlayerEntity);
+	m_pPlayerEntity->GetOrCreateComponent<PlayerComponent>();
+	m_pPlayerEntity->GetComponent<OwnerInfoComponent>()->SetOwner(m_pPlayerEntity);
 
-	SpawnPlayerHQBuilding(pPlayerEntity);
+	SpawnPlayerHQBuilding(m_pPlayerEntity);
 }
 
 void SpawnPointComponent::SpawnPlayerHQBuilding(IEntity* owner)
 {
 	SEntitySpawnParams pHQBuildingSpawnParams;
 	pHQBuildingSpawnParams.vPosition = m_pEntity->GetWorldPos();
-	IEntity* pHqBuildingEntity = gEnv->pEntitySystem->SpawnEntity(pHQBuildingSpawnParams);
+	pHqBuildingEntity = gEnv->pEntitySystem->SpawnEntity(pHQBuildingSpawnParams);
 
 	pHqBuildingEntity->GetOrCreateComponent<HQ1BuildingComponent>();
 	pHqBuildingEntity->GetComponent<OwnerInfoComponent>()->SetOwner(owner);

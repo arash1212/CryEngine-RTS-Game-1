@@ -1,6 +1,7 @@
 #pragma once
 
 class UIResourcesPanelComponent;
+enum class EResourceType;
 
 struct SResourceInfo {
 public:
@@ -35,4 +36,5 @@ public:
 	SResourceInfo GetAvailableResourcesInfo();
 	bool RequsetResources(SResourceInfo resourceRequestParams);
 	void RefundResources(SResourceInfo resourceRequestParams);
+	void AddResource(EResourceType type, int32 amount);
 };

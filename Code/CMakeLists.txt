@@ -31,16 +31,20 @@ add_sources("Train_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "Actions\\\\Train"
 		"Actions/Train/TrainEngineer1Action.cpp"
+		"Actions/Train/TrainSoldier1Action.cpp"
 		"Actions/Train/TrainEngineer1Action.h"
+		"Actions/Train/TrainSoldier1Action.h"
 )
 add_sources("Units_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "Actions\\\\Units"
 		"Actions/Units/UnitAttackAction.cpp"
 		"Actions/Units/UnitBuildAction.cpp"
+		"Actions/Units/UnitCollectResourceAction.cpp"
 		"Actions/Units/UnitMoveAction.cpp"
 		"Actions/Units/UnitAttackAction.h"
 		"Actions/Units/UnitBuildAction.h"
+		"Actions/Units/UnitCollectResourceAction.h"
 		"Actions/Units/UnitMoveAction.h"
 )
 add_sources("Components_uber.cpp"
@@ -60,8 +64,12 @@ add_sources("BaseBuilding_uber.cpp"
 add_sources("Buildings_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "Components\\\\BaseBuilding\\\\Buildings"
+		"Components/BaseBuilding/Buildings/Barracks1Building.cpp"
 		"Components/BaseBuilding/Buildings/HQ1Building.cpp"
+		"Components/BaseBuilding/Buildings/Warehouse1Building.cpp"
+		"Components/BaseBuilding/Buildings/Barracks1Building.h"
 		"Components/BaseBuilding/Buildings/HQ1Building.h"
+		"Components/BaseBuilding/Buildings/Warehouse1Building.h"
 )
 add_sources("Controller_uber.cpp"
     PROJECTS Game
@@ -85,8 +93,10 @@ add_sources("Managers_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "Components\\\\Managers"
 		"Components/Managers/ActionManager.cpp"
+		"Components/Managers/ResourceManager.cpp"
 		"Components/Managers/UnitStateManager.cpp"
 		"Components/Managers/ActionManager.h"
+		"Components/Managers/ResourceManager.h"
 		"Components/Managers/UnitStateManager.h"
 )
 add_sources("Player_uber.cpp"
@@ -95,15 +105,33 @@ add_sources("Player_uber.cpp"
 		"Components/Player/Player.cpp"
 		"Components/Player/Player.h"
 )
+add_sources("Resources_uber.cpp"
+    PROJECTS Game
+    SOURCE_GROUP "Components\\\\Resources"
+		"Components/Resources/Resource.cpp"
+		"Components/Resources/Resource.h"
+)
+add_sources("Resource_uber.cpp"
+    PROJECTS Game
+    SOURCE_GROUP "Components\\\\Resources\\\\Resource"
+		"Components/Resources/Resource/ResourceOil.cpp"
+		"Components/Resources/Resource/ResourceOil.h"
+)
 add_sources("Selectables_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "Components\\\\Selectables"
 		"Components/Selectables/Attacker.cpp"
+		"Components/Selectables/Cost.cpp"
 		"Components/Selectables/Engineer.cpp"
+		"Components/Selectables/ResourceCollector.cpp"
+		"Components/Selectables/ResourceStorage.cpp"
 		"Components/Selectables/Selectable.cpp"
 		"Components/Selectables/UnitAnimation.cpp"
 		"Components/Selectables/Attacker.h"
+		"Components/Selectables/Cost.h"
 		"Components/Selectables/Engineer.h"
+		"Components/Selectables/ResourceCollector.h"
+		"Components/Selectables/ResourceStorage.h"
 		"Components/Selectables/Selectable.h"
 		"Components/Selectables/UnitAnimation.h"
 )
@@ -155,14 +183,20 @@ add_sources("Items_uber.cpp"
 add_sources("Buildings_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "UIItems\\\\Items\\\\Buildings"
+		"UIItems/Items/Buildings/UIBarracks1BuildItem.cpp"
 		"UIItems/Items/Buildings/UIHQ1BuildItem.cpp"
+		"UIItems/Items/Buildings/UIWarehouse1BuildItem.cpp"
+		"UIItems/Items/Buildings/UIBarracks1BuildItem.h"
 		"UIItems/Items/Buildings/UIHQ1BuildItem.h"
+		"UIItems/Items/Buildings/UIWarehouse1BuildItem.h"
 )
 add_sources("TrainUnits_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "UIItems\\\\Items\\\\Buildings\\\\TrainUnits"
 		"UIItems/Items/Buildings/TrainUnits/UITrainEngineer1Item.cpp"
+		"UIItems/Items/Buildings/TrainUnits/UITrainSoldier1Item.cpp"
 		"UIItems/Items/Buildings/TrainUnits/UITrainEngineer1Item.h"
+		"UIItems/Items/Buildings/TrainUnits/UITrainSoldier1Item.h"
 )
 add_sources("Utils_uber.cpp"
     PROJECTS Game

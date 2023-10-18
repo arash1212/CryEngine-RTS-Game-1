@@ -12,6 +12,7 @@ class AttackerComponent;
 class UnitAnimationComponent;
 class EngineerComponent;
 class CostComponent;
+class ResourceCollectorComponent;
 
 struct SOwnerInfo;
 struct SResourceInfo;
@@ -46,11 +47,16 @@ private:
 	UnitAnimationComponent* m_pUnitAnimationComponent = nullptr;
 	EngineerComponent* m_pEngineerComponent = nullptr;
 	CostComponent* m_pCostComponent = nullptr;
+	ResourceCollectorComponent* m_pResourceCollectorComponent = nullptr;
 
 	//OwnerShip
 	OwnerInfoComponent* m_pOwnerInfoComponent = nullptr;
 
+	//Resource
+	IAttachment* m_pOilBarrelAttachment = nullptr;
+
 private:
+	void UpdateResourceAttachment();
 
 public:
 

@@ -4,6 +4,7 @@
 
 #include <Actions/IBaseAction.h>
 #include <Components/UI/UIResourcesPanel.h>
+#include <Components/Resources/Resource.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -85,4 +86,20 @@ void ResourceManagerComponent::RefundResources(SResourceInfo resourceRequestPara
 	m_pResouceInfo.m_oilAmount += resourceRequestParams.m_oilAmount;
 	m_pResouecesPanelComponent->UpdatePanel();
 	CryLog("resource refunded");
+}
+
+void ResourceManagerComponent::AddResource(EResourceType type, int32 amount)
+{
+	switch (type)
+	{
+	case EResourceType::Money: {
+		m_pResouceInfo.m_moneyAmount += amount;
+	}break;
+	case EResourceType::OIL: {
+		m_pResouceInfo.m_oilAmount += amount;
+	}break;
+	default:
+		break;
+	}
+	m_pResouecesPanelComponent->UpdatePanel();
 }

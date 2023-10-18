@@ -18,6 +18,9 @@
 #include <Components/Info/OwnerInfo.h>
 #include <Components/BaseBuilding/Building.h>
 #include <Components/Managers/ResourceManager.h>
+#include <Components/Resources/Resource.h>
+#include <Actions/Units/UnitCollectResourceAction.h>
+#include <Components/Selectables/ResourceCollector.h>
 
 #include <Components/BaseBuilding/BaseBuilding.h>
 
@@ -299,6 +302,12 @@ void PlayerComponent::RightMouseDown(int activationMode, float value)
 				AssignBuildingToEngineers(entity);
 				return;
 			}
+
+			ResourceComponent* resource = entity->GetComponent<ResourceComponent>();
+			if (resource) {
+				AssignResourceToEngineers(entity);
+				return;
+			}
 		}
 		else {
 			CommandUnitsToMove(mousePos);
@@ -399,6 +408,27 @@ void PlayerComponent::AssignBuildingToEngineers(IEntity* buildingEntity)
 	}
 }
 
+void PlayerComponent::AssignResourceToEngineers(IEntity* resourceEntity)
+{
+	for (IEntity* entity : m_selectedUnits) {
+		if (!entity->GetComponent<EngineerComponent>()) {
+			continue;
+		}
+		if (!entity->GetComponent<ResourceCollectorComponent>()) {
+			continue;
+		}
+		ActionManagerComponent* actionManager = entity->GetComponent<ActionManagerComponent>();
+		if (actionManager) {
+			if (resourceEntity) {
+				actionManager->AddAction(new UnitCollectResourceAction(entity, resourceEntity));
+			}
+		}
+		else {
+			continue;
+		}
+	}
+}
+
 void PlayerComponent::AddUIItemsToActionbar()
 {
 	m_pUIActionbarComponent->Clear();
@@ -423,6 +453,7 @@ void PlayerComponent::AddUIItemsToActionbar()
 			for (IBaseUIItem* uiItem : selectable->GetAllUIItems()) {
 				m_pUIActionbarComponent->AddButton(uiItem->GetImagePath());
 			}
+			return;
 		}
 	}
 }
@@ -466,7 +497,7 @@ void PlayerComponent::ExecuteActionbarItem(int32 index)
 
 		if (m_selectedUnits.size() == 1) {
 			selectable->GetAllUIItems()[index]->Execute();
-			continue;
+			break;
 		}
 	}
 }

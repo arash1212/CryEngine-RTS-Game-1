@@ -1,0 +1,50 @@
+#pragma once
+
+#include <Components/Resources/Resource.h>
+#include <Components/Managers/ResourceManager.h>
+
+class OwnerInfoComponent;
+
+class ResourceCollectorComponent final : public IEntityComponent
+{
+
+public:
+	ResourceCollectorComponent() = default;
+	virtual ~ResourceCollectorComponent() = default;
+
+	// IEntityComponent
+	virtual void Initialize() override;
+
+	virtual Cry::Entity::EventFlags GetEventMask() const override;
+	virtual void ProcessEvent(const SEntityEvent& event) override;
+
+	// Reflect type to set a unique identifier for this component
+	static void ReflectType(Schematyc::CTypeDesc<ResourceCollectorComponent>& desc)
+	{
+		desc.SetGUID("{0086DD74-7806-41D8-AA21-35AC3710B989}"_cry_guid);
+		desc.SetEditorCategory("Resource");
+	}
+
+private :
+	//OwnerShip
+	OwnerInfoComponent* m_pOwnerInfoComponent = nullptr;
+
+	EResourceType m_pCurrentResourceType = EResourceType::OIL;
+
+private:
+	int32 m_amountResourceCollected = 0;
+	int32 m_maxResouceCanBeCollected = 40;
+
+public:
+	void AddResource(int32 amount);
+	int32 GetAmountOfResourceCollected();
+	void SendResourceToWareHouse();
+
+	int32 GetMaxResourceCanBeCollected();
+
+	void SetCurrentResourceType(EResourceType resourceType);
+	EResourceType GetCurrentResourceType();
+
+	bool CanCollectResource();
+	void EmptyResources();
+};
