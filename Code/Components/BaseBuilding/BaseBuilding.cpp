@@ -11,9 +11,11 @@
 #include <Components/Selectables/UnitAnimation.h>
 #include <Components/Managers/ActionManager.h>
 
+#include <Utils/EntityUtils.h>
 #include <Utils/MathUtils.h>
 #include <Utils/MouseUtils.h>
 
+#include <Components/Info/OwnerInfo.h>
 #include <Components/BaseBuilding/Building.h>
 #include <Components/BaseBuilding/Buildings/HQ1Building.h>
 #include <Components/Managers/ResourceManager.h>
@@ -46,6 +48,10 @@ void BaseBuildingComponent::Initialize()
 
 	//Sounds
 	m_buildingPlacementSound = CryAudio::StringToId("Building_Placement_Sound");
+
+	//OwnerInfoComponent initialization
+	m_pOwnerInfoComponent = m_pEntity->GetOrCreateComponent<OwnerInfoComponent>();
+	m_pOwnerInfoComponent->SetIsPlayer(true);
 }
 
 
@@ -88,7 +94,7 @@ void BaseBuildingComponent::UpdateBuildingPosition()
 	m_pBuildingEntity->SetPos(mousePos);
 }
 
-IEntity* BaseBuildingComponent::AssignBuilding()
+IEntity* BaseBuildingComponent::AssignBuilding(std::shared_ptr<IEntityComponent> ptr)
 {
 	if (m_pBuildingEntity) {
 		gEnv->pEntitySystem->RemoveEntity(m_pBuildingEntity->GetId());
@@ -100,9 +106,9 @@ IEntity* BaseBuildingComponent::AssignBuilding()
 		return nullptr;
 	}
 
-	SEntitySpawnParams buildingEntitySpawnParams;
-	buildingEntitySpawnParams.vPosition = m_pEntity->GetWorldPos();
-	m_pBuildingEntity = gEnv->pEntitySystem->SpawnEntity(buildingEntitySpawnParams, true);
+	Vec3 position = m_pEntity->GetWorldPos();
+	m_pBuildingEntity = EntityUtils::SpawnEntity(position, IDENTITY, m_pOwnerInfoComponent->GetOwner());
+	//m_pBuildingEntity->AddComponent(ptr);
 	return m_pBuildingEntity;
 }
 

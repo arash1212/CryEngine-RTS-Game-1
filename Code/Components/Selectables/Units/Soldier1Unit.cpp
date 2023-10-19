@@ -78,8 +78,7 @@ void Soldier1UnitComponent::Initialize()
 	m_pWeaponComponent->Draw();
 
 	//OwnerComponent Initialization
-	m_pOwnerInfoComponent = m_pEntity->GetOrCreateComponent<OwnerInfoComponent>();
-	m_pOwnerInfoComponent->SetTeam(EPlayerTeam::TEAM6);
+	m_pOwnerInfoComponent = m_pEntity->GetComponent<OwnerInfoComponent>();
 
 	//UnitAnimationComponent Initialization
 	m_pUnitAnimationComponent = m_pEntity->GetOrCreateComponent<UnitAnimationComponent>();

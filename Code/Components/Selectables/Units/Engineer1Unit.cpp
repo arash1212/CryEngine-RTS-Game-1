@@ -11,6 +11,7 @@
 #include <UIItems/Items/Buildings/UIHQ1BuildItem.h>
 #include <UIItems/Items/Buildings/UIBarracks1BuildItem.h>
 #include <UIItems/Items/Buildings/UIWarehouse1BuildItem.h>
+#include <UIItems/Items/Buildings/UIHouse1BuildItem.h>
 
 #include <Components/Controller/AIController.h>
 #include <Components/Managers/ActionManager.h>
@@ -77,13 +78,13 @@ void Engineer1UnitComponent::Initialize()
 	m_pSelectableComponent->AddUIItem(new UIHQ1BuildItem(m_pEntity));
 	m_pSelectableComponent->AddUIItem(new UIBarracks1BuildItem(m_pEntity));
 	m_pSelectableComponent->AddUIItem(new UIWarehouse1BuildItem(m_pEntity));
+	m_pSelectableComponent->AddUIItem(new UIHouse1BuildItem(m_pEntity));
 
 	//ActionManager Initializations
 	m_pActionManagerComponent = m_pEntity->GetOrCreateComponent<ActionManagerComponent>();
 
 	//OwnerComponent Initialization
-	m_pOwnerInfoComponent = m_pEntity->GetOrCreateComponent<OwnerInfoComponent>();
-	m_pOwnerInfoComponent->SetTeam(EPlayerTeam::TEAM6);
+	m_pOwnerInfoComponent = m_pEntity->GetComponent<OwnerInfoComponent>();
 
 	//AttackerComponent Initialization
 	m_pUnitAnimationComponent = m_pEntity->GetOrCreateComponent<UnitAnimationComponent>();

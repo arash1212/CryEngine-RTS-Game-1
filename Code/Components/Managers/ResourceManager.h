@@ -32,9 +32,14 @@ private:
 	UIResourcesPanelComponent* m_pResouecesPanelComponent = nullptr;
 	SResourceInfo m_pResouceInfo;
 
+	DynArray<IEntity*> m_pOwnedEntities;
+
 public:
 	SResourceInfo GetAvailableResourcesInfo();
 	bool RequsetResources(SResourceInfo resourceRequestParams);
 	void RefundResources(SResourceInfo resourceRequestParams);
 	void AddResource(EResourceType type, int32 amount);
+
+	void AddOwnedEntity(IEntity* unit);
+	void RemoveOwnedEntity(IEntity* unit);
 };

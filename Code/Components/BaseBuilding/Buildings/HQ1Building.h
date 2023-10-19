@@ -3,6 +3,7 @@
 #include <DefaultComponents/Geometry/AdvancedAnimationComponent.h>
 #include <DefaultComponents/Geometry/StaticMeshComponent.h>
 #include <DefaultComponents/Physics/BoxPrimitiveComponent.h>
+#include <DefaultComponents/Effects/DecalComponent.h>
 
 class BuildingComponent;
 class SelectableComponent;
@@ -38,6 +39,7 @@ private:
 	Cry::DefaultComponents::CAdvancedAnimationComponent* m_pAnimationComponent = nullptr;
 	Cry::DefaultComponents::CStaticMeshComponent* m_pTrussMeshComponent = nullptr;
 	Cry::DefaultComponents::CBoxPrimitiveComponent* m_pBboxComponent = nullptr;
+	Cry::DefaultComponents::CDecalComponent* m_pDecalComponent = nullptr;
 
 	SelectableComponent* m_pSelectableComponent = nullptr;
 	BuildingComponent* m_pBuildingComponent = nullptr;

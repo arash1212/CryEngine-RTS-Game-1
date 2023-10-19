@@ -3,6 +3,7 @@
 #include "GamePlugin.h"
 
 #include <CryEntitySystem/IEntitySystem.h>
+#include <Utils/EntityUtils.h>
 
 #include <Components/Selectables/Attacker.h>
 #include <Components/Controller/AIController.h>
@@ -44,13 +45,15 @@ void TrainEngineer1Action::Execute()
 		Cancel();
 		return;
 	}
+	IEntity* ownerEntity = onwerInfo->GetOwner();
+	if (!ownerEntity) {
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "BuildingTrainEngineer1Action:(Execute) ownerEntity is null.");
+		Cancel();
+		return;
+	}
 
-	SEntitySpawnParams entitySpawnParams;
-	entitySpawnParams.vPosition = m_exitPosition;
-	entitySpawnParams.qRotation = IDENTITY;
-	IEntity* spawnedEntity = gEnv->pEntitySystem->SpawnEntity(entitySpawnParams);
+	IEntity* spawnedEntity = EntityUtils::SpawnEntity(m_exitPosition, IDENTITY, ownerEntity);
 	spawnedEntity->GetOrCreateComponent<Engineer1UnitComponent>();
-	spawnedEntity->GetComponent<OwnerInfoComponent>()->SetOwner(onwerInfo->GetOwner());
 	bIsDone = true;
 }
 

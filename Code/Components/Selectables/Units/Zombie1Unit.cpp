@@ -75,8 +75,7 @@ void Zombie1UnitComponent::Initialize()
 	m_pActionManagerComponent = m_pEntity->GetOrCreateComponent<ActionManagerComponent>();
 
 	//OwnerComponent Initialization
-	m_pOwnerInfoComponent = m_pEntity->GetOrCreateComponent<OwnerInfoComponent>();
-	m_pOwnerInfoComponent->SetTeam(EPlayerTeam::TEAM6);
+	m_pOwnerInfoComponent = m_pEntity->GetComponent<OwnerInfoComponent>();
 
 	//AttackerComponent Initialization
 	m_pUnitAnimationComponent = m_pEntity->GetOrCreateComponent<UnitAnimationComponent>();

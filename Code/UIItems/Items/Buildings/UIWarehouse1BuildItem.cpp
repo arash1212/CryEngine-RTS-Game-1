@@ -45,17 +45,16 @@ void UIWarehouse1BuildItem::Execute()
 		return;
 	}
 
+	if (!resourceManager->RequsetResources(Barracks1BuildingComponent::GetCost())) {
+		return;
+	}
+
 	ActionManagerComponent* actionManager = m_pEntity->GetComponent<ActionManagerComponent>();
 	if (actionManager) {
 		BaseBuildingComponent* baseBuildingComponent = m_pPlayerEntity->GetComponent<BaseBuildingComponent>();
-		IEntity* pBuildingEntity = baseBuildingComponent->AssignBuilding();
+		IEntity* pBuildingEntity = baseBuildingComponent->AssignBuilding(nullptr);
 		if (pBuildingEntity) {
 			pBuildingEntity->GetOrCreateComponent<Warehouse1BuildingComponent>();
-			if (!resourceManager->RequsetResources(Warehouse1BuildingComponent::GetCost())) {
-				baseBuildingComponent->CancelBuilding();
-				return;
-			}
-			pBuildingEntity->GetComponent<OwnerInfoComponent>()->SetOwner(pOwnerInfo->GetOwner());
 		}
 	}
 }

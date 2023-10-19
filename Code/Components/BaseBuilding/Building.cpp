@@ -52,28 +52,15 @@ void BuildingComponent::Initialize()
 	//BoxComponent Initialization
 	m_pBboxComponent = m_pEntity->GetComponent<Cry::DefaultComponents::CBoxPrimitiveComponent>();
 
-
-	AABB aabb;
-	m_pEntity->GetWorldBounds(aabb);
-	Vec3 min = aabb.min;
-	Vec3 max = aabb.max;
-	f32 width = max.x - min.x;
-	f32 height = max.y - min.y;
-
 	//DecalComponent(Placement) Initialization
-	m_pDecalComponent = m_pEntity->CreateComponent<Cry::DefaultComponents::CDecalComponent>();
-	m_pDecalComponent->SetTransformMatrix(Matrix34::Create(Vec3(width + 2, height + 2, 3), IDENTITY, Vec3(0)));
-	m_pDecalComponent->SetMaterialFileName(BUILDING_PLACEMENT_GREEN_DECAL_MATERIAL);
-	m_pDecalComponent->SetSortPriority(50);
-	m_pDecalComponent->SetDepth(10);
-	m_pDecalComponent->Spawn();
+	m_pDecalComponent = m_pEntity->GetComponent<Cry::DefaultComponents::CDecalComponent>();
 
 	//ActionManager Initializations
 	m_pActionManagerComponent = m_pEntity->GetOrCreateComponent<ActionManagerComponent>();
 	m_pActionManagerComponent->SetIsBuilding(true);
 
 	//OwnerInfoComponent Initialization
-	m_pOwnerInfoComponent = m_pEntity->GetOrCreateComponent<OwnerInfoComponent>();
+	m_pOwnerInfoComponent = m_pEntity->GetComponent<OwnerInfoComponent>();
 
 	//ExitPointAttachment Initialization
 	m_pExitPointAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("exitPoint");
@@ -227,11 +214,11 @@ bool BuildingComponent::CanBePlaced()
 		AABB otherAABB;
 		other->GetWorldBounds(otherAABB);
 		if (aabb.IsIntersectBox(otherAABB) && !other->GetComponent<Cry::DefaultComponents::CEnvironmentProbeComponent>() ) {
-			pd->AddAABB(aabb.min, aabb.max, ColorF(1, 0, 0), 2);
+			pd->AddAABB(aabb.min, aabb.max, ColorF(1, 0, 0), 0.1f);
 			return false;
 		}
 	}
-	pd->AddAABB(aabb.min, aabb.max, ColorF(0, 1, 0), 2);
+	pd->AddAABB(aabb.min, aabb.max, ColorF(0, 1, 0), 0.1f);
 	return true;
 }
 
@@ -270,9 +257,5 @@ void BuildingComponent::AddUIItem(IBaseUIItem* item)
 
 Vec3 BuildingComponent::GetExitPoint()
 {
-	//TODO : Fix beshe
-	//m_pExitPointAttachment->GetAttWorldAbsolute().t
-	Vec3 pos = m_pEntity->GetWorldPos();
-	pos.y -= 5;
-	return pos;
+	return m_pExitPointAttachment->GetAttWorldAbsolute().t;
 }

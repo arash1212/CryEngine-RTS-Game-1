@@ -12,8 +12,8 @@ class OwnerInfoComponent;
 class UIResourcesPanelComponent;
 class ResourceManagerComponent;
 
-static const f32 PLAYER_CAMERA_DEFAULT_HEIGHT = 16.f;
-static const f32 PLAYER_CAMERA_DEFAULT_MOVE_SPEED = 9.5f;
+static const f32 PLAYER_CAMERA_DEFAULT_HEIGHT = 18.f;
+static const f32 PLAYER_CAMERA_DEFAULT_MOVE_SPEED = 7.5f;
 static const f32 PLAYER_CAMERA_MAX_ZOOM_AMOUNT = 10.f;
 static const string PLAYER_ENTITY_NAME = "PlayerEntity";
 

@@ -103,3 +103,13 @@ void ResourceManagerComponent::AddResource(EResourceType type, int32 amount)
 	}
 	m_pResouecesPanelComponent->UpdatePanel();
 }
+
+void ResourceManagerComponent::AddOwnedEntity(IEntity* unit)
+{
+	this->m_pOwnedEntities.append(unit);
+}
+
+void ResourceManagerComponent::RemoveOwnedEntity(IEntity* unit)
+{
+	//TODO
+}

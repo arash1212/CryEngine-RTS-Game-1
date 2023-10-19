@@ -30,7 +30,8 @@ private:
 
 public:
 	void SetEventListener(IUIElementEventListener* eventListener);
-	void SetMoneyAmount(int moneyAmount);
-	void SetOilAmount(int moneyAmount);
+	void SetMoneyAmount(int32 moneyAmount);
+	void SetOilAmount(int32 moneyAmount);
+	void SetPopulationAmount(int32 populationAmount);
 	void UpdatePanel();
 };

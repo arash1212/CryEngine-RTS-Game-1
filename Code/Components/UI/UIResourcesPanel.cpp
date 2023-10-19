@@ -68,7 +68,7 @@ void UIResourcesPanelComponent::ProcessEvent(const SEntityEvent& event)
 	}
 }
 
-void UIResourcesPanelComponent::SetMoneyAmount(int moneyAmount)
+void UIResourcesPanelComponent::SetMoneyAmount(int32 moneyAmount)
 {
 	if (!m_pResourcesPanelUIElement) {
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "UIResourcesPanelComponent : (SetMoneyAmount) ResourcesPanelUIElement is null !");
@@ -81,7 +81,7 @@ void UIResourcesPanelComponent::SetMoneyAmount(int moneyAmount)
 	m_pResourcesPanelUIElement->CallFunction("SetMoneyAmount", args);
 }
 
-void UIResourcesPanelComponent::SetOilAmount(int oilAmount)
+void UIResourcesPanelComponent::SetOilAmount(int32 oilAmount)
 {
 	if (!m_pResourcesPanelUIElement) {
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "UIResourcesPanelComponent : (SetOilAmount) ResourcesPanelUIElement is null !");
@@ -92,6 +92,19 @@ void UIResourcesPanelComponent::SetOilAmount(int oilAmount)
 	args.AddArgument(oilAmount);
 
 	m_pResourcesPanelUIElement->CallFunction("SetOilAmount", args);
+}
+
+void UIResourcesPanelComponent::SetPopulationAmount(int32 populationAmount) {
+
+	if (!m_pResourcesPanelUIElement) {
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "UIResourcesPanelComponent : (SetPopulationAmount) SetPopulationAmount is null !");
+		return;
+	}
+
+	SUIArguments args;
+	args.AddArgument(populationAmount);
+
+	m_pResourcesPanelUIElement->CallFunction("SetPopulationAmount", args);
 }
 
 void UIResourcesPanelComponent::UpdatePanel()

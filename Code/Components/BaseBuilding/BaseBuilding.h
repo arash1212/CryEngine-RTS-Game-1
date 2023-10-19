@@ -1,5 +1,7 @@
 #pragma once
 
+class OwnerInfoComponent;
+
 class BaseBuildingComponent final : public IEntityComponent
 {
 
@@ -21,6 +23,8 @@ public:
 	}
 
 private:
+	OwnerInfoComponent* m_pOwnerInfoComponent = nullptr;
+
 	IEntityAudioComponent* m_pAudioComponent = nullptr;
 	IEntity* m_pBuildingEntity = nullptr;
 
@@ -32,7 +36,7 @@ private:
 	void UpdateBuildingPosition();
 
 public:
-	IEntity* AssignBuilding();
+	IEntity* AssignBuilding(std::shared_ptr<IEntityComponent> ptr);
 	void CancelAssignedBuilding();
 	void CancelBuilding();
 

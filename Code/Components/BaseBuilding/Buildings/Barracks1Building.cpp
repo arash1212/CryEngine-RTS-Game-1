@@ -62,6 +62,14 @@ void Barracks1BuildingComponent::Initialize()
 	m_pBboxComponent->m_size = Vec3(5.9f, 2.7f, 1.3f);
 	m_pBboxComponent->m_bReactToCollisions = true;
 
+	//DecalComponent(Placement) Initialization
+	m_pDecalComponent = m_pEntity->CreateComponent<Cry::DefaultComponents::CDecalComponent>();
+	m_pDecalComponent->SetTransformMatrix(Matrix34::Create(Vec3(8.2f, 4.1f, 3), IDENTITY, Vec3(0.5f, 0, 0)));
+	m_pDecalComponent->SetMaterialFileName(BUILDING_PLACEMENT_GREEN_DECAL_MATERIAL);
+	m_pDecalComponent->SetSortPriority(50);
+	m_pDecalComponent->SetDepth(10);
+	m_pDecalComponent->Spawn();
+
 	//BuildingComponent initialization
 	m_pBuildingComponent = m_pEntity->GetOrCreateComponent<BuildingComponent>();
 	m_pBuildingComponent->SetPathToTrussMesh(BARRACKS_BUILDING_1_TRUSS_MODEL_PATH);

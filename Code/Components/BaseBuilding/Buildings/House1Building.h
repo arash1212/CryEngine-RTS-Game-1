@@ -8,19 +8,18 @@
 class BuildingComponent;
 class SelectableComponent;
 class CostComponent;
-class ResourceStorageComponent;
 
 struct SResourceInfo;
 
-static string WAREHOUSE_BUILDING_1_MODEL_PATH = "Objects/buildings/warehouse1/warehouse1.cdf";
-static string WAREHOUSE_BUILDING_1_TRUSS_MODEL_PATH = "Objects/buildings/warehouse1/truss/warehouse1_truss.cgf";
+static string HOUSE_BUILDING_1_MODEL_PATH = "Objects/buildings/house1/house1.cdf";
+static string HOUSE_BUILDING_1_TRUSS_MODEL_PATH = "Objects/buildings/house1/truss/house1_truss.cgf";
 
-class Warehouse1BuildingComponent final : public IEntityComponent
+class House1BuildingComponent final : public IEntityComponent
 {
 
 public:
-	Warehouse1BuildingComponent() = default;
-	virtual ~Warehouse1BuildingComponent() = default;
+	House1BuildingComponent() = default;
+	virtual ~House1BuildingComponent() = default;
 
 	// IEntityComponent
 	virtual void Initialize() override;
@@ -29,13 +28,11 @@ public:
 	virtual void ProcessEvent(const SEntityEvent& event) override;
 
 	// Reflect type to set a unique identifier for this component
-	static void ReflectType(Schematyc::CTypeDesc<Warehouse1BuildingComponent>& desc)
+	static void ReflectType(Schematyc::CTypeDesc<House1BuildingComponent>& desc)
 	{
-		desc.SetGUID("{7F0FD288-E898-4AC7-9A4D-6C9520E7124E}"_cry_guid);
+		desc.SetGUID("{423D5D0D-5FBA-4E26-9FBD-F8F7CE77F4E7}"_cry_guid);
 		desc.SetEditorCategory("Building");
 	}
-
-
 
 private:
 	Cry::DefaultComponents::CAdvancedAnimationComponent* m_pAnimationComponent = nullptr;
@@ -46,7 +43,6 @@ private:
 	SelectableComponent* m_pSelectableComponent = nullptr;
 	BuildingComponent* m_pBuildingComponent = nullptr;
 	CostComponent* m_pCostComponent = nullptr;
-	ResourceStorageComponent* m_pResourceStorageComponent = nullptr;
 
 private:
 

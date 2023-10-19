@@ -3,6 +3,7 @@
 #include "GamePlugin.h"
 
 #include <CryEntitySystem/IEntitySystem.h>
+#include <Components/Info/OwnerInfo.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -33,6 +34,9 @@ void BulletTracerComponent::Initialize()
 	//m_pEntity->LoadGeometry(0, "Objects/effects/bulletTracer/bullet_tracer_1.cgf");
 	//m_pEntity->LoadGeometry(0, "%ENGINE%/EngineAssets/Objects/primitive_sphere.cgf");
 	//m_pEntity->SetScale(Vec3(0.5f));
+
+	//OwnerComponent Initialization
+	m_pOwnerInfoComponent = m_pEntity->GetComponent<OwnerInfoComponent>();
 
 	SEntityPhysicalizeParams physParams;
 	physParams.type = PE_RIGID;

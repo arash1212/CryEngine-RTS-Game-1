@@ -65,9 +65,11 @@ add_sources("Buildings_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "Components\\\\BaseBuilding\\\\Buildings"
 		"Components/BaseBuilding/Buildings/Barracks1Building.cpp"
+		"Components/BaseBuilding/Buildings/House1Building.cpp"
 		"Components/BaseBuilding/Buildings/HQ1Building.cpp"
 		"Components/BaseBuilding/Buildings/Warehouse1Building.cpp"
 		"Components/BaseBuilding/Buildings/Barracks1Building.h"
+		"Components/BaseBuilding/Buildings/House1Building.h"
 		"Components/BaseBuilding/Buildings/HQ1Building.h"
 		"Components/BaseBuilding/Buildings/Warehouse1Building.h"
 )
@@ -184,9 +186,11 @@ add_sources("Buildings_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "UIItems\\\\Items\\\\Buildings"
 		"UIItems/Items/Buildings/UIBarracks1BuildItem.cpp"
+		"UIItems/Items/Buildings/UIHouse1BuildItem.cpp"
 		"UIItems/Items/Buildings/UIHQ1BuildItem.cpp"
 		"UIItems/Items/Buildings/UIWarehouse1BuildItem.cpp"
 		"UIItems/Items/Buildings/UIBarracks1BuildItem.h"
+		"UIItems/Items/Buildings/UIHouse1BuildItem.h"
 		"UIItems/Items/Buildings/UIHQ1BuildItem.h"
 		"UIItems/Items/Buildings/UIWarehouse1BuildItem.h"
 )

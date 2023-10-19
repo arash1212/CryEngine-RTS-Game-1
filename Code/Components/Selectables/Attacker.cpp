@@ -173,6 +173,7 @@ void AttackerComponent::PerformRangedAttack(IEntity* target)
 
 void AttackerComponent::FindRandomTarget()
 {
+
 	if (m_pRandomAttackTarget || m_pAttackTargetEntity || m_pActionManagerComponent->IsProcessingAnAction()) {
 		m_pRandomAttackTarget = nullptr;
 		return;
@@ -185,15 +186,16 @@ void AttackerComponent::FindRandomTarget()
 	{
 		IEntity* entity = entityItPtr->Next();
 		f32 distanceToTarget = m_pEntity->GetWorldPos().GetDistance(entity->GetWorldPos());
-		OwnerInfoComponent* entityOwnerInfo = entity->GetComponent<OwnerInfoComponent>();
+		OwnerInfoComponent* otherEntityOwnerInfo = entity->GetComponent<OwnerInfoComponent>();
 
 		//Ignore entity if it's not in detection range
-		if (!entityOwnerInfo || distanceToTarget > m_pAttackInfo.m_detectionDistance || entityOwnerInfo->IsPlayer()) {
+		if (!otherEntityOwnerInfo || distanceToTarget > m_pAttackInfo.m_detectionDistance || otherEntityOwnerInfo->IsPlayer()) {
 			continue;
 		}
 
 		//set entity as randomAttackTarget if it's team is not same as this unit's team
-		if (entityOwnerInfo->GetInfo().m_pTeam != m_pEntity->GetComponent<OwnerInfoComponent>()->GetInfo().m_pTeam) {
+		OwnerInfoComponent* pOwnerInfoComponent = m_pEntity->GetComponent<OwnerInfoComponent>();
+		if (pOwnerInfoComponent && otherEntityOwnerInfo && otherEntityOwnerInfo->GetInfo().m_pTeam != pOwnerInfoComponent->GetInfo().m_pTeam) {
 			m_pRandomAttackTarget = entity;
 		}
 	}

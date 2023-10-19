@@ -57,11 +57,6 @@ void ResourceComponent::ProcessEvent(const SEntityEvent& event)
 	case Cry::Entity::EEvent::Update: {
 		//f32 DeltaTime = event.fParam[0];
 
-		IPersistantDebug* pd = gEnv->pGameFramework->GetIPersistantDebug();
-		if (pd) {
-			pd->Begin("testeststs", true);
-			pd->AddSphere(GetCollectingLocation(), 0.6f, ColorF(1, 0, 0), 0.6f);
-		}
 	}break;
 	case Cry::Entity::EEvent::Reset: {
 

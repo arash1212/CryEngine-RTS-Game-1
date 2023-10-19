@@ -2,6 +2,8 @@
 
 #include <DefaultComponents/Geometry/StaticMeshComponent.h>
 
+class OwnerInfoComponent;
+
 class BulletTracerComponent final : public IEntityComponent
 {
 
@@ -26,6 +28,8 @@ private:
 	Cry::DefaultComponents::CStaticMeshComponent* m_pMeshComponent = nullptr;
 
 	IEntity* m_pOwner = nullptr;
+	//OwnerShip
+	OwnerInfoComponent* m_pOwnerInfoComponent = nullptr;
 
 private:
 	f32 m_timeBetweenDestroy = 5.0f;

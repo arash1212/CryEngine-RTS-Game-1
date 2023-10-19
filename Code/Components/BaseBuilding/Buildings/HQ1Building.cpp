@@ -61,6 +61,14 @@ void HQ1BuildingComponent::Initialize()
 	m_pBboxComponent->m_size = Vec3(5.f, 2.8f, 2.0f);
 	m_pBboxComponent->m_bReactToCollisions = true;
 
+	//DecalComponent(Placement) Initialization
+	m_pDecalComponent = m_pEntity->CreateComponent<Cry::DefaultComponents::CDecalComponent>();
+	m_pDecalComponent->SetTransformMatrix(Matrix34::Create(Vec3(6.7f, 4.1f, 3), IDENTITY, Vec3(0.0f, 0, 0)));
+	m_pDecalComponent->SetMaterialFileName(BUILDING_PLACEMENT_GREEN_DECAL_MATERIAL);
+	m_pDecalComponent->SetSortPriority(50);
+	m_pDecalComponent->SetDepth(10);
+	m_pDecalComponent->Spawn();
+
 	//BuildingComponent initialization
 	m_pBuildingComponent = m_pEntity->GetOrCreateComponent<BuildingComponent>();
 	m_pBuildingComponent->SetPathToTrussMesh(HQ_BUILDING_1_TRUSS_MODEL_PATH);

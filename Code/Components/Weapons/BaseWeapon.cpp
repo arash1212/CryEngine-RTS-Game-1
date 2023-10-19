@@ -4,8 +4,11 @@
 
 #include <CryPhysics/physinterface.h>
 #include <Components/Effects/BulletTracer.h>
-#include <Utils/MathUtils.h>
 
+#include <Utils/MathUtils.h>
+#include <Utils/EntityUtils.h>
+
+#include <Components/Info/OwnerInfo.h>
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
 #include <CrySchematyc/Env/IEnvRegistrar.h>
@@ -132,11 +135,8 @@ void BaseWeaponComponent::SpawnProjectile(Vec3 pos)
 
 	Vec3 origin = this->GetMuzzlePosition();
 	Vec3 dir = pos - origin;
-
-	SEntitySpawnParams projectileSpawnParams;
-	projectileSpawnParams.vPosition = origin;
-	projectileSpawnParams.qRotation = Quat::CreateRotationVDir(dir.normalized());
-	IEntity* projectileEntity = gEnv->pEntitySystem->SpawnEntity(projectileSpawnParams, true);
+	Quat Rotation = Quat::CreateRotationVDir(dir.normalized());
+	IEntity* projectileEntity = EntityUtils::SpawnEntity(origin, Rotation, m_pEntity->GetComponent<OwnerInfoComponent>() != nullptr ? m_pEntity->GetComponent<OwnerInfoComponent>()->GetOwner() : nullptr);
 	BulletTracerComponent* bullet = projectileEntity->GetOrCreateComponent<BulletTracerComponent>();
 	bullet->SetOwner(m_pEntity);
 }

@@ -8,6 +8,8 @@
 #include <Components/BaseBuilding/Buildings/HQ1Building.h>
 #include <Components/Info/OwnerInfo.h>
 
+#include <Utils/EntityUtils.h>
+
 #include <CrySchematyc/Reflection/TypeDesc.h>
 #include <CrySchematyc/Utils/EnumFlags.h>
 #include <CrySchematyc/Env/IEnvRegistry.h>
@@ -63,9 +65,8 @@ void SpawnPointComponent::ProcessEvent(const SEntityEvent& event)
 
 void SpawnPointComponent::SpawnPlayer()
 {
-	SEntitySpawnParams pPlayerSpawnParams;
-	pPlayerSpawnParams.vPosition = m_pEntity->GetWorldPos();
-	m_pPlayerEntity = gEnv->pEntitySystem->SpawnEntity(pPlayerSpawnParams);
+	Vec3 position = m_pEntity->GetWorldPos();
+	m_pPlayerEntity = EntityUtils::SpawnEntity(position, IDENTITY, nullptr);
 
 	m_pPlayerEntity->GetOrCreateComponent<PlayerComponent>();
 	m_pPlayerEntity->GetComponent<OwnerInfoComponent>()->SetOwner(m_pPlayerEntity);
@@ -75,11 +76,10 @@ void SpawnPointComponent::SpawnPlayer()
 
 void SpawnPointComponent::SpawnPlayerHQBuilding(IEntity* owner)
 {
-	SEntitySpawnParams pHQBuildingSpawnParams;
-	pHQBuildingSpawnParams.vPosition = m_pEntity->GetWorldPos();
-	pHqBuildingEntity = gEnv->pEntitySystem->SpawnEntity(pHQBuildingSpawnParams);
+	Vec3 position = m_pEntity->GetWorldPos();
+	pHqBuildingEntity = EntityUtils::SpawnEntity(position, IDENTITY, owner);
 
 	pHqBuildingEntity->GetOrCreateComponent<HQ1BuildingComponent>();
-	pHqBuildingEntity->GetComponent<OwnerInfoComponent>()->SetOwner(owner);
+	//pHqBuildingEntity->GetComponent<OwnerInfoComponent>()->SetOwner(owner);
 	pHqBuildingEntity->GetComponent<BuildingComponent>()->SetBuilt();
 }
