@@ -7,6 +7,8 @@ struct SResourceInfo {
 public:
 	int32 m_moneyAmount = 650;
 	int32 m_oilAmount = 350;
+	int32 m_populationUsed = 0;
+	INT32 m_populationAmount = 20;
 };
 
 class ResourceManagerComponent : public IEntityComponent {
@@ -30,9 +32,19 @@ public:
 
 private:
 	UIResourcesPanelComponent* m_pResouecesPanelComponent = nullptr;
+	IEntityAudioComponent* m_pAudioComponent = nullptr;
 	SResourceInfo m_pResouceInfo;
 
 	DynArray<IEntity*> m_pOwnedEntities;
+
+public:
+	const static int32 m_oilPrice = 10;
+
+	//Sounds
+	CryAudio::ControlId m_pBuySound;
+	CryAudio::ControlId m_pSellSound;
+private:
+	void UpdatePopulation();
 
 public:
 	SResourceInfo GetAvailableResourcesInfo();
@@ -42,4 +54,7 @@ public:
 
 	void AddOwnedEntity(IEntity* unit);
 	void RemoveOwnedEntity(IEntity* unit);
+
+	void SellResource(int32 amount, EResourceType type);
+	void BuyResource(int32 amount, EResourceType type);
 };

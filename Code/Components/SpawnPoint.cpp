@@ -7,6 +7,7 @@
 #include <Components/BaseBuilding/Building.h>
 #include <Components/BaseBuilding/Buildings/HQ1Building.h>
 #include <Components/Info/OwnerInfo.h>
+#include <Components/Selectables/Units/Zombie1Unit.h>
 
 #include <Utils/EntityUtils.h>
 
@@ -82,4 +83,14 @@ void SpawnPointComponent::SpawnPlayerHQBuilding(IEntity* owner)
 	pHqBuildingEntity->GetOrCreateComponent<HQ1BuildingComponent>();
 	//pHqBuildingEntity->GetComponent<OwnerInfoComponent>()->SetOwner(owner);
 	pHqBuildingEntity->GetComponent<BuildingComponent>()->SetBuilt();
+
+	/*
+	//testing
+	Vec3 tP = position;
+	tP.y -= 9.f;
+	IEntity* zombieE = EntityUtils::SpawnEntity(tP, IDENTITY, owner);
+	zombieE->GetOrCreateComponent<Zombie1UnitComponent>();
+	zombieE->GetComponent<OwnerInfoComponent>()->SetTeam(EPlayerTeam::FERAL);
+	*/
+
 }

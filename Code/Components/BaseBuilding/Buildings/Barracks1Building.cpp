@@ -73,6 +73,9 @@ void Barracks1BuildingComponent::Initialize()
 	//BuildingComponent initialization
 	m_pBuildingComponent = m_pEntity->GetOrCreateComponent<BuildingComponent>();
 	m_pBuildingComponent->SetPathToTrussMesh(BARRACKS_BUILDING_1_TRUSS_MODEL_PATH);
+	SBuildingInfo buildingInfo;
+	buildingInfo.m_populationProduces = 0;
+	m_pBuildingComponent->SetBuildingInfo(buildingInfo);
 	//UIItems
 	m_pBuildingComponent->AddUIItem(new UITrainEngineer1Item(m_pEntity));
 	m_pBuildingComponent->AddUIItem(new UITrainSoldier1Item(m_pEntity));
@@ -123,7 +126,8 @@ void Barracks1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 SResourceInfo Barracks1BuildingComponent::GetCost()
 {
 	SResourceInfo cost;
-	cost.m_moneyAmount = 300;
-	cost.m_oilAmount = 70;
+	cost.m_moneyAmount = 150;
+	cost.m_oilAmount = 40;
+	cost.m_populationAmount = 5;
 	return cost;
 }

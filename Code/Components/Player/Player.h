@@ -13,7 +13,7 @@ class UIResourcesPanelComponent;
 class ResourceManagerComponent;
 
 static const f32 PLAYER_CAMERA_DEFAULT_HEIGHT = 18.f;
-static const f32 PLAYER_CAMERA_DEFAULT_MOVE_SPEED = 7.5f;
+static const f32 PLAYER_CAMERA_DEFAULT_MOVE_SPEED = 24.f;
 static const f32 PLAYER_CAMERA_MAX_ZOOM_AMOUNT = 10.f;
 static const string PLAYER_ENTITY_NAME = "PlayerEntity";
 
@@ -44,6 +44,7 @@ private:
 	Cry::DefaultComponents::CCameraComponent* m_pCameraComponent = nullptr;
 	Cry::DefaultComponents::CInputComponent* m_pInputComponent = nullptr;
 	Cry::Audio::DefaultComponents::CListenerComponent* m_pListenerComp = nullptr;
+	IEntityAudioComponent* m_pAudioComponent = nullptr;
 	
 	UISelectionBoxComponent* m_pUISelectionBoxComponent;
 	UIActionbarComponent* m_pUIActionbarComponent;
@@ -63,7 +64,6 @@ private:
 	f32 m_cameraMaxZoomAmount = PLAYER_CAMERA_MAX_ZOOM_AMOUNT;
 	f32 m_currentZoomAmount = 0;
 	f32 m_defaultPosZ = 0;
-	f32 m_movementSpeed = 620.f;
 	Vec3 m_movementOffset = ZERO;
 
 	DynArray<IEntity*> m_selectedUnits;
@@ -90,6 +90,8 @@ private:
 	void MouseWheelUp(int activationMode, float value);
 	void LeftMouseDown(int activationMode, float value);
 	void RightMouseDown(int activationMode, float value);
+	void RotateLeft(int activationMode, float value);
+	void RotateRight(int activationMode, float value);
 
 	//Actions
 	void DeselectSelectables();

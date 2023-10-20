@@ -45,7 +45,7 @@ void UIWarehouse1BuildItem::Execute()
 		return;
 	}
 
-	if (!resourceManager->RequsetResources(Barracks1BuildingComponent::GetCost())) {
+	if (!resourceManager->RequsetResources(Warehouse1BuildingComponent::GetCost())) {
 		return;
 	}
 

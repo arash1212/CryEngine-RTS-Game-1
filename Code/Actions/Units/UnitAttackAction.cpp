@@ -2,6 +2,8 @@
 #include "UnitAttackAction.h"
 #include "GamePlugin.h"
 
+#include <Utils/EntityUtils.h>
+
 #include <Components/Selectables/Attacker.h>
 #include <Components/Controller/AIController.h>
 #include <Components/Managers/UnitStateManager.h>
@@ -40,7 +42,7 @@ void UnitAttackAction::Execute()
 		m_pAttackerComponent->LookAt(m_pTarget->GetWorldPos());
 	}
 	else {
-		m_pAiControllerComponent->MoveTo(m_pTarget->GetWorldPos(), false);
+		m_pAiControllerComponent->MoveTo(EntityUtils::GetClosetPointOnMeshBorder(m_pEntity->GetWorldPos(), m_pTarget), false);
 		m_pAiControllerComponent->LookAtWalkDirection();
 	}
 }

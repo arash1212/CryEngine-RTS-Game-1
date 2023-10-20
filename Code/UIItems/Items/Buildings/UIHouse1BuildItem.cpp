@@ -45,7 +45,7 @@ void UIHouse1BuildItem::Execute()
 		return;
 	}
 
-	if (!resourceManager->RequsetResources(Barracks1BuildingComponent::GetCost())) {
+	if (!resourceManager->RequsetResources(House1BuildingComponent::GetCost())) {
 		return;
 	}
 

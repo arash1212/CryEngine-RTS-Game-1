@@ -4,6 +4,7 @@
 
 #include <CryEntitySystem/IEntitySystem.h>
 #include <Components/Info/OwnerInfo.h>
+#include <Utils/EntityUtils.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -102,7 +103,7 @@ void BulletTracerComponent::Move()
 
 void BulletTracerComponent::Destroy()
 {
-	gEnv->pEntitySystem->RemoveEntity(GetEntityId());
+	EntityUtils::RemoveEntity(m_pEntity);
 }
 
 void BulletTracerComponent::CheckCollision(const EventPhysCollision* physCollision)

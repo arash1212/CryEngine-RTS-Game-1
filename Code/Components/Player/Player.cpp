@@ -7,7 +7,9 @@
 #include <Components/UI/UIActionbar.h>
 #include <Components/UI/Listener/UIElementEventListener.h>
 
-#include <Utils\MouseUtils.h>
+#include <Utils/MouseUtils.h>
+#include <Utils/EntityUtils.h>
+
 #include <Components/Selectables/Selectable.h>
 #include <Components/Selectables/Engineer.h>
 
@@ -74,6 +76,9 @@ void PlayerComponent::Initialize()
 	//ListenerComponent initialization
 	m_pListenerComp = m_pEntity->GetOrCreateComponent<Cry::Audio::DefaultComponents::CListenerComponent>();
 
+	//AudioComponent initialization
+	m_pAudioComponent = m_pEntity->GetOrCreateComponent<IEntityAudioComponent>();
+
 	//OwnerInfoComponent initialization
 	m_pOwnerInfoComponent = m_pEntity->GetOrCreateComponent<OwnerInfoComponent>();
 	m_pOwnerInfoComponent->SetIsPlayer(true);
@@ -136,7 +141,7 @@ void PlayerComponent::Move(f32 DeltaTime)
 	Vec3 currentPos = m_pEntity->GetWorldPos();
 
 	//Apply movement
-	Vec3 pos = currentPos + (m_movementOffset * m_cameraMoveSpeed * DeltaTime);
+	Vec3 pos = currentPos + (m_movementOffset) * m_cameraMoveSpeed * DeltaTime;
 
 	//Apply zoomAmount
 	pos.z = m_defaultPosZ - m_currentZoomAmount;
@@ -182,26 +187,33 @@ void PlayerComponent::InitInputs()
 	m_pInputComponent->RegisterAction("player", "command", [this](int activationMode, float value) {this->RightMouseDown(activationMode, value); });
 	m_pInputComponent->BindAction("player", "command", eAID_KeyboardMouse, eKI_Mouse2);
 
+	//RotateLeft
+	m_pInputComponent->RegisterAction("player", "rotateLeft", [this](int activationMode, float value) {this->RotateLeft(activationMode, value); });
+	m_pInputComponent->BindAction("player", "rotateLeft", eAID_KeyboardMouse, eKI_Q);
+
+	//RotateRight
+	m_pInputComponent->RegisterAction("player", "rotateRight", [this](int activationMode, float value) {this->RotateRight(activationMode, value); });
+	m_pInputComponent->BindAction("player", "rotateRight", eAID_KeyboardMouse, eKI_E);
 }
 
 void PlayerComponent::MoveForward(int activationMode, float value)
 {
-	m_movementOffset.y = value * m_movementSpeed * gEnv->pTimer->GetFrameTime();
+	m_movementOffset.y = value;
 }
 
 void PlayerComponent::MoveBackward(int activationMode, float value)
 {
-	m_movementOffset.y = -value * m_movementSpeed * gEnv->pTimer->GetFrameTime();
+	m_movementOffset.y = -value;
 }
 
 void PlayerComponent::MoveRight(int activationMode, float value)
 {
-	m_movementOffset.x = value * m_movementSpeed * gEnv->pTimer->GetFrameTime();
+	m_movementOffset.x = value;
 }
 
 void PlayerComponent::MoveLeft(int activationMode, float value)
 {
-	m_movementOffset.x = -value * m_movementSpeed * gEnv->pTimer->GetFrameTime();
+	m_movementOffset.x = -value;
 }
 
 void PlayerComponent::MouseWheelUp(int activationMode, float value)
@@ -316,6 +328,28 @@ void PlayerComponent::RightMouseDown(int activationMode, float value)
 	}
 }
 
+void PlayerComponent::RotateLeft(int activationMode, float value)
+{
+	if (activationMode == eAAM_OnHold) {
+		if (!m_pBaseBuildingComponent || !m_pBaseBuildingComponent->HasBuildingAssigned()) {
+			return;
+		}
+
+		m_pBaseBuildingComponent->RotateBuildingToLeft();
+	}
+}
+
+void PlayerComponent::RotateRight(int activationMode, float value)
+{
+	if (activationMode == eAAM_OnHold) {
+		if (!m_pBaseBuildingComponent || !m_pBaseBuildingComponent->HasBuildingAssigned()) {
+			return;
+		}
+
+		m_pBaseBuildingComponent->RotateBuildingToRight();
+	}
+}
+
 /*=============================================================================================================================================
 																	ACTIONS
 ==============================================================================================================================================*/
@@ -366,7 +400,13 @@ void PlayerComponent::CommandUnitsToMove(Vec3 position)
 			m_selectedUnits[i]->GetWorldBounds(aabb);
 			f32 width = aabb.max.x - aabb.min.x;
 			f32 height = aabb.max.y - aabb.min.y;
-			Vec3 pos = Vec3(position.x + ((column * width) + 0.8f), position.y - ((row * height) + 0.8f), position.z);
+			Vec3 pos = Vec3(position.x + ((column * (width + 2.f))), position.y - ((row * (height + 2.f))), position.z);
+
+			IPersistantDebug* pd = gEnv->pGameFramework->GetIPersistantDebug();
+			if (pd) {
+				pd->Begin("moveCommand" + i, true);
+				pd->AddSphere(pos, 0.3f, ColorF(0, 1, 0), 1);
+			}
 			actionManager->AddAction(new UnitMoveAction(m_selectedUnits[i], pos, m_rightClickCount >= 2));
 		}
 		else {

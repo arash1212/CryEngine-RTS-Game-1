@@ -2,6 +2,8 @@
 #include "UnitMoveAction.h"
 #include "GamePlugin.h"
 
+#include <Utils/EntityUtils.h>
+
 #include <Components/Selectables/Attacker.h>
 #include <Components/Controller/AIController.h>
 #include <Components/Managers/UnitStateManager.h>
@@ -58,7 +60,7 @@ void UnitMoveAction::Cancel()
 bool UnitMoveAction::IsDone()
 {
 	if (!bIsDone) {
-		bIsDone = m_pEntity->GetWorldPos().GetDistance(m_movePosition) <= 1;
+		bIsDone = EntityUtils::GetDistance(m_pEntity->GetWorldPos(), m_movePosition, nullptr) <= 1;
 	}
 	return bIsDone;
 }

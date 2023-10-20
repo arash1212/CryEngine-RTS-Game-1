@@ -3,7 +3,7 @@
 struct SEngineerInfo {
 public:
 	f32 m_timeBetweenBuilds = 1.f;
-	f32 m_maxBuildDistance = 20.f;
+	f32 m_maxBuildDistance = 1.f;
 };
 
 class EngineerComponent final : public IEntityComponent

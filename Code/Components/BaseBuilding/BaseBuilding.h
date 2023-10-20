@@ -42,4 +42,7 @@ public:
 
 	IEntity* PlaceBuilding(Vec3 at);
 	bool HasBuildingAssigned();
+
+	void RotateBuildingToLeft();
+	void RotateBuildingToRight();
 };

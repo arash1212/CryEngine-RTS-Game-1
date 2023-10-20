@@ -2,6 +2,8 @@
 #include "UnitCollectResourceAction.h"
 #include "GamePlugin.h"
 
+#include <Utils/EntityUtils.h>
+
 #include <CryEntitySystem/IEntitySystem.h>
 #include <Components/Selectables/ResourceStorage.h>
 #include <Components/Resources/Resource.h>
@@ -72,7 +74,8 @@ void UnitCollectResourceAction::Execute()
 	}
 	
 
-	f32 distanceToResource = m_pEntity->GetWorldPos().GetDistance(m_pResourceEntity->GetWorldPos());
+	Vec3 collectingLocationPos = m_pResourceEntity->GetComponent<ResourceComponent>()->GetCollectingLocation();
+	f32 distanceToResource = EntityUtils::GetDistance(m_pEntity->GetWorldPos(), collectingLocationPos, nullptr);
 	if (distanceToResource <= m_pEngineerComponent->GetEngineerInfo().m_maxBuildDistance && m_pResourceCollectorComponent->CanCollectResource()) {
 
 		if (this->m_pResourceCollectorComponent->GetCurrentResourceType() != m_pResourceComponent->GetType()) {
@@ -81,31 +84,32 @@ void UnitCollectResourceAction::Execute()
 		}
 
 		this->m_pAiControllerComponent->StopMoving();
-		this->m_pAiControllerComponent->LookAt(m_pResourceEntity->GetComponent<ResourceComponent>()->GetCollectingLocation());
+		this->m_pAiControllerComponent->LookAt(collectingLocationPos);
 		this->m_pAnimationComponent->PlayRandomAttackAnimation();
 		this->m_builtTimePassed = 0;
 		this->m_pResourceCollectorComponent->AddResource(5);
 	}
 	else if (distanceToResource > m_pEngineerComponent->GetEngineerInfo().m_maxBuildDistance && m_pResourceCollectorComponent->CanCollectResource()) {
-		//TODO : FIX 
-		Vec3 pos = m_pResourceEntity->GetComponent<ResourceComponent>()->GetCollectingLocation();
-		//pos.x += 2;
-		//pos.y -= 3;
-		this->m_pAiControllerComponent->MoveTo(pos, true);
+		this->m_pAiControllerComponent->MoveTo(collectingLocationPos, true);
 		this->m_pAiControllerComponent->LookAtWalkDirection();
 	}
+
+	//If Can't collect resources anymore
 	else if (!m_pResourceCollectorComponent->CanCollectResource()) {
 		if (!m_pWarehouseEntity) {
 			m_pWarehouseEntity = FindClosestWarehouse();
 			this->m_builtTimePassed = 0.2f;
 			return;
 		}
-		f32 distanceToWareHouse = m_pEntity->GetWorldPos().GetDistance(m_pWarehouseEntity->GetWorldPos());
+
+		Vec3 warehouseExitPoint = m_pWarehouseEntity->GetComponent<BuildingComponent>()->GetExitPoint();
+		//Move closer to warehouse if it's not close
+		f32 distanceToWareHouse = EntityUtils::GetDistance(m_pEntity->GetWorldPos(), warehouseExitPoint, nullptr);
 		if (m_pWarehouseEntity && distanceToWareHouse > m_pEngineerComponent->GetEngineerInfo().m_maxBuildDistance) {
-			Vec3 pos = m_pWarehouseEntity->GetWorldPos();
-			this->m_pAiControllerComponent->MoveTo(pos, false);
+			this->m_pAiControllerComponent->MoveTo(warehouseExitPoint, false);
 			this->m_pAiControllerComponent->LookAtWalkDirection();
 		}
+		//Deliver Resource to Warehouse
 		else {
 			this->m_pAiControllerComponent->StopMoving();
 			this->m_pAiControllerComponent->LookAt(m_pWarehouseEntity->GetWorldPos());

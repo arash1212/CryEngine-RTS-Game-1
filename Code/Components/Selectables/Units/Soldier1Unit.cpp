@@ -130,5 +130,6 @@ SResourceInfo Soldier1UnitComponent::GetCost()
 	SResourceInfo cost;
 	cost.m_moneyAmount = 120;
 	cost.m_oilAmount = 60;
+	cost.m_populationAmount = 5;
 	return cost;
 }

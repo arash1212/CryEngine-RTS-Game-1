@@ -97,14 +97,14 @@ void Engineer1UnitComponent::Initialize()
 	pAttckInfo.bIsFollower = true;
 	pAttckInfo.bIsHumanoid = true;
 	pAttckInfo.m_timeBetweenAttacks = 0.7f;
-	pAttckInfo.m_maxAttackDistance = 2.3f;
+	pAttckInfo.m_maxAttackDistance = 0.2f;
 	m_pAttackerComponent->SetAttackInfo(pAttckInfo);
 
 	//EngineerComponent Initializations
 	m_pEngineerComponent = m_pEntity->GetOrCreateComponent<EngineerComponent>();
 	//engineer info
 	SEngineerInfo engineerInfo;
-	engineerInfo.m_maxBuildDistance = 8.f;
+	engineerInfo.m_maxBuildDistance = 0.2f;
 	engineerInfo.m_timeBetweenBuilds = 1.f;
 	m_pEngineerComponent->SetEngineerInfo(engineerInfo);
 
@@ -179,6 +179,7 @@ SResourceInfo Engineer1UnitComponent::GetCost()
 	SResourceInfo cost;
 	cost.m_moneyAmount = 60;
 	cost.m_oilAmount = 20;
+	cost.m_populationAmount = 3;
 	return cost;
 }
 

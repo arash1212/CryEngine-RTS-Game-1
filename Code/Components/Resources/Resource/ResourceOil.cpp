@@ -49,6 +49,14 @@ void ResourceOilComponent::Initialize()
 	m_pBboxComponent->m_size = Vec3(2.1f, 3.4f, 1.0f);
 	m_pBboxComponent->m_bReactToCollisions = true;
 
+	//Update bounding box
+	AABB aabb;
+	m_pEntity->GetLocalBounds(aabb);
+	Vec3 min = Vec3(aabb.min.x - 2, aabb.min.y - 3, aabb.min.z);
+	Vec3 max = Vec3(aabb.max.x + 3.6f, aabb.max.y + 2, aabb.max.z);
+	AABB newAABB = AABB(min, max);
+	m_pEntity->SetLocalBounds(newAABB, true);
+
 	//Physicalize
 	SEntityPhysicalizeParams physParams;
 	physParams.type = PE_STATIC;

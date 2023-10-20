@@ -10,6 +10,7 @@
 #include <Components/Managers/ActionManager.h>
 
 #include <Utils/MathUtils.h>
+#include <Utils/EntityUtils.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -155,7 +156,7 @@ void AttackerComponent::AttackRandomTarget()
 
 		//If is a follwer follow random target if it's not in unit attack range
 		else {
-			this->m_pAIController->MoveTo(m_pRandomAttackTarget->GetWorldPos(), true);
+			this->m_pAIController->MoveTo(EntityUtils::GetClosetPointOnMeshBorder(m_pEntity->GetWorldPos(), m_pRandomAttackTarget), true);
 			this->m_pAIController->LookAtWalkDirection();
 		}
 	}
@@ -185,7 +186,8 @@ void AttackerComponent::FindRandomTarget()
 	while (!entityItPtr->IsEnd())
 	{
 		IEntity* entity = entityItPtr->Next();
-		f32 distanceToTarget = m_pEntity->GetWorldPos().GetDistance(entity->GetWorldPos());
+
+		f32 distanceToTarget = EntityUtils::GetDistance(m_pEntity->GetWorldPos(), entity->GetWorldPos(), entity);
 		OwnerInfoComponent* otherEntityOwnerInfo = entity->GetComponent<OwnerInfoComponent>();
 
 		//Ignore entity if it's not in detection range
@@ -240,7 +242,7 @@ bool AttackerComponent::IsAttacking()
 	}
 	IEntity* target = m_pAttackTargetEntity ? m_pAttackTargetEntity : m_pRandomAttackTarget;
 
-	f32 distanceToTarget = m_pEntity->GetWorldPos().GetDistance(target->GetWorldPos());
+	f32 distanceToTarget = EntityUtils::GetDistance(m_pEntity->GetWorldPos(), target->GetWorldPos(), target);
 	if (distanceToTarget > m_pAttackInfo.m_maxAttackDistance) {
 		return false;
 	}
@@ -255,7 +257,7 @@ bool AttackerComponent::CanAttack()
 	}
 	IEntity* target = m_pAttackTargetEntity ? m_pAttackTargetEntity : m_pRandomAttackTarget;
 
-	f32 distanceToTarget = m_pEntity->GetWorldPos().GetDistance(target->GetWorldPos());
+	f32 distanceToTarget = EntityUtils::GetDistance(m_pEntity->GetWorldPos(), target->GetWorldPos(), target);
 	if (distanceToTarget > m_pAttackInfo.m_maxAttackDistance) {
 		return false;
 	}

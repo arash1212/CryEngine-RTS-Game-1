@@ -2,6 +2,8 @@
 #include "UnitBuildAction.h"
 #include "GamePlugin.h"
 
+#include <Utils/EntityUtils.h>
+
 #include <Components/BaseBuilding/Building.h>
 #include <Components/Selectables/Engineer.h>
 #include <Components/Controller/AIController.h>
@@ -47,7 +49,7 @@ void UnitBuildAction::Execute()
 		return;
 	}
 
-	f32 distanceToBuilding = m_pEntity->GetWorldPos().GetDistance(m_pBuildingEntity->GetWorldPos());
+	f32 distanceToBuilding = EntityUtils::GetDistance(m_pEntity->GetWorldPos(), m_pBuildingEntity->GetWorldPos(), m_pBuildingEntity);
 	if (distanceToBuilding <= m_pEngineerComponent->GetEngineerInfo().m_maxBuildDistance) {
 		this->m_pAiControllerComponent->StopMoving();
 		this->m_pBuildingComponent->Build();
@@ -56,7 +58,7 @@ void UnitBuildAction::Execute()
 		this->m_builtTimePassed = 0;
 	}
 	else {
-		this->m_pAiControllerComponent->MoveTo(m_pBuildingEntity->GetWorldPos(), true);
+		this->m_pAiControllerComponent->MoveTo(EntityUtils::GetClosetPointOnMeshBorder(m_pEntity->GetWorldPos(), m_pBuildingEntity), true);
 		this->m_pAiControllerComponent->LookAtWalkDirection();
 	}
 }

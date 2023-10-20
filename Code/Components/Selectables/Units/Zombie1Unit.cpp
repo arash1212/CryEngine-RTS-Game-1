@@ -76,6 +76,7 @@ void Zombie1UnitComponent::Initialize()
 
 	//OwnerComponent Initialization
 	m_pOwnerInfoComponent = m_pEntity->GetComponent<OwnerInfoComponent>();
+	m_pOwnerInfoComponent->SetTeam(EPlayerTeam::FERAL);
 
 	//AttackerComponent Initialization
 	m_pUnitAnimationComponent = m_pEntity->GetOrCreateComponent<UnitAnimationComponent>();
@@ -88,7 +89,7 @@ void Zombie1UnitComponent::Initialize()
 	pAttckInfo.bIsFollower = true;
 	pAttckInfo.bIsHumanoid = true;
 	pAttckInfo.m_timeBetweenAttacks = 0.7f;
-	pAttckInfo.m_maxAttackDistance = 7.3f;
+	pAttckInfo.m_maxAttackDistance = 0.2f;
 	m_pAttackerComponent->SetAttackInfo(pAttckInfo);
 
 	/////////CostComponent Initializations
@@ -130,6 +131,7 @@ SResourceInfo Zombie1UnitComponent::GetCost()
 	SResourceInfo cost;
 	cost.m_moneyAmount = 20;
 	cost.m_oilAmount = 0;
+	cost.m_oilAmount = 1;
 	return cost;
 }
 

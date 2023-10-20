@@ -15,6 +15,8 @@
 #include <UIItems/Items/UIChangeStanceItem.h>
 #include <UIItems/Items/Buildings/UIHQ1BuildItem.h>
 #include<UIItems/Items/Buildings/TrainUnits/UITrainEngineer1Item.h>
+#include<UIItems/Items/Resources/UISellOilItem.h>
+#include<UIItems/Items/Resources/UIBuyOilItem.h>
 
 #include <Components/BaseBuilding/Building.h>
 #include <Utils/MathUtils.h>
@@ -73,7 +75,12 @@ void Warehouse1BuildingComponent::Initialize()
 	//BuildingComponent initialization
 	m_pBuildingComponent = m_pEntity->GetOrCreateComponent<BuildingComponent>();
 	m_pBuildingComponent->SetPathToTrussMesh(WAREHOUSE_BUILDING_1_TRUSS_MODEL_PATH);
+	SBuildingInfo buildingInfo;
+	buildingInfo.m_populationProduces = 0;
+	m_pBuildingComponent->SetBuildingInfo(buildingInfo);
 	//UIItems
+	m_pBuildingComponent->AddUIItem(new UIBuyOilItem(m_pEntity));
+	m_pBuildingComponent->AddUIItem(new UISellOilItem(m_pEntity));
 
 	//ResourceStorageComponent Initialization
 	m_pResourceStorageComponent = m_pEntity->GetOrCreateComponent<ResourceStorageComponent>();
@@ -124,7 +131,8 @@ void Warehouse1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 SResourceInfo Warehouse1BuildingComponent::GetCost()
 {
 	SResourceInfo cost;
-	cost.m_moneyAmount = 300;
-	cost.m_oilAmount = 80;
+	cost.m_moneyAmount = 150;
+	cost.m_oilAmount = 50;
+	cost.m_populationAmount = 5;
 	return cost;
 }

@@ -72,6 +72,10 @@ void HQ1BuildingComponent::Initialize()
 	//BuildingComponent initialization
 	m_pBuildingComponent = m_pEntity->GetOrCreateComponent<BuildingComponent>();
 	m_pBuildingComponent->SetPathToTrussMesh(HQ_BUILDING_1_TRUSS_MODEL_PATH);
+	m_pBuildingComponent->SetIsHouse(true);
+	SBuildingInfo buildingInfo;
+	buildingInfo.m_populationProduces = 20;
+	m_pBuildingComponent->SetBuildingInfo(buildingInfo);
 	//UIItems
 	m_pBuildingComponent->AddUIItem(new UITrainEngineer1Item(m_pEntity));
 
@@ -123,5 +127,6 @@ SResourceInfo HQ1BuildingComponent::GetCost()
 	SResourceInfo cost;
 	cost.m_moneyAmount = 500;
 	cost.m_oilAmount = 200;
+	cost.m_populationAmount = 20;
 	return cost;
 }

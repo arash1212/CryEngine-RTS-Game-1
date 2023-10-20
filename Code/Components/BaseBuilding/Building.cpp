@@ -65,6 +65,11 @@ void BuildingComponent::Initialize()
 	//ExitPointAttachment Initialization
 	m_pExitPointAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("exitPoint");
 
+	//SkinAttachment Initialization
+	m_pSkinAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByIndex(0);
+
+	//Materials Initializations
+	m_pDefaultMaterial = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByIndex(0)->GetIAttachmentObject()->GetBaseMaterial();
 }
 
 
@@ -110,9 +115,15 @@ void BuildingComponent::UpdateMaterial()
 
 	if (CanBePlaced()) {
 		m_pDecalComponent->SetMaterialFileName(BUILDING_PLACEMENT_GREEN_DECAL_MATERIAL);
+
+		IMaterial* m_pGreenMaterial = gEnv->p3DEngine->GetMaterialManager()->LoadMaterial("Materials/buildings/building_placement_green_material.mtl");
+		m_pSkinAttachment->GetIAttachmentObject()->SetReplacementMaterial(m_pGreenMaterial);
 	}
 	else {
 		m_pDecalComponent->SetMaterialFileName(BUILDING_PLACEMENT_RED_DECAL_MATERIAL);
+
+		IMaterial* m_pRedMaterial = gEnv->p3DEngine->GetMaterialManager()->LoadMaterial("Materials/buildings/building_placement_red_material.mtl");
+		m_pSkinAttachment->GetIAttachmentObject()->SetReplacementMaterial(m_pRedMaterial);
 	}
 }
 
@@ -143,6 +154,9 @@ void BuildingComponent::Place(Vec3 at)
 	physParams.type = PE_STATIC;
 	physParams.mass = 38000.f;
 	m_pEntity->Physicalize(physParams);
+
+	//Update Material
+	m_pSkinAttachment->GetIAttachmentObject()->SetReplacementMaterial(m_pDefaultMaterial);
 }
 
 void BuildingComponent::Build()
@@ -183,6 +197,11 @@ void BuildingComponent::SetBuildingInfo(SBuildingInfo buildingInfo)
 	this->m_pBuildingInfo = buildingInfo;
 }
 
+SBuildingInfo BuildingComponent::GetBuildingInfos()
+{
+	return m_pBuildingInfo;
+}
+
 bool BuildingComponent::IsPlaced()
 {
 	return bIsPlaced;
@@ -211,6 +230,7 @@ bool BuildingComponent::CanBePlaced()
 			continue;
 		}
 
+		pd->Begin("BuildingCanBePlaced", true);
 		AABB otherAABB;
 		other->GetWorldBounds(otherAABB);
 		if (aabb.IsIntersectBox(otherAABB) && !other->GetComponent<Cry::DefaultComponents::CEnvironmentProbeComponent>() ) {
@@ -257,5 +277,17 @@ void BuildingComponent::AddUIItem(IBaseUIItem* item)
 
 Vec3 BuildingComponent::GetExitPoint()
 {
-	return m_pExitPointAttachment->GetAttWorldAbsolute().t;
+	Vec3 pos = m_pExitPointAttachment->GetAttWorldAbsolute().t;
+	pos.z = m_pEntity->GetWorldPos().z;
+	return pos;
+}
+
+void BuildingComponent::SetIsHouse(bool IsHouse)
+{
+	this->bIsHouse = IsHouse;
+}
+
+bool BuildingComponent::IsHouse()
+{
+	return bIsHouse;
 }

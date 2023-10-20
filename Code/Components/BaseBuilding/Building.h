@@ -14,6 +14,7 @@ class OwnerInfoComponent;
 struct SBuildingInfo {
 public:
 	f32 m_maxBuildAmount = 20.f;
+	int32 m_populationProduces = 0;
 };
 
 static const string BUILDING_PLACEMENT_GREEN_DECAL_MATERIAL = "Materials/buildings/building_placement_green_material.mtl";
@@ -51,10 +52,14 @@ private:
 	SBuildingInfo m_pBuildingInfo;
 
 	IAttachment* m_pExitPointAttachment = nullptr;
+	IAttachment* m_pSkinAttachment = nullptr;
+
+	IMaterial* m_pDefaultMaterial = nullptr;
 
 private:
 	bool bIsPlaced = false;
 	bool bIsBuilt = false;
+	bool bIsHouse = false;
 
 	f32 m_currentBuiltAmount = 0.f;
 
@@ -70,6 +75,7 @@ public:
 	void Place(Vec3 at);
 	void Build();
 	void SetBuildingInfo(SBuildingInfo buildingInfo);
+	SBuildingInfo GetBuildingInfos();
 
 	bool IsPlaced();
 	bool CanBePlaced();
@@ -82,4 +88,7 @@ public:
 	void AddUIItem(IBaseUIItem* item);
 
 	Vec3 GetExitPoint();
+
+	void SetIsHouse(bool IsHouse);
+	bool IsHouse();
 };

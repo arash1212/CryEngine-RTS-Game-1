@@ -73,6 +73,11 @@ void House1BuildingComponent::Initialize()
 	//BuildingComponent initialization
 	m_pBuildingComponent = m_pEntity->GetOrCreateComponent<BuildingComponent>();
 	m_pBuildingComponent->SetPathToTrussMesh(HOUSE_BUILDING_1_TRUSS_MODEL_PATH);
+	m_pBuildingComponent->SetIsHouse(true);
+
+	SBuildingInfo buildingInfo;
+	buildingInfo.m_populationProduces = 5;
+	m_pBuildingComponent->SetBuildingInfo(buildingInfo);
 	//UIItems
 
 	//Update bounding box
@@ -121,7 +126,8 @@ void House1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 SResourceInfo House1BuildingComponent::GetCost()
 {
 	SResourceInfo cost;
-	cost.m_moneyAmount = 100;
-	cost.m_oilAmount = 50;
+	cost.m_moneyAmount = 80;
+	cost.m_oilAmount = 30;
+	cost.m_populationAmount = 0;
 	return cost;
 }

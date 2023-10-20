@@ -56,7 +56,7 @@ void ResourceComponent::ProcessEvent(const SEntityEvent& event)
 	}break;
 	case Cry::Entity::EEvent::Update: {
 		//f32 DeltaTime = event.fParam[0];
-
+		
 	}break;
 	case Cry::Entity::EEvent::Reset: {
 
@@ -68,7 +68,9 @@ void ResourceComponent::ProcessEvent(const SEntityEvent& event)
 
 Vec3 ResourceComponent::GetCollectingLocation()
 {
-	return m_pCollectingLocationAttachment->GetAttWorldAbsolute().t;
+	Vec3 pos = m_pCollectingLocationAttachment->GetAttWorldAbsolute().t;
+	pos.z = m_pEntity->GetWorldPos().z;
+	return pos;
 }
 
 void ResourceComponent::SetType(EResourceType type)

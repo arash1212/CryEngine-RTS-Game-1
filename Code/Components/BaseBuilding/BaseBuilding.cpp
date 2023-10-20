@@ -3,6 +3,8 @@
 #include "GamePlugin.h"
 
 #include <CryEntitySystem/IEntitySystem.h>
+#include <CryAISystem/INavigationSystem.h>
+#include <CryAISystem/NavigationSystem/INavigationUpdatesManager.h>
 
 #include <Components/Info/OwnerInfo.h>
 #include <Components/Managers/UnitStateManager.h>
@@ -97,7 +99,7 @@ void BaseBuildingComponent::UpdateBuildingPosition()
 IEntity* BaseBuildingComponent::AssignBuilding(std::shared_ptr<IEntityComponent> ptr)
 {
 	if (m_pBuildingEntity) {
-		gEnv->pEntitySystem->RemoveEntity(m_pBuildingEntity->GetId());
+		EntityUtils::RemoveEntity(m_pBuildingEntity);
 		m_pBuildingEntity = nullptr;
 	}
 	IEntity* owner = m_pEntity->GetComponent<OwnerInfoComponent>()->GetOwner();
@@ -122,7 +124,7 @@ void BaseBuildingComponent::CancelAssignedBuilding()
 		return;
 	}
 	resourceManager->RefundResources(m_pBuildingEntity->GetComponent<CostComponent>()->GetCost());
-	gEnv->pEntitySystem->RemoveEntity(m_pBuildingEntity->GetId());
+	EntityUtils::RemoveEntity(m_pBuildingEntity);
 	m_pBuildingEntity = nullptr;
 }
 
@@ -135,7 +137,7 @@ void BaseBuildingComponent::CancelBuilding()
 	if (!resourceManager) {
 		return;
 	}
-	gEnv->pEntitySystem->RemoveEntity(m_pBuildingEntity->GetId());
+	EntityUtils::RemoveEntity(m_pBuildingEntity);
 	m_pBuildingEntity = nullptr;
 }
 
@@ -157,12 +159,36 @@ IEntity* BaseBuildingComponent::PlaceBuilding(Vec3 at)
 
 	m_pBuildingEntity->GetComponent<BuildingComponent>()->Place(at);
 	IEntity* buildingTemp = m_pBuildingEntity;
-	m_pBuildingEntity = nullptr;
 
+	//NavigationAgentTypeID agentTypeId = NavigationAgentTypeID::TNavigationID(1);
+	//NavigationMeshID navMeshId = gEnv->pAISystem->GetNavigationSystem()->FindEnclosingMeshID(agentTypeId, m_pBuildingEntity->GetWorldPos());
+	//gEnv->pAISystem->GetNavigationSystem()->GetUpdateManager()->RequestGlobalUpdate();
+
+	m_pBuildingEntity = nullptr;
 	return buildingTemp;
 }
 
 bool BaseBuildingComponent::HasBuildingAssigned()
 {
 	return m_pBuildingEntity != nullptr;
+}
+
+void BaseBuildingComponent::RotateBuildingToLeft()
+{
+	if (!HasBuildingAssigned()) {
+		return;
+	}
+
+	Quat rotation = Quat::CreateRotationZ(m_pBuildingEntity->GetRotation().GetRotZ() - 0.01f);
+	m_pBuildingEntity->SetRotation(rotation);
+}
+
+void BaseBuildingComponent::RotateBuildingToRight()
+{
+	if (!HasBuildingAssigned()) {
+		return;
+	}
+
+	Quat rotation = Quat::CreateRotationZ(m_pBuildingEntity->GetRotation().GetRotZ() + 0.01f);
+	m_pBuildingEntity->SetRotation(-rotation);
 }

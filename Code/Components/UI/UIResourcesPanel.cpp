@@ -119,6 +119,7 @@ void UIResourcesPanelComponent::UpdatePanel()
 	//
 	SetMoneyAmount(resourceInfo.m_moneyAmount);
 	SetOilAmount(resourceInfo.m_oilAmount);
+	SetPopulationAmount(resourceInfo.m_populationAmount);
 
 	CryLog("resources panel updated");
 }
