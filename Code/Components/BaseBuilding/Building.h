@@ -91,4 +91,6 @@ public:
 
 	void SetIsHouse(bool IsHouse);
 	bool IsHouse();
+
+	bool IsWorkplace();
 };

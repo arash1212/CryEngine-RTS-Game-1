@@ -1,4 +1,5 @@
 #pragma once
+
 #include <DefaultComponents/Geometry/AdvancedAnimationComponent.h>
 
 class SelectableComponent;
@@ -13,6 +14,7 @@ class UnitAnimationComponent;
 class EngineerComponent;
 class CostComponent;
 class ResourceCollectorComponent;
+class WorkerComponent;
 
 struct SOwnerInfo;
 struct SResourceInfo;
@@ -48,15 +50,12 @@ private:
 	EngineerComponent* m_pEngineerComponent = nullptr;
 	CostComponent* m_pCostComponent = nullptr;
 	ResourceCollectorComponent* m_pResourceCollectorComponent = nullptr;
+	WorkerComponent* m_pWorkerComponent = nullptr;
 
 	//OwnerShip
 	OwnerInfoComponent* m_pOwnerInfoComponent = nullptr;
 
-	//Resource
-	IAttachment* m_pOilBarrelAttachment = nullptr;
-
 private:
-	void UpdateResourceAttachment();
 
 public:
 

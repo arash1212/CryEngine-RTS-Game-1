@@ -15,6 +15,7 @@
 #include <UIItems/Items/UICancelItem.h>
 #include <UIItems/Items/UIChangeStanceItem.h>
 #include <UIItems/Items/Buildings/UIHQ1BuildItem.h>
+#include <Components/Selectables/Workplace.h>
 
 #include <Utils/MathUtils.h>
 
@@ -290,4 +291,9 @@ void BuildingComponent::SetIsHouse(bool IsHouse)
 bool BuildingComponent::IsHouse()
 {
 	return bIsHouse;
+}
+
+bool BuildingComponent::IsWorkplace()
+{
+	return bIsBuilt && m_pEntity->GetComponent<WorkplaceComponent>();
 }

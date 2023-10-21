@@ -31,8 +31,16 @@ namespace
 
 void ResourceCollectorComponent::Initialize()
 {
+	//AnimationComponent Initializations
+	m_pAnimationComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CAdvancedAnimationComponent>();
+
 	//OwnerComponent Initialization
 	m_pOwnerInfoComponent = m_pEntity->GetOrCreateComponent<OwnerInfoComponent>();
+
+	//**************************************Resource Attchments
+	//OilBarrelAttachment Initialization
+	m_pOilBarrelAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("oilBarrel");
+	m_pWheatAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("wheat");
 }
 
 Cry::Entity::EventFlags ResourceCollectorComponent::GetEventMask() const
@@ -52,6 +60,8 @@ void ResourceCollectorComponent::ProcessEvent(const SEntityEvent& event)
 	}break;
 	case Cry::Entity::EEvent::Update: {
 		//f32 DeltaTime = event.fParam[0];
+
+		UpdateResourceAttachment();
 
 	}break;
 	case Cry::Entity::EEvent::Reset: {
@@ -97,11 +107,42 @@ void ResourceCollectorComponent::SendResourceToWareHouse()
 	case EResourceType::OIL: {
 		resourceManager->AddResource(EResourceType::OIL, m_amountResourceCollected);
 	}break;
+	case EResourceType::WHEAT: {
+		resourceManager->AddResource(EResourceType::WHEAT, m_amountResourceCollected);
+	}break;
 	default:
 		break;
-	} m_pCurrentResourceType;
+	}
 
 	this->m_amountResourceCollected = 0;
+}
+
+void ResourceCollectorComponent::UpdateResourceAttachment()
+{
+	EResourceType pResourceType = GetCurrentResourceType();
+	if (GetAmountOfResourceCollected() <= 0) {
+		m_pOilBarrelAttachment->HideAttachment(true);
+		m_pWheatAttachment->HideAttachment(true);
+		return;
+	}
+
+	switch (pResourceType)
+	{
+	case EResourceType::Money: {
+		m_pOilBarrelAttachment->HideAttachment(true);
+		m_pWheatAttachment->HideAttachment(true);
+	}break;
+	case EResourceType::OIL: {
+		m_pOilBarrelAttachment->HideAttachment(false);
+		m_pWheatAttachment->HideAttachment(true);
+	}break;
+	case EResourceType::WHEAT: {
+		m_pOilBarrelAttachment->HideAttachment(true);
+		m_pWheatAttachment->HideAttachment(false);
+	}break;
+	default:
+		break;
+	}
 }
 
 int32 ResourceCollectorComponent::GetMaxResourceCanBeCollected()

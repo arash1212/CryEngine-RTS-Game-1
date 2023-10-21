@@ -8,7 +8,8 @@ public:
 	int32 m_moneyAmount = 650;
 	int32 m_oilAmount = 350;
 	int32 m_populationUsed = 0;
-	INT32 m_populationAmount = 20;
+	int32 m_populationAmount = 20;
+	int32 m_wheatAmount = 0;
 };
 
 class ResourceManagerComponent : public IEntityComponent {
@@ -39,6 +40,7 @@ private:
 
 public:
 	const static int32 m_oilPrice = 10;
+	const static int32 m_WheatPrice = 5;
 
 	//Sounds
 	CryAudio::ControlId m_pBuySound;

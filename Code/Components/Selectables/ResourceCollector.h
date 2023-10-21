@@ -1,5 +1,6 @@
 #pragma once
 
+#include <DefaultComponents/Geometry/AdvancedAnimationComponent.h>
 #include <Components/Resources/Resource.h>
 #include <Components/Managers/ResourceManager.h>
 
@@ -26,14 +27,23 @@ public:
 	}
 
 private :
+	Cry::DefaultComponents::CAdvancedAnimationComponent* m_pAnimationComponent = nullptr;
 	//OwnerShip
 	OwnerInfoComponent* m_pOwnerInfoComponent = nullptr;
 
 	EResourceType m_pCurrentResourceType = EResourceType::OIL;
 
+	//Atachments
+	//Resource
+	IAttachment* m_pOilBarrelAttachment = nullptr;
+	IAttachment* m_pWheatAttachment = nullptr;
+
 private:
 	int32 m_amountResourceCollected = 0;
 	int32 m_maxResouceCanBeCollected = 40;
+
+private:
+	void UpdateResourceAttachment();
 
 public:
 	void AddResource(int32 amount);

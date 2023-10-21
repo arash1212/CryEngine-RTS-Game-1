@@ -23,6 +23,10 @@
 #include <Components/Resources/Resource.h>
 #include <Actions/Units/UnitCollectResourceAction.h>
 #include <Components/Selectables/ResourceCollector.h>
+#include <Components/Selectables/Worker.h>
+#include <Components/Selectables/Workplace.h>
+#include <Actions/Units/UnitSendResourceToWarehouseAction.h>
+#include <Components/Selectables/ResourceStorage.h>
 
 #include <Components/BaseBuilding/BaseBuilding.h>
 
@@ -95,6 +99,9 @@ void PlayerComponent::Initialize()
 
 	//Set player entity name
 	m_pEntity->SetName(PLAYER_ENTITY_NAME);
+
+	
+	gEnv->p3DEngine->GetTimeOfDay();
 }
 
 Cry::Entity::EventFlags PlayerComponent::GetEventMask() const
@@ -315,6 +322,18 @@ void PlayerComponent::RightMouseDown(int activationMode, float value)
 				return;
 			}
 
+			WorkplaceComponent* workplace = entity->GetComponent<WorkplaceComponent>();
+			if (building && building->IsBuilt() && workplace) {
+				AssignWorkplaceToWorkers(entity);
+				return;
+			}
+
+			ResourceStorageComponent* resourceStorage = entity->GetComponent<ResourceStorageComponent>();
+			if (building && building->IsBuilt() && resourceStorage) {
+				CommandUnitsToSendResourceToWareHouse(entity);
+				return;
+			}
+
 			ResourceComponent* resource = entity->GetComponent<ResourceComponent>();
 			if (resource) {
 				AssignResourceToEngineers(entity);
@@ -461,6 +480,49 @@ void PlayerComponent::AssignResourceToEngineers(IEntity* resourceEntity)
 		if (actionManager) {
 			if (resourceEntity) {
 				actionManager->AddAction(new UnitCollectResourceAction(entity, resourceEntity));
+			}
+		}
+		else {
+			continue;
+		}
+	}
+}
+
+void PlayerComponent::AssignWorkplaceToWorkers(IEntity* workplaceEntity)
+{
+	for (IEntity* entity : m_selectedUnits) {
+		WorkerComponent* workerComponent = entity->GetComponent<WorkerComponent>();
+		if (!workerComponent) {
+			continue;
+		}
+		WorkplaceComponent* workPlaceComponent = workplaceEntity->GetComponent<WorkplaceComponent>();
+		if (!workPlaceComponent) {
+			return;
+		}
+		ActionManagerComponent* actionManager = entity->GetComponent<ActionManagerComponent>();
+		if (actionManager) {
+			if (workplaceEntity) {
+				workerComponent->AssignWorkplace(workplaceEntity);
+				workPlaceComponent->AssignWorkerToPlace(entity);
+				CryLog("workplace assigned");
+			}
+		}
+		else {
+			continue;
+		}
+	}
+}
+
+void PlayerComponent::CommandUnitsToSendResourceToWareHouse(IEntity* warehouse)
+{
+	for (IEntity* entity : m_selectedUnits) {
+		if (!entity->GetComponent<ResourceCollectorComponent>()) {
+			continue;
+		}
+		ActionManagerComponent* actionManager = entity->GetComponent<ActionManagerComponent>();
+		if (actionManager) {
+			if (warehouse) {
+				actionManager->AddAction(new UnitSendResourceToWarehouseAction(entity, warehouse));
 			}
 		}
 		else {

@@ -93,6 +93,9 @@ void BaseBuildingComponent::UpdateBuildingPosition()
 	}
 
 	Vec3 mousePos = MouseUtils::GetPositionUnderCursor();
+	mousePos.x = crymath::floor(mousePos.x + 0.5f);
+	mousePos.y = crymath::floor(mousePos.y + 0.5f);
+	mousePos.z = crymath::floor(mousePos.z + 0.5f);
 	m_pBuildingEntity->SetPos(mousePos);
 }
 
@@ -157,7 +160,7 @@ IEntity* BaseBuildingComponent::PlaceBuilding(Vec3 at)
 
 	m_pAudioComponent->ExecuteTrigger(m_buildingPlacementSound);
 
-	m_pBuildingEntity->GetComponent<BuildingComponent>()->Place(at);
+	m_pBuildingEntity->GetComponent<BuildingComponent>()->Place(m_pBuildingEntity->GetWorldPos());
 	IEntity* buildingTemp = m_pBuildingEntity;
 
 	//NavigationAgentTypeID agentTypeId = NavigationAgentTypeID::TNavigationID(1);

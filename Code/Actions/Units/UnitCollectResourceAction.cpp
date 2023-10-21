@@ -35,6 +35,15 @@ IEntity* UnitCollectResourceAction::FindClosestWarehouse()
 	while (!entityItPtr->IsEnd()) {
 		IEntity* entity = entityItPtr->Next();
 		if (entity) {
+			/*
+			BuildingComponent* pBuildingComponent = entity->GetComponent<BuildingComponent>();
+			if (!pBuildingComponent) {
+				return nullptr;
+			}
+			if (!pBuildingComponent->IsBuilt()) {
+				return nullptr;
+			}
+			*/
 			ResourceStorageComponent* resourceStorage = entity->GetComponent<ResourceStorageComponent>();
 			if (resourceStorage) {
 				return entity;

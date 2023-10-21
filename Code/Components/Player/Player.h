@@ -102,6 +102,8 @@ private:
 	void SetUnitsAttackTarget(IEntity* target); 
 	void AssignBuildingToEngineers(IEntity* buildingEntity);
 	void AssignResourceToEngineers(IEntity* resourceEntity);
+	void AssignWorkplaceToWorkers(IEntity* workplaceEntity);
+	void CommandUnitsToSendResourceToWareHouse(IEntity* warehouse);
 
 	//Action bar
 	void AddUIItemsToActionbar();

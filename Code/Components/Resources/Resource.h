@@ -8,7 +8,8 @@ class SelectableComponent;
 enum class EResourceType {
 	Money,
 	OIL,
-	POPULATION
+	POPULATION,
+	WHEAT
 };
 
 class ResourceComponent final : public IEntityComponent
