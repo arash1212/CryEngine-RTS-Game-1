@@ -110,6 +110,8 @@ private:
 
 	//
 	void CheckSelectablesMouseOver();
+	//
+	bool AreSelectedUnitsSameType();
 
 public:
 	void ExecuteActionbarItem(int32 index);

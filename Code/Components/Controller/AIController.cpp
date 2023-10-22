@@ -31,7 +31,7 @@ void AIControllerComponent::Initialize()
 {
 	//CharacterController component initialization
 	m_pCharacterControllerComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CCharacterControllerComponent>();
-	m_pCharacterControllerComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), IDENTITY, Vec3(0, 0, 1)));
+	m_pCharacterControllerComponent->SetTransformMatrix(Matrix34::Create(Vec3(0.1f), IDENTITY, Vec3(0, 0, 1)));
 
 	//Navigation component initializations
 	m_pNavigationComponent = m_pEntity->GetOrCreateComponent<IEntityNavigationComponent>();
@@ -46,7 +46,7 @@ void AIControllerComponent::Initialize()
 
 	//Collision avoidance
 	IEntityNavigationComponent::SCollisionAvoidanceProperties collisionAvoidanceProps;
-	collisionAvoidanceProps.radius = 0.1f;
+	collisionAvoidanceProps.radius = 0.03f;
 	m_pNavigationComponent->SetCollisionAvoidanceProperties(collisionAvoidanceProps);
 
 	//StateManager initialization
@@ -126,7 +126,7 @@ void AIControllerComponent::LookAt(Vec3 position)
 
 	Vec3 dir = position - m_pEntity->GetWorldPos();
 	dir.z = 0;
-	m_pEntity->SetRotation(Quat::CreateRotationVDir(dir));
+	m_pEntity->SetRotation(Quat::CreateRotationVDir(dir.GetNormalizedSafe()));
 }
 
 f32 AIControllerComponent::AngleTo(Vec3 position)
@@ -157,7 +157,7 @@ void AIControllerComponent::StopMoving()
 
 void AIControllerComponent::LookAtWalkDirection()
 {
-	m_pEntity->SetRotation(Quat::CreateRotationVDir(m_pNavigationComponent->GetRequestedVelocity()));
+	m_pEntity->SetRotation(Quat::CreateRotationVDir(m_pNavigationComponent->GetRequestedVelocity().GetNormalizedSafe()));
 }
 
 bool AIControllerComponent::IsMoving()

@@ -37,6 +37,7 @@ private :
 	//Resource
 	IAttachment* m_pOilBarrelAttachment = nullptr;
 	IAttachment* m_pWheatAttachment = nullptr;
+	IAttachment* m_pFlourAttachment = nullptr;
 
 private:
 	int32 m_amountResourceCollected = 0;

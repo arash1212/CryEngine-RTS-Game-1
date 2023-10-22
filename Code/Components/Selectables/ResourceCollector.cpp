@@ -41,6 +41,7 @@ void ResourceCollectorComponent::Initialize()
 	//OilBarrelAttachment Initialization
 	m_pOilBarrelAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("oilBarrel");
 	m_pWheatAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("wheat");
+	m_pFlourAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("flour");
 }
 
 Cry::Entity::EventFlags ResourceCollectorComponent::GetEventMask() const
@@ -123,6 +124,7 @@ void ResourceCollectorComponent::UpdateResourceAttachment()
 	if (GetAmountOfResourceCollected() <= 0) {
 		m_pOilBarrelAttachment->HideAttachment(true);
 		m_pWheatAttachment->HideAttachment(true);
+		m_pFlourAttachment->HideAttachment(true);
 		return;
 	}
 
@@ -131,14 +133,22 @@ void ResourceCollectorComponent::UpdateResourceAttachment()
 	case EResourceType::Money: {
 		m_pOilBarrelAttachment->HideAttachment(true);
 		m_pWheatAttachment->HideAttachment(true);
+		m_pFlourAttachment->HideAttachment(true);
 	}break;
 	case EResourceType::OIL: {
 		m_pOilBarrelAttachment->HideAttachment(false);
 		m_pWheatAttachment->HideAttachment(true);
+		m_pFlourAttachment->HideAttachment(true);
 	}break;
 	case EResourceType::WHEAT: {
 		m_pOilBarrelAttachment->HideAttachment(true);
 		m_pWheatAttachment->HideAttachment(false);
+		m_pFlourAttachment->HideAttachment(true);
+	}break;
+	case EResourceType::FLOUR: {
+		m_pOilBarrelAttachment->HideAttachment(true);
+		m_pWheatAttachment->HideAttachment(true);
+		m_pFlourAttachment->HideAttachment(false);
 	}break;
 	default:
 		break;

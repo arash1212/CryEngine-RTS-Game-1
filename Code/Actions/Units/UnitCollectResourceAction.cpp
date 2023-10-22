@@ -86,6 +86,9 @@ void UnitCollectResourceAction::Execute()
 	Vec3 collectingLocationPos = m_pResourceEntity->GetComponent<ResourceComponent>()->GetCollectingLocation();
 	f32 distanceToResource = EntityUtils::GetDistance(m_pEntity->GetWorldPos(), collectingLocationPos, nullptr);
 	if (distanceToResource <= m_pEngineerComponent->GetEngineerInfo().m_maxBuildDistance && m_pResourceCollectorComponent->CanCollectResource()) {
+		if (m_pResourceComponent->IsSingleUse() && m_pResourceComponent->IsInUse() && m_pResourceComponent->GetCurrentCollector()->GetId() != m_pEntity->GetId()) {
+			return;
+		}
 
 		if (this->m_pResourceCollectorComponent->GetCurrentResourceType() != m_pResourceComponent->GetType()) {
 			this->m_pResourceCollectorComponent->SetCurrentResourceType(m_pResourceComponent->GetType());
@@ -97,14 +100,28 @@ void UnitCollectResourceAction::Execute()
 		this->m_pAnimationComponent->PlayRandomAttackAnimation();
 		this->m_builtTimePassed = 0;
 		this->m_pResourceCollectorComponent->AddResource(5);
+
+		this->m_pResourceComponent->SetIsInUse(true);
+		this->m_pResourceComponent->SetCurrentCollector(m_pEntity);
 	}
 	else if (distanceToResource > m_pEngineerComponent->GetEngineerInfo().m_maxBuildDistance && m_pResourceCollectorComponent->CanCollectResource()) {
-		this->m_pAiControllerComponent->MoveTo(collectingLocationPos, true);
-		this->m_pAiControllerComponent->LookAtWalkDirection();
+		if (m_pResourceComponent->IsSingleUse() && m_pResourceComponent->IsInUse() && m_pResourceComponent->GetCurrentCollector()->GetId() != m_pEntity->GetId()) {
+			this->m_pAiControllerComponent->MoveTo(EntityUtils::GetClosetPointOnMeshBorder(m_pEntity->GetWorldPos(), m_pResourceEntity), true);
+			this->m_pAiControllerComponent->LookAtWalkDirection();
+		}
+		else {
+			this->m_pAiControllerComponent->MoveTo(collectingLocationPos, true);
+			this->m_pAiControllerComponent->LookAtWalkDirection();
+		}
 	}
 
 	//If Can't collect resources anymore
 	else if (!m_pResourceCollectorComponent->CanCollectResource()) {
+		if (m_pResourceComponent->IsInUse() && m_pResourceComponent->GetCurrentCollector() == m_pEntity) {
+			this->m_pResourceComponent->SetIsInUse(false);
+			this->m_pResourceComponent->SetCurrentCollector(nullptr);
+		}
+
 		if (!m_pWarehouseEntity) {
 			m_pWarehouseEntity = FindClosestWarehouse();
 			this->m_builtTimePassed = 0.2f;
@@ -121,7 +138,7 @@ void UnitCollectResourceAction::Execute()
 		//Deliver Resource to Warehouse
 		else {
 			this->m_pAiControllerComponent->StopMoving();
-			this->m_pAiControllerComponent->LookAt(m_pWarehouseEntity->GetWorldPos());
+			this->m_pAiControllerComponent->LookAt(EntityUtils::GetClosetPointOnMeshBorder(m_pEntity->GetWorldPos(), m_pWarehouseEntity));
 			this->m_pResourceCollectorComponent->SendResourceToWareHouse();
 		}
 	}
@@ -129,6 +146,10 @@ void UnitCollectResourceAction::Execute()
 
 void UnitCollectResourceAction::Cancel()
 {
+	if (m_pResourceComponent->GetCurrentCollector() && m_pResourceComponent->GetCurrentCollector()->GetId() != m_pEntity->GetId()) {
+		this->m_pResourceComponent->SetIsInUse(false);
+		this->m_pResourceComponent->SetCurrentCollector(nullptr);
+	}
 	this->m_pEngineerComponent->CancelBuildingAssigned();
 	this->m_pAiControllerComponent->StopMoving();
 	bIsDone = true;

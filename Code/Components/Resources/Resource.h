@@ -9,7 +9,8 @@ enum class EResourceType {
 	Money,
 	OIL,
 	POPULATION,
-	WHEAT
+	WHEAT,
+	FLOUR
 };
 
 class ResourceComponent final : public IEntityComponent
@@ -38,10 +39,24 @@ private:
 	IAttachment* m_pCollectingLocationAttachment = nullptr;
 
 	EResourceType m_type = EResourceType::Money;
+
+	bool bIsSingleUse = false;
+	bool bIsInUse = false;
+
+	IEntity* m_pCurrentCollector = nullptr;
 public:
 
 	Vec3 GetCollectingLocation();
 	
 	void SetType(EResourceType type);
 	EResourceType GetType();
+
+	void SetIsSingleUse(bool singleUse);
+	bool IsSingleUse();
+
+	bool IsInUse();
+	void SetIsInUse(bool inUse);
+
+	void SetCurrentCollector(IEntity* currentCollector);
+	IEntity* GetCurrentCollector();
 };

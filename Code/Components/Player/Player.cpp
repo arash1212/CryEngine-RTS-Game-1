@@ -13,6 +13,10 @@
 #include <Components/Selectables/Selectable.h>
 #include <Components/Selectables/Engineer.h>
 
+#include <Components/Selectables/Units/Engineer1Unit.h>
+#include <Components/Selectables/Units/Soldier1Unit.h>
+#include <Components/Selectables/Units/Zombie1Unit.h>
+
 #include <Components/Managers/ActionManager.h>
 #include <Actions/Units/UnitMoveAction.h>
 #include <Actions/Units/UnitAttackAction.h>
@@ -539,7 +543,7 @@ void PlayerComponent::AddUIItemsToActionbar()
 	}
 
 	//TODO : UPDATE BESHE
-	if (m_selectedUnits.size() > 1) {
+	if (m_selectedUnits.size() > 1 && !AreSelectedUnitsSameType()) {
 		SelectableComponent* selectable = m_selectedUnits[0]->GetComponent<SelectableComponent>();
 		if (selectable) {
 			for (IBaseUIItem* uiItem : selectable->GetGeneralUIItems()) {
@@ -549,7 +553,7 @@ void PlayerComponent::AddUIItemsToActionbar()
 		}
 	}
 
-	if (m_selectedUnits.size() == 1) {
+	if (m_selectedUnits.size() == 1 || AreSelectedUnitsSameType()) {
 		SelectableComponent* selectable = m_selectedUnits[0]->GetComponent<SelectableComponent>();
 		if (selectable) {
 			for (IBaseUIItem* uiItem : selectable->GetAllUIItems()) {
@@ -592,14 +596,61 @@ void PlayerComponent::ExecuteActionbarItem(int32 index)
 			return;
 		}
 
-		if (m_selectedUnits.size() > 1) {
+		if (m_selectedUnits.size() > 1 && !AreSelectedUnitsSameType()) {
 			selectable->GetGeneralUIItems()[index]->Execute();
 			continue;
 		}
 
-		if (m_selectedUnits.size() == 1) {
+		if (m_selectedUnits.size() == 1 || AreSelectedUnitsSameType()) {
 			selectable->GetAllUIItems()[index]->Execute();
 			break;
 		}
 	}
+}
+
+//TODO : update beshe if ziad migire in shekli
+bool PlayerComponent::AreSelectedUnitsSameType()
+{
+	bool bIsEngineer1 = false;
+	bool bIsSoldier1 = false;
+	bool bIsZombie1 = false;
+
+	//
+	IEntity* firstSelectedUnit = m_selectedUnits[0];
+	if (firstSelectedUnit) {
+		Engineer1UnitComponent* engineer = firstSelectedUnit->GetComponent<Engineer1UnitComponent>();
+		if (engineer) {
+			bIsEngineer1 = true;
+		}
+		Soldier1UnitComponent* soldier = firstSelectedUnit->GetComponent<Soldier1UnitComponent>();
+		if (soldier) {
+			bIsSoldier1 = true;
+		}
+		Zombie1UnitComponent* zombie = firstSelectedUnit->GetComponent<Zombie1UnitComponent>();
+		if (zombie) {
+			bIsZombie1 = true;
+		}
+	}
+
+	for (IEntity* entity : m_selectedUnits) {
+		if (bIsEngineer1) {
+			if (!entity->GetComponent<EngineerComponent>()) {
+				return false;
+			}
+		}
+
+		if (bIsSoldier1) {
+			if (!entity->GetComponent<Soldier1UnitComponent>()) {
+				return false;
+			}
+		}
+
+		if (bIsZombie1) {
+			if (!entity->GetComponent<Zombie1UnitComponent>()) {
+				return false;
+			}
+		}
+	}
+
+	return true;
 }

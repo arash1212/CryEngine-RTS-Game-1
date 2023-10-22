@@ -43,6 +43,7 @@ void ResourceOilComponent::Initialize()
 	//ResourceComponent Initialization
 	m_pResourceComponent = m_pEntity->GetOrCreateComponent<ResourceComponent>();
 	m_pResourceComponent->SetType(EResourceType::OIL);
+	m_pResourceComponent->SetIsSingleUse(true);
 
 	//BoxComponent Initialization
 	m_pBboxComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CBoxPrimitiveComponent>();
@@ -52,8 +53,8 @@ void ResourceOilComponent::Initialize()
 	//Update bounding box
 	AABB aabb;
 	m_pEntity->GetLocalBounds(aabb);
-	Vec3 min = Vec3(aabb.min.x - 2, aabb.min.y - 3, aabb.min.z);
-	Vec3 max = Vec3(aabb.max.x + 3.6f, aabb.max.y + 2, aabb.max.z);
+	Vec3 min = Vec3(aabb.min.x - 4, aabb.min.y - 4, aabb.min.z);
+	Vec3 max = Vec3(aabb.max.x + 4.5f, aabb.max.y + 3, aabb.max.z);
 	AABB newAABB = AABB(min, max);
 	m_pEntity->SetLocalBounds(newAABB, true);
 

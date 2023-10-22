@@ -164,7 +164,7 @@ void Farm1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 	case Cry::Entity::EEvent::Update: {
 		f32 DeltaTime = event.fParam[0];
 
-		UpdateCurrentMoveToAttachment();
+		UpdateAssignedWorkers();
 
 		//Timers
 		if (m_workTimePassed < m_timeBetweenWorks) {
@@ -180,7 +180,7 @@ void Farm1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 	}
 }
 
-void Farm1BuildingComponent::UpdateCurrentMoveToAttachment()
+void Farm1BuildingComponent::UpdateAssignedWorkers()
 {
 	if (!m_pBuildingComponent) {
 		return;
@@ -208,17 +208,17 @@ void Farm1BuildingComponent::UpdateCurrentMoveToAttachment()
 		return;
 	}
 	ResourceCollectorComponent* pResourceCollectorComponent = pWorker->GetComponent<ResourceCollectorComponent>();
-	if (!pAIController) {
+	if (!pResourceCollectorComponent) {
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "Farm1BuildingComponent:(UpdateCurrentMoveToAttachment) pResourceCollectorComponent is null");
 		return;
 	}
 	WorkerComponent* pWorkerComponent = pWorker->GetComponent<WorkerComponent>();
-	if (!pAIController) {
+	if (!pWorkerComponent) {
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "Farm1BuildingComponent:(UpdateCurrentMoveToAttachment) pWorkerComponent is null");
 		return;
 	}
 
-	//Plant
+	//**********************************Plant
 	if (!bIsPlantingDone) {
 		f32 DistanceToCurrentAssignedPos = EntityUtils::GetDistance(m_pWorker1CurrentAssignePos, pWorker->GetWorldPos(), nullptr);
 		if (DistanceToCurrentAssignedPos > 1.f) {
@@ -243,7 +243,7 @@ void Farm1BuildingComponent::UpdateCurrentMoveToAttachment()
 		}
 	}
 
-	//Wait
+	//**********************************Wait
 	if (bIsPlantingDone && !bIsHarvestingStarted || bIsHarvestingDone) {
 		f32 DistanceToExitPos = EntityUtils::GetDistance(pWorker->GetWorldPos(), m_pBuildingComponent->GetExitPoint(), nullptr);
 		if (DistanceToExitPos > 1.0f) {
@@ -270,7 +270,7 @@ void Farm1BuildingComponent::UpdateCurrentMoveToAttachment()
 		}
 	}
 
-	//Harvest
+	//**********************************Harvest
 	if (bIsPlantingDone && !bIsHarvestingDone && bIsHarvestingStarted) {
 		f32 DistanceToCurrentAssignedPos = EntityUtils::GetDistance(m_pWorker1CurrentAssignePos, m_pWorkplaceComponent->GetWorkers()[0]->GetWorldPos(), nullptr);
 		if (DistanceToCurrentAssignedPos > 1.f) {
@@ -302,7 +302,7 @@ void Farm1BuildingComponent::UpdateCurrentMoveToAttachment()
 		}
 	}
 
-	//SendResource to warehouse
+	//**********************************SendResource to warehouse
 	if (bIsPlantingDone && bIsHarvestingDone && bIsHarvestingStarted) {
 		if (!m_pWarehouseEntity) {
 			m_pWarehouseEntity = FindClosestWarehouse();

@@ -83,3 +83,33 @@ EResourceType ResourceComponent::GetType()
 	return m_type;
 }
 
+void ResourceComponent::SetIsSingleUse(bool singleUse)
+{
+	this->bIsSingleUse = singleUse;
+}
+
+bool ResourceComponent::IsSingleUse()
+{
+	return bIsSingleUse;
+}
+
+bool ResourceComponent::IsInUse()
+{
+	return bIsInUse;
+}
+
+void ResourceComponent::SetIsInUse(bool inUse)
+{
+	this->bIsInUse = inUse;
+}
+
+void ResourceComponent::SetCurrentCollector(IEntity* currentCollector)
+{
+	this->m_pCurrentCollector = currentCollector;
+}
+
+IEntity* ResourceComponent::GetCurrentCollector()
+{
+	return m_pCurrentCollector;
+}
+

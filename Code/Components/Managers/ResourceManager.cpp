@@ -36,6 +36,14 @@ void ResourceManagerComponent::Initialize()
 	//Sounds
 	m_pBuySound = CryAudio::StringToId("buy_sound_1");
 	m_pSellSound = CryAudio::StringToId("sell_sound_1");
+
+	//Set Resources Amount
+	m_pResouceInfo.m_moneyAmount = 700;
+	m_pResouceInfo.m_oilAmount = 300;
+	m_pResouceInfo.m_populationAmount = 20;
+	m_pResouceInfo.m_populationUsed = 0;
+	m_pResouceInfo.m_wheatAmount = 70;
+	m_pResouceInfo.m_flourAmount = 0;
 }
 
 Cry::Entity::EventFlags ResourceManagerComponent::GetEventMask() const
@@ -82,7 +90,9 @@ void ResourceManagerComponent::UpdatePopulation()
 			currentPopulation += pBuildingComponet->GetBuildingInfos().m_populationProduces;
 		}
 	}
-	m_pResouecesPanelComponent->SetPopulationAmount(currentPopulation - m_pResouceInfo.m_populationUsed);
+	currentPopulation -= m_pResouceInfo.m_populationUsed;
+	m_pResouceInfo.m_populationAmount = currentPopulation;
+	m_pResouecesPanelComponent->SetPopulationAmount(currentPopulation);
 }
 
 SResourceInfo ResourceManagerComponent::GetAvailableResourcesInfo()
@@ -109,12 +119,36 @@ bool ResourceManagerComponent::RequsetResources(SResourceInfo resourceRequestPar
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (RequsetResources) Not Enough Wheat");
 		return false;
 	}
+	else if (m_pResouceInfo.m_flourAmount < resourceRequestParams.m_flourAmount) {
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (RequsetResources) Not Enough Flour");
+		return false;
+	}
 
 	m_pResouceInfo.m_moneyAmount -= resourceRequestParams.m_moneyAmount;
 	m_pResouceInfo.m_oilAmount -= resourceRequestParams.m_oilAmount;
 	m_pResouceInfo.m_populationUsed += resourceRequestParams.m_populationAmount;
 	m_pResouceInfo.m_wheatAmount -= resourceRequestParams.m_wheatAmount;
+	m_pResouceInfo.m_flourAmount -= resourceRequestParams.m_flourAmount;
+
 	m_pResouecesPanelComponent->UpdatePanel();
+	return true;
+}
+
+bool ResourceManagerComponent::CheckIfResourcesAvailable(SResourceInfo resourceRequestParams)
+{
+
+	if (m_pResouceInfo.m_moneyAmount < resourceRequestParams.m_moneyAmount) {
+		return false;
+	}
+	else if (m_pResouceInfo.m_oilAmount < resourceRequestParams.m_oilAmount) {
+		return false;
+	}
+	else if (m_pResouceInfo.m_populationAmount < resourceRequestParams.m_populationAmount) {
+		return false;
+	}
+	else if (m_pResouceInfo.m_wheatAmount < resourceRequestParams.m_wheatAmount) {
+		return false;
+	}
 	return true;
 }
 
@@ -124,6 +158,8 @@ void ResourceManagerComponent::RefundResources(SResourceInfo resourceRequestPara
 	m_pResouceInfo.m_oilAmount += resourceRequestParams.m_oilAmount;
 	m_pResouceInfo.m_populationUsed -= resourceRequestParams.m_populationAmount;
 	m_pResouceInfo.m_wheatAmount -= resourceRequestParams.m_wheatAmount;
+	m_pResouceInfo.m_flourAmount -= resourceRequestParams.m_flourAmount;
+
 	m_pResouecesPanelComponent->UpdatePanel();
 	CryLog("resource refunded");
 }
@@ -140,6 +176,9 @@ void ResourceManagerComponent::AddResource(EResourceType type, int32 amount)
 	}break;
 	case EResourceType::WHEAT: {
 		m_pResouceInfo.m_wheatAmount += amount;
+	}break;
+	case EResourceType::FLOUR: {
+		m_pResouceInfo.m_flourAmount += amount;
 	}break;
 	default:
 		break;
@@ -176,12 +215,20 @@ void ResourceManagerComponent::SellResource(int32 amount, EResourceType type)
 		this->m_pResouceInfo.m_moneyAmount += (amount * ResourceManagerComponent::m_oilPrice / 2);
 	}break;
 	case EResourceType::WHEAT: {
-		if (m_pResouceInfo.m_oilAmount < amount) {
+		if (m_pResouceInfo.m_wheatAmount < amount) {
 			CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (SellResource) Not Enough Wheat to sell");
 			return;
 		}
-		this->m_pResouceInfo.m_oilAmount -= amount * (ResourceManagerComponent::m_oilPrice / 2);
-		this->m_pResouceInfo.m_moneyAmount += (amount * ResourceManagerComponent::m_oilPrice / 2);
+		this->m_pResouceInfo.m_wheatAmount -= amount * (ResourceManagerComponent::m_WheatPrice / 2);
+		this->m_pResouceInfo.m_moneyAmount += (amount * ResourceManagerComponent::m_WheatPrice / 2);
+	}break;
+	case EResourceType::FLOUR: {
+		if (m_pResouceInfo.m_flourAmount < amount) {
+			CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (SellResource) Not Enough Flour to sell");
+			return;
+		}
+		this->m_pResouceInfo.m_flourAmount -= amount * (ResourceManagerComponent::m_FlourPrice / 2);
+		this->m_pResouceInfo.m_moneyAmount += (amount * ResourceManagerComponent::m_FlourPrice / 2);
 	}break;
 	default:
 		break;
@@ -210,7 +257,15 @@ void ResourceManagerComponent::BuyResource(int32 amount, EResourceType type)
 			CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (BuyResource) Not Enough Money to buy");
 			return;
 		}
-		this->m_pResouceInfo.m_oilAmount += amount * ResourceManagerComponent::m_WheatPrice;
+		this->m_pResouceInfo.m_wheatAmount += amount * ResourceManagerComponent::m_WheatPrice;
+	}break;
+	case EResourceType::FLOUR: {
+		buyPrice = (amount * ResourceManagerComponent::m_FlourPrice);
+		if (m_pResouceInfo.m_moneyAmount < buyPrice) {
+			CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (BuyResource) Not Enough Money to buy");
+			return;
+		}
+		this->m_pResouceInfo.m_flourAmount += amount * ResourceManagerComponent::m_FlourPrice;
 	}break;
 	default:
 		break;

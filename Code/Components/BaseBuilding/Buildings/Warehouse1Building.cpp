@@ -17,6 +17,10 @@
 #include<UIItems/Items/Buildings/TrainUnits/UITrainEngineer1Item.h>
 #include<UIItems/Items/Resources/UISellOilItem.h>
 #include<UIItems/Items/Resources/UIBuyOilItem.h>
+#include<UIItems/Items/Resources/UISellWheatItem.h>
+#include<UIItems/Items/Resources/UIBuyWheatItem.h>
+#include<UIItems/Items/Resources/UISellFlourItem.h>
+#include<UIItems/Items/Resources/UIBuyFlourItem.h>
 
 #include <Components/BaseBuilding/Building.h>
 #include <Utils/MathUtils.h>
@@ -81,6 +85,10 @@ void Warehouse1BuildingComponent::Initialize()
 	//UIItems
 	m_pBuildingComponent->AddUIItem(new UIBuyOilItem(m_pEntity));
 	m_pBuildingComponent->AddUIItem(new UISellOilItem(m_pEntity));
+	m_pBuildingComponent->AddUIItem(new UIBuyWheatItem(m_pEntity));
+	m_pBuildingComponent->AddUIItem(new UISellWheatItem(m_pEntity));
+	m_pBuildingComponent->AddUIItem(new UIBuyFlourItem(m_pEntity));
+	m_pBuildingComponent->AddUIItem(new UISellFlourItem(m_pEntity));
 
 	//ResourceStorageComponent Initialization
 	m_pResourceStorageComponent = m_pEntity->GetOrCreateComponent<ResourceStorageComponent>();

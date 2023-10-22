@@ -5,11 +5,12 @@ enum class EResourceType;
 
 struct SResourceInfo {
 public:
-	int32 m_moneyAmount = 650;
-	int32 m_oilAmount = 350;
+	int32 m_moneyAmount = 0;
+	int32 m_oilAmount = 0;
 	int32 m_populationUsed = 0;
-	int32 m_populationAmount = 20;
+	int32 m_populationAmount = 0;
 	int32 m_wheatAmount = 0;
+	int32 m_flourAmount = 0;
 };
 
 class ResourceManagerComponent : public IEntityComponent {
@@ -41,6 +42,7 @@ private:
 public:
 	const static int32 m_oilPrice = 10;
 	const static int32 m_WheatPrice = 5;
+	const static int32 m_FlourPrice = 8;
 
 	//Sounds
 	CryAudio::ControlId m_pBuySound;
@@ -51,6 +53,7 @@ private:
 public:
 	SResourceInfo GetAvailableResourcesInfo();
 	bool RequsetResources(SResourceInfo resourceRequestParams);
+	bool CheckIfResourcesAvailable(SResourceInfo resourceRequestParams);
 	void RefundResources(SResourceInfo resourceRequestParams);
 	void AddResource(EResourceType type, int32 amount);
 
