@@ -32,6 +32,8 @@
 #include <Components/Managers/ResourceManager.h>
 #include <Components/Selectables/ResourceCollector.h>
 
+#include <Components/Managers/UnitTypeManager.h>
+
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
 #include <CrySchematyc/Env/IEnvRegistrar.h>
@@ -122,6 +124,10 @@ void Engineer1UnitComponent::Initialize()
 
 	//WorkerComponent Initialization
 	m_pWorkerComponent = m_pEntity->GetOrCreateComponent<WorkerComponent>();
+
+	//UnitTypeManagerComponent
+	m_pUnitTypeManagerComponent = m_pEntity->GetOrCreateComponent<UnitTypeManagerComponent>();
+	m_pUnitTypeManagerComponent->SetUnitType(EUnitType::ENGINEER1);
 }
 
 

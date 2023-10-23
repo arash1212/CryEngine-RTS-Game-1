@@ -10,7 +10,8 @@ enum class EResourceType {
 	OIL,
 	POPULATION,
 	WHEAT,
-	FLOUR
+	FLOUR,
+	WOOD
 };
 
 class ResourceComponent final : public IEntityComponent
@@ -44,6 +45,8 @@ private:
 	bool bIsInUse = false;
 
 	IEntity* m_pCurrentCollector = nullptr;
+
+	bool bHasCollectingLocation = false;
 public:
 
 	Vec3 GetCollectingLocation();
@@ -59,4 +62,7 @@ public:
 
 	void SetCurrentCollector(IEntity* currentCollector);
 	IEntity* GetCurrentCollector();
+
+	void SetHasCollectingLocation(bool hasCollectingLocation);
+	bool HasCollectingLocation();
 };

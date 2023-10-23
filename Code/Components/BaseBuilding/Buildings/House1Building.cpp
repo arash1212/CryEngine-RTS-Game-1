@@ -76,7 +76,7 @@ void House1BuildingComponent::Initialize()
 	m_pBuildingComponent->SetIsHouse(true);
 
 	SBuildingInfo buildingInfo;
-	buildingInfo.m_populationProduces = 5;
+	buildingInfo.m_populationProduces = 10;
 	m_pBuildingComponent->SetBuildingInfo(buildingInfo);
 	//UIItems
 
@@ -129,5 +129,6 @@ SResourceInfo House1BuildingComponent::GetCost()
 	cost.m_moneyAmount = 80;
 	cost.m_oilAmount = 30;
 	cost.m_populationAmount = 0;
+	cost.m_woodAmount = 50;
 	return cost;
 }

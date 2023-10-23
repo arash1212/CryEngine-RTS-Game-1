@@ -24,6 +24,8 @@
 
 #include <Components/Managers/ResourceManager.h>
 
+#include <Components/Managers/UnitTypeManager.h>
+
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
 #include <CrySchematyc/Env/IEnvRegistrar.h>
@@ -94,6 +96,10 @@ void Soldier1UnitComponent::Initialize()
 	//CostComponent Initializations
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
 	m_pCostComponent->SetCost(Soldier1UnitComponent::GetCost());
+
+	//UnitTypeManagerComponent
+	m_pUnitTypeManagerComponent = m_pEntity->GetOrCreateComponent<UnitTypeManagerComponent>();
+	m_pUnitTypeManagerComponent->SetUnitType(EUnitType::SOLDIER1);
 }
 
 

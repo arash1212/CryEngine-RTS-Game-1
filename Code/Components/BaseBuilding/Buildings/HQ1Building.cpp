@@ -128,5 +128,6 @@ SResourceInfo HQ1BuildingComponent::GetCost()
 	cost.m_moneyAmount = 500;
 	cost.m_oilAmount = 200;
 	cost.m_populationAmount = 20;
+	cost.m_woodAmount = 600;
 	return cost;
 }

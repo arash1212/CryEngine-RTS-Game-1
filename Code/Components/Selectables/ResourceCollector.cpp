@@ -42,6 +42,7 @@ void ResourceCollectorComponent::Initialize()
 	m_pOilBarrelAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("oilBarrel");
 	m_pWheatAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("wheat");
 	m_pFlourAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("flour");
+	m_pWoodAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("wood");
 }
 
 Cry::Entity::EventFlags ResourceCollectorComponent::GetEventMask() const
@@ -111,6 +112,9 @@ void ResourceCollectorComponent::SendResourceToWareHouse()
 	case EResourceType::WHEAT: {
 		resourceManager->AddResource(EResourceType::WHEAT, m_amountResourceCollected);
 	}break;
+	case EResourceType::WOOD: {
+		resourceManager->AddResource(EResourceType::WOOD, m_amountResourceCollected);
+	}break;
 	default:
 		break;
 	}
@@ -125,6 +129,7 @@ void ResourceCollectorComponent::UpdateResourceAttachment()
 		m_pOilBarrelAttachment->HideAttachment(true);
 		m_pWheatAttachment->HideAttachment(true);
 		m_pFlourAttachment->HideAttachment(true);
+		m_pWoodAttachment->HideAttachment(true);
 		return;
 	}
 
@@ -134,21 +139,31 @@ void ResourceCollectorComponent::UpdateResourceAttachment()
 		m_pOilBarrelAttachment->HideAttachment(true);
 		m_pWheatAttachment->HideAttachment(true);
 		m_pFlourAttachment->HideAttachment(true);
+		m_pWoodAttachment->HideAttachment(true);
 	}break;
 	case EResourceType::OIL: {
 		m_pOilBarrelAttachment->HideAttachment(false);
 		m_pWheatAttachment->HideAttachment(true);
 		m_pFlourAttachment->HideAttachment(true);
+		m_pWoodAttachment->HideAttachment(true);
 	}break;
 	case EResourceType::WHEAT: {
 		m_pOilBarrelAttachment->HideAttachment(true);
 		m_pWheatAttachment->HideAttachment(false);
 		m_pFlourAttachment->HideAttachment(true);
+		m_pWoodAttachment->HideAttachment(true);
 	}break;
 	case EResourceType::FLOUR: {
 		m_pOilBarrelAttachment->HideAttachment(true);
 		m_pWheatAttachment->HideAttachment(true);
 		m_pFlourAttachment->HideAttachment(false);
+		m_pWoodAttachment->HideAttachment(true);
+	}break;
+	case EResourceType::WOOD: {
+		m_pOilBarrelAttachment->HideAttachment(true);
+		m_pWheatAttachment->HideAttachment(true);
+		m_pFlourAttachment->HideAttachment(true);
+		m_pWoodAttachment->HideAttachment(false);
 	}break;
 	default:
 		break;

@@ -82,9 +82,18 @@ void UnitCollectResourceAction::Execute()
 		return;
 	}
 	
+	Vec3 collectingLocationPos = ZERO;
+	f32 distanceToResource = 100000.f;
 
-	Vec3 collectingLocationPos = m_pResourceEntity->GetComponent<ResourceComponent>()->GetCollectingLocation();
-	f32 distanceToResource = EntityUtils::GetDistance(m_pEntity->GetWorldPos(), collectingLocationPos, nullptr);
+	//*********************************Collecting location
+	if (m_pResourceComponent->HasCollectingLocation()) {
+		collectingLocationPos = m_pResourceEntity->GetComponent<ResourceComponent>()->GetCollectingLocation();
+		distanceToResource = EntityUtils::GetDistance(m_pEntity->GetWorldPos(), m_pResourceComponent->GetCollectingLocation(), nullptr);
+	}
+	else {
+		distanceToResource = EntityUtils::GetDistance(m_pEntity->GetWorldPos(), EntityUtils::GetClosetPointOnMeshBorder(m_pEntity->GetWorldPos(), m_pResourceEntity), nullptr);
+	}
+
 	if (distanceToResource <= m_pEngineerComponent->GetEngineerInfo().m_maxBuildDistance && m_pResourceCollectorComponent->CanCollectResource()) {
 		if (m_pResourceComponent->IsSingleUse() && m_pResourceComponent->IsInUse() && m_pResourceComponent->GetCurrentCollector()->GetId() != m_pEntity->GetId()) {
 			return;
@@ -96,7 +105,14 @@ void UnitCollectResourceAction::Execute()
 		}
 
 		this->m_pAiControllerComponent->StopMoving();
-		this->m_pAiControllerComponent->LookAt(collectingLocationPos);
+
+		if (m_pResourceComponent->HasCollectingLocation()) {
+			this->m_pAiControllerComponent->LookAt(collectingLocationPos);
+		}
+		else {
+			this->m_pAiControllerComponent->LookAt(m_pResourceEntity->GetWorldPos());
+		}
+
 		this->m_pAnimationComponent->PlayRandomAttackAnimation();
 		this->m_builtTimePassed = 0;
 		this->m_pResourceCollectorComponent->AddResource(5);
@@ -105,7 +121,7 @@ void UnitCollectResourceAction::Execute()
 		this->m_pResourceComponent->SetCurrentCollector(m_pEntity);
 	}
 	else if (distanceToResource > m_pEngineerComponent->GetEngineerInfo().m_maxBuildDistance && m_pResourceCollectorComponent->CanCollectResource()) {
-		if (m_pResourceComponent->IsSingleUse() && m_pResourceComponent->IsInUse() && m_pResourceComponent->GetCurrentCollector()->GetId() != m_pEntity->GetId()) {
+		if (!m_pResourceComponent->HasCollectingLocation() || m_pResourceComponent->HasCollectingLocation()&& m_pResourceComponent->IsSingleUse() && m_pResourceComponent->IsInUse() && m_pResourceComponent->GetCurrentCollector()->GetId() != m_pEntity->GetId()) {
 			this->m_pAiControllerComponent->MoveTo(EntityUtils::GetClosetPointOnMeshBorder(m_pEntity->GetWorldPos(), m_pResourceEntity), true);
 			this->m_pAiControllerComponent->LookAtWalkDirection();
 		}

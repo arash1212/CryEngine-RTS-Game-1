@@ -11,6 +11,7 @@ public:
 	int32 m_populationAmount = 0;
 	int32 m_wheatAmount = 0;
 	int32 m_flourAmount = 0;
+	int32 m_woodAmount = 0;
 };
 
 class ResourceManagerComponent : public IEntityComponent {
@@ -43,6 +44,7 @@ public:
 	const static int32 m_oilPrice = 10;
 	const static int32 m_WheatPrice = 5;
 	const static int32 m_FlourPrice = 8;
+	const static int32 m_WoodPrice = 6;
 
 	//Sounds
 	CryAudio::ControlId m_pBuySound;

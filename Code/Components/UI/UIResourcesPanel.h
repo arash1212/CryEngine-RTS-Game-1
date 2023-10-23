@@ -33,5 +33,6 @@ public:
 	void SetMoneyAmount(int32 moneyAmount);
 	void SetOilAmount(int32 moneyAmount);
 	void SetPopulationAmount(int32 populationAmount);
+	void SetWoodAmount(int32 woodAmount);
 	void UpdatePanel();
 };

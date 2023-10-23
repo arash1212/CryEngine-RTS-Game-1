@@ -305,5 +305,6 @@ SResourceInfo Windmill1BuildingComponent::GetCost()
 	cost.m_moneyAmount = 120;
 	cost.m_oilAmount = 100;
 	cost.m_populationAmount = 3;
+	cost.m_woodAmount = 200;
 	return cost;
 }

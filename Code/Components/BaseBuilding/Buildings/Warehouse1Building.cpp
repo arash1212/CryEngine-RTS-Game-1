@@ -21,6 +21,8 @@
 #include<UIItems/Items/Resources/UIBuyWheatItem.h>
 #include<UIItems/Items/Resources/UISellFlourItem.h>
 #include<UIItems/Items/Resources/UIBuyFlourItem.h>
+#include<UIItems/Items/Resources/UISellWoodItem.h>
+#include<UIItems/Items/Resources/UIBuyWoodItem.h>
 
 #include <Components/BaseBuilding/Building.h>
 #include <Utils/MathUtils.h>
@@ -89,6 +91,8 @@ void Warehouse1BuildingComponent::Initialize()
 	m_pBuildingComponent->AddUIItem(new UISellWheatItem(m_pEntity));
 	m_pBuildingComponent->AddUIItem(new UIBuyFlourItem(m_pEntity));
 	m_pBuildingComponent->AddUIItem(new UISellFlourItem(m_pEntity));
+	m_pBuildingComponent->AddUIItem(new UIBuyWoodItem(m_pEntity));
+	m_pBuildingComponent->AddUIItem(new UISellWoodItem(m_pEntity));
 
 	//ResourceStorageComponent Initialization
 	m_pResourceStorageComponent = m_pEntity->GetOrCreateComponent<ResourceStorageComponent>();
@@ -142,5 +146,6 @@ SResourceInfo Warehouse1BuildingComponent::GetCost()
 	cost.m_moneyAmount = 150;
 	cost.m_oilAmount = 50;
 	cost.m_populationAmount = 5;
+	cost.m_woodAmount = 200;
 	return cost;
 }

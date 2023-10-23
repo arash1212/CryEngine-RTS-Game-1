@@ -36,7 +36,9 @@ void ResourceComponent::Initialize()
 	m_pSelectableComponent->SetIsBuilding(true);
 
 	//CollectingLocationAttachment Initialization
-	m_pCollectingLocationAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("collectingLocation");
+	if (bHasCollectingLocation) {
+		m_pCollectingLocationAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("collectingLocation");
+	}
 }
 
 Cry::Entity::EventFlags ResourceComponent::GetEventMask() const
@@ -111,5 +113,15 @@ void ResourceComponent::SetCurrentCollector(IEntity* currentCollector)
 IEntity* ResourceComponent::GetCurrentCollector()
 {
 	return m_pCurrentCollector;
+}
+
+void ResourceComponent::SetHasCollectingLocation(bool hasCollectingLocation)
+{
+	this->bHasCollectingLocation = hasCollectingLocation;
+}
+
+bool ResourceComponent::HasCollectingLocation()
+{
+	return this->bHasCollectingLocation;
 }
 

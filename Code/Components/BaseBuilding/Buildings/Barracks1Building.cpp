@@ -129,5 +129,6 @@ SResourceInfo Barracks1BuildingComponent::GetCost()
 	cost.m_moneyAmount = 150;
 	cost.m_oilAmount = 40;
 	cost.m_populationAmount = 5;
+	cost.m_woodAmount = 100;
 	return cost;
 }

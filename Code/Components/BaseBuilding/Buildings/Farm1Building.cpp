@@ -364,5 +364,6 @@ SResourceInfo Farm1BuildingComponent::GetCost()
 	cost.m_moneyAmount = 170;
 	cost.m_oilAmount = 60;
 	cost.m_populationAmount = 5;
+	cost.m_woodAmount = 100;
 	return cost;
 }

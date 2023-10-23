@@ -13,6 +13,7 @@ class UnitStateManagerComponent;
 class AttackerComponent;
 class UnitAnimationComponent;
 class CostComponent;
+class UnitTypeManagerComponent;
 
 struct SOwnerInfo;
 struct SResourceInfo;
@@ -48,6 +49,7 @@ private:
 	AttackerComponent* m_pAttackerComponent = nullptr;
 	UnitAnimationComponent* m_pUnitAnimationComponent = nullptr;
 	CostComponent* m_pCostComponent = nullptr;
+	UnitTypeManagerComponent* m_pUnitTypeManagerComponent = nullptr;
 
 	//OwnerShip
 	OwnerInfoComponent* m_pOwnerInfoComponent = nullptr;

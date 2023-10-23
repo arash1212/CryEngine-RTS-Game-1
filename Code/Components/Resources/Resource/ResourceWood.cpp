@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "ResourceOil.h"
+#include "ResourceWood.h"
 #include "GamePlugin.h"
 
 #include <UIItems/IBaseUIItem.h>
@@ -15,23 +15,23 @@
 
 namespace
 {
-	static void RegisterResourceOilComponent(Schematyc::IEnvRegistrar& registrar)
+	static void RegisterResourceWoodComponent(Schematyc::IEnvRegistrar& registrar)
 	{
 		Schematyc::CEnvRegistrationScope scope = registrar.Scope(IEntity::GetEntityScopeGUID());
 		{
-			Schematyc::CEnvRegistrationScope componentScope = scope.Register(SCHEMATYC_MAKE_ENV_COMPONENT(ResourceOilComponent));
+			Schematyc::CEnvRegistrationScope componentScope = scope.Register(SCHEMATYC_MAKE_ENV_COMPONENT(ResourceWoodComponent));
 		}
 	}
 
-	CRY_STATIC_AUTO_REGISTER_FUNCTION(&RegisterResourceOilComponent);
+	CRY_STATIC_AUTO_REGISTER_FUNCTION(&RegisterResourceWoodComponent);
 }
 
-void ResourceOilComponent::Initialize()
+void ResourceWoodComponent::Initialize()
 {
 	//AnimationComponent Initializations
 	m_pAnimationComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CAdvancedAnimationComponent>();
 	m_pAnimationComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), Quat::CreateRotationXYZ(Ang3(DEG2RAD(0), 0, DEG2RAD(0))), Vec3(0)));
-	m_pAnimationComponent->SetCharacterFile("objects/resource/oil/resource_oil.cdf");
+	m_pAnimationComponent->SetCharacterFile("objects/resource/tree1/tree1.cdf");
 	m_pAnimationComponent->SetMannequinAnimationDatabaseFile("Animations/Mannequin/ADB/resourceOil.adb");
 	m_pAnimationComponent->SetControllerDefinitionFile("Animations/Mannequin/ADB/FirstPersonControllerDefinition.xml");
 	m_pAnimationComponent->SetDefaultScopeContextName("ThirdPersonCharacter");
@@ -42,20 +42,20 @@ void ResourceOilComponent::Initialize()
 
 	//ResourceComponent Initialization
 	m_pResourceComponent = m_pEntity->GetOrCreateComponent<ResourceComponent>();
-	m_pResourceComponent->SetType(EResourceType::OIL);
-	m_pResourceComponent->SetIsSingleUse(true);
-	m_pResourceComponent->SetHasCollectingLocation(true);
+	m_pResourceComponent->SetType(EResourceType::WOOD);
+	m_pResourceComponent->SetIsSingleUse(false);
+	m_pResourceComponent->SetHasCollectingLocation(false);
 
 	//BoxComponent Initialization
 	m_pBboxComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CBoxPrimitiveComponent>();
-	m_pBboxComponent->m_size = Vec3(2.1f, 3.4f, 1.0f);
+	m_pBboxComponent->m_size = Vec3(0.2f, 0.3f, 2.5f);
 	m_pBboxComponent->m_bReactToCollisions = true;
 
 	//Update bounding box
 	AABB aabb;
 	m_pEntity->GetLocalBounds(aabb);
-	Vec3 min = Vec3(aabb.min.x - 4, aabb.min.y - 4, aabb.min.z);
-	Vec3 max = Vec3(aabb.max.x + 4.5f, aabb.max.y + 3, aabb.max.z);
+	Vec3 min = Vec3(aabb.min.x - 1.1f, aabb.min.y - 1.1f, aabb.min.z);
+	Vec3 max = Vec3(aabb.max.x + 1.5f, aabb.max.y + 1, aabb.max.z);
 	AABB newAABB = AABB(min, max);
 	m_pEntity->SetLocalBounds(newAABB, true);
 
@@ -66,7 +66,7 @@ void ResourceOilComponent::Initialize()
 	m_pEntity->Physicalize(physParams);
 }
 
-Cry::Entity::EventFlags ResourceOilComponent::GetEventMask() const
+Cry::Entity::EventFlags ResourceWoodComponent::GetEventMask() const
 {
 	return
 		Cry::Entity::EEvent::GameplayStarted |
@@ -74,7 +74,7 @@ Cry::Entity::EventFlags ResourceOilComponent::GetEventMask() const
 		Cry::Entity::EEvent::Reset;
 }
 
-void ResourceOilComponent::ProcessEvent(const SEntityEvent& event)
+void ResourceWoodComponent::ProcessEvent(const SEntityEvent& event)
 {
 	switch (event.event)
 	{
@@ -92,4 +92,3 @@ void ResourceOilComponent::ProcessEvent(const SEntityEvent& event)
 		break;
 	}
 }
-
