@@ -43,8 +43,9 @@ void ResourceManagerComponent::Initialize()
 	m_pResouceInfo.m_populationAmount = 20;
 	m_pResouceInfo.m_populationUsed = 0;
 	m_pResouceInfo.m_wheatAmount = 70;
-	m_pResouceInfo.m_flourAmount = 0;
+	m_pResouceInfo.m_flourAmount = 50;
 	m_pResouceInfo.m_woodAmount = 500;
+	m_pResouceInfo.m_breadAmount = 30;
 }
 
 Cry::Entity::EventFlags ResourceManagerComponent::GetEventMask() const
@@ -128,6 +129,10 @@ bool ResourceManagerComponent::RequsetResources(SResourceInfo resourceRequestPar
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (RequsetResources) Not Enough Wood");
 		return false;
 	}
+	else if (m_pResouceInfo.m_breadAmount < resourceRequestParams.m_breadAmount) {
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (RequsetResources) Not Enough Bread");
+		return false;
+	}
 
 	m_pResouceInfo.m_moneyAmount -= resourceRequestParams.m_moneyAmount;
 	m_pResouceInfo.m_oilAmount -= resourceRequestParams.m_oilAmount;
@@ -135,6 +140,7 @@ bool ResourceManagerComponent::RequsetResources(SResourceInfo resourceRequestPar
 	m_pResouceInfo.m_wheatAmount -= resourceRequestParams.m_wheatAmount;
 	m_pResouceInfo.m_flourAmount -= resourceRequestParams.m_flourAmount;
 	m_pResouceInfo.m_woodAmount -= resourceRequestParams.m_woodAmount;
+	m_pResouceInfo.m_breadAmount -= resourceRequestParams.m_breadAmount;
 
 	m_pResouecesPanelComponent->UpdatePanel();
 	return true;
@@ -161,6 +167,9 @@ bool ResourceManagerComponent::CheckIfResourcesAvailable(SResourceInfo resourceR
 	else if (m_pResouceInfo.m_woodAmount < resourceRequestParams.m_woodAmount) {
 		return false;
 	}
+	else if (m_pResouceInfo.m_breadAmount < resourceRequestParams.m_breadAmount) {
+		return false;
+	}
 	return true;
 }
 
@@ -172,6 +181,7 @@ void ResourceManagerComponent::RefundResources(SResourceInfo resourceRequestPara
 	m_pResouceInfo.m_wheatAmount -= resourceRequestParams.m_wheatAmount;
 	m_pResouceInfo.m_flourAmount += resourceRequestParams.m_flourAmount;
 	m_pResouceInfo.m_woodAmount += resourceRequestParams.m_woodAmount;
+	m_pResouceInfo.m_breadAmount += resourceRequestParams.m_breadAmount;
 
 	m_pResouecesPanelComponent->UpdatePanel();
 	CryLog("resource refunded");
@@ -195,6 +205,9 @@ void ResourceManagerComponent::AddResource(EResourceType type, int32 amount)
 	}break;
 	case EResourceType::WOOD: {
 		m_pResouceInfo.m_woodAmount += amount;
+	}break;
+	case EResourceType::BREAD: {
+		m_pResouceInfo.m_breadAmount += amount;
 	}break;
 	default:
 		break;
@@ -254,6 +267,14 @@ void ResourceManagerComponent::SellResource(int32 amount, EResourceType type)
 		this->m_pResouceInfo.m_woodAmount -= amount * (ResourceManagerComponent::m_WoodPrice / 2);
 		this->m_pResouceInfo.m_moneyAmount += (amount * ResourceManagerComponent::m_WoodPrice / 2);
 	}break;
+	case EResourceType::BREAD: {
+		if (m_pResouceInfo.m_breadAmount < amount) {
+			CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (SellResource) Not Enough Bread to sell");
+			return;
+		}
+		this->m_pResouceInfo.m_breadAmount -= amount * (ResourceManagerComponent::m_BreadPrice / 2);
+		this->m_pResouceInfo.m_moneyAmount += (amount * ResourceManagerComponent::m_BreadPrice / 2);
+	}break;
 	default:
 		break;
 	}
@@ -298,6 +319,14 @@ void ResourceManagerComponent::BuyResource(int32 amount, EResourceType type)
 			return;
 		}
 		this->m_pResouceInfo.m_woodAmount += amount * ResourceManagerComponent::m_WoodPrice;
+	}break;
+	case EResourceType::BREAD: {
+		buyPrice = (amount * ResourceManagerComponent::m_BreadPrice);
+		if (m_pResouceInfo.m_moneyAmount < buyPrice) {
+			CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (BuyResource) Not Enough Bread to buy");
+			return;
+		}
+		this->m_pResouceInfo.m_woodAmount += amount * ResourceManagerComponent::m_BreadPrice;
 	}break;
 	default:
 		break;

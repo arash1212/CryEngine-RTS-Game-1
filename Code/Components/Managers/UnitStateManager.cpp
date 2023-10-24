@@ -80,6 +80,7 @@ void UnitStateManagerComponent::UpdateState()
 void UnitStateManagerComponent::UpdateCurrentSpeed()
 {
 	if (!m_pCharacterControllerComponent) {
+		m_pCharacterControllerComponent = m_pEntity->GetComponent<Cry::DefaultComponents::CCharacterControllerComponent>();
 		return;
 	}
 

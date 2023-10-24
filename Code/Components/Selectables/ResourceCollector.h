@@ -39,6 +39,7 @@ private :
 	IAttachment* m_pWheatAttachment = nullptr;
 	IAttachment* m_pFlourAttachment = nullptr;
 	IAttachment* m_pWoodAttachment = nullptr;
+	IAttachment* m_pBreadAttachment = nullptr;
 
 private:
 	int32 m_amountResourceCollected = 0;

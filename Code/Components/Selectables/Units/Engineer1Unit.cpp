@@ -14,6 +14,7 @@
 #include <UIItems/Items/Buildings/UIHouse1BuildItem.h>
 #include <UIItems/Items/Buildings/UIFarm1BuildItem.h>
 #include <UIItems/Items/Buildings/UIWindmillBuildItem.h>
+#include <UIItems/Items/Buildings/UIBakery1BuildItem.h>
 #include <Components/Selectables/Worker.h>
 
 #include <Components/Controller/AIController.h>
@@ -86,6 +87,7 @@ void Engineer1UnitComponent::Initialize()
 	m_pSelectableComponent->AddUIItem(new UIHouse1BuildItem(m_pEntity));
 	m_pSelectableComponent->AddUIItem(new UIFarm1BuildItem(m_pEntity));
 	m_pSelectableComponent->AddUIItem(new UIWindmillBuildItem(m_pEntity));
+	m_pSelectableComponent->AddUIItem(new UIBakery1BuildItem(m_pEntity));
 
 	//ActionManager Initializations
 	m_pActionManagerComponent = m_pEntity->GetOrCreateComponent<ActionManagerComponent>();

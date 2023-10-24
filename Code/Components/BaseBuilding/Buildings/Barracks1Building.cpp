@@ -64,7 +64,7 @@ void Barracks1BuildingComponent::Initialize()
 
 	//DecalComponent(Placement) Initialization
 	m_pDecalComponent = m_pEntity->CreateComponent<Cry::DefaultComponents::CDecalComponent>();
-	m_pDecalComponent->SetTransformMatrix(Matrix34::Create(Vec3(8.2f, 4.1f, 3), IDENTITY, Vec3(0.5f, 0, 0)));
+	m_pDecalComponent->SetTransformMatrix(Matrix34::Create(Vec3(8.3f, 4.3f, 3), IDENTITY, Vec3(0.5f, 0, 0)));
 	m_pDecalComponent->SetMaterialFileName(BUILDING_PLACEMENT_GREEN_DECAL_MATERIAL);
 	m_pDecalComponent->SetSortPriority(50);
 	m_pDecalComponent->SetDepth(10);
@@ -83,8 +83,8 @@ void Barracks1BuildingComponent::Initialize()
 	//Update bounding box
 	AABB aabb;
 	m_pEntity->GetLocalBounds(aabb);
-	Vec3 min = Vec3(aabb.min.x - 5.f, aabb.min.y - 4.1f, aabb.min.z);
-	Vec3 max = Vec3(aabb.max.x + 8.5f, aabb.max.y + 4.1f, aabb.max.z);
+	Vec3 min = Vec3(aabb.min.x - 5.1f, aabb.min.y - 4.2f, aabb.min.z);
+	Vec3 max = Vec3(aabb.max.x + 8.6f, aabb.max.y + 4.2f, aabb.max.z);
 	AABB newAABB = AABB(min, max);
 	m_pEntity->SetLocalBounds(newAABB, true);
 

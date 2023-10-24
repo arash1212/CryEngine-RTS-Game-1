@@ -11,7 +11,8 @@ enum class EResourceType {
 	POPULATION,
 	WHEAT,
 	FLOUR,
-	WOOD
+	WOOD,
+	BREAD
 };
 
 class ResourceComponent final : public IEntityComponent

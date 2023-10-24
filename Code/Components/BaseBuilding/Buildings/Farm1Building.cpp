@@ -66,12 +66,12 @@ void Farm1BuildingComponent::Initialize()
 
 	//BoxComponent Initialization
 	m_pBboxComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CBoxPrimitiveComponent>();
-	m_pBboxComponent->m_size = Vec3(5.9f, 2.7f, 1.3f);
+	m_pBboxComponent->m_size = Vec3(3.2f, 4.1f, 1.3f);
 	m_pBboxComponent->m_bReactToCollisions = true;
 
 	//DecalComponent(Placement) Initialization
 	m_pDecalComponent = m_pEntity->CreateComponent<Cry::DefaultComponents::CDecalComponent>();
-	m_pDecalComponent->SetTransformMatrix(Matrix34::Create(Vec3(8.2f, 4.1f, 3), IDENTITY, Vec3(0.5f, 0, 0)));
+	m_pDecalComponent->SetTransformMatrix(Matrix34::Create(Vec3(9.8f, 8.1f, 3), IDENTITY, Vec3(0.3f, -2.55f, 0)));
 	m_pDecalComponent->SetMaterialFileName(BUILDING_PLACEMENT_GREEN_DECAL_MATERIAL);
 	m_pDecalComponent->SetSortPriority(50);
 	m_pDecalComponent->SetDepth(10);
@@ -88,8 +88,8 @@ void Farm1BuildingComponent::Initialize()
 	//Update bounding box
 	AABB aabb;
 	m_pEntity->GetLocalBounds(aabb);
-	Vec3 min = Vec3(aabb.min.x - 7.f, aabb.min.y - 9.1f, aabb.min.z);
-	Vec3 max = Vec3(aabb.max.x + 12.f, aabb.max.y + 11.1f, aabb.max.z);
+	Vec3 min = Vec3(aabb.min.x - 9.f, aabb.min.y - 7.1f, aabb.min.z - 1.0f);
+	Vec3 max = Vec3(aabb.max.x + 10.f, aabb.max.y + 5.1f, aabb.max.z);
 	AABB newAABB = AABB(min, max);
 	m_pEntity->SetLocalBounds(newAABB, true);
 
