@@ -10,6 +10,7 @@ class ActionManagerComponent;
 class SelectableComponent;
 class IBaseUIItem;
 class OwnerInfoComponent;
+class HealthComponent;
 
 struct SBuildingInfo {
 public:
@@ -49,6 +50,8 @@ private:
 	ActionManagerComponent* m_pActionManagerComponent = nullptr;
 	SelectableComponent* m_pSelectableComponent = nullptr;
 	OwnerInfoComponent* m_pOwnerInfoComponent = nullptr;
+	HealthComponent* m_pHealthComponent = nullptr;
+
 	SBuildingInfo m_pBuildingInfo;
 
 	IAttachment* m_pExitPointAttachment = nullptr;
@@ -93,4 +96,6 @@ public:
 	bool IsHouse();
 
 	bool IsWorkplace();
+
+	void SetMaxHealth(f32 maxHealth);
 };

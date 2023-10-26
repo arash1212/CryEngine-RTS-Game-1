@@ -26,6 +26,8 @@
 
 #include <Components/Managers/UnitTypeManager.h>
 
+#include <Components/Selectables/Health.h>
+
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
 #include <CrySchematyc/Env/IEnvRegistrar.h>
@@ -88,6 +90,7 @@ void Soldier1UnitComponent::Initialize()
 
 	//AttackerComponent Initialization
 	m_pAttackerComponent = m_pEntity->GetOrCreateComponent<AttackerComponent>();
+	m_pAttackerComponent->SetDamageAmount(4.f);
 	//attack info
 	SUnitAttackInfo pAttckInfo;
 	pAttckInfo.m_pAttackType = EAttackType::RANGED;
@@ -101,6 +104,9 @@ void Soldier1UnitComponent::Initialize()
 	//UnitTypeManagerComponent
 	m_pUnitTypeManagerComponent = m_pEntity->GetOrCreateComponent<UnitTypeManagerComponent>();
 	m_pUnitTypeManagerComponent->SetUnitType(EUnitType::SOLDIER1);
+
+	//HealthComponent Initialization
+	m_pHealthComponent = m_pEntity->GetOrCreateComponent<HealthComponent>();
 }
 
 

@@ -30,6 +30,8 @@
 
 #include <Utils/EntityUtils.h>
 
+#include <Components/Selectables/Health.h>
+
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
 #include <CrySchematyc/Env/IEnvRegistrar.h>
@@ -86,6 +88,7 @@ void Bakery1BuildingComponent::Initialize()
 	//UIItems
 	m_pBuildingComponent->AddUIItem(new UITrainEngineer1Item(m_pEntity));
 	m_pBuildingComponent->AddUIItem(new UITrainSoldier1Item(m_pEntity));
+	m_pBuildingComponent->SetMaxHealth(500.f);
 
 	//Update bounding box
 	AABB aabb;

@@ -53,7 +53,6 @@ void BaseBuildingComponent::Initialize()
 
 	//OwnerInfoComponent initialization
 	m_pOwnerInfoComponent = m_pEntity->GetOrCreateComponent<OwnerInfoComponent>();
-	m_pOwnerInfoComponent->SetIsPlayer(true);
 }
 
 

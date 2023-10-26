@@ -22,6 +22,8 @@
 
 #include <Components/Managers/ResourceManager.h>
 
+#include <Components/Selectables/Health.h>
+
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
 #include <CrySchematyc/Env/IEnvRegistrar.h>
@@ -76,6 +78,7 @@ void HQ1BuildingComponent::Initialize()
 	SBuildingInfo buildingInfo;
 	buildingInfo.m_populationProduces = 20;
 	m_pBuildingComponent->SetBuildingInfo(buildingInfo);
+	m_pBuildingComponent->SetMaxHealth(1000.f);
 	//UIItems
 	m_pBuildingComponent->AddUIItem(new UITrainEngineer1Item(m_pEntity));
 

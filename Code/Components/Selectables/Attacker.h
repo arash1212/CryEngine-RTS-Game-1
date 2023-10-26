@@ -24,6 +24,7 @@ public:
 	f32 m_timeBetweenAttacks = 0.04f;
 };
 
+static constexpr f32 DEFAULT_DAMAGE_AMOUNT = 20.F;
 
 class AttackerComponent final : public IEntityComponent
 {
@@ -66,6 +67,7 @@ private:
 	SUnitAttackInfo m_pAttackInfo;
 
 private:
+	f32 m_damageAmount = DEFAULT_DAMAGE_AMOUNT;
 
 	//Timers
 	f32 m_attackTimePassed = 0.f;
@@ -84,6 +86,8 @@ private:
 	void PerformMeleeAttack(IEntity* target);
 	void PerformRangedAttack(IEntity* target);
 
+	void ApplyDamageToTarget(IEntity* target);
+
 public:
 	void Attack(IEntity* target);
 	void LookAt(Vec3 position);
@@ -95,4 +99,7 @@ public:
 	void SetAttackInfo(SUnitAttackInfo attackInfo);
 
 	void SetTargetEntity(IEntity* target);
+
+	void SetDamageAmount(f32 damage);
+	f32 GetDamageAmount();
 };

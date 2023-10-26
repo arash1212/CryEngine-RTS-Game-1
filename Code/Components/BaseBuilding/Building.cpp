@@ -22,6 +22,8 @@
 #include <CryGame/IGameFramework.h>
 #include <Cry3DEngine/IMaterial.h>
 
+#include <Components/Selectables/Health.h>
+
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
 #include <CrySchematyc/Env/IEnvRegistrar.h>
@@ -71,6 +73,9 @@ void BuildingComponent::Initialize()
 
 	//Materials Initializations
 	m_pDefaultMaterial = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByIndex(0)->GetIAttachmentObject()->GetBaseMaterial();
+
+	//HealthComponent Initialization
+	m_pHealthComponent = m_pEntity->GetOrCreateComponent<HealthComponent>();
 }
 
 
@@ -296,4 +301,9 @@ bool BuildingComponent::IsHouse()
 bool BuildingComponent::IsWorkplace()
 {
 	return bIsBuilt && m_pEntity->GetComponent<WorkplaceComponent>();
+}
+
+void BuildingComponent::SetMaxHealth(f32 maxHealth)
+{
+	this->m_pHealthComponent->SetMaxHealth(maxHealth);
 }

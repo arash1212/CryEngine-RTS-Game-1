@@ -32,6 +32,8 @@
 #include <Components/Managers/ResourceManager.h>
 #include <Components/Selectables/ResourceStorage.h>
 
+#include <Components/Selectables/Health.h>
+
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
 #include <CrySchematyc/Env/IEnvRegistrar.h>
@@ -85,6 +87,7 @@ void Windmill1BuildingComponent::Initialize()
 	SBuildingInfo buildingInfo;
 	buildingInfo.m_populationProduces = 0;
 	m_pBuildingComponent->SetBuildingInfo(buildingInfo);
+	m_pBuildingComponent->SetMaxHealth(600.f);
 	//UIItems
 
 

@@ -23,6 +23,8 @@
 
 #include <Components/Managers/ResourceManager.h>
 
+#include <Components/Selectables/Health.h>
+
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
 #include <CrySchematyc/Env/IEnvRegistrar.h>
@@ -74,6 +76,7 @@ void House1BuildingComponent::Initialize()
 	m_pBuildingComponent = m_pEntity->GetOrCreateComponent<BuildingComponent>();
 	m_pBuildingComponent->SetPathToTrussMesh(HOUSE_BUILDING_1_TRUSS_MODEL_PATH);
 	m_pBuildingComponent->SetIsHouse(true);
+	m_pBuildingComponent->SetMaxHealth(300.f);
 
 	SBuildingInfo buildingInfo;
 	buildingInfo.m_populationProduces = 10;

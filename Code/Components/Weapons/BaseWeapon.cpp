@@ -136,7 +136,7 @@ void BaseWeaponComponent::SpawnProjectile(Vec3 pos)
 	Vec3 origin = this->GetMuzzlePosition();
 	Vec3 dir = pos - origin;
 	Quat Rotation = Quat::CreateRotationVDir(dir.normalized());
-	IEntity* projectileEntity = EntityUtils::SpawnEntity(origin, Rotation, m_pEntity->GetComponent<OwnerInfoComponent>() != nullptr ? m_pEntity->GetComponent<OwnerInfoComponent>()->GetOwner() : nullptr);
+	IEntity* projectileEntity = EntityUtils::SpawnEntity(origin, Rotation, nullptr);
 	BulletTracerComponent* bullet = projectileEntity->GetOrCreateComponent<BulletTracerComponent>();
 	bullet->SetOwner(m_pEntity);
 }

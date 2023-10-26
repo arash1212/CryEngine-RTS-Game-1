@@ -1,6 +1,7 @@
 #pragma once
 
 #include <DefaultComponents/Geometry/StaticMeshComponent.h>
+#include <DefaultComponents/Lights/PointLightComponent.h>
 
 class OwnerInfoComponent;
 
@@ -26,10 +27,11 @@ public:
 
 private:
 	Cry::DefaultComponents::CStaticMeshComponent* m_pMeshComponent = nullptr;
+	Cry::DefaultComponents::CPointLightComponent* m_pPointLightComponent = nullptr;
 
 	IEntity* m_pOwner = nullptr;
 	//OwnerShip
-	OwnerInfoComponent* m_pOwnerInfoComponent = nullptr;
+//	OwnerInfoComponent* m_pOwnerInfoComponent = nullptr;
 
 private:
 	f32 m_timeBetweenDestroy = 5.0f;

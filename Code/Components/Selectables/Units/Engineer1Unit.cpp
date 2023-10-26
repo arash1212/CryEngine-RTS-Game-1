@@ -15,6 +15,7 @@
 #include <UIItems/Items/Buildings/UIFarm1BuildItem.h>
 #include <UIItems/Items/Buildings/UIWindmillBuildItem.h>
 #include <UIItems/Items/Buildings/UIBakery1BuildItem.h>
+#include <UIItems/Items/Buildings/UILight1BuildItem.h>
 #include <Components/Selectables/Worker.h>
 
 #include <Components/Controller/AIController.h>
@@ -34,6 +35,8 @@
 #include <Components/Selectables/ResourceCollector.h>
 
 #include <Components/Managers/UnitTypeManager.h>
+
+#include <Components/Selectables/Health.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -88,6 +91,7 @@ void Engineer1UnitComponent::Initialize()
 	m_pSelectableComponent->AddUIItem(new UIFarm1BuildItem(m_pEntity));
 	m_pSelectableComponent->AddUIItem(new UIWindmillBuildItem(m_pEntity));
 	m_pSelectableComponent->AddUIItem(new UIBakery1BuildItem(m_pEntity));
+	m_pSelectableComponent->AddUIItem(new UILight1BuildItem(m_pEntity));
 
 	//ActionManager Initializations
 	m_pActionManagerComponent = m_pEntity->GetOrCreateComponent<ActionManagerComponent>();
@@ -100,13 +104,14 @@ void Engineer1UnitComponent::Initialize()
 
 	//////////AttackerComponent Initializations
 	m_pAttackerComponent = m_pEntity->GetOrCreateComponent<AttackerComponent>();
+	m_pAttackerComponent->SetDamageAmount(10.f);
 	//attack info
 	SUnitAttackInfo pAttckInfo;
 	pAttckInfo.m_pAttackType = EAttackType::MELEE;
 	pAttckInfo.bIsFollower = true;
 	pAttckInfo.bIsHumanoid = true;
 	pAttckInfo.m_timeBetweenAttacks = 0.7f;
-	pAttckInfo.m_maxAttackDistance = 0.2f;
+	pAttckInfo.m_maxAttackDistance = 1.0f;
 	m_pAttackerComponent->SetAttackInfo(pAttckInfo);
 
 	//EngineerComponent Initializations
@@ -130,6 +135,9 @@ void Engineer1UnitComponent::Initialize()
 	//UnitTypeManagerComponent
 	m_pUnitTypeManagerComponent = m_pEntity->GetOrCreateComponent<UnitTypeManagerComponent>();
 	m_pUnitTypeManagerComponent->SetUnitType(EUnitType::ENGINEER1);
+
+	//HealthComponent Initialization
+	m_pHealthComponent = m_pEntity->GetOrCreateComponent<HealthComponent>();
 }
 
 

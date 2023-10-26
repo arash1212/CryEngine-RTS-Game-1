@@ -29,9 +29,9 @@ enum class EPlayerFaction {
 
 struct SOwnerInfo {
 public:
-	EPlayer m_pPlayer = EPlayer::PLAYER1;
-	EPlayerTeam m_pTeam = EPlayerTeam::TEAM1;
-	EPlayerFaction m_pFaction = EPlayerFaction::FACTION1;
+	EPlayer m_pPlayer = EPlayer::FERAL;
+	EPlayerTeam m_pTeam = EPlayerTeam::FERAL;
+	EPlayerFaction m_pFaction = EPlayerFaction::FERAL;
 };
 
 class OwnerInfoComponent final : public IEntityComponent
@@ -58,17 +58,21 @@ private:
 	IEntity* m_pOwner = nullptr;
 private:
 	SOwnerInfo m_pOwnerInfo;
-	bool bIsPlayer = false;
+	bool bCanBeTarget = true;
 
 public:
 	SOwnerInfo GetInfo();
 	void SetTeam(EPlayerTeam team);
+	EPlayerTeam GetTeam();
 	void SetFaction(EPlayerFaction faction);
 
 	bool IsEntityHostile(IEntity* entity);
-	bool IsPlayer();
-	void SetIsPlayer(bool isPlayer);
+	bool CanBeTarget();
+	void SetCanBeTarget(bool isPlayer);
 
 	void SetOwner(IEntity* owner);
 	IEntity* GetOwner();
+
+	EPlayer GetPlayer();
+	void SetPlayer(EPlayer player);
 };

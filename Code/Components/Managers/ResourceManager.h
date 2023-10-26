@@ -51,6 +51,9 @@ public:
 	//Sounds
 	CryAudio::ControlId m_pBuySound;
 	CryAudio::ControlId m_pSellSound;
+
+	bool bIsPlayer = false;
+	bool bIsinitDone = false;
 private:
 	void UpdatePopulation();
 
@@ -66,4 +69,9 @@ public:
 
 	void SellResource(int32 amount, EResourceType type);
 	void BuyResource(int32 amount, EResourceType type);
+
+	void SetIsPlayer(bool isPlayer);
+	bool IsPlayer();
+
+	DynArray<IEntity*> GetOwnedEntities();
 };

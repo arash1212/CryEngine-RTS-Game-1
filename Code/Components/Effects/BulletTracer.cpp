@@ -4,6 +4,8 @@
 
 #include <CryEntitySystem/IEntitySystem.h>
 #include <Components/Info/OwnerInfo.h>
+#include <Components/Selectables/Health.h>
+#include <Components/Selectables/Attacker.h>
 #include <Utils/EntityUtils.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
@@ -37,7 +39,14 @@ void BulletTracerComponent::Initialize()
 	//m_pEntity->SetScale(Vec3(0.5f));
 
 	//OwnerComponent Initialization
-	m_pOwnerInfoComponent = m_pEntity->GetComponent<OwnerInfoComponent>();
+	//m_pOwnerInfoComponent = m_pEntity->GetComponent<OwnerInfoComponent>();
+
+	m_pPointLightComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CPointLightComponent>();
+	m_pPointLightComponent->SetTransformMatrix(Matrix34::Create(Vec3(2), IDENTITY, Vec3(0, 0, 0)));
+	m_pPointLightComponent->GetColorParameters().m_diffuseMultiplier = 2.f;
+	m_pPointLightComponent->GetColorParameters().m_color = ColorF(1, 1, 0.6f);
+	m_pPointLightComponent->GetOptions().m_attenuationBulbSize = 250.f;
+	m_pPointLightComponent->Enable(true);
 
 	SEntityPhysicalizeParams physParams;
 	physParams.type = PE_RIGID;
@@ -103,16 +112,34 @@ void BulletTracerComponent::Move()
 
 void BulletTracerComponent::Destroy()
 {
-	EntityUtils::RemoveEntity(m_pEntity);
+	gEnv->pEntitySystem->RemoveEntity(m_pEntity->GetId());
 }
 
 void BulletTracerComponent::CheckCollision(const EventPhysCollision* physCollision)
 {
-	IEntity* hitEntity = gEnv->pEntitySystem->GetEntityFromPhysics(*physCollision->pEntity);
-	if (hitEntity && hitEntity == m_pOwner) {
+	if (!physCollision) {
 		return;
 	}
 	Destroy();
+
+	IEntity* hitEntity = gEnv->pEntitySystem->GetEntityFromPhysics(*physCollision->pEntity);
+	if (!m_pOwner || !hitEntity) {
+		return;
+	}
+
+	OwnerInfoComponent* pthisOwnerInfoComponent = m_pOwner->GetComponent<OwnerInfoComponent>();
+	AttackerComponent* pAttackerInfoComponent = m_pOwner->GetComponent<AttackerComponent>();
+	if (!pAttackerInfoComponent) {
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "BulletTracerComponent : (CheckCollision) pAttackerInfoComponent is null !");
+		return;
+	}
+
+	OwnerInfoComponent* phitOwnerInfoComponent = hitEntity->GetComponent<OwnerInfoComponent>();
+	HealthComponent* pHitHealthComponent = hitEntity->GetComponent<HealthComponent>();
+	if (!pHitHealthComponent || hitEntity && hitEntity == m_pOwner || phitOwnerInfoComponent && pthisOwnerInfoComponent->GetTeam() == phitOwnerInfoComponent->GetTeam()) {
+		return;
+	}
+	pHitHealthComponent->ApplyDamage(pAttackerInfoComponent->GetDamageAmount());
 }
 
 void BulletTracerComponent::SetOwner(IEntity* owner)

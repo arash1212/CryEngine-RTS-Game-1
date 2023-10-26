@@ -4,6 +4,8 @@
 
 #include <CryGame/IGameFramework.h>
 
+#include <Utils/MathUtils.h>
+
 #include <Components/Info/OwnerInfo.h>
 #include <CryEntitySystem/IEntitySystem.h>
 #include <Components/Managers/ResourceManager.h>
@@ -44,12 +46,12 @@ void EntityUtils::RemoveEntity(IEntity* entity)
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "EntityUtils :(RemoveEntity) No OwnerInfo Found on entity !");
 		return;
 	}
-	IEntity* owner = pOwnerInfo->GetOwner();
-	if (!owner) {
+	IEntity* pOwner = pOwnerInfo->GetOwner();
+	if (!pOwner) {
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "EntityUtils :(RemoveEntity) owner Cannot be Empty !");
 		return;
 	}
-	ResourceManagerComponent* pResourceManagerComponent = pOwnerInfo->GetOwner()->GetComponent<ResourceManagerComponent>();
+	ResourceManagerComponent* pResourceManagerComponent = pOwner->GetComponent<ResourceManagerComponent>();
 	if (!pResourceManagerComponent) {
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "EntityUtils :(SpawnEntity) No ResourceManagerComponent found on OwnerEntity");
 		return;
@@ -65,12 +67,13 @@ f32 EntityUtils::GetDistance(Vec3 from, Vec3 to, IEntity* toEntity)
 		AABB aabb;
 		toEntity->GetWorldBounds(aabb);
 
-		f32 distToCenterX = crymath::abs(aabb.GetCenter().x - from.x);
-		f32 distToCenterY = crymath::abs(aabb.GetCenter().y - from.y);
-
 		IPersistantDebug* pd = gEnv->pGameFramework->GetIPersistantDebug();
 		pd->Begin("tessadadsadt", true);
-		if (distToCenterX > distToCenterY) {
+		/*
+		f32 distToCenterX = crymath::abs(aabb.GetCenter().x - from.x);
+		f32 distToCenterY = crymath::abs(aabb.GetCenter().y - from.y);
+		
+		if (distToCenterX >= distToCenterY) {
 			f32 diff = aabb.max.x - aabb.GetCenter().x;
 			Vec3 pos = to;
 			if (from.x > to.x) {
@@ -96,6 +99,11 @@ f32 EntityUtils::GetDistance(Vec3 from, Vec3 to, IEntity* toEntity)
 			pd->AddSphere(pos, 0.4f, ColorF(1, 0, 0), 0.4f);
 			return from.GetDistance(pos);
 		}
+		*/
+
+		Vec3 pos = GetClosetPointOnMeshBorder(from, toEntity);
+		pd->AddSphere(pos, 0.4f, ColorF(1, 0, 0), 0.4f);
+		return from.GetDistance(pos);
 	}
 	else {
 		return from.GetDistance(to);
@@ -109,12 +117,13 @@ Vec3 EntityUtils::GetClosetPointOnMeshBorder(Vec3 from, IEntity* entity)
 		entity->GetWorldBounds(aabb);
 		Vec3 to = entity->GetWorldPos();
 
-		f32 distToCenterX = crymath::abs(aabb.GetCenter().x - from.x);
-		f32 distToCenterY = crymath::abs(aabb.GetCenter().y - from.y);
+		//f32 distToCenterX = crymath::abs(aabb.GetCenter().x - from.x);
+	//	f32 distToCenterY = crymath::abs(aabb.GetCenter().y - from.y);
 
 		IPersistantDebug* pd = gEnv->pGameFramework->GetIPersistantDebug();
 		pd->Begin("tessadadsadt1231", true);
-		if (distToCenterX > distToCenterY) {
+		/*
+		if (distToCenterX >= distToCenterY) {
 			f32 diff = aabb.max.x - aabb.GetCenter().x;
 			Vec3 pos = to;
 			if (from.x > to.x) {
@@ -124,22 +133,51 @@ Vec3 EntityUtils::GetClosetPointOnMeshBorder(Vec3 from, IEntity* entity)
 				pos.x -= diff;
 			}
 			pos.y = from.y;
-			pd->AddSphere(pos, 0.4f, ColorF(1, 0, 0), 0.4f);
+			pd->AddSphere(pos, 0.4f, ColorF(0, 1, 0), 0.4f);
 			return pos;
 		}
 		else {
 			f32 diff = aabb.max.y - aabb.GetCenter().y;
 			Vec3 pos = to;
-			if (from.y > to.y) {
-				pos.y += diff;
+			if (from.x > to.x) {
+				pos.x += diff;
 			}
 			else {
-				pos.y -= diff;
+				pos.x -= diff;
 			}
 			pos.x = from.x;
-			pd->AddSphere(pos, 0.4f, ColorF(1, 0, 0), 0.4f);
+			pd->AddSphere(pos, 0.4f, ColorF(0, 1, 0), 0.4f);
 			return pos;
 		}
+		*/
+
+		f32 diffX = aabb.max.x - aabb.GetCenter().x;
+		f32 diffY = aabb.max.y - aabb.GetCenter().y;
+
+		Vec3 pos = to;
+		//X
+		if (from.x > pos.x + diffX)  {
+			pos.x += diffX;
+		}
+		else if (from.x < pos.x - diffX) {
+			pos.x -= diffX;
+		}
+		else {
+			pos.x = from.x;
+		}
+
+		//Y
+		if (from.y > pos.y + diffY) {
+			pos.y += diffY;
+		}
+		else if (from.y < pos.y - diffY) {
+			pos.y -= diffY;
+		}
+		else {
+			pos.y = from.y;
+		}
+		pd->AddSphere(pos, 0.4f, ColorF(0, 1, 0), 0.4f);
+		return pos;
 	}
 	else {
 		return ZERO;

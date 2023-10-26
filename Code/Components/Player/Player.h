@@ -113,6 +113,8 @@ private:
 	//
 	bool AreSelectedUnitsSameType();
 
+	void BoxSelectEntities(Vec2 mousePos);
+
 public:
 	void ExecuteActionbarItem(int32 index);
 };

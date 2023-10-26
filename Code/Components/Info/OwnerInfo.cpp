@@ -61,6 +61,11 @@ void OwnerInfoComponent::SetTeam(EPlayerTeam team)
 	this->m_pOwnerInfo.m_pTeam = team;
 }
 
+EPlayerTeam OwnerInfoComponent::GetTeam()
+{
+	return this->m_pOwnerInfo.m_pTeam;
+}
+
 void OwnerInfoComponent::SetFaction(EPlayerFaction faction)
 {
 	this->m_pOwnerInfo.m_pFaction = faction;
@@ -72,17 +77,17 @@ bool OwnerInfoComponent::IsEntityHostile(IEntity* entity)
 	if (!otherOwner) {
 		return false;
 	}
-	return otherOwner->GetInfo().m_pTeam != this->m_pOwnerInfo.m_pTeam && !bIsPlayer;
+	return otherOwner->GetInfo().m_pTeam != this->m_pOwnerInfo.m_pTeam && bCanBeTarget;
 }
 
-bool OwnerInfoComponent::IsPlayer()
+bool OwnerInfoComponent::CanBeTarget()
 {
-	return bIsPlayer;
+	return bCanBeTarget;
 }
 
-void OwnerInfoComponent::SetIsPlayer(bool isPlayer)
+void OwnerInfoComponent::SetCanBeTarget(bool canBeTarget)
 {
-	this->bIsPlayer = isPlayer;
+	this->bCanBeTarget = canBeTarget;
 }
 
 void OwnerInfoComponent::SetOwner(IEntity* owner)
@@ -101,4 +106,14 @@ void OwnerInfoComponent::SetOwner(IEntity* owner)
 IEntity* OwnerInfoComponent::GetOwner()
 {
 	return m_pOwner;
+}
+
+EPlayer OwnerInfoComponent::GetPlayer()
+{
+	return m_pOwnerInfo.m_pPlayer;
+}
+
+void OwnerInfoComponent::SetPlayer(EPlayer player)
+{
+	this->m_pOwnerInfo.m_pPlayer = player;
 }

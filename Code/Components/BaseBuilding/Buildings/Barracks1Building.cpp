@@ -23,6 +23,8 @@
 
 #include <Components/Managers/ResourceManager.h>
 
+#include <Components/Selectables/Health.h>
+
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
 #include <CrySchematyc/Env/IEnvRegistrar.h>
@@ -76,6 +78,7 @@ void Barracks1BuildingComponent::Initialize()
 	SBuildingInfo buildingInfo;
 	buildingInfo.m_populationProduces = 0;
 	m_pBuildingComponent->SetBuildingInfo(buildingInfo);
+	m_pBuildingComponent->SetMaxHealth(700.f);
 	//UIItems
 	m_pBuildingComponent->AddUIItem(new UITrainEngineer1Item(m_pEntity));
 	m_pBuildingComponent->AddUIItem(new UITrainSoldier1Item(m_pEntity));
@@ -91,6 +94,7 @@ void Barracks1BuildingComponent::Initialize()
 	//CostComponent Initializations
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
 	m_pCostComponent->SetCost(Barracks1BuildingComponent::GetCost());
+
 }
 
 

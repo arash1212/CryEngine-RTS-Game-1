@@ -83,6 +83,7 @@ void Farm1BuildingComponent::Initialize()
 	SBuildingInfo buildingInfo;
 	buildingInfo.m_populationProduces = 0;
 	m_pBuildingComponent->SetBuildingInfo(buildingInfo);
+	m_pBuildingComponent->SetMaxHealth(500.f);
 	//UIItems
 
 	//Update bounding box

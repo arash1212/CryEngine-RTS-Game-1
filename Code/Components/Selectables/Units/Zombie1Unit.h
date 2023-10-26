@@ -13,6 +13,7 @@ class AttackerComponent;
 class UnitAnimationComponent;
 class CostComponent;
 class UnitTypeManagerComponent;
+class HealthComponent;
 
 struct SOwnerInfo;
 struct SResourceInfo;
@@ -49,6 +50,7 @@ private:
 	UnitAnimationComponent* m_pUnitAnimationComponent = nullptr;
 	CostComponent* m_pCostComponent = nullptr;
 	UnitTypeManagerComponent* m_pUnitTypeManagerComponent = nullptr;
+	HealthComponent* m_pHealthComponent = nullptr;
 
 	//OwnerShip
 	OwnerInfoComponent* m_pOwnerInfoComponent = nullptr;

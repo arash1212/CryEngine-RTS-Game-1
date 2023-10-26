@@ -26,6 +26,8 @@
 
 #include <Components/Managers/UnitTypeManager.h>
 
+#include <Components/Selectables/Health.h>
+
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
 #include <CrySchematyc/Env/IEnvRegistrar.h>
@@ -78,20 +80,20 @@ void Zombie1UnitComponent::Initialize()
 
 	//OwnerComponent Initialization
 	m_pOwnerInfoComponent = m_pEntity->GetComponent<OwnerInfoComponent>();
-	m_pOwnerInfoComponent->SetTeam(EPlayerTeam::FERAL);
 
 	//AttackerComponent Initialization
 	m_pUnitAnimationComponent = m_pEntity->GetOrCreateComponent<UnitAnimationComponent>();
 
 	//////////AttackerComponent Initializations
 	m_pAttackerComponent = m_pEntity->GetOrCreateComponent<AttackerComponent>();
+	m_pAttackerComponent->SetDamageAmount(20.f);
 	//attack info
 	SUnitAttackInfo pAttckInfo;
 	pAttckInfo.m_pAttackType = EAttackType::MELEE;
 	pAttckInfo.bIsFollower = true;
 	pAttckInfo.bIsHumanoid = true;
 	pAttckInfo.m_timeBetweenAttacks = 0.7f;
-	pAttckInfo.m_maxAttackDistance = 0.2f;
+	pAttckInfo.m_maxAttackDistance = 1.0f;
 	m_pAttackerComponent->SetAttackInfo(pAttckInfo);
 
 	/////////CostComponent Initializations
@@ -101,6 +103,10 @@ void Zombie1UnitComponent::Initialize()
 	//UnitTypeManagerComponent
 	m_pUnitTypeManagerComponent = m_pEntity->GetOrCreateComponent<UnitTypeManagerComponent>();
 	m_pUnitTypeManagerComponent->SetUnitType(EUnitType::ZOMBIE1);
+
+	//HealthComponent Initialization
+	m_pHealthComponent = m_pEntity->GetOrCreateComponent<HealthComponent>();
+	m_pHealthComponent->SetMaxHealth(100);
 }
 
 
@@ -122,6 +128,16 @@ void Zombie1UnitComponent::ProcessEvent(const SEntityEvent& event)
 	case Cry::Entity::EEvent::Update: {
 		//f32 DeltaTime = event.fParam[0];
 
+		/*
+		if (m_pOwnerInfoComponent->GetTeam() == EPlayerTeam::FERAL) {
+			CryLog("feral");
+		}
+		*/
+
+		if (m_pOwnerInfoComponent && !m_pOwnerInfoComponent->GetOwner()) {
+			//CryLog("no owner ?>>?????");
+		}
+
 	}break;
 	case Cry::Entity::EEvent::Reset: {
 		m_pAnimationComponent->ResetCharacter();
@@ -138,6 +154,7 @@ SResourceInfo Zombie1UnitComponent::GetCost()
 	cost.m_moneyAmount = 20;
 	cost.m_oilAmount = 0;
 	cost.m_oilAmount = 1;
+	cost.m_populationAmount = 0;
 	return cost;
 }
 

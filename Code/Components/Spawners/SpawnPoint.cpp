@@ -1,7 +1,7 @@
 // Copyright 2017-2019 Crytek GmbH / Crytek Group. All rights reserved.
 #include "StdAfx.h"
 #include "SpawnPoint.h"
-#include "Player/Player.h"
+#include <Components/Player/Player.h>
 
 #include <Components/Selectables/Units/Soldier1Unit.h>
 #include <Components/BaseBuilding/Building.h>

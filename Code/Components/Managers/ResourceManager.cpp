@@ -27,25 +27,6 @@ namespace
 
 void ResourceManagerComponent::Initialize()
 {
-	//ResouecesPanelComponent initialization
-	m_pResouecesPanelComponent = m_pEntity->GetComponent<UIResourcesPanelComponent>();
-
-	//AudioComponent initialization
-	m_pAudioComponent = m_pEntity->GetComponent<IEntityAudioComponent>();
-
-	//Sounds
-	m_pBuySound = CryAudio::StringToId("buy_sound_1");
-	m_pSellSound = CryAudio::StringToId("sell_sound_1");
-
-	//Set Resources Amount
-	m_pResouceInfo.m_moneyAmount = 700;
-	m_pResouceInfo.m_oilAmount = 300;
-	m_pResouceInfo.m_populationAmount = 20;
-	m_pResouceInfo.m_populationUsed = 0;
-	m_pResouceInfo.m_wheatAmount = 70;
-	m_pResouceInfo.m_flourAmount = 50;
-	m_pResouceInfo.m_woodAmount = 500;
-	m_pResouceInfo.m_breadAmount = 30;
 }
 
 Cry::Entity::EventFlags ResourceManagerComponent::GetEventMask() const
@@ -61,12 +42,41 @@ void ResourceManagerComponent::ProcessEvent(const SEntityEvent& event)
 	switch (event.event)
 	{
 	case Cry::Entity::EEvent::GameplayStarted: {
-		m_pResouecesPanelComponent->UpdatePanel();
 
 	}break;
 	case Cry::Entity::EEvent::Update: {
 		//f32 DeltaTime = event.fParam[0];
-		UpdatePopulation();
+
+		//If is Player add UI stuff
+		if (bIsPlayer && !bIsinitDone) {
+			//ResouecesPanelComponent initialization
+			m_pResouecesPanelComponent = m_pEntity->GetComponent<UIResourcesPanelComponent>();
+
+			//Set Resources Amount
+			m_pResouceInfo.m_moneyAmount = 700;
+			m_pResouceInfo.m_oilAmount = 300;
+			m_pResouceInfo.m_populationAmount = 20;
+			m_pResouceInfo.m_populationUsed = 0;
+			m_pResouceInfo.m_wheatAmount = 70;
+			m_pResouceInfo.m_flourAmount = 50;
+			m_pResouceInfo.m_woodAmount = 500;
+			m_pResouceInfo.m_breadAmount = 30;
+
+			//AudioComponent initialization
+			m_pAudioComponent = m_pEntity->GetComponent<IEntityAudioComponent>();
+
+			//Sounds
+			m_pBuySound = CryAudio::StringToId("buy_sound_1");
+			m_pSellSound = CryAudio::StringToId("sell_sound_1");
+
+			m_pResouecesPanelComponent->UpdatePanel();
+
+			bIsinitDone = true;
+		}
+
+		if (bIsPlayer && bIsinitDone) {
+			UpdatePopulation();
+		}
 
 	}break;
 	case Cry::Entity::EEvent::Reset: {
@@ -323,7 +333,7 @@ void ResourceManagerComponent::BuyResource(int32 amount, EResourceType type)
 	case EResourceType::BREAD: {
 		buyPrice = (amount * ResourceManagerComponent::m_BreadPrice);
 		if (m_pResouceInfo.m_moneyAmount < buyPrice) {
-			CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (BuyResource) Not Enough Bread to buy");
+			CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (BuyResource) Not Enough Money to buy");
 			return;
 		}
 		this->m_pResouceInfo.m_woodAmount += amount * ResourceManagerComponent::m_BreadPrice;
@@ -336,4 +346,19 @@ void ResourceManagerComponent::BuyResource(int32 amount, EResourceType type)
 	m_pResouecesPanelComponent->UpdatePanel();
 
 	m_pAudioComponent->ExecuteTrigger(m_pBuySound);
+}
+
+void ResourceManagerComponent::SetIsPlayer(bool isPlayer)
+{
+	this->bIsPlayer = isPlayer;
+}
+
+bool ResourceManagerComponent::IsPlayer()
+{
+	return bIsPlayer;
+}
+
+DynArray<IEntity*> ResourceManagerComponent::GetOwnedEntities()
+{
+	return m_pOwnedEntities;
 }

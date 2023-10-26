@@ -8,9 +8,12 @@
 #include <Components/Weapons/BaseWeapon.h>
 #include <Components/Selectables/UnitAnimation.h>
 #include <Components/Managers/ActionManager.h>
+#include <Components/Effects/BulletTracer.h>
 
 #include <Utils/MathUtils.h>
 #include <Utils/EntityUtils.h>
+
+#include <Components/Selectables/Health.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -165,11 +168,25 @@ void AttackerComponent::AttackRandomTarget()
 void AttackerComponent::PerformMeleeAttack(IEntity* target)
 {
 	m_pUnitAnimationComponent->PlayRandomAttackAnimation();
+
+	ApplyDamageToTarget(target);
 }
 
 void AttackerComponent::PerformRangedAttack(IEntity* target)
 {
 	m_pWeaponComponent->Fire(target->GetWorldPos());
+
+	ApplyDamageToTarget(target);
+}
+
+void AttackerComponent::ApplyDamageToTarget(IEntity* target)
+{
+	HealthComponent* healthComponent = target->GetComponent<HealthComponent>();
+	if (!healthComponent) {
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "AttackerComponent : (ApplyDamageToTarget) target have to healthComonent assigned.");
+		return;
+	}
+	healthComponent->ApplyDamage(m_damageAmount);
 }
 
 void AttackerComponent::FindRandomTarget()
@@ -190,8 +207,9 @@ void AttackerComponent::FindRandomTarget()
 		f32 distanceToTarget = EntityUtils::GetDistance(m_pEntity->GetWorldPos(), entity->GetWorldPos(), entity);
 		OwnerInfoComponent* otherEntityOwnerInfo = entity->GetComponent<OwnerInfoComponent>();
 
+		BulletTracerComponent* bulletTracerComponent = entity->GetComponent<BulletTracerComponent>();
 		//Ignore entity if it's not in detection range
-		if (!otherEntityOwnerInfo || distanceToTarget > m_pAttackInfo.m_detectionDistance || otherEntityOwnerInfo->IsPlayer()) {
+		if (!otherEntityOwnerInfo || distanceToTarget > m_pAttackInfo.m_detectionDistance || !otherEntityOwnerInfo->CanBeTarget() || bulletTracerComponent) {
 			continue;
 		}
 
@@ -241,6 +259,9 @@ bool AttackerComponent::IsAttacking()
 		return false;
 	}
 	IEntity* target = m_pAttackTargetEntity ? m_pAttackTargetEntity : m_pRandomAttackTarget;
+	if (!target) {
+		return false;
+	}
 
 	f32 distanceToTarget = EntityUtils::GetDistance(m_pEntity->GetWorldPos(), target->GetWorldPos(), target);
 	if (distanceToTarget > m_pAttackInfo.m_maxAttackDistance) {
@@ -256,6 +277,9 @@ bool AttackerComponent::CanAttack()
 		return false;
 	}
 	IEntity* target = m_pAttackTargetEntity ? m_pAttackTargetEntity : m_pRandomAttackTarget;
+	if (!target) {
+		return false;
+	}
 
 	f32 distanceToTarget = EntityUtils::GetDistance(m_pEntity->GetWorldPos(), target->GetWorldPos(), target);
 	if (distanceToTarget > m_pAttackInfo.m_maxAttackDistance) {
@@ -269,6 +293,16 @@ void AttackerComponent::SetTargetEntity(IEntity* target)
 {
 	this->m_pRandomAttackTarget = nullptr;
 	this->m_pAttackTargetEntity = target;
+}
+
+void AttackerComponent::SetDamageAmount(f32 damage)
+{
+	this->m_damageAmount = damage;
+}
+
+f32 AttackerComponent::GetDamageAmount()
+{
+	return m_damageAmount;
 }
 
 SUnitAttackInfo AttackerComponent::GetAttackInfo()

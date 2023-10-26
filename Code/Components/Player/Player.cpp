@@ -87,7 +87,10 @@ void PlayerComponent::Initialize()
 
 	//OwnerInfoComponent initialization
 	m_pOwnerInfoComponent = m_pEntity->GetOrCreateComponent<OwnerInfoComponent>();
-	m_pOwnerInfoComponent->SetIsPlayer(true);
+	m_pOwnerInfoComponent->SetCanBeTarget(true);
+	m_pOwnerInfoComponent->SetPlayer(EPlayer::PLAYER1);
+	m_pOwnerInfoComponent->SetTeam(EPlayerTeam::TEAM1);
+	m_pOwnerInfoComponent->SetFaction(EPlayerFaction::FACTION1);
 
 	//ResouecesPanelComponent initialization
 	m_pResouecesPanelComponent = m_pEntity->GetOrCreateComponent<UIResourcesPanelComponent>();
@@ -95,6 +98,7 @@ void PlayerComponent::Initialize()
 
 	//ResourceManagerComponent initialization
 	m_pResourceManagerComponent = m_pEntity->GetOrCreateComponent<ResourceManagerComponent>();
+	m_pResourceManagerComponent->SetIsPlayer(true);
 
 	//Update Resource Panel
 	m_pResouecesPanelComponent->UpdatePanel();
@@ -280,7 +284,7 @@ void PlayerComponent::LeftMouseDown(int activationMode, float value)
 
 		//Box/Multiple Selection
 		else if (m_pUISelectionBoxComponent->IsBoxSelectionTriggered(mousePos)) {
-			m_selectedUnits = m_pUISelectionBoxComponent->GetEntitiesInsideBox(mousePos);
+			BoxSelectEntities(mousePos);
 			SelectSelectables();
 		}
 		//////////////////////////
@@ -378,6 +382,10 @@ void PlayerComponent::RotateRight(int activationMode, float value)
 void PlayerComponent::DeselectSelectables()
 {
 	for (IEntity* entity : m_selectedUnits) {
+		if (!entity) {
+			continue;
+		}
+
 		SelectableComponent* selectable = entity->GetComponent<SelectableComponent>();
 		if (selectable) {
 			selectable->DeSelect();
@@ -393,6 +401,10 @@ void PlayerComponent::DeselectSelectables()
 void PlayerComponent::SelectSelectables()
 {
 	for (IEntity* entity : m_selectedUnits) {
+		if (!entity) {
+			continue;
+		}
+
 		SelectableComponent* selectable = entity->GetComponent<SelectableComponent>();
 		if (selectable) {
 			selectable->Select();
@@ -407,6 +419,10 @@ void PlayerComponent::CommandUnitsToMove(Vec3 position)
 {
 	int32 row = 0, column = 0;
 	for (int32 i = 0; i < m_selectedUnits.size(); i++) {
+		if (!m_selectedUnits[i]) {
+			continue;
+		}
+
 		ActionManagerComponent* actionManager = m_selectedUnits[i]->GetComponent<ActionManagerComponent>();
 		if (actionManager) {
 			if (i != 0) {
@@ -439,6 +455,10 @@ void PlayerComponent::CommandUnitsToMove(Vec3 position)
 void PlayerComponent::SetUnitsAttackTarget(IEntity* target)
 {
 	for (IEntity* entity : m_selectedUnits) {
+		if (!entity) {
+			continue;
+		}
+
 		ActionManagerComponent* actionManager = entity->GetComponent<ActionManagerComponent>();
 		if (actionManager) {
 			if (target) {
@@ -454,6 +474,10 @@ void PlayerComponent::SetUnitsAttackTarget(IEntity* target)
 void PlayerComponent::AssignBuildingToEngineers(IEntity* buildingEntity)
 {
 	for (IEntity* entity : m_selectedUnits) {
+		if (!entity) {
+			continue;
+		}
+
 		if (!entity->GetComponent<EngineerComponent>()) {
 			continue;
 		}
@@ -472,6 +496,10 @@ void PlayerComponent::AssignBuildingToEngineers(IEntity* buildingEntity)
 void PlayerComponent::AssignResourceToEngineers(IEntity* resourceEntity)
 {
 	for (IEntity* entity : m_selectedUnits) {
+		if (!entity) {
+			continue;
+		}
+
 		if (!entity->GetComponent<EngineerComponent>()) {
 			continue;
 		}
@@ -493,6 +521,10 @@ void PlayerComponent::AssignResourceToEngineers(IEntity* resourceEntity)
 void PlayerComponent::AssignWorkplaceToWorkers(IEntity* workplaceEntity)
 {
 	for (IEntity* entity : m_selectedUnits) {
+		if (!entity) {
+			continue;
+		}
+
 		WorkerComponent* workerComponent = entity->GetComponent<WorkerComponent>();
 		if (!workerComponent) {
 			continue;
@@ -518,6 +550,10 @@ void PlayerComponent::AssignWorkplaceToWorkers(IEntity* workplaceEntity)
 void PlayerComponent::CommandUnitsToSendResourceToWareHouse(IEntity* warehouse)
 {
 	for (IEntity* entity : m_selectedUnits) {
+		if (!entity) {
+			continue;
+		}
+
 		if (!entity->GetComponent<ResourceCollectorComponent>()) {
 			continue;
 		}
@@ -575,7 +611,7 @@ void PlayerComponent::CheckSelectablesMouseOver()
 	}
 
 	//Turn highligh color back to black on entity if mouse is not over anyomore
-	else if (!entity && m_pEntityUnderCursor || entity && entity != m_pEntityUnderCursor) {
+	else if (m_pEntityUnderCursor && !entity && m_pEntityUnderCursor || entity && entity != m_pEntityUnderCursor) {
 		SelectableComponent* selectable = m_pEntityUnderCursor->GetComponent<SelectableComponent>();
 		if (selectable->IsSelected()) {
 			return;
@@ -625,4 +661,21 @@ bool PlayerComponent::AreSelectedUnitsSameType()
 	}
 
 	return true;
+}
+
+void PlayerComponent::BoxSelectEntities(Vec2 mousePos)
+{
+	DynArray<IEntity*> entities;
+	DynArray<IEntity*> result;
+	entities = m_pUISelectionBoxComponent->GetEntitiesInsideBox(mousePos);
+	for (IEntity* entity : entities) {
+		OwnerInfoComponent* pOwnerComponent = entity->GetComponent<OwnerInfoComponent>();
+		if (!pOwnerComponent || pOwnerComponent->GetPlayer() != m_pOwnerInfoComponent->GetPlayer()) {
+			continue;
+		}
+
+		result.append(entity);
+	}
+
+	m_selectedUnits = result;
 }
