@@ -66,7 +66,7 @@ void Zombie1UnitComponent::Initialize()
 
 	//StateManagerComponent Initialization
 	m_pStateManagerComponent = m_pEntity->GetOrCreateComponent<UnitStateManagerComponent>();
-	m_pStateManagerComponent->SetWalkSpeed(6.f);
+	m_pStateManagerComponent->SetWalkSpeed(1.f);
 
 	//AIController Initializations
 	m_pAIController = m_pEntity->GetOrCreateComponent<AIControllerComponent>();
@@ -86,14 +86,14 @@ void Zombie1UnitComponent::Initialize()
 
 	//////////AttackerComponent Initializations
 	m_pAttackerComponent = m_pEntity->GetOrCreateComponent<AttackerComponent>();
-	m_pAttackerComponent->SetDamageAmount(20.f);
+	m_pAttackerComponent->SetDamageAmount(5.f);
 	//attack info
 	SUnitAttackInfo pAttckInfo;
 	pAttckInfo.m_pAttackType = EAttackType::MELEE;
 	pAttckInfo.bIsFollower = true;
 	pAttckInfo.bIsHumanoid = true;
 	pAttckInfo.m_timeBetweenAttacks = 0.7f;
-	pAttckInfo.m_maxAttackDistance = 1.0f;
+	pAttckInfo.m_maxAttackDistance = 1.5f;
 	m_pAttackerComponent->SetAttackInfo(pAttckInfo);
 
 	/////////CostComponent Initializations
@@ -106,7 +106,7 @@ void Zombie1UnitComponent::Initialize()
 
 	//HealthComponent Initialization
 	m_pHealthComponent = m_pEntity->GetOrCreateComponent<HealthComponent>();
-	m_pHealthComponent->SetMaxHealth(100);
+	m_pHealthComponent->SetMaxHealth(30);
 }
 
 

@@ -140,7 +140,8 @@ void AttackerComponent::Attack(IEntity* target)
 
 void AttackerComponent::AttackRandomTarget()
 {
-	if (!m_pRandomAttackTarget || m_pAttackTargetEntity || m_pStateManagerComponent->IsRunning() || m_pActionManagerComponent->IsProcessingAnAction()) {
+	//|| m_pStateManagerComponent->IsRunning()
+	if (!m_pRandomAttackTarget || m_pAttackTargetEntity || m_pActionManagerComponent->IsProcessingAnAction()) {
 		return;
 	}
 
@@ -191,8 +192,8 @@ void AttackerComponent::ApplyDamageToTarget(IEntity* target)
 
 void AttackerComponent::FindRandomTarget()
 {
-
-	if (m_pRandomAttackTarget || m_pAttackTargetEntity || m_pActionManagerComponent->IsProcessingAnAction()) {
+	//|| m_pActionManagerComponent->IsProcessingAnAction()
+	if (m_pRandomAttackTarget || m_pAttackTargetEntity) {
 		m_pRandomAttackTarget = nullptr;
 		return;
 	}
@@ -263,10 +264,10 @@ bool AttackerComponent::IsAttacking()
 		return false;
 	}
 
-	f32 distanceToTarget = EntityUtils::GetDistance(m_pEntity->GetWorldPos(), target->GetWorldPos(), target);
-	if (distanceToTarget > m_pAttackInfo.m_maxAttackDistance) {
-		return false;
-	}
+	//f32 distanceToTarget = EntityUtils::GetDistance(m_pEntity->GetWorldPos(), target->GetWorldPos(), target);
+	//if (distanceToTarget > m_pAttackInfo.m_detectionDistance) {
+	//	return false;
+	//}
 
 	return true;
 }
@@ -277,7 +278,7 @@ bool AttackerComponent::CanAttack()
 		return false;
 	}
 	IEntity* target = m_pAttackTargetEntity ? m_pAttackTargetEntity : m_pRandomAttackTarget;
-	if (!target) {
+	if (!target || target->IsGarbage() || m_pEntity->IsGarbage()) {
 		return false;
 	}
 

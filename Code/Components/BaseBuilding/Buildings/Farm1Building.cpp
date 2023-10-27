@@ -196,6 +196,9 @@ void Farm1BuildingComponent::UpdateAssignedWorkers()
 		m_pWorker1CurrentAssignePos = m_pWheatAttachments[m_currentIndex]->GetAttWorldAbsolute().t;
 		m_currentIndex = 0;
 	}
+	if (!m_pWorkplaceComponent->GetWorkers()[0] || m_pWorkplaceComponent->GetWorkers()[0]->IsGarbage()) {
+		return;
+	}
 	if (!m_pWorkplaceComponent->GetWorkers()[0]->GetComponent<WorkerComponent>()->HasEnteredWorkplace()) {
 		return;
 	}

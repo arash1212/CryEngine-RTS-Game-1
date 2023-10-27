@@ -82,3 +82,13 @@ f32 HealthComponent::GetCurrentHealth()
 {
 	return m_currentHealth;
 }
+
+bool HealthComponent::IsConsumesFood()
+{
+	return bIsConsumesFood;
+}
+
+void HealthComponent::SetConsumesFood(bool consumesFood)
+{
+	this->bIsConsumesFood = consumesFood;
+}

@@ -189,6 +189,9 @@ void Bakery1BuildingComponent::UpdateAssignedWorkers()
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "Bakery1BuildingComponent:(UpdateCurrentMoveToAttachment) pWorkerComponent is null");
 		return;
 	}
+	if (!m_pWorkplaceComponent->GetWorkers()[0] || m_pWorkplaceComponent->GetWorkers()[0]->IsGarbage()) {
+		return;
+	}
 
 	int32 FlourRequestAmount = 30;
 	int32 BreadProducedAmount = 10;

@@ -41,6 +41,8 @@ private:
 	void Move(f32 DeltaTime);
 	Vec3 SnapToNavmesh(Vec3 point);
 
+	Vec3 GetRandomPointInsideTriangle(Triangle t);
+
 public:
 	bool MoveTo(Vec3 position, bool run);
 	void LookAt(Vec3 position);
@@ -54,4 +56,6 @@ public:
 
 	Vec3 GetVelocity();
 	Cry::DefaultComponents::CCharacterControllerComponent* GetCharacterController();
+
+	Vec3 GetRandomPointOnNavmesh(float MaxDistance, IEntity* Around);
 };

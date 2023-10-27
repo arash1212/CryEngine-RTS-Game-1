@@ -12,7 +12,7 @@ class OwnerInfoComponent;
 class UIResourcesPanelComponent;
 class ResourceManagerComponent;
 
-static const f32 PLAYER_CAMERA_DEFAULT_HEIGHT = 18.f;
+static const f32 PLAYER_CAMERA_DEFAULT_HEIGHT = 25.f;
 static const f32 PLAYER_CAMERA_DEFAULT_MOVE_SPEED = 24.f;
 static const f32 PLAYER_CAMERA_MAX_ZOOM_AMOUNT = 10.f;
 static const string PLAYER_ENTITY_NAME = "PlayerEntity";
@@ -77,6 +77,8 @@ private:
 	//
 	bool bIsLeftClickWorks = false;
 
+	//
+	int32 m_lastSelectablesCheckSize = 0;
 private:
 	void InitInputs();
 	void Move(f32 DeltaTime);
@@ -114,6 +116,8 @@ private:
 	bool AreSelectedUnitsSameType();
 
 	void BoxSelectEntities(Vec2 mousePos);
+
+	void UpdateSelectables();
 
 public:
 	void ExecuteActionbarItem(int32 index);

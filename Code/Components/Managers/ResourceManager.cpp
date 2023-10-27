@@ -6,6 +6,7 @@
 #include <Components/UI/UIResourcesPanel.h>
 #include <Components/Resources/Resource.h>
 #include <Components/BaseBuilding/Building.h>
+#include <Components/Selectables/Health.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -45,7 +46,7 @@ void ResourceManagerComponent::ProcessEvent(const SEntityEvent& event)
 
 	}break;
 	case Cry::Entity::EEvent::Update: {
-		//f32 DeltaTime = event.fParam[0];
+		f32 DeltaTime = event.fParam[0];
 
 		//If is Player add UI stuff
 		if (bIsPlayer && !bIsinitDone) {
@@ -78,6 +79,15 @@ void ResourceManagerComponent::ProcessEvent(const SEntityEvent& event)
 			UpdatePopulation();
 		}
 
+		//Timers
+		if (m_eatingTimePassed < m_timeBetweenEatingFoods) {
+			m_eatingTimePassed += 0.5f * DeltaTime;
+		}
+
+		if (bIsPlayer) {
+			CheckFood();
+		}
+
 	}break;
 	case Cry::Entity::EEvent::Reset: {
 
@@ -104,7 +114,39 @@ void ResourceManagerComponent::UpdatePopulation()
 	}
 	currentPopulation -= m_pResouceInfo.m_populationUsed;
 	m_pResouceInfo.m_populationAmount = currentPopulation;
-	m_pResouecesPanelComponent->SetPopulationAmount(currentPopulation);
+	//m_pResouecesPanelComponent->SetPopulationAmount(currentPopulation);
+	if (m_lastPopulationCheclAmount != m_pResouceInfo.m_populationAmount) {
+		m_lastPopulationCheclAmount = m_pResouceInfo.m_populationAmount;
+		m_pResouecesPanelComponent->UpdatePanel();
+	}
+}
+
+void ResourceManagerComponent::CheckFood()
+{
+	if (m_eatingTimePassed >= m_timeBetweenEatingFoods) {
+		for (IEntity* entity : m_pOwnedEntities) {
+			HealthComponent* healthComponent = entity->GetComponent<HealthComponent>();
+			if (!healthComponent) {
+				continue;
+			}
+			if (!healthComponent->IsConsumesFood()) {
+				continue;
+			}
+
+			if (m_pResouceInfo.m_breadAmount <= 0) {
+				healthComponent->ApplyDamage(10.f);
+			}
+			else {
+				m_pResouceInfo.m_breadAmount -= 1;
+			}
+		}
+
+		m_pResouecesPanelComponent->UpdatePanel();
+		m_eatingTimePassed = 0;
+	}
+	else {
+		return;
+	}
 }
 
 SResourceInfo ResourceManagerComponent::GetAvailableResourcesInfo()

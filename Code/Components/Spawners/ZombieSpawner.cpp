@@ -5,8 +5,13 @@
 #include <Components/Info/OwnerInfo.h>
 #include <Components/Selectables/Units/Zombie1Unit.h>
 #include <Components/Managers/ResourceManager.h>
+#include <Components/Managers/ActionManager.h>
 
+#include <Actions/Units/UnitWanderingRandomlyAction.h>
+
+#include <Utils/MathUtils.h>
 #include <Utils/EntityUtils.h>
+#include <Components/Controller/AIController.h>
 
 #include <CryEntitySystem/IEntitySystem.h>
 #include <CryRenderer/IRenderAuxGeom.h>
@@ -67,6 +72,7 @@ void ZombieSpawnerComponent::ProcessEvent(const SEntityEvent& event)
 		}
 	}break;
 	case Cry::Entity::EEvent::Reset: {
+		bIsGameStarted = false;
 
 	}break;
 	default:
@@ -86,11 +92,27 @@ void ZombieSpawnerComponent::SpawnZombies()
 	if (m_spawnTimePassed >= m_timeBetweenSpawningZombies) {
 		Vec3 position = m_pEntity->GetWorldPos();
 		Quat rotation = IDENTITY;
-		IEntity* spawnedEntity = EntityUtils::SpawnEntity(position, rotation, m_pEntity);
+
+		int32 randomPoint = MathUtils::GetRandomInt(0, m_pSpawnPoints.Size() - 1);
+		IEntity* point = gEnv->pEntitySystem->FindEntityByName(m_pSpawnPoints.At(randomPoint).spawnPointEntityName);
+		if (!point) {
+			return;
+		}
+
+		IEntity* spawnedEntity = EntityUtils::SpawnEntity(point->GetWorldPos(), rotation, m_pEntity);
 		if (!spawnedEntity) {
 			return;
 		}
 		spawnedEntity->GetOrCreateComponent<Zombie1UnitComponent>();
+
+		ActionManagerComponent* pActionManagerComponent = spawnedEntity->GetComponent<ActionManagerComponent>();
+		pActionManagerComponent->AddAction(new UnitWanderingRandomlyAction(spawnedEntity, point, false));
 		m_spawnTimePassed = 0;
 	}
+}
+
+inline bool ZombieSpawnerComponent::SSpawnPointDefinition::Serialize(Serialization::IArchive& archive)
+{
+	archive(spawnPointEntityName, "SpawnPointName", "PointEntityName");
+	return true;
 }

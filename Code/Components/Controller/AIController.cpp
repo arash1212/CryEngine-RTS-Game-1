@@ -8,6 +8,7 @@
 #include <CryAISystem/NavigationSystem/INavMeshQueryFilter.h>
 
 #include <Components/Managers/UnitStateManager.h>
+#include <Utils/MathUtils.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -113,6 +114,9 @@ bool AIControllerComponent::MoveTo(Vec3 position, bool run)
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "AIControllerComponent : (MoveTo) Destination is not reachable !");
 		return false;
 	}
+	if (run) {
+		m_pStateManager->SetStance(EUnitStance::RUNNING);
+	}
 
 	m_moveToPosition = this->SnapToNavmesh(position);
 	return true;
@@ -152,12 +156,80 @@ void AIControllerComponent::StopMoving()
 {
 	this->m_moveToPosition = m_pEntity->GetWorldPos();
 	this->m_pCharacterControllerComponent->SetVelocity(ZERO);
+	//this->m_pStateManager->SetStance(EUnitStance::WALKING);
 	//this->MoveTo(m_pEntity->GetWorldPos(), false);
 }
 
 void AIControllerComponent::LookAtWalkDirection()
 {
 	m_pEntity->SetRotation(Quat::CreateRotationVDir(m_pNavigationComponent->GetRequestedVelocity().GetNormalizedSafe()));
+}
+
+Vec3 AIControllerComponent::GetRandomPointInsideTriangle(Triangle t)
+{
+	f32 r1 = crymath::sqrt(MathUtils::GetRandomFloat(0.f, 1.f));
+	f32 r2 = MathUtils::GetRandomFloat(0.f, 1.f);
+	f32 m1 = 1 - r1;
+	f32 m2 = r1 * (1 - r2);
+	f32 m3 = r2 * r1;
+
+	Vec3 p1 = t.v0;
+	Vec3 p2 = t.v1;
+	Vec3 p3 = t.v2;
+	return (m1 * p1) + (m2 * p2) + (m3 * p3);
+}
+
+
+Vec3 AIControllerComponent::GetRandomPointOnNavmesh(float MaxDistance, IEntity* Around)
+{
+	MNM::TriangleIDArray resultArray;
+	DynArray<Vec3> resultPositions;
+
+	NavigationAgentTypeID agentTypeId = NavigationAgentTypeID::TNavigationID(1);
+	NavigationMeshID navMeshId = gEnv->pAISystem->GetNavigationSystem()->FindEnclosingMeshID(agentTypeId, Around->GetWorldPos());
+
+	//get Triangles
+	const MNM::INavMesh* navMesh = gEnv->pAISystem->GetNavigationSystem()->GetMNMNavMesh(navMeshId);
+	if (!navMesh) {
+		return m_pEntity->GetWorldPos();
+	}
+
+	const Vec3 triggerBoxSize = Vec3(20, 20, 20);
+	MNM::aabb_t	 aabb = MNM::aabb_t(triggerBoxSize * -15.5f, triggerBoxSize * 15.5f);
+	MNM::TriangleIDArray triangleIDArray = navMesh->QueryTriangles(aabb);
+	if (triangleIDArray.size() <= 0 || !triangleIDArray[0].IsValid() || !navMeshId.IsValid() || !agentTypeId.IsValid()) {
+		return m_pEntity->GetWorldPos();
+	}
+
+	for (int32 i = 0; i < triangleIDArray.size(); i++) {
+		int32 j = 0;
+		Triangle triangle;
+		gEnv->pAISystem->GetNavigationSystem()->GetTriangleVertices(navMeshId, triangleIDArray[i], triangle);
+		//while (j <= 5) {
+		j++;
+		Vec3 point = GetRandomPointInsideTriangle(triangle);
+		//if (IsPointVisibleFrom(agentTypeId, point, Around->GetWorldPos())) {
+			resultPositions.append(point);
+		//}
+	}
+ 
+	int32 max = resultPositions.size();
+	int32 min = 0;
+	int32 range = max - min + 1;
+	int random = rand() % range + min;
+	Vec3 resultPos = resultPositions[random];
+
+	f32 resultMax = MaxDistance - 2;
+	f32 resultMin = 3;
+	Vec3 Dir = resultPos - Around->GetWorldPos();
+
+	resultPos = Around->GetWorldPos() + Dir.normalize() * (resultMin + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / resultMax - resultMin)));
+
+	MNM::SOrderedSnappingMetrics snappingMetrics;
+	snappingMetrics.CreateDefault();
+	SAcceptAllQueryTrianglesFilter filter;
+	MNM::SPointOnNavMesh pointOnNavMesh = gEnv->pAISystem->GetNavigationSystem()->SnapToNavMesh(agentTypeId, resultPos, snappingMetrics, &filter, &navMeshId);
+	return pointOnNavMesh.GetWorldPosition();
 }
 
 bool AIControllerComponent::IsMoving()

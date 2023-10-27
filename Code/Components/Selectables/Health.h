@@ -26,10 +26,14 @@ private:
 	f32 m_maxHealth = DEFAULT_MAX_HEALTH;
 	f32 m_currentHealth = m_maxHealth;
 
+	bool bIsConsumesFood = false;
 public:
 	void ApplyDamage(f32 damage);
 	void Die();
 
 	void SetMaxHealth(f32 maxHealth);
 	f32 GetCurrentHealth();
+
+	bool IsConsumesFood();
+	void SetConsumesFood(bool consumesFood);
 };

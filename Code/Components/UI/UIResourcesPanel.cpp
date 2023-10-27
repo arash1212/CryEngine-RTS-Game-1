@@ -96,7 +96,7 @@ void UIResourcesPanelComponent::SetOilAmount(int32 oilAmount)
 
 void UIResourcesPanelComponent::SetPopulationAmount(int32 populationAmount) {
 	if (!m_pResourcesPanelUIElement) {
-		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "UIResourcesPanelComponent : (SetPopulationAmount) SetPopulationAmount is null !");
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "UIResourcesPanelComponent : (SetPopulationAmount) m_pResourcesPanelUIElement is null !");
 		return;
 	}
 
@@ -106,10 +106,23 @@ void UIResourcesPanelComponent::SetPopulationAmount(int32 populationAmount) {
 	m_pResourcesPanelUIElement->CallFunction("SetPopulationAmount", args);
 }
 
+void UIResourcesPanelComponent::SetPopulationUsedAmount(int32 populationUsedAmount)
+{
+	if (!m_pResourcesPanelUIElement) {
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "UIResourcesPanelComponent : (SetPopulationUsedAmount) m_pResourcesPanelUIElement is null !");
+		return;
+	}
+
+	SUIArguments args;
+	args.AddArgument(populationUsedAmount);
+
+	m_pResourcesPanelUIElement->CallFunction("SetPopulationUsedAmount", args);
+}
+
 void UIResourcesPanelComponent::SetWoodAmount(int32 woodAmount)
 {
 	if (!m_pResourcesPanelUIElement) {
-		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "UIResourcesPanelComponent : (SetWoodAmount) SetWoodAmount is null !");
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "UIResourcesPanelComponent : (SetWoodAmount) m_pResourcesPanelUIElement is null !");
 		return;
 	}
 
@@ -117,6 +130,19 @@ void UIResourcesPanelComponent::SetWoodAmount(int32 woodAmount)
 	args.AddArgument(woodAmount);
 
 	m_pResourcesPanelUIElement->CallFunction("SetWoodAmount", args);
+}
+
+void UIResourcesPanelComponent::SetFoodAmount(int32 foodAmount)
+{
+	if (!m_pResourcesPanelUIElement) {
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "UIResourcesPanelComponent : (SetFoodAmount) m_pResourcesPanelUIElement is null !");
+		return;
+	}
+
+	SUIArguments args;
+	args.AddArgument(foodAmount);
+
+	m_pResourcesPanelUIElement->CallFunction("SetFoodAmount", args);
 }
 
 void UIResourcesPanelComponent::UpdatePanel()
@@ -131,8 +157,10 @@ void UIResourcesPanelComponent::UpdatePanel()
 	//
 	SetMoneyAmount(resourceInfo.m_moneyAmount);
 	SetOilAmount(resourceInfo.m_oilAmount);
-	SetPopulationAmount(resourceInfo.m_populationAmount);
+	SetPopulationAmount(resourceInfo.m_populationAmount + resourceInfo.m_populationUsed);
+	SetPopulationUsedAmount(resourceInfo.m_populationUsed);
 	SetWoodAmount(resourceInfo.m_woodAmount);
+	SetFoodAmount(resourceInfo.m_breadAmount);
 
 	CryLog("resources panel updated");
 }

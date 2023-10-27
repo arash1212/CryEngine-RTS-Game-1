@@ -95,6 +95,7 @@ void Soldier1UnitComponent::Initialize()
 	SUnitAttackInfo pAttckInfo;
 	pAttckInfo.m_pAttackType = EAttackType::RANGED;
 	pAttckInfo.bIsHumanoid = true;
+	pAttckInfo.bIsFollower = false;
 	m_pAttackerComponent->SetAttackInfo(pAttckInfo);
 
 	//CostComponent Initializations
@@ -107,6 +108,7 @@ void Soldier1UnitComponent::Initialize()
 
 	//HealthComponent Initialization
 	m_pHealthComponent = m_pEntity->GetOrCreateComponent<HealthComponent>();
+	m_pHealthComponent->SetConsumesFood(true);
 }
 
 

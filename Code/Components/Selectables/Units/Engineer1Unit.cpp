@@ -108,10 +108,10 @@ void Engineer1UnitComponent::Initialize()
 	//attack info
 	SUnitAttackInfo pAttckInfo;
 	pAttckInfo.m_pAttackType = EAttackType::MELEE;
-	pAttckInfo.bIsFollower = true;
+	pAttckInfo.bIsFollower = false;
 	pAttckInfo.bIsHumanoid = true;
 	pAttckInfo.m_timeBetweenAttacks = 0.7f;
-	pAttckInfo.m_maxAttackDistance = 1.0f;
+	pAttckInfo.m_maxAttackDistance = 1.5f;
 	m_pAttackerComponent->SetAttackInfo(pAttckInfo);
 
 	//EngineerComponent Initializations
@@ -138,6 +138,7 @@ void Engineer1UnitComponent::Initialize()
 
 	//HealthComponent Initialization
 	m_pHealthComponent = m_pEntity->GetOrCreateComponent<HealthComponent>();
+	m_pHealthComponent->SetConsumesFood(true);
 }
 
 

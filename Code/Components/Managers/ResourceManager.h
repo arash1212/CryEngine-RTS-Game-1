@@ -41,6 +41,8 @@ private:
 
 	DynArray<IEntity*> m_pOwnedEntities;
 
+private:
+	int32 m_lastPopulationCheclAmount = 0;
 public:
 	const static int32 m_oilPrice = 10;
 	const static int32 m_WheatPrice = 5;
@@ -54,9 +56,14 @@ public:
 
 	bool bIsPlayer = false;
 	bool bIsinitDone = false;
+
+	//Timers
+	f32 m_timeBetweenEatingFoods = 20.f;
+	f32 m_eatingTimePassed = 0.f;
 private:
 	void UpdatePopulation();
 
+	void CheckFood();
 public:
 	SResourceInfo GetAvailableResourcesInfo();
 	bool RequsetResources(SResourceInfo resourceRequestParams);

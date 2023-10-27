@@ -87,7 +87,7 @@ void PlayerComponent::Initialize()
 
 	//OwnerInfoComponent initialization
 	m_pOwnerInfoComponent = m_pEntity->GetOrCreateComponent<OwnerInfoComponent>();
-	m_pOwnerInfoComponent->SetCanBeTarget(true);
+	m_pOwnerInfoComponent->SetCanBeTarget(false);
 	m_pOwnerInfoComponent->SetPlayer(EPlayer::PLAYER1);
 	m_pOwnerInfoComponent->SetTeam(EPlayerTeam::TEAM1);
 	m_pOwnerInfoComponent->SetFaction(EPlayerFaction::FACTION1);
@@ -131,6 +131,8 @@ void PlayerComponent::ProcessEvent(const SEntityEvent& event)
 		Move(DeltaTime);
 
 		CheckSelectablesMouseOver();
+
+		UpdateSelectables();
 
 		if (m_rightClickCountRestartTimePassed < m_timeBetweenRightClickCountRestart) {
 			m_rightClickCountRestartTimePassed += 0.5f * DeltaTime;
@@ -290,7 +292,7 @@ void PlayerComponent::LeftMouseDown(int activationMode, float value)
 		//////////////////////////
 
 		//Actionbar
-		AddUIItemsToActionbar();
+		//AddUIItemsToActionbar();
 	}
 }
 
@@ -381,6 +383,7 @@ void PlayerComponent::RotateRight(int activationMode, float value)
 
 void PlayerComponent::DeselectSelectables()
 {
+	m_lastSelectablesCheckSize = -1;
 	for (IEntity* entity : m_selectedUnits) {
 		if (!entity) {
 			continue;
@@ -611,7 +614,7 @@ void PlayerComponent::CheckSelectablesMouseOver()
 	}
 
 	//Turn highligh color back to black on entity if mouse is not over anyomore
-	else if (m_pEntityUnderCursor && !entity && m_pEntityUnderCursor || entity && entity != m_pEntityUnderCursor) {
+	else if (m_pEntityUnderCursor && !m_pEntityUnderCursor->IsGarbage() && !entity && m_pEntityUnderCursor || entity && entity != m_pEntityUnderCursor) {
 		SelectableComponent* selectable = m_pEntityUnderCursor->GetComponent<SelectableComponent>();
 		if (selectable->IsSelected()) {
 			return;
@@ -677,5 +680,23 @@ void PlayerComponent::BoxSelectEntities(Vec2 mousePos)
 		result.append(entity);
 	}
 
+	m_selectedUnits = result;
+}
+
+void PlayerComponent::UpdateSelectables()
+{
+	if (m_selectedUnits.size() != m_lastSelectablesCheckSize) {
+		m_lastSelectablesCheckSize = m_selectedUnits.size();
+		AddUIItemsToActionbar();
+	}
+
+	DynArray<IEntity*> result;
+	for (IEntity* entity : m_selectedUnits) {
+		if (entity->IsGarbage()) {
+			continue;
+		}
+
+		result.append(entity);
+	}
 	m_selectedUnits = result;
 }

@@ -162,9 +162,11 @@ IEntity* BaseBuildingComponent::PlaceBuilding(Vec3 at)
 	m_pBuildingEntity->GetComponent<BuildingComponent>()->Place(m_pBuildingEntity->GetWorldPos());
 	IEntity* buildingTemp = m_pBuildingEntity;
 
-	//NavigationAgentTypeID agentTypeId = NavigationAgentTypeID::TNavigationID(1);
-	//NavigationMeshID navMeshId = gEnv->pAISystem->GetNavigationSystem()->FindEnclosingMeshID(agentTypeId, m_pBuildingEntity->GetWorldPos());
-	//gEnv->pAISystem->GetNavigationSystem()->GetUpdateManager()->RequestGlobalUpdate();
+	NavigationAgentTypeID agentTypeId = NavigationAgentTypeID::TNavigationID(1);
+	NavigationMeshID navMeshId = gEnv->pAISystem->GetNavigationSystem()->FindEnclosingMeshID(agentTypeId, m_pBuildingEntity->GetWorldPos());
+	AABB aabb;
+	m_pBuildingEntity->GetWorldBounds(aabb);
+	gEnv->pAISystem->GetNavigationSystem()->GetUpdateManager()->WorldChanged(aabb);
 
 	m_pBuildingEntity = nullptr;
 	return buildingTemp;
