@@ -10,6 +10,7 @@
 #include <Components/Managers/ActionManager.h>
 #include <Components/Effects/BulletTracer.h>
 
+#include <Components/Managers/ResourceManager.h>
 #include <Utils/MathUtils.h>
 #include <Utils/EntityUtils.h>
 
@@ -75,9 +76,14 @@ void AttackerComponent::ProcessEvent(const SEntityEvent& event)
 	case Cry::Entity::EEvent::Update: {
 		f32 DeltaTime = event.fParam[0];
  
-		//Target/Attack
-		FindRandomTarget();
-		AttackRandomTarget();
+		if (!bIsCheckedForHstilePlayers) {
+			FindHostilePlayers();
+		}
+		else {
+			//Target/Attack
+			FindRandomTarget();
+			AttackRandomTarget();
+		}
 
 		//Timers
 		if (m_attackTimePassed < m_pAttackInfo.m_timeBetweenAttacks) {
@@ -91,6 +97,8 @@ void AttackerComponent::ProcessEvent(const SEntityEvent& event)
 		}
 
 		//TODO : ATTACK ANIMATION EVENT (FOR NOT RANGED)
+
+		ValidateTarget();
 
 	}break;
 	case Cry::Entity::EEvent::Reset: {
@@ -166,6 +174,15 @@ void AttackerComponent::AttackRandomTarget()
 	}
 }
 
+void AttackerComponent::ValidateTarget()
+{
+	IEntity* target = m_pAttackTargetEntity ? m_pAttackTargetEntity : m_pRandomAttackTarget;
+	if (!target || target && target->IsGarbage()) {
+		m_pAttackTargetEntity = nullptr;
+		m_pRandomAttackTarget = nullptr;
+	}
+}
+
 void AttackerComponent::PerformMeleeAttack(IEntity* target)
 {
 	m_pUnitAnimationComponent->PlayRandomAttackAnimation();
@@ -190,34 +207,62 @@ void AttackerComponent::ApplyDamageToTarget(IEntity* target)
 	healthComponent->ApplyDamage(m_damageAmount);
 }
 
-void AttackerComponent::FindRandomTarget()
+void AttackerComponent::FindHostilePlayers()
 {
-	//|| m_pActionManagerComponent->IsProcessingAnAction()
-	if (m_pRandomAttackTarget || m_pAttackTargetEntity) {
-		m_pRandomAttackTarget = nullptr;
-		return;
-	}
-
 	IEntityItPtr entityItPtr = gEnv->pEntitySystem->GetEntityIterator();
 	entityItPtr->MoveFirst();
 
 	while (!entityItPtr->IsEnd())
 	{
 		IEntity* entity = entityItPtr->Next();
+		ResourceManagerComponent* pResourceManagerComponent = entity->GetComponent<ResourceManagerComponent>();
+		if (!pResourceManagerComponent) {
+			continue;
+		}
 
-		f32 distanceToTarget = EntityUtils::GetDistance(m_pEntity->GetWorldPos(), entity->GetWorldPos(), entity);
 		OwnerInfoComponent* otherEntityOwnerInfo = entity->GetComponent<OwnerInfoComponent>();
-
 		BulletTracerComponent* bulletTracerComponent = entity->GetComponent<BulletTracerComponent>();
 		//Ignore entity if it's not in detection range
-		if (!otherEntityOwnerInfo || distanceToTarget > m_pAttackInfo.m_detectionDistance || !otherEntityOwnerInfo->CanBeTarget() || bulletTracerComponent) {
+		if (!otherEntityOwnerInfo || bulletTracerComponent) {
 			continue;
 		}
 
 		//set entity as randomAttackTarget if it's team is not same as this unit's team
 		OwnerInfoComponent* pOwnerInfoComponent = m_pEntity->GetComponent<OwnerInfoComponent>();
 		if (pOwnerInfoComponent && otherEntityOwnerInfo && otherEntityOwnerInfo->GetInfo().m_pTeam != pOwnerInfoComponent->GetInfo().m_pTeam) {
-			m_pRandomAttackTarget = entity;
+			m_hostilePlayers.append(entity);
+		}
+	}
+
+	bIsCheckedForHstilePlayers = true;
+}
+
+void AttackerComponent::FindRandomTarget()
+{
+	//|| m_pActionManagerComponent->IsProcessingAnAction()
+	if (m_pRandomAttackTarget || m_pAttackTargetEntity) {
+	//	m_pRandomAttackTarget = nullptr;
+		return;
+	}
+
+	for (IEntity* entity : m_hostilePlayers)
+	{
+		for (IEntity* pEntity : entity->GetComponent<ResourceManagerComponent>()->GetOwnedEntities()) {
+
+			f32 distanceToTarget = EntityUtils::GetDistance(m_pEntity->GetWorldPos(), pEntity->GetWorldPos(), pEntity);
+			OwnerInfoComponent* otherEntityOwnerInfo = pEntity->GetComponent<OwnerInfoComponent>();
+
+			BulletTracerComponent* bulletTracerComponent = pEntity->GetComponent<BulletTracerComponent>();
+			//Ignore entity if it's not in detection range
+			if (!otherEntityOwnerInfo || distanceToTarget > m_pAttackInfo.m_detectionDistance || !otherEntityOwnerInfo->CanBeTarget() || bulletTracerComponent) {
+				continue;
+			}
+
+			//set entity as randomAttackTarget if it's team is not same as this unit's team
+			OwnerInfoComponent* pOwnerInfoComponent = m_pEntity->GetComponent<OwnerInfoComponent>();
+			if (pOwnerInfoComponent && otherEntityOwnerInfo && otherEntityOwnerInfo->GetInfo().m_pTeam != pOwnerInfoComponent->GetInfo().m_pTeam) {
+				m_pRandomAttackTarget = pEntity;
+			}
 		}
 	}
 }

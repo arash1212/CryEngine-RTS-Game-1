@@ -78,15 +78,21 @@ private:
 	int32 m_maxAttackCount = 10;
 	int32 m_attackCount = 0;
 
+	DynArray<IEntity*> m_hostilePlayers;
+
+	bool bIsCheckedForHstilePlayers = false;
 private:
 	void FindRandomTarget();
 	void AttackRandomTarget();
+	void ValidateTarget();
 
 	//Attack types
 	void PerformMeleeAttack(IEntity* target);
 	void PerformRangedAttack(IEntity* target);
 
 	void ApplyDamageToTarget(IEntity* target);
+
+	void FindHostilePlayers();
 
 public:
 	void Attack(IEntity* target);

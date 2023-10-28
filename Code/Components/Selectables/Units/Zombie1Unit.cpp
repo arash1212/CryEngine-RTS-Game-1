@@ -9,6 +9,7 @@
 #include <UIItems/Items/UICancelItem.h>
 #include <UIItems/Items/UIChangeStanceItem.h>
 #include <UIItems/Items/Buildings/UIHQ1BuildItem.h>
+#include <Actions/Units/UnitWanderingRandomlyAction.h>
 
 #include <Components/Controller/AIController.h>
 #include <Components/Managers/ActionManager.h>
@@ -128,14 +129,10 @@ void Zombie1UnitComponent::ProcessEvent(const SEntityEvent& event)
 	case Cry::Entity::EEvent::Update: {
 		//f32 DeltaTime = event.fParam[0];
 
-		/*
-		if (m_pOwnerInfoComponent->GetTeam() == EPlayerTeam::FERAL) {
-			CryLog("feral");
-		}
-		*/
 
-		if (m_pOwnerInfoComponent && !m_pOwnerInfoComponent->GetOwner()) {
-			//CryLog("no owner ?>>?????");
+		//Wander around
+		if (m_pActionManagerComponent && m_pOwnerInfoComponent && !m_pAttackerComponent->IsAttacking() && !m_pActionManagerComponent->IsProcessingAnAction()) {
+			m_pActionManagerComponent->AddAction(new UnitWanderingRandomlyAction(m_pEntity, m_pOwnerInfoComponent->GetOwner(), false));
 		}
 
 	}break;

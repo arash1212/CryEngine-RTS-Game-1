@@ -3,12 +3,12 @@
 struct IUIElement;
 struct IUIElementEventListener;
 
-class UIActionbarComponent final : public IEntityComponent
+class UIHealthbarsComponent final : public IEntityComponent
 {
 
 public:
-	UIActionbarComponent() = default;
-	virtual ~UIActionbarComponent() = default;
+	UIHealthbarsComponent() = default;
+	virtual ~UIHealthbarsComponent() = default;
 
 	// IEntityComponent
 	virtual void Initialize() override;
@@ -17,18 +17,20 @@ public:
 	virtual void ProcessEvent(const SEntityEvent& event) override;
 
 	// Reflect type to set a unique identifier for this component
-	static void ReflectType(Schematyc::CTypeDesc<UIActionbarComponent>& desc)
+	static void ReflectType(Schematyc::CTypeDesc<UIHealthbarsComponent>& desc)
 	{
-		desc.SetGUID("{C632D0A7-7139-4BEC-AAE8-03891A0E6C30}"_cry_guid);
+		desc.SetGUID("{47904F52-98D1-4A5E-9988-7C8EF11EF955}"_cry_guid);
 		desc.SetEditorCategory("UI");
 	}
 
+
 private:
-	IUIElement* m_pActionbarUIElement = nullptr;;
+	IUIElement* m_pHealthbarUIElement = nullptr;
+
+private:
 
 public:
-	void AddButton(string imagePath);
-	void Clear();
-
 	void SetEventListener(IUIElementEventListener* eventListener);
+	void AddHealthbar(int32 x, int32 y);
 };
+

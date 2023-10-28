@@ -24,7 +24,7 @@ public:
 	}
 
 private:
-	IUIElement* m_pResourcesPanelUIElement;
+	IUIElement* m_pResourcesPanelUIElement = nullptr;;
 
 private:
 

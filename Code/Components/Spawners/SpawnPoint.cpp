@@ -11,6 +11,10 @@
 
 #include <Utils/EntityUtils.h>
 
+#include <CryEntitySystem/IEntitySystem.h>
+#include <CryAISystem/INavigationSystem.h>
+#include <CryAISystem/NavigationSystem/INavigationUpdatesManager.h>
+
 #include <CrySchematyc/Reflection/TypeDesc.h>
 #include <CrySchematyc/Utils/EnumFlags.h>
 #include <CrySchematyc/Env/IEnvRegistry.h>

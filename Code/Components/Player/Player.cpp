@@ -6,6 +6,7 @@
 #include <Components/UI/UISelectionBox.h>
 #include <Components/UI/UIActionbar.h>
 #include <Components/UI/Listener/UIElementEventListener.h>
+#include <Components/UI/UIHealthbars.h>
 
 #include <Utils/MouseUtils.h>
 #include <Utils/EntityUtils.h>
@@ -106,6 +107,9 @@ void PlayerComponent::Initialize()
 	//Set player entity name
 	m_pEntity->SetName(PLAYER_ENTITY_NAME);
 
+	//HealthbarsComponent initialization
+	//m_pHealthbarsComponent = m_pEntity->GetOrCreateComponent<UIHealthbarsComponent>();
+//	m_pHealthbarsComponent->SetEventListener(m_pUIElementEventListener);
 	
 	gEnv->p3DEngine->GetTimeOfDay();
 }
@@ -428,19 +432,37 @@ void PlayerComponent::CommandUnitsToMove(Vec3 position)
 
 		ActionManagerComponent* actionManager = m_selectedUnits[i]->GetComponent<ActionManagerComponent>();
 		if (actionManager) {
-			if (i != 0) {
-				column++;
+			f32 diffX = crymath::abs(position.x - m_selectedUnits[0]->GetWorldPos().x);
+			f32 diffY = crymath::abs(position.y - m_selectedUnits[0]->GetWorldPos().y);
+
+			if (diffX > diffY) {
+				//int32 temp = row;
+				//row = column;
+				//column = temp;
+
+				if (i != 0) {
+					row++;
+				}
+				if (i != 0 && i % 5 == 0) {
+					column++;
+					row = 0;
+				}
 			}
-			if (i != 0 && i % 5 == 0) {
-				row++;
-				column = 0;
+			else {
+				if (i != 0) {
+					column++;
+				}
+				if (i != 0 && i % 5 == 0) {
+					row++;
+					column = 0;
+				}
 			}
 
 			AABB aabb;
 			m_selectedUnits[i]->GetWorldBounds(aabb);
 			f32 width = aabb.max.x - aabb.min.x;
 			f32 height = aabb.max.y - aabb.min.y;
-			Vec3 pos = Vec3(position.x + ((column * (width + 2.f))), position.y - ((row * (height + 2.f))), position.z);
+			Vec3 pos = Vec3(position.x + ((column * (width + 1.4f))), position.y - ((row * (height + 1.4f))), position.z);
 
 			IPersistantDebug* pd = gEnv->pGameFramework->GetIPersistantDebug();
 			if (pd) {
@@ -622,6 +644,17 @@ void PlayerComponent::CheckSelectablesMouseOver()
 		selectable->HighLightBlack();
 		m_pEntityUnderCursor = nullptr;
 	}
+
+	/*
+	IEntity* entity = MouseUtils::GetActorUnderCursor();
+	if (entity) {
+		SelectableComponent* selectable = entity->GetComponent<SelectableComponent>();
+		if (selectable) {
+			//m_pEntityUnderCursor = entity;
+			selectable->MouseOver();
+		}
+	}
+	*/
 }
 
 void PlayerComponent::ExecuteActionbarItem(int32 index)

@@ -183,3 +183,27 @@ Vec3 EntityUtils::GetClosetPointOnMeshBorder(Vec3 from, IEntity* entity)
 		return ZERO;
 	}
 }
+
+/*
+Vec2 EntityUtils::GetScreenPosition(Cry::DefaultComponents::CCameraComponent* camera, IEntity* entity)
+{
+	Vec3 pos = entity->GetPos();
+	//pos.z = 0;
+	Vec3 result;
+	camera->GetCamera().Project(pos, result);
+	//gEnv->pRenderer->ProjectToScreen(pos.x, pos.y, pos.z, &result.x, &result.y, &result.z);
+	//result.y = gEnv->pRenderer->GetHeight() - result.y;
+	return Vec2(result.x, result.y);
+}
+*/
+bool EntityUtils::IsEntityInsideViewPort(Cry::DefaultComponents::CCameraComponent* camera, IEntity* entity)
+{
+	Vec3 pos = entity->GetWorldPos();
+	Vec3 result;
+	camera->GetCamera().Project(pos, result);
+
+	int32 vHeight = gEnv->pRenderer->GetHeight();
+	int32 vWidth = gEnv->pRenderer->GetWidth();
+
+	return result.x >= 0 && result.x <= vWidth && result.y >= 0 && result.y <= vHeight;
+}

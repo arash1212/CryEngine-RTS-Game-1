@@ -36,7 +36,7 @@ void UnitWanderingRandomlyAction::Execute()
 		return;
 	}
 	if (m_pAttackerComponent->IsAttacking()) {
-		m_pStateManagerComponent->SetStance(EUnitStance::RUNNING);
+		//m_pStateManagerComponent->SetStance(EUnitStance::RUNNING);
 		Cancel();
 		return;
 	}

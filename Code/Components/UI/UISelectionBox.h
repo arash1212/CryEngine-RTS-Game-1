@@ -26,7 +26,7 @@ public:
 	}
 private:
 	Cry::DefaultComponents::CCameraComponent* m_pCameraComponent = nullptr;
-	IUIElement* m_pSelectionBoxUIElement;
+	IUIElement* m_pSelectionBoxUIElement = nullptr;;
 
 private:
 	Vec2 m_boxInitPoint = ZERO;

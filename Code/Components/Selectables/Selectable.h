@@ -63,4 +63,6 @@ public:
 
 	void HighLightGreen();
 	void HighLightBlack();
+
+	void MouseOver();
 };

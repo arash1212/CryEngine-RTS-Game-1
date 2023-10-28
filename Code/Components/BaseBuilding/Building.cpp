@@ -17,6 +17,10 @@
 #include <UIItems/Items/Buildings/UIHQ1BuildItem.h>
 #include <Components/Selectables/Workplace.h>
 
+#include <CryEntitySystem/IEntitySystem.h>
+#include <CryAISystem/INavigationSystem.h>
+#include <CryAISystem/NavigationSystem/INavigationUpdatesManager.h>
+
 #include <Utils/MathUtils.h>
 
 #include <CryGame/IGameFramework.h>
@@ -163,6 +167,10 @@ void BuildingComponent::Place(Vec3 at)
 
 	//Update Material
 	m_pSkinAttachment->GetIAttachmentObject()->SetReplacementMaterial(m_pDefaultMaterial);
+
+	AABB aabb;
+	m_pEntity->GetWorldBounds(aabb);
+	gEnv->pAISystem->GetNavigationSystem()->GetUpdateManager()->WorldChanged(aabb);
 }
 
 void BuildingComponent::Build()
@@ -267,6 +275,10 @@ void BuildingComponent::SetBuilt()
 	physParams.type = PE_STATIC;
 	physParams.mass = 38000.f;
 	m_pEntity->Physicalize(physParams);
+
+	AABB aabb;
+	m_pEntity->GetWorldBounds(aabb);
+	gEnv->pAISystem->GetNavigationSystem()->GetUpdateManager()->WorldChanged(aabb);
 
 	Build();
 }

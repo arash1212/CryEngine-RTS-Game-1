@@ -111,7 +111,7 @@ bool AIControllerComponent::MoveTo(Vec3 position, bool run)
 		return false;
 	}
 	if (!m_pNavigationComponent->IsDestinationReachable(position)) {
-		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "AIControllerComponent : (MoveTo) Destination is not reachable !");
+		//CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "AIControllerComponent : (MoveTo) Destination is not reachable !");
 		return false;
 	}
 	if (run) {

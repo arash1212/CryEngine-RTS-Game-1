@@ -139,3 +139,9 @@ void SelectableComponent::HighLightBlack()
 {
 	m_pRenderNode->m_nHUDSilhouettesParam = m_blackColor;
 }
+
+void SelectableComponent::MouseOver()
+{
+	m_pRenderNode->m_nHUDSilhouettesParam = m_greenColor;
+	//m_pRenderNode->m_nHUDSilhouettesParam = m_blackColor;
+}

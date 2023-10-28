@@ -11,6 +11,7 @@ class BaseBuildingComponent;
 class OwnerInfoComponent;
 class UIResourcesPanelComponent;
 class ResourceManagerComponent;
+class UIHealthbarsComponent;
 
 static const f32 PLAYER_CAMERA_DEFAULT_HEIGHT = 25.f;
 static const f32 PLAYER_CAMERA_DEFAULT_MOVE_SPEED = 24.f;
@@ -52,6 +53,7 @@ private:
 	OwnerInfoComponent* m_pOwnerInfoComponent = nullptr;
 	UIResourcesPanelComponent* m_pResouecesPanelComponent = nullptr;
 	ResourceManagerComponent* m_pResourceManagerComponent = nullptr;
+	UIHealthbarsComponent* m_pHealthbarsComponent = nullptr;
 
 	//UI
 	UIElementEventListener* m_pUIElementEventListener = nullptr;
