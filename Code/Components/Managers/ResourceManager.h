@@ -13,6 +13,9 @@ public:
 	int32 m_flourAmount = 0;
 	int32 m_woodAmount = 0;
 	int32 m_breadAmount = 0;
+	int32 m_sulfurAmount = 0;
+	int32 m_gunPowderAmount = 0;
+	int32 m_ironAmount = 0;
 };
 
 class ResourceManagerComponent : public IEntityComponent {
@@ -44,11 +47,14 @@ private:
 private:
 	int32 m_lastPopulationCheclAmount = 0;
 public:
-	const static int32 m_oilPrice = 10;
+	const static int32 m_oilPrice = 20;
 	const static int32 m_WheatPrice = 5;
 	const static int32 m_FlourPrice = 8;
-	const static int32 m_WoodPrice = 6;
+	const static int32 m_WoodPrice = 12;
 	const static int32 m_BreadPrice = 6;
+	const static int32 m_SulfurPrice = 10;
+	const static int32 m_GunPowderPrice = 50;
+	const static int32 m_IronPrice = 20;
 
 	//Sounds
 	CryAudio::ControlId m_pBuySound;

@@ -53,7 +53,7 @@ void UnitAnimationComponent::Initialize()
 	//Attack animations
 	m_pAttackAnimations.append(m_attack1FragmentId);
 	m_pAttackAnimations.append(m_attack2FragmentId);
-	m_pAttackAnimations.append(m_attack3FragmentId);
+	//m_pAttackAnimations.append(m_attack3FragmentId);
 }
 
 
@@ -142,7 +142,7 @@ void UnitAnimationComponent::UpdateAnimations()
 void UnitAnimationComponent::PlayRandomAttackAnimation()
 {
 	m_activeFragmentId = m_attack1FragmentId;
-	FragmentID attackingFragmentId = m_pAttackAnimations[MathUtils::GetRandomInt(0, m_pAttackAnimations.size())];
+	FragmentID attackingFragmentId = m_pAttackAnimations[MathUtils::GetRandomInt(0, m_pAttackAnimations.size() - 1)];
 	m_pAnimationComponent->GetActionController()->Flush();
 	IActionPtr action = new TAction<SAnimationContext>(30U, attackingFragmentId);
 	m_pAnimationComponent->QueueCustomFragment(*action);

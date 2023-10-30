@@ -68,10 +68,14 @@ void HealthComponent::ProcessEvent(const SEntityEvent& event)
 
 	}break;
 	case Cry::Entity::EEvent::Update: {
-		//f32 DeltaTime = event.fParam[0];
+		f32 DeltaTime = event.fParam[0];
+		if (m_entityRemoveTimePassed < m_timeBetweenRemoveingEntity) {
+			m_entityRemoveTimePassed += 0.5f * DeltaTime;
+		}
 
+		Die();
 
-		//TODO
+		//TODO: player hamishe yeki hast ?
 		IEntity* player = gEnv->pEntitySystem->FindEntityByName(PLAYER_ENTITY_NAME);
 		if (!player) {
 			return;
@@ -84,11 +88,13 @@ void HealthComponent::ProcessEvent(const SEntityEvent& event)
 		if (!pPlayerOwnerInfo) {
 			return;
 		}
-		if (EntityUtils::IsEntityInsideViewPort(camera, m_pEntity)) {
+		if (EntityUtils::IsEntityInsideViewPort(camera, m_pEntity) && m_currentHealth > 0) {
 			ShowHealthBar();
+			m_entityRemoveTimePassed = 0;
 		}
-		else {
+		else if (!EntityUtils::IsEntityInsideViewPort(camera, m_pEntity) || m_currentHealth <= 0) {
 			HideHealthBar();
+			return;
 		}
 
 		if ( m_pHealthbarUIElement) {
@@ -104,7 +110,7 @@ void HealthComponent::ProcessEvent(const SEntityEvent& event)
 			if (m_lastHealthUpdateAmount != m_currentHealth) {
 				SetHealthAmount((int32)m_currentHealth, bIsRed);
 			}
-			SetHealthbarPosition(flashPos.x - 5, flashPos.y - 15);
+			SetHealthbarPosition(flashPos.x , flashPos.y - 15);
 		}
 		else {
 			//HideHealthBar();
@@ -120,17 +126,19 @@ void HealthComponent::ProcessEvent(const SEntityEvent& event)
 
 void HealthComponent::ApplyDamage(f32 damage)
 {
-	this->m_currentHealth -= damage;
+	this->m_currentHealth = CLAMP(m_currentHealth - damage, 0, m_maxHealth);
 
-	if (m_currentHealth <= 0) {
-		Die();
-	}
+	//if (m_currentHealth <= 0) {
+		
+	//}
 }
 
 void HealthComponent::Die()
 {
-	EntityUtils::RemoveEntity(m_pEntity);
-	HideHealthBar();
+	if (m_currentHealth <= 0 && m_entityRemoveTimePassed >= m_timeBetweenRemoveingEntity) {
+		HideHealthBar();
+		EntityUtils::RemoveEntity(m_pEntity);
+	}
 }
 
 void HealthComponent::SetMaxHealth(f32 maxHealth)

@@ -40,6 +40,10 @@ private:
 
 	IUIElement* m_pHealthbarUIElement = nullptr;
 
+	//Timers
+	f32 m_timeBetweenRemoveingEntity = 0.1f;
+	f32 m_entityRemoveTimePassed = 0.0f;
+
 public:
 	void ApplyDamage(f32 damage);
 	void Die();

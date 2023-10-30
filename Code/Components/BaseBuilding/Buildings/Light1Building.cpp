@@ -102,6 +102,7 @@ void Light1BuildingComponent::Initialize()
 	m_pPointLightComponent->GetColorParameters().m_diffuseMultiplier = 2.f;
 	m_pPointLightComponent->GetColorParameters().m_color = ColorF(1, 1, 0.6f);
 	m_pPointLightComponent->GetOptions().m_attenuationBulbSize = 250.f;
+	m_pPointLightComponent->GetShadowParameters().m_castShadowSpec = Cry::DefaultComponents::EMiniumSystemSpec::High;
 	m_pPointLightComponent->Enable(true);
 
 }

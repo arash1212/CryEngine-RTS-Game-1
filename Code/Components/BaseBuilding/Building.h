@@ -71,6 +71,8 @@ private:
 	//UI Actions
 	DynArray< IBaseUIItem*> m_pAllUIItems;
 
+	f32 m_maxHealth = 100.f;
+
 private:
 	void UpdateMaterial();
 

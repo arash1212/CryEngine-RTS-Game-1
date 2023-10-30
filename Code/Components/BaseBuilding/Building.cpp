@@ -77,9 +77,6 @@ void BuildingComponent::Initialize()
 
 	//Materials Initializations
 	m_pDefaultMaterial = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByIndex(0)->GetIAttachmentObject()->GetBaseMaterial();
-
-	//HealthComponent Initialization
-	m_pHealthComponent = m_pEntity->GetOrCreateComponent<HealthComponent>();
 }
 
 
@@ -171,6 +168,10 @@ void BuildingComponent::Place(Vec3 at)
 	AABB aabb;
 	m_pEntity->GetWorldBounds(aabb);
 	gEnv->pAISystem->GetNavigationSystem()->GetUpdateManager()->WorldChanged(aabb);
+
+	//HealthComponent Initialization
+	m_pHealthComponent = m_pEntity->GetOrCreateComponent<HealthComponent>();
+	m_pHealthComponent->SetMaxHealth(m_maxHealth);
 }
 
 void BuildingComponent::Build()
@@ -317,5 +318,6 @@ bool BuildingComponent::IsWorkplace()
 
 void BuildingComponent::SetMaxHealth(f32 maxHealth)
 {
-	this->m_pHealthComponent->SetMaxHealth(maxHealth);
+	// this->m_pHealthComponent->SetMaxHealth(maxHealth);
+	this->m_maxHealth = maxHealth;
 }

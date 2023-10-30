@@ -133,7 +133,7 @@ void Cave1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 		m_pOwnerInfoComponent->SetTeam(EPlayerTeam::FERAL);
 		m_pOwnerInfoComponent->SetFaction(EPlayerFaction::FERAL);
 
-		m_pBuildingComponent->SetMaxHealth(300.f);
+		//m_pBuildingComponent->SetMaxHealth(300.f);
 
 		bIsGameStarted = true;
 

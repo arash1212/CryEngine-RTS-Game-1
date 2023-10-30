@@ -13,7 +13,7 @@ class WorkplaceComponent;
 struct SResourceInfo;
 
 static string BAKERY_BUILDING_1_MODEL_PATH = "Objects/buildings/bakery1/bakery1.cdf";
-static string BAKERY_BUILDING_1_TRUSS_MODEL_PATH = "Objects/buildings/barracks1/truss/barracks1_truss.cgf";
+static string BAKERY_BUILDING_1_TRUSS_MODEL_PATH = "Objects/buildings/bakery1/truss/bakery1_truss.cgf";
 
 class Bakery1BuildingComponent final : public IEntityComponent
 {

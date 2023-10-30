@@ -12,7 +12,10 @@ enum class EResourceType {
 	WHEAT,
 	FLOUR,
 	WOOD,
-	BREAD
+	BREAD,
+	SULFUR,
+	GUN_POWDER,
+	IRON
 };
 
 class ResourceComponent final : public IEntityComponent

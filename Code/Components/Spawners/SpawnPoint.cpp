@@ -86,6 +86,7 @@ void SpawnPointComponent::SpawnPlayerHQBuilding(IEntity* owner)
 
 	pHqBuildingEntity->GetOrCreateComponent<HQ1BuildingComponent>();
 	//pHqBuildingEntity->GetComponent<OwnerInfoComponent>()->SetOwner(owner);
+	pHqBuildingEntity->GetComponent<BuildingComponent>()->Place(pHqBuildingEntity->GetWorldPos());
 	pHqBuildingEntity->GetComponent<BuildingComponent>()->SetBuilt();
 
 	/*

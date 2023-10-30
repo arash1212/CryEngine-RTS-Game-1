@@ -14,7 +14,7 @@ class WorkplaceComponent;
 struct SResourceInfo;
 
 static string WINDMILL_BUILDING_1_MODEL_PATH = "Objects/buildings/windmill/windmill.cdf";
-static string WINDMILL_BUILDING_1_TRUSS_MODEL_PATH = "Objects/buildings/warehouse1/truss/warehouse1_truss.cgf";
+static string WINDMILL_BUILDING_1_TRUSS_MODEL_PATH = "Objects/buildings/windmill/truss/windmill_truss.cgf";
 
 class Windmill1BuildingComponent final : public IEntityComponent
 {

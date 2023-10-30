@@ -40,6 +40,9 @@ private :
 	IAttachment* m_pFlourAttachment = nullptr;
 	IAttachment* m_pWoodAttachment = nullptr;
 	IAttachment* m_pBreadAttachment = nullptr;
+	IAttachment* m_pSulfurAttachment = nullptr;
+	IAttachment* m_pGunPowderAttachment = nullptr;
+	IAttachment* m_pIronAttachment = nullptr;
 
 private:
 	int32 m_amountResourceCollected = 0;

@@ -78,7 +78,7 @@ void Barracks1BuildingComponent::Initialize()
 	SBuildingInfo buildingInfo;
 	buildingInfo.m_populationProduces = 0;
 	m_pBuildingComponent->SetBuildingInfo(buildingInfo);
-	m_pBuildingComponent->SetMaxHealth(700.f);
+	//m_pBuildingComponent->SetMaxHealth(700.f);
 	//UIItems
 	m_pBuildingComponent->AddUIItem(new UITrainEngineer1Item(m_pEntity));
 	m_pBuildingComponent->AddUIItem(new UITrainSoldier1Item(m_pEntity));
@@ -132,7 +132,7 @@ SResourceInfo Barracks1BuildingComponent::GetCost()
 	SResourceInfo cost;
 	cost.m_moneyAmount = 150;
 	cost.m_oilAmount = 40;
-	cost.m_populationAmount = 5;
+	cost.m_populationAmount = 0;
 	cost.m_woodAmount = 100;
 	return cost;
 }

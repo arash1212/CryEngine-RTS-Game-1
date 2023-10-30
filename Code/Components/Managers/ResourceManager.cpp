@@ -55,13 +55,16 @@ void ResourceManagerComponent::ProcessEvent(const SEntityEvent& event)
 
 			//Set Resources Amount
 			m_pResouceInfo.m_moneyAmount = 700;
-			m_pResouceInfo.m_oilAmount = 300;
+			m_pResouceInfo.m_oilAmount = 600;
 			m_pResouceInfo.m_populationAmount = 20;
 			m_pResouceInfo.m_populationUsed = 0;
-			m_pResouceInfo.m_wheatAmount = 70;
+			m_pResouceInfo.m_wheatAmount = 100;
 			m_pResouceInfo.m_flourAmount = 50;
-			m_pResouceInfo.m_woodAmount = 500;
+			m_pResouceInfo.m_woodAmount = 600;
 			m_pResouceInfo.m_breadAmount = 30;
+			m_pResouceInfo.m_sulfurAmount = 50;
+			m_pResouceInfo.m_gunPowderAmount = 20;
+			m_pResouceInfo.m_ironAmount = 400;
 
 			//AudioComponent initialization
 			m_pAudioComponent = m_pEntity->GetComponent<IEntityAudioComponent>();
@@ -185,6 +188,18 @@ bool ResourceManagerComponent::RequsetResources(SResourceInfo resourceRequestPar
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (RequsetResources) Not Enough Bread");
 		return false;
 	}
+	else if (m_pResouceInfo.m_sulfurAmount < resourceRequestParams.m_sulfurAmount) {
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (RequsetResources) Not Enough Sulfur");
+		return false;
+	}
+	else if (m_pResouceInfo.m_gunPowderAmount < resourceRequestParams.m_gunPowderAmount) {
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (RequsetResources) Not Enough GunPowder");
+		return false;
+	}
+	else if (m_pResouceInfo.m_ironAmount < resourceRequestParams.m_ironAmount) {
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (RequsetResources) Not Enough Iron");
+		return false;
+	}
 
 	m_pResouceInfo.m_moneyAmount -= resourceRequestParams.m_moneyAmount;
 	m_pResouceInfo.m_oilAmount -= resourceRequestParams.m_oilAmount;
@@ -193,6 +208,9 @@ bool ResourceManagerComponent::RequsetResources(SResourceInfo resourceRequestPar
 	m_pResouceInfo.m_flourAmount -= resourceRequestParams.m_flourAmount;
 	m_pResouceInfo.m_woodAmount -= resourceRequestParams.m_woodAmount;
 	m_pResouceInfo.m_breadAmount -= resourceRequestParams.m_breadAmount;
+	m_pResouceInfo.m_sulfurAmount -= resourceRequestParams.m_sulfurAmount;
+	m_pResouceInfo.m_gunPowderAmount -= resourceRequestParams.m_gunPowderAmount;
+	m_pResouceInfo.m_ironAmount -= resourceRequestParams.m_ironAmount;
 
 	m_pResouecesPanelComponent->UpdatePanel();
 	return true;
@@ -222,6 +240,15 @@ bool ResourceManagerComponent::CheckIfResourcesAvailable(SResourceInfo resourceR
 	else if (m_pResouceInfo.m_breadAmount < resourceRequestParams.m_breadAmount) {
 		return false;
 	}
+	else if (m_pResouceInfo.m_sulfurAmount < resourceRequestParams.m_sulfurAmount) {
+		return false;
+	}
+	else if (m_pResouceInfo.m_gunPowderAmount < resourceRequestParams.m_gunPowderAmount) {
+		return false;
+	}
+	else if (m_pResouceInfo.m_ironAmount < resourceRequestParams.m_ironAmount) {
+		return false;
+	}
 	return true;
 }
 
@@ -234,6 +261,9 @@ void ResourceManagerComponent::RefundResources(SResourceInfo resourceRequestPara
 	m_pResouceInfo.m_flourAmount += resourceRequestParams.m_flourAmount;
 	m_pResouceInfo.m_woodAmount += resourceRequestParams.m_woodAmount;
 	m_pResouceInfo.m_breadAmount += resourceRequestParams.m_breadAmount;
+	m_pResouceInfo.m_sulfurAmount += resourceRequestParams.m_sulfurAmount;
+	m_pResouceInfo.m_gunPowderAmount += resourceRequestParams.m_gunPowderAmount;
+	m_pResouceInfo.m_ironAmount += resourceRequestParams.m_ironAmount;
 
 	m_pResouecesPanelComponent->UpdatePanel();
 	CryLog("resource refunded");
@@ -260,6 +290,15 @@ void ResourceManagerComponent::AddResource(EResourceType type, int32 amount)
 	}break;
 	case EResourceType::BREAD: {
 		m_pResouceInfo.m_breadAmount += amount;
+	}break;
+	case EResourceType::SULFUR: {
+		m_pResouceInfo.m_sulfurAmount += amount;
+	}break;
+	case EResourceType::GUN_POWDER: {
+		m_pResouceInfo.m_sulfurAmount += amount;
+	}break;
+	case EResourceType::IRON: {
+		m_pResouceInfo.m_ironAmount += amount;
 	}break;
 	default:
 		break;
@@ -327,6 +366,30 @@ void ResourceManagerComponent::SellResource(int32 amount, EResourceType type)
 		this->m_pResouceInfo.m_breadAmount -= amount * (ResourceManagerComponent::m_BreadPrice / 2);
 		this->m_pResouceInfo.m_moneyAmount += (amount * ResourceManagerComponent::m_BreadPrice / 2);
 	}break;
+	case EResourceType::SULFUR: {
+		if (m_pResouceInfo.m_sulfurAmount < amount) {
+			CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (SellResource) Not Enough Sulfur to sell");
+			return;
+		}
+		this->m_pResouceInfo.m_sulfurAmount -= amount * (ResourceManagerComponent::m_SulfurPrice / 2);
+		this->m_pResouceInfo.m_moneyAmount += (amount * ResourceManagerComponent::m_SulfurPrice / 2);
+	}break;
+	case EResourceType::GUN_POWDER: {
+		if (m_pResouceInfo.m_gunPowderAmount < amount) {
+			CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (SellResource) Not Enough GunPowder to sell");
+			return;
+		}
+		this->m_pResouceInfo.m_gunPowderAmount -= amount * (ResourceManagerComponent::m_GunPowderPrice / 2);
+		this->m_pResouceInfo.m_moneyAmount += (amount * ResourceManagerComponent::m_GunPowderPrice / 2);
+	}break;
+	case EResourceType::IRON: {
+		if (m_pResouceInfo.m_gunPowderAmount < amount) {
+			CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (SellResource) Not Enough Iron to sell");
+			return;
+		}
+		this->m_pResouceInfo.m_ironAmount -= amount * (ResourceManagerComponent::m_IronPrice / 2);
+		this->m_pResouceInfo.m_moneyAmount += (amount * ResourceManagerComponent::m_IronPrice / 2);
+	}break;
 	default:
 		break;
 	}
@@ -378,7 +441,31 @@ void ResourceManagerComponent::BuyResource(int32 amount, EResourceType type)
 			CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (BuyResource) Not Enough Money to buy");
 			return;
 		}
-		this->m_pResouceInfo.m_woodAmount += amount * ResourceManagerComponent::m_BreadPrice;
+		this->m_pResouceInfo.m_breadAmount += amount * ResourceManagerComponent::m_BreadPrice;
+	}break;
+	case EResourceType::SULFUR: {
+		buyPrice = (amount * ResourceManagerComponent::m_SulfurPrice);
+		if (m_pResouceInfo.m_moneyAmount < buyPrice) {
+			CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (BuyResource) Not Enough Money to buy");
+			return;
+		}
+		this->m_pResouceInfo.m_sulfurAmount += amount * ResourceManagerComponent::m_SulfurPrice;
+	}break;
+	case EResourceType::GUN_POWDER: {
+		buyPrice = (amount * ResourceManagerComponent::m_GunPowderPrice);
+		if (m_pResouceInfo.m_moneyAmount < buyPrice) {
+			CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (BuyResource) Not Enough Money to buy");
+			return;
+		}
+		this->m_pResouceInfo.m_gunPowderAmount += amount * ResourceManagerComponent::m_GunPowderPrice;
+	}break;
+	case EResourceType::IRON: {
+		buyPrice = (amount * ResourceManagerComponent::m_IronPrice);
+		if (m_pResouceInfo.m_ironAmount < buyPrice) {
+			CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (BuyResource) Not Enough Money to buy");
+			return;
+		}
+		this->m_pResouceInfo.m_ironAmount += amount * ResourceManagerComponent::m_IronPrice;
 	}break;
 	default:
 		break;
