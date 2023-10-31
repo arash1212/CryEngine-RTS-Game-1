@@ -11,4 +11,5 @@ public:
 	static Vec3 GetClosetPointOnMeshBorder(Vec3 from, IEntity* entity);
 	//static Vec2 GetScreenPosition(Cry::DefaultComponents::CCameraComponent* camera, IEntity* entity);
 	static bool IsEntityInsideViewPort(Cry::DefaultComponents::CCameraComponent* camera, IEntity* entity);
+	static IEntity* FindClosestWarehouse(IEntity* to);
 };

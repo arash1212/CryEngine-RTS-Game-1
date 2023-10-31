@@ -73,7 +73,7 @@ void Bakery1BuildingComponent::Initialize()
 
 	//DecalComponent(Placement) Initialization
 	m_pDecalComponent = m_pEntity->CreateComponent<Cry::DefaultComponents::CDecalComponent>();
-	m_pDecalComponent->SetTransformMatrix(Matrix34::Create(Vec3(5.f, 6.3f, 3), IDENTITY, Vec3(0.5f, -1.8, 0)));
+	m_pDecalComponent->SetTransformMatrix(Matrix34::Create(Vec3(4.f, 5.7f, 3), IDENTITY, Vec3(0.3f, -2.4, 0)));
 	m_pDecalComponent->SetMaterialFileName(BUILDING_PLACEMENT_GREEN_DECAL_MATERIAL);
 	m_pDecalComponent->SetSortPriority(50);
 	m_pDecalComponent->SetDepth(10);
@@ -91,8 +91,8 @@ void Bakery1BuildingComponent::Initialize()
 	//Update bounding box
 	AABB aabb;
 	m_pEntity->GetLocalBounds(aabb);
-	Vec3 min = Vec3(aabb.min.x - 4.5f, aabb.min.y - 10.f, aabb.min.z);
-	Vec3 max = Vec3(aabb.max.x + 4.3f, aabb.max.y + 0.3f, aabb.max.z);
+	Vec3 min = Vec3(aabb.min.x - 3.6f, aabb.min.y - 10.f, aabb.min.z);
+	Vec3 max = Vec3(aabb.max.x + 3.1f, aabb.max.y + -0.9f, aabb.max.z);
 	AABB newAABB = AABB(min, max);
 	m_pEntity->SetLocalBounds(newAABB, true);
 
@@ -203,7 +203,7 @@ void Bakery1BuildingComponent::UpdateAssignedWorkers()
 			return;
 		}
 		if (!m_pWarehouseEntity) {
-			m_pWarehouseEntity = FindClosestWarehouse();
+			m_pWarehouseEntity = EntityUtils::FindClosestWarehouse(m_pEntity);
 			return;
 		}
 
@@ -214,7 +214,7 @@ void Bakery1BuildingComponent::UpdateAssignedWorkers()
 			pAIController->MoveTo(warehouseExitPoint, false);
 			pAIController->LookAtWalkDirection();
 		}
-		//Pickup Wheat from Warehouse
+		//Pickup Flour from Warehouse
 		else {
 			pAIController->StopMoving();
 			pAIController->LookAt(m_pWarehouseEntity->GetWorldPos());
@@ -251,10 +251,10 @@ void Bakery1BuildingComponent::UpdateAssignedWorkers()
 		}
 	}
 
-	//**********************************Transfer Bread to warehouse Flour
+	//**********************************Transfer Bread to warehouse
 	if (bIsCollectedFlour && bIsTransferedFlourToBakery) {
 		if (!m_pWarehouseEntity) {
-			m_pWarehouseEntity = FindClosestWarehouse();
+			m_pWarehouseEntity = EntityUtils::FindClosestWarehouse(m_pEntity);
 			return;
 		}
 
@@ -277,33 +277,6 @@ void Bakery1BuildingComponent::UpdateAssignedWorkers()
 			pWorkerComponent->SetHasEnteredWorkplace(false);
 		}
 	}
-}
-
-
-IEntity* Bakery1BuildingComponent::FindClosestWarehouse()
-{
-	IEntityItPtr entityItPtr = gEnv->pEntitySystem->GetEntityIterator();
-	entityItPtr->MoveFirst();
-	while (!entityItPtr->IsEnd()) {
-		IEntity* entity = entityItPtr->Next();
-		if (entity) {
-			/*
-			BuildingComponent* pBuildingComponent = entity->GetComponent<BuildingComponent>();
-			if (!pBuildingComponent) {
-				CryLog("Building component not found");
-				return nullptr;
-			}
-			if (!pBuildingComponent->IsBuilt()) {
-				return nullptr;
-			}
-			*/
-			ResourceStorageComponent* resourceStorage = entity->GetComponent<ResourceStorageComponent>();
-			if (resourceStorage) {
-				return entity;
-			}
-		}
-	}
-	return nullptr;
 }
 
 SResourceInfo Bakery1BuildingComponent::GetCost()

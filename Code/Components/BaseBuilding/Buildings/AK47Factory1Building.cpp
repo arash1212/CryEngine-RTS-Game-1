@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "Windmill1Building.h"
+#include "ak47Factory1Building.h"
 #include "GamePlugin.h"
 
 #include <Components/Info/OwnerInfo.h>
@@ -15,22 +15,20 @@
 #include <UIItems/Items/UIChangeStanceItem.h>
 #include <UIItems/Items/Buildings/UIHQ1BuildItem.h>
 #include<UIItems/Items/Buildings/TrainUnits/UITrainEngineer1Item.h>
-#include<UIItems/Items/Resources/UISellOilItem.h>
-#include<UIItems/Items/Resources/UIBuyOilItem.h>
+#include<UIItems/Items/Buildings/TrainUnits/UITrainSoldier1Item.h>
+
+#include <Components/BaseBuilding/Building.h>
+#include <Utils/MathUtils.h>
+#include <Components/Selectables/Cost.h>
+
+#include <Components/Managers/ResourceManager.h>
 
 #include <Components/Selectables/Worker.h>
 #include <Components/Selectables/Workplace.h>
 #include <Components/Selectables/ResourceCollector.h>
 #include <Components/Selectables/ResourceStorage.h>
 
-#include <Components/BaseBuilding/Building.h>
-#include <Components/Selectables/Cost.h>
-
-#include <Utils/MathUtils.h>
 #include <Utils/EntityUtils.h>
-
-#include <Components/Managers/ResourceManager.h>
-#include <Components/Selectables/ResourceStorage.h>
 
 #include <Components/Selectables/Health.h>
 
@@ -42,25 +40,25 @@
 
 namespace
 {
-	static void RegisterWindmill1BuildingComponent(Schematyc::IEnvRegistrar& registrar)
+	static void RegisterAK47Factory1BuildingComponent(Schematyc::IEnvRegistrar& registrar)
 	{
 		Schematyc::CEnvRegistrationScope scope = registrar.Scope(IEntity::GetEntityScopeGUID());
 		{
-			Schematyc::CEnvRegistrationScope componentScope = scope.Register(SCHEMATYC_MAKE_ENV_COMPONENT(Windmill1BuildingComponent));
+			Schematyc::CEnvRegistrationScope componentScope = scope.Register(SCHEMATYC_MAKE_ENV_COMPONENT(AK47Factory1BuildingComponent));
 		}
 	}
 
-	CRY_STATIC_AUTO_REGISTER_FUNCTION(&RegisterWindmill1BuildingComponent);
+	CRY_STATIC_AUTO_REGISTER_FUNCTION(&RegisterAK47Factory1BuildingComponent);
 }
 
 
-void Windmill1BuildingComponent::Initialize()
+void AK47Factory1BuildingComponent::Initialize()
 {
 	//AnimationComponent Initializations
 	m_pAnimationComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CAdvancedAnimationComponent>();
 	m_pAnimationComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), IDENTITY, Vec3(0, 0, 0)));
-	m_pAnimationComponent->SetCharacterFile(WINDMILL_BUILDING_1_MODEL_PATH);
-	m_pAnimationComponent->SetMannequinAnimationDatabaseFile("Animations/Mannequin/ADB/windmill.adb");
+	m_pAnimationComponent->SetCharacterFile(AK47_FACTORY_BUILDING_1_MODEL_PATH);
+	m_pAnimationComponent->SetMannequinAnimationDatabaseFile("Animations/Mannequin/ADB/bulletfactory1.adb");
 	m_pAnimationComponent->SetControllerDefinitionFile("Animations/Mannequin/ADB/FirstPersonControllerDefinition.xml");
 	m_pAnimationComponent->SetDefaultScopeContextName("ThirdPersonCharacter");
 	m_pAnimationComponent->SetDefaultFragmentName("Idle");
@@ -70,12 +68,12 @@ void Windmill1BuildingComponent::Initialize()
 
 	//BoxComponent Initialization
 	m_pBboxComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CBoxPrimitiveComponent>();
-	m_pBboxComponent->m_size = Vec3(1.7f, 1.6f, 4.5f);
+	m_pBboxComponent->m_size = Vec3(4.6f, 2.5f, 1.8f);
 	m_pBboxComponent->m_bReactToCollisions = true;
 
 	//DecalComponent(Placement) Initialization
 	m_pDecalComponent = m_pEntity->CreateComponent<Cry::DefaultComponents::CDecalComponent>();
-	m_pDecalComponent->SetTransformMatrix(Matrix34::Create(Vec3(6.1f, 4.6f, 3), IDENTITY, Vec3(-0.05f, -0.03f, 0)));
+	m_pDecalComponent->SetTransformMatrix(Matrix34::Create(Vec3(5.0f, 4.6, 3), IDENTITY, Vec3(0.55f, -1.50f, 0)));
 	m_pDecalComponent->SetMaterialFileName(BUILDING_PLACEMENT_GREEN_DECAL_MATERIAL);
 	m_pDecalComponent->SetSortPriority(50);
 	m_pDecalComponent->SetDepth(10);
@@ -83,33 +81,35 @@ void Windmill1BuildingComponent::Initialize()
 
 	//BuildingComponent initialization
 	m_pBuildingComponent = m_pEntity->GetOrCreateComponent<BuildingComponent>();
-	m_pBuildingComponent->SetPathToTrussMesh(WINDMILL_BUILDING_1_TRUSS_MODEL_PATH);
+	m_pBuildingComponent->SetPathToTrussMesh(AK47_FACTORY_1_TRUSS_MODEL_PATH);
 	SBuildingInfo buildingInfo;
 	buildingInfo.m_populationProduces = 0;
 	m_pBuildingComponent->SetBuildingInfo(buildingInfo);
-	m_pBuildingComponent->SetMaxHealth(600.f);
+	//m_pBuildingComponent->SetMaxHealth(700.f);
 	//UIItems
-
 
 	//Update bounding box
 	AABB aabb;
 	m_pEntity->GetLocalBounds(aabb);
-	Vec3 min = Vec3(aabb.min.x - 6.f, aabb.min.y - 2, aabb.min.z - 2.72f);
-	Vec3 max = Vec3(aabb.max.x + 6.f, aabb.max.y + 6, aabb.max.z);
+	Vec3 min = Vec3(aabb.min.x - 1.7f, aabb.min.y - 6.0f, aabb.min.z - 3.17f);
+	Vec3 max = Vec3(aabb.max.x + 5.5f, aabb.max.y + 3.0f, aabb.max.z + 2);
 	AABB newAABB = AABB(min, max);
 	m_pEntity->SetLocalBounds(newAABB, true);
 
 	//CostComponent Initializations
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
-	m_pCostComponent->SetCost(Windmill1BuildingComponent::GetCost());
+	m_pCostComponent->SetCost(AK47Factory1BuildingComponent::GetCost());
 
 	//WorkplaceComponent  Initializations
 	m_pWorkplaceComponent = m_pEntity->GetOrCreateComponent<WorkplaceComponent>();
-	m_pWorkplaceComponent->SetMaxWorkersCount(1);
+	m_pWorkplaceComponent->SetMaxWorkersCount(1);;
+
+	//WorkPositionAttachment
+	m_pWorkPositionAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("workPosition1");
 }
 
 
-Cry::Entity::EventFlags Windmill1BuildingComponent::GetEventMask() const
+Cry::Entity::EventFlags AK47Factory1BuildingComponent::GetEventMask() const
 {
 	return
 		Cry::Entity::EEvent::GameplayStarted |
@@ -117,7 +117,7 @@ Cry::Entity::EventFlags Windmill1BuildingComponent::GetEventMask() const
 		Cry::Entity::EEvent::Reset;
 }
 
-void Windmill1BuildingComponent::ProcessEvent(const SEntityEvent& event)
+void AK47Factory1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 {
 	switch (event.event)
 	{
@@ -143,7 +143,8 @@ void Windmill1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 	}
 }
 
-void Windmill1BuildingComponent::UpdateAssignedWorkers()
+
+void AK47Factory1BuildingComponent::UpdateAssignedWorkers()
 {
 	if (!m_pBuildingComponent) {
 		return;
@@ -175,31 +176,33 @@ void Windmill1BuildingComponent::UpdateAssignedWorkers()
 	}
 	AIControllerComponent* pAIController = pWorker->GetComponent<AIControllerComponent>();
 	if (!pAIController) {
-		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "Windmill1BuildingComponent:(UpdateCurrentMoveToAttachment) pAIController is null");
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "BulletFactory1BuildingComponent:(UpdateCurrentMoveToAttachment) pAIController is null");
 		return;
 	}
 	ResourceCollectorComponent* pResourceCollectorComponent = pWorker->GetComponent<ResourceCollectorComponent>();
 	if (!pResourceCollectorComponent) {
-		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "Windmill1BuildingComponent:(UpdateCurrentMoveToAttachment) pResourceCollectorComponent is null");
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "BulletFactory1BuildingComponent:(UpdateCurrentMoveToAttachment) pResourceCollectorComponent is null");
 		return;
 	}
 	WorkerComponent* pWorkerComponent = pWorker->GetComponent<WorkerComponent>();
 	if (!pWorkerComponent) {
-		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "Windmill1BuildingComponent:(UpdateCurrentMoveToAttachment) pWorkerComponent is null");
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "BulletFactory1BuildingComponent:(UpdateCurrentMoveToAttachment) pWorkerComponent is null");
 		return;
 	}
 	if (!m_pWorkplaceComponent->GetWorkers()[0] || m_pWorkplaceComponent->GetWorkers()[0]->IsGarbage()) {
 		return;
 	}
 
-	int32 WheatRequestAmount = 30;
-	int32 FlourProducedAmount = 10;
+	int32 BulletRequestAmount = 5;
+	int32 IronRequestAmount = 30;
+	int32 BulletProducedAmount = 10;
 
-	//**********************************Move to Warehouse and pickup some wheat
-	if (!bIsCollectedWheat) {
-		SResourceInfo pResourceRequest;
-		pResourceRequest.m_wheatAmount = WheatRequestAmount;
-		if (!pResourceManager->CheckIfResourcesAvailable(pResourceRequest)) {
+	//**********************************Move to Warehouse and pickup some Bullet
+	if (!bIsCollectedBullet) {
+
+		SResourceInfo pSulfurResourceRequest;
+		pSulfurResourceRequest.m_bulletAmount = BulletRequestAmount;
+		if (!pResourceManager->CheckIfResourcesAvailable(pSulfurResourceRequest)) {
 			return;
 		}
 		if (!m_pWarehouseEntity) {
@@ -214,45 +217,102 @@ void Windmill1BuildingComponent::UpdateAssignedWorkers()
 			pAIController->MoveTo(warehouseExitPoint, false);
 			pAIController->LookAtWalkDirection();
 		}
-		//Pickup Wheat from Warehouse
+		//Pickup Bullet from Warehouse
 		else {
 			pAIController->StopMoving();
 			pAIController->LookAt(m_pWarehouseEntity->GetWorldPos());
-			pResourceManager->RequsetResources(pResourceRequest);
-			pResourceCollectorComponent->AddResource(WheatRequestAmount);
-			pResourceCollectorComponent->SetCurrentResourceType(EResourceType::WHEAT);
+			pResourceManager->RequsetResources(pSulfurResourceRequest);
+			pResourceCollectorComponent->AddResource(BulletRequestAmount);
+			pResourceCollectorComponent->SetCurrentResourceType(EResourceType::BULLET);
 
-			bIsCollectedWheat = true;
+			bIsCollectedBullet = true;
 		}
 	}
 
-	//**********************************Transfer Wheat to mill && Get Flour
-	if (bIsCollectedWheat && !bIsTransferedWheatToMill) {
-		Vec3 millExitPoint = m_pBuildingComponent->GetExitPoint();
-		//Move closer to warehouse if it's not close
-		f32 distanceToMill = EntityUtils::GetDistance(m_pWorkplaceComponent->GetWorkers()[0]->GetWorldPos(), millExitPoint, nullptr);
-		if (m_pWarehouseEntity && distanceToMill > 1) {
-			pAIController->MoveTo(millExitPoint, false);
+	//**********************************Transfer Bullet to Factory
+	if (bIsCollectedBullet && !bIsCollectedIron && !bIsTransferedBulletToFactory && !bIsTransferedIronToFactory) {
+		Vec3 workingPoint = m_pWorkPositionAttachment->GetAttWorldAbsolute().t;
+		//Move closer to factory if it's not close
+		f32 distanceToBakery = EntityUtils::GetDistance(m_pWorkplaceComponent->GetWorkers()[0]->GetWorldPos(), workingPoint, nullptr);
+		if (m_pWarehouseEntity && distanceToBakery > 1) {
+			pAIController->MoveTo(workingPoint, false);
 			pAIController->LookAtWalkDirection();
 			m_workTimePassed = 0;
 		}
-		//Pickup Resources from Warehouse
+		//
+		else {
+			pAIController->StopMoving();
+			pAIController->LookAt(m_pEntity->GetWorldPos());
+			pResourceCollectorComponent->EmptyResources();
+
+			//if (m_workTimePassed >= m_timeBetweenWorks) {
+			bIsTransferedBulletToFactory = true;
+
+			//pResourceCollectorComponent->AddResource(GunPowderProducedAmount);
+			//pResourceCollectorComponent->SetCurrentResourceType(EResourceType::GUN_POWDER);
+	//	}
+		}
+	}
+
+	//**********************************Move to Warehouse and pickup some Iron
+	if (!bIsCollectedIron && bIsCollectedBullet && bIsTransferedBulletToFactory && !bIsTransferedIronToFactory) {
+
+		SResourceInfo pIronResourceRequest;
+		pIronResourceRequest.m_ironAmount = IronRequestAmount;
+		if (!pResourceManager->CheckIfResourcesAvailable(pIronResourceRequest)) {
+			return;
+		}
+		if (!m_pWarehouseEntity) {
+			m_pWarehouseEntity = EntityUtils::FindClosestWarehouse(m_pEntity);
+			return;
+		}
+
+		Vec3 warehouseExitPoint = m_pWarehouseEntity->GetComponent<BuildingComponent>()->GetExitPoint();
+		//Move closer to warehouse if it's not close
+		f32 distanceToWareHouse = EntityUtils::GetDistance(m_pWorkplaceComponent->GetWorkers()[0]->GetWorldPos(), warehouseExitPoint, nullptr);
+		if (m_pWarehouseEntity && distanceToWareHouse > 1) {
+			pAIController->MoveTo(warehouseExitPoint, false);
+			pAIController->LookAtWalkDirection();
+		}
+		//Pickup Iron from Warehouse
+		else {
+			pAIController->StopMoving();
+			pAIController->LookAt(m_pWarehouseEntity->GetWorldPos());
+			pResourceManager->RequsetResources(pIronResourceRequest);
+			pResourceCollectorComponent->AddResource(IronRequestAmount);
+			pResourceCollectorComponent->SetCurrentResourceType(EResourceType::IRON);
+
+			bIsCollectedIron = true;
+		}
+	}
+
+	//**********************************Transfer Iron to Factory And Create AK47
+	if (bIsCollectedBullet && bIsCollectedIron && bIsTransferedBulletToFactory && !bIsTransferedIronToFactory) {
+		Vec3 workingPoint = m_pWorkPositionAttachment->GetAttWorldAbsolute().t;
+		//Move closer to Factory if it's not close
+		f32 distanceToBakery = EntityUtils::GetDistance(m_pWorkplaceComponent->GetWorkers()[0]->GetWorldPos(), workingPoint, nullptr);
+		if (m_pWarehouseEntity && distanceToBakery > 1) {
+			pAIController->MoveTo(workingPoint, false);
+			pAIController->LookAtWalkDirection();
+			m_workTimePassed = 0;
+		}
+		//
 		else {
 			pAIController->StopMoving();
 			pAIController->LookAt(m_pEntity->GetWorldPos());
 			pResourceCollectorComponent->EmptyResources();
 
 			if (m_workTimePassed >= m_timeBetweenWorks) {
-				bIsTransferedWheatToMill = true;
+				bIsTransferedIronToFactory = true;
 
-				pResourceCollectorComponent->AddResource(FlourProducedAmount);
-				pResourceCollectorComponent->SetCurrentResourceType(EResourceType::FLOUR);
+				pResourceCollectorComponent->AddResource(BulletProducedAmount);
+				pResourceCollectorComponent->SetCurrentResourceType(EResourceType::AK47);
 			}
 		}
 	}
 
-	//**********************************Transfer Flour to warehouse
-	if (bIsCollectedWheat && bIsTransferedWheatToMill) {
+	//**********************************Transfer AK47 to warehouse
+	if (bIsCollectedBullet && bIsCollectedIron && bIsTransferedBulletToFactory && bIsTransferedIronToFactory) {
 		if (!m_pWarehouseEntity) {
 			m_pWarehouseEntity = EntityUtils::FindClosestWarehouse(m_pEntity);
 			return;
@@ -265,26 +325,28 @@ void Windmill1BuildingComponent::UpdateAssignedWorkers()
 			pAIController->MoveTo(warehouseExitPoint, false);
 			pAIController->LookAtWalkDirection();
 		}
-		//Transer Flour to Warehouse
+		//Transer AK47 to Warehouse
 		else {
 			pAIController->StopMoving();
 			pAIController->LookAt(m_pWarehouseEntity->GetWorldPos());
-			pResourceManager->AddResource(EResourceType::FLOUR, FlourProducedAmount);
+			pResourceManager->AddResource(EResourceType::AK47, BulletProducedAmount);
 			pResourceCollectorComponent->EmptyResources();
 
-			bIsCollectedWheat = false;
-			bIsTransferedWheatToMill = false;
+			bIsCollectedBullet = false;
+			bIsTransferedBulletToFactory = false;
+			bIsCollectedIron = false;
+			bIsTransferedIronToFactory = false;
 			pWorkerComponent->SetHasEnteredWorkplace(false);
 		}
 	}
 }
 
-SResourceInfo Windmill1BuildingComponent::GetCost()
+SResourceInfo AK47Factory1BuildingComponent::GetCost()
 {
 	SResourceInfo cost;
-	cost.m_moneyAmount = 120;
+	cost.m_moneyAmount = 180;
 	cost.m_oilAmount = 100;
-	cost.m_populationAmount = 3;
-	cost.m_woodAmount = 200;
+	cost.m_populationAmount = 2;
+	cost.m_woodAmount = 40;
 	return cost;
 }

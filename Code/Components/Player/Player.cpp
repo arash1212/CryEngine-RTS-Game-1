@@ -284,6 +284,10 @@ void PlayerComponent::LeftMouseDown(int activationMode, float value)
 		//Single selection
 		IEntity* entity = MouseUtils::GetActorUnderCursor();
 		if (entity && !m_pUISelectionBoxComponent->IsBoxSelectionTriggered(mousePos)) {
+			OwnerInfoComponent* pOwnerComponent = entity->GetComponent<OwnerInfoComponent>();
+			if (!pOwnerComponent || pOwnerComponent->GetPlayer() != m_pOwnerInfoComponent->GetPlayer()) {
+				return;
+			}
 			m_selectedUnits.push_back(entity);
 			SelectSelectables();
 		}

@@ -73,7 +73,7 @@ void GunPowderFactory1BuildingComponent::Initialize()
 
 	//DecalComponent(Placement) Initialization
 	m_pDecalComponent = m_pEntity->CreateComponent<Cry::DefaultComponents::CDecalComponent>();
-	m_pDecalComponent->SetTransformMatrix(Matrix34::Create(Vec3(2.7f, 3.8f, 3), IDENTITY, Vec3(0.15f, -1.4f, 0)));
+	m_pDecalComponent->SetTransformMatrix(Matrix34::Create(Vec3(2.0f, 3.6f, 3), IDENTITY, Vec3(0.14f, -1.7f, 0)));
 	m_pDecalComponent->SetMaterialFileName(BUILDING_PLACEMENT_GREEN_DECAL_MATERIAL);
 	m_pDecalComponent->SetSortPriority(50);
 	m_pDecalComponent->SetDepth(10);
@@ -87,13 +87,12 @@ void GunPowderFactory1BuildingComponent::Initialize()
 	m_pBuildingComponent->SetBuildingInfo(buildingInfo);
 	//m_pBuildingComponent->SetMaxHealth(700.f);
 	//UIItems
-	m_pBuildingComponent->AddUIItem(new UITrainEngineer1Item(m_pEntity));
 
 	//Update bounding box
 	AABB aabb;
 	m_pEntity->GetLocalBounds(aabb);
-	Vec3 min = Vec3(aabb.min.x - 2.5f, aabb.min.y - 5.0f, aabb.min.z);
-	Vec3 max = Vec3(aabb.max.x + 2.0f, aabb.max.y + 2.0f, aabb.max.z);
+	Vec3 min = Vec3(aabb.min.x - 1.8f, aabb.min.y - 5.0f, aabb.min.z);
+	Vec3 max = Vec3(aabb.max.x + 1.3f, aabb.max.y + 1.5f, aabb.max.z);
 	AABB newAABB = AABB(min, max);
 	m_pEntity->SetLocalBounds(newAABB, true);
 
@@ -213,7 +212,7 @@ void GunPowderFactory1BuildingComponent::UpdateAssignedWorkers()
 			return;
 		}
 		if (!m_pWarehouseEntity) {
-			m_pWarehouseEntity = FindClosestWarehouse();
+			m_pWarehouseEntity = EntityUtils::FindClosestWarehouse(m_pEntity);
 			return;
 		}
 
@@ -270,7 +269,7 @@ void GunPowderFactory1BuildingComponent::UpdateAssignedWorkers()
 			return;
 		}
 		if (!m_pWarehouseEntity) {
-			m_pWarehouseEntity = FindClosestWarehouse();
+			m_pWarehouseEntity = EntityUtils::FindClosestWarehouse(m_pEntity);
 			return;
 		}
 
@@ -323,7 +322,7 @@ void GunPowderFactory1BuildingComponent::UpdateAssignedWorkers()
 	//**********************************Transfer GunPowder to warehouse
 	if (bIsCollectedSulfur && bIsCollectedWood && bIsTransferedSulfurToFactory && bIsTransferedWoodToFactory) {
 		if (!m_pWarehouseEntity) {
-			m_pWarehouseEntity = FindClosestWarehouse();
+			m_pWarehouseEntity = EntityUtils::FindClosestWarehouse(m_pEntity);
 			return;
 		}
 
@@ -348,23 +347,6 @@ void GunPowderFactory1BuildingComponent::UpdateAssignedWorkers()
 			pWorkerComponent->SetHasEnteredWorkplace(false);
 		}
 	}
-}
-
-
-IEntity* GunPowderFactory1BuildingComponent::FindClosestWarehouse()
-{
-	IEntityItPtr entityItPtr = gEnv->pEntitySystem->GetEntityIterator();
-	entityItPtr->MoveFirst();
-	while (!entityItPtr->IsEnd()) {
-		IEntity* entity = entityItPtr->Next();
-		if (entity) {
-			ResourceStorageComponent* resourceStorage = entity->GetComponent<ResourceStorageComponent>();
-			if (resourceStorage) {
-				return entity;
-			}
-		}
-	}
-	return nullptr;
 }
 
 SResourceInfo GunPowderFactory1BuildingComponent::GetCost()

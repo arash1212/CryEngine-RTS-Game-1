@@ -309,7 +309,7 @@ void Farm1BuildingComponent::UpdateAssignedWorkers()
 	//**********************************SendResource to warehouse
 	if (bIsPlantingDone && bIsHarvestingDone && bIsHarvestingStarted) {
 		if (!m_pWarehouseEntity) {
-			m_pWarehouseEntity = FindClosestWarehouse();
+			m_pWarehouseEntity = EntityUtils::FindClosestWarehouse(m_pEntity);
 			return;
 		}
 
@@ -334,32 +334,6 @@ void Farm1BuildingComponent::UpdateAssignedWorkers()
 			m_pWorker1CurrentAssignePos = m_pWheatAttachments[m_currentIndex]->GetAttWorldAbsolute().t;
 		}
 	}
-}
-
-IEntity* Farm1BuildingComponent::FindClosestWarehouse()
-{
-	IEntityItPtr entityItPtr = gEnv->pEntitySystem->GetEntityIterator();
-	entityItPtr->MoveFirst();
-	while (!entityItPtr->IsEnd()) {
-		IEntity* entity = entityItPtr->Next();
-		if (entity) {
-			/*
-			BuildingComponent* pBuildingComponent = entity->GetComponent<BuildingComponent>();
-			if (!pBuildingComponent) {
-				CryLog("Building component not found");
-				return nullptr;
-			}
-			if (!pBuildingComponent->IsBuilt()) {
-				return nullptr;
-			}
-			*/
-			ResourceStorageComponent* resourceStorage = entity->GetComponent<ResourceStorageComponent>();
-			if (resourceStorage) {
-				return entity;
-			}
-		}
-	}
-	return nullptr;
 }
 
 SResourceInfo Farm1BuildingComponent::GetCost()

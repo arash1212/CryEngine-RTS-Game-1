@@ -43,6 +43,8 @@ private :
 	IAttachment* m_pSulfurAttachment = nullptr;
 	IAttachment* m_pGunPowderAttachment = nullptr;
 	IAttachment* m_pIronAttachment = nullptr;
+	IAttachment* m_pBulletAttachment = nullptr;
+	IAttachment* m_pAK47Attachment = nullptr;
 
 private:
 	int32 m_amountResourceCollected = 0;

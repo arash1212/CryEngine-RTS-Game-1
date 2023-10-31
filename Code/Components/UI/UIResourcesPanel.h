@@ -36,5 +36,7 @@ public:
 	void SetPopulationUsedAmount(int32 populationUsedAmount);
 	void SetWoodAmount(int32 woodAmount);
 	void SetFoodAmount(int32 foodAmount);
+	void SetBulletAmount(int32 bulletAmount);
+	void SetIronAmount(int32 ironAmount);
 	void UpdatePanel();
 };

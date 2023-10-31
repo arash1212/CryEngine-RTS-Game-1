@@ -145,6 +145,32 @@ void UIResourcesPanelComponent::SetFoodAmount(int32 foodAmount)
 	m_pResourcesPanelUIElement->CallFunction("SetFoodAmount", args);
 }
 
+void UIResourcesPanelComponent::SetBulletAmount(int32 bulletAmount)
+{
+	if (!m_pResourcesPanelUIElement) {
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "UIResourcesPanelComponent : (SetBulletAmount) m_pResourcesPanelUIElement is null !");
+		return;
+	}
+
+	SUIArguments args;
+	args.AddArgument(bulletAmount);
+
+	m_pResourcesPanelUIElement->CallFunction("SetBulletAmount", args);
+}
+
+void UIResourcesPanelComponent::SetIronAmount(int32 ironAmount)
+{
+	if (!m_pResourcesPanelUIElement) {
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "UIResourcesPanelComponent : (SetIronAmount) m_pResourcesPanelUIElement is null !");
+		return;
+	}
+
+	SUIArguments args;
+	args.AddArgument(ironAmount);
+
+	m_pResourcesPanelUIElement->CallFunction("SetIronAmount", args);
+}
+
 void UIResourcesPanelComponent::UpdatePanel()
 {
 	ResourceManagerComponent* resourceManager = m_pEntity->GetComponent<ResourceManagerComponent>();
@@ -161,6 +187,8 @@ void UIResourcesPanelComponent::UpdatePanel()
 	SetPopulationUsedAmount(resourceInfo.m_populationUsed);
 	SetWoodAmount(resourceInfo.m_woodAmount);
 	SetFoodAmount(resourceInfo.m_breadAmount);
+	SetBulletAmount(resourceInfo.m_bulletAmount);
+	SetIronAmount(resourceInfo.m_ironAmount);
 
 	CryLog("resources panel updated");
 }

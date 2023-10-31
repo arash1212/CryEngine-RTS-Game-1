@@ -96,6 +96,10 @@ void AttackerComponent::ProcessEvent(const SEntityEvent& event)
 			m_attackCount = 0;
 		}
 
+		if (m_lookingForRandomTargetTimePassed < m_timeBetweenLookingForRandomTarget) {
+			m_lookingForRandomTargetTimePassed += 0.5f * DeltaTime;
+		}
+
 		//TODO : ATTACK ANIMATION EVENT (FOR NOT RANGED)
 
 		ValidateTarget();
@@ -244,6 +248,9 @@ void AttackerComponent::FindRandomTarget()
 	//	m_pRandomAttackTarget = nullptr;
 		return;
 	}
+	if (m_lookingForRandomTargetTimePassed < m_timeBetweenLookingForRandomTarget) {
+		return;
+	}
 
 	for (IEntity* entity : m_hostilePlayers)
 	{
@@ -265,6 +272,7 @@ void AttackerComponent::FindRandomTarget()
 			}
 		}
 	}
+	m_lookingForRandomTargetTimePassed = 0;
 }
 
 void AttackerComponent::LookAt(Vec3 position)

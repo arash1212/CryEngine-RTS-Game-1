@@ -63,8 +63,10 @@ void ResourceManagerComponent::ProcessEvent(const SEntityEvent& event)
 			m_pResouceInfo.m_woodAmount = 600;
 			m_pResouceInfo.m_breadAmount = 30;
 			m_pResouceInfo.m_sulfurAmount = 50;
-			m_pResouceInfo.m_gunPowderAmount = 20;
+			m_pResouceInfo.m_gunPowderAmount = 90;
 			m_pResouceInfo.m_ironAmount = 400;
+			m_pResouceInfo.m_bulletAmount = 60;
+			m_pResouceInfo.m_ak47Amount = 5;
 
 			//AudioComponent initialization
 			m_pAudioComponent = m_pEntity->GetComponent<IEntityAudioComponent>();
@@ -200,6 +202,14 @@ bool ResourceManagerComponent::RequsetResources(SResourceInfo resourceRequestPar
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (RequsetResources) Not Enough Iron");
 		return false;
 	}
+	else if (m_pResouceInfo.m_bulletAmount < resourceRequestParams.m_bulletAmount) {
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (RequsetResources) Not Enough Bullet");
+		return false;
+	}
+	else if (m_pResouceInfo.m_ak47Amount < resourceRequestParams.m_ak47Amount) {
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (RequsetResources) Not Enough Bullet");
+		return false;
+	}
 
 	m_pResouceInfo.m_moneyAmount -= resourceRequestParams.m_moneyAmount;
 	m_pResouceInfo.m_oilAmount -= resourceRequestParams.m_oilAmount;
@@ -211,6 +221,8 @@ bool ResourceManagerComponent::RequsetResources(SResourceInfo resourceRequestPar
 	m_pResouceInfo.m_sulfurAmount -= resourceRequestParams.m_sulfurAmount;
 	m_pResouceInfo.m_gunPowderAmount -= resourceRequestParams.m_gunPowderAmount;
 	m_pResouceInfo.m_ironAmount -= resourceRequestParams.m_ironAmount;
+	m_pResouceInfo.m_bulletAmount -= resourceRequestParams.m_bulletAmount;
+	m_pResouceInfo.m_ak47Amount -= resourceRequestParams.m_ak47Amount;
 
 	m_pResouecesPanelComponent->UpdatePanel();
 	return true;
@@ -249,6 +261,12 @@ bool ResourceManagerComponent::CheckIfResourcesAvailable(SResourceInfo resourceR
 	else if (m_pResouceInfo.m_ironAmount < resourceRequestParams.m_ironAmount) {
 		return false;
 	}
+	else if (m_pResouceInfo.m_bulletAmount < resourceRequestParams.m_bulletAmount) {
+		return false;
+	}
+	else if (m_pResouceInfo.m_ak47Amount < resourceRequestParams.m_ak47Amount) {
+		return false;
+	}
 	return true;
 }
 
@@ -264,6 +282,8 @@ void ResourceManagerComponent::RefundResources(SResourceInfo resourceRequestPara
 	m_pResouceInfo.m_sulfurAmount += resourceRequestParams.m_sulfurAmount;
 	m_pResouceInfo.m_gunPowderAmount += resourceRequestParams.m_gunPowderAmount;
 	m_pResouceInfo.m_ironAmount += resourceRequestParams.m_ironAmount;
+	m_pResouceInfo.m_bulletAmount += resourceRequestParams.m_bulletAmount;
+	m_pResouceInfo.m_ak47Amount += resourceRequestParams.m_ak47Amount;
 
 	m_pResouecesPanelComponent->UpdatePanel();
 	CryLog("resource refunded");
@@ -299,6 +319,12 @@ void ResourceManagerComponent::AddResource(EResourceType type, int32 amount)
 	}break;
 	case EResourceType::IRON: {
 		m_pResouceInfo.m_ironAmount += amount;
+	}break;
+	case EResourceType::BULLET: {
+		m_pResouceInfo.m_bulletAmount += amount;
+	}break;
+	case EResourceType::AK47: {
+		m_pResouceInfo.m_ak47Amount += amount;
 	}break;
 	default:
 		break;
@@ -390,6 +416,22 @@ void ResourceManagerComponent::SellResource(int32 amount, EResourceType type)
 		this->m_pResouceInfo.m_ironAmount -= amount * (ResourceManagerComponent::m_IronPrice / 2);
 		this->m_pResouceInfo.m_moneyAmount += (amount * ResourceManagerComponent::m_IronPrice / 2);
 	}break;
+	case EResourceType::BULLET: {
+		if (m_pResouceInfo.m_bulletAmount < amount) {
+			CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (SellResource) Not Enough Bullet to sell");
+			return;
+		}
+		this->m_pResouceInfo.m_bulletAmount -= amount * (ResourceManagerComponent::m_bulletPrice / 2);
+		this->m_pResouceInfo.m_moneyAmount += (amount * ResourceManagerComponent::m_bulletPrice / 2);
+	}break;
+	case EResourceType::AK47: {
+		if (m_pResouceInfo.m_ak47Amount < amount) {
+			CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (SellResource) Not Enough AK47 to sell");
+			return;
+		}
+		this->m_pResouceInfo.m_ak47Amount -= amount * (ResourceManagerComponent::m_ak47Price / 2);
+		this->m_pResouceInfo.m_moneyAmount += (amount * ResourceManagerComponent::m_ak47Price / 2);
+	}break;
 	default:
 		break;
 	}
@@ -466,6 +508,22 @@ void ResourceManagerComponent::BuyResource(int32 amount, EResourceType type)
 			return;
 		}
 		this->m_pResouceInfo.m_ironAmount += amount * ResourceManagerComponent::m_IronPrice;
+	}break;
+	case EResourceType::BULLET: {
+		buyPrice = (amount * ResourceManagerComponent::m_bulletPrice);
+		if (m_pResouceInfo.m_ironAmount < buyPrice) {
+			CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (BuyResource) Not Enough Money to buy");
+			return;
+		}
+		this->m_pResouceInfo.m_bulletAmount += amount * ResourceManagerComponent::m_bulletPrice;
+	}break;
+	case EResourceType::AK47: {
+		buyPrice = (amount * ResourceManagerComponent::m_bulletPrice);
+		if (m_pResouceInfo.m_ak47Amount < buyPrice) {
+			CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (BuyResource) Not Enough Money to buy");
+			return;
+		}
+		this->m_pResouceInfo.m_ak47Amount += amount * ResourceManagerComponent::m_ak47Price;
 	}break;
 	default:
 		break;

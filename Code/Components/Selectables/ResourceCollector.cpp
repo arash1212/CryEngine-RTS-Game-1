@@ -47,6 +47,8 @@ void ResourceCollectorComponent::Initialize()
 	m_pSulfurAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("sulfur");
 	m_pGunPowderAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("gunPowder");
 	m_pIronAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("iron");
+	m_pBulletAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("bullet");
+	m_pAK47Attachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("ak47");
 }
 
 Cry::Entity::EventFlags ResourceCollectorComponent::GetEventMask() const
@@ -128,6 +130,12 @@ void ResourceCollectorComponent::SendResourceToWareHouse()
 	case EResourceType::IRON: {
 		resourceManager->AddResource(EResourceType::IRON, m_amountResourceCollected);
 	}break;
+	case EResourceType::BULLET: {
+		resourceManager->AddResource(EResourceType::BULLET, m_amountResourceCollected);
+	}break;
+	case EResourceType::AK47: {
+		resourceManager->AddResource(EResourceType::BULLET, m_amountResourceCollected);
+	}break;
 	default:
 		break;
 	}
@@ -147,6 +155,8 @@ void ResourceCollectorComponent::UpdateResourceAttachment()
 		m_pSulfurAttachment->HideAttachment(true);
 		m_pGunPowderAttachment->HideAttachment(true);
 		m_pIronAttachment->HideAttachment(true);
+		m_pBulletAttachment->HideAttachment(true);
+		m_pAK47Attachment->HideAttachment(true);
 		return;
 	}
 
@@ -161,6 +171,8 @@ void ResourceCollectorComponent::UpdateResourceAttachment()
 		m_pSulfurAttachment->HideAttachment(true);
 		m_pGunPowderAttachment->HideAttachment(true);
 		m_pIronAttachment->HideAttachment(true);
+		m_pBulletAttachment->HideAttachment(true);
+		m_pAK47Attachment->HideAttachment(true);
 	}break;
 	case EResourceType::OIL: {
 		m_pOilBarrelAttachment->HideAttachment(false);
@@ -171,6 +183,8 @@ void ResourceCollectorComponent::UpdateResourceAttachment()
 		m_pSulfurAttachment->HideAttachment(true);
 		m_pGunPowderAttachment->HideAttachment(true);
 		m_pIronAttachment->HideAttachment(true);
+		m_pBulletAttachment->HideAttachment(true);
+		m_pAK47Attachment->HideAttachment(true);
 	}break;
 	case EResourceType::WHEAT: {
 		m_pOilBarrelAttachment->HideAttachment(true);
@@ -181,6 +195,8 @@ void ResourceCollectorComponent::UpdateResourceAttachment()
 		m_pSulfurAttachment->HideAttachment(true);
 		m_pGunPowderAttachment->HideAttachment(true);
 		m_pIronAttachment->HideAttachment(true);
+		m_pBulletAttachment->HideAttachment(true);
+		m_pAK47Attachment->HideAttachment(true);
 	}break;
 	case EResourceType::FLOUR: {
 		m_pOilBarrelAttachment->HideAttachment(true);
@@ -191,6 +207,8 @@ void ResourceCollectorComponent::UpdateResourceAttachment()
 		m_pSulfurAttachment->HideAttachment(true);
 		m_pGunPowderAttachment->HideAttachment(true);
 		m_pIronAttachment->HideAttachment(true);
+		m_pBulletAttachment->HideAttachment(true);
+		m_pAK47Attachment->HideAttachment(true);
 	}break;
 	case EResourceType::WOOD: {
 		m_pOilBarrelAttachment->HideAttachment(true);
@@ -201,6 +219,8 @@ void ResourceCollectorComponent::UpdateResourceAttachment()
 		m_pSulfurAttachment->HideAttachment(true);
 		m_pGunPowderAttachment->HideAttachment(true);
 		m_pIronAttachment->HideAttachment(true);
+		m_pBulletAttachment->HideAttachment(true);
+		m_pAK47Attachment->HideAttachment(true);
 	}break;
 	case EResourceType::BREAD: {
 		m_pOilBarrelAttachment->HideAttachment(true);
@@ -211,6 +231,8 @@ void ResourceCollectorComponent::UpdateResourceAttachment()
 		m_pSulfurAttachment->HideAttachment(true);
 		m_pGunPowderAttachment->HideAttachment(true);
 		m_pIronAttachment->HideAttachment(true);
+		m_pBulletAttachment->HideAttachment(true);
+		m_pAK47Attachment->HideAttachment(true);
 	}break;
 	case EResourceType::SULFUR: {
 		m_pOilBarrelAttachment->HideAttachment(true);
@@ -221,6 +243,8 @@ void ResourceCollectorComponent::UpdateResourceAttachment()
 		m_pSulfurAttachment->HideAttachment(false);
 		m_pGunPowderAttachment->HideAttachment(true);
 		m_pIronAttachment->HideAttachment(true);
+		m_pBulletAttachment->HideAttachment(true);
+		m_pAK47Attachment->HideAttachment(true);
 	}break;
 	case EResourceType::GUN_POWDER: {
 		m_pOilBarrelAttachment->HideAttachment(true);
@@ -231,6 +255,8 @@ void ResourceCollectorComponent::UpdateResourceAttachment()
 		m_pSulfurAttachment->HideAttachment(true);
 		m_pGunPowderAttachment->HideAttachment(false);
 		m_pIronAttachment->HideAttachment(true);
+		m_pBulletAttachment->HideAttachment(true);
+		m_pAK47Attachment->HideAttachment(true);
 	}break;
 	case EResourceType::IRON: {
 		m_pOilBarrelAttachment->HideAttachment(true);
@@ -241,6 +267,32 @@ void ResourceCollectorComponent::UpdateResourceAttachment()
 		m_pSulfurAttachment->HideAttachment(true);
 		m_pGunPowderAttachment->HideAttachment(true);
 		m_pIronAttachment->HideAttachment(false);
+		m_pBulletAttachment->HideAttachment(true);
+		m_pAK47Attachment->HideAttachment(true);
+	}break;
+	case EResourceType::BULLET: {
+		m_pOilBarrelAttachment->HideAttachment(true);
+		m_pWheatAttachment->HideAttachment(true);
+		m_pFlourAttachment->HideAttachment(true);
+		m_pWoodAttachment->HideAttachment(true);
+		m_pBreadAttachment->HideAttachment(true);
+		m_pSulfurAttachment->HideAttachment(true);
+		m_pGunPowderAttachment->HideAttachment(true);
+		m_pIronAttachment->HideAttachment(true);
+		m_pBulletAttachment->HideAttachment(false);
+		m_pAK47Attachment->HideAttachment(true);
+	}break;
+	case EResourceType::AK47: {
+		m_pOilBarrelAttachment->HideAttachment(true);
+		m_pWheatAttachment->HideAttachment(true);
+		m_pFlourAttachment->HideAttachment(true);
+		m_pWoodAttachment->HideAttachment(true);
+		m_pBreadAttachment->HideAttachment(true);
+		m_pSulfurAttachment->HideAttachment(true);
+		m_pGunPowderAttachment->HideAttachment(true);
+		m_pIronAttachment->HideAttachment(true);
+		m_pBulletAttachment->HideAttachment(true);
+		m_pAK47Attachment->HideAttachment(false);
 	}break;
 	default:
 		break;

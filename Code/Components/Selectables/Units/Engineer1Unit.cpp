@@ -18,6 +18,9 @@
 #include <UIItems/Items/Buildings/UILight1BuildItem.h>
 #include <UIItems/Items/Buildings/UIAlchemy1BuildItem.h>
 #include <UIItems/Items/Buildings/UIGunPowderFactory1BuildItem.h>
+#include <UIItems/Items/Buildings/UIBulletFactory1BuildItem.h>
+#include <UIItems/Items/Buildings/UIAK47Factory1BuildItem.h>
+
 #include <Components/Selectables/Worker.h>
 
 #include <Components/Controller/AIController.h>
@@ -93,9 +96,11 @@ void Engineer1UnitComponent::Initialize()
 	m_pSelectableComponent->AddUIItem(new UIFarm1BuildItem(m_pEntity));
 	m_pSelectableComponent->AddUIItem(new UIWindmillBuildItem(m_pEntity));
 	m_pSelectableComponent->AddUIItem(new UIBakery1BuildItem(m_pEntity));
-	m_pSelectableComponent->AddUIItem(new UILight1BuildItem(m_pEntity));
 	m_pSelectableComponent->AddUIItem(new UIAlchemy1BuildItem(m_pEntity));
 	m_pSelectableComponent->AddUIItem(new UIGunPowderFactory1BuildItem(m_pEntity));
+	m_pSelectableComponent->AddUIItem(new UIBulletFactory1BuildItem(m_pEntity));
+	m_pSelectableComponent->AddUIItem(new UIAK47Factory1BuildItem(m_pEntity));
+	m_pSelectableComponent->AddUIItem(new UILight1BuildItem(m_pEntity));
 
 	//ActionManager Initializations
 	m_pActionManagerComponent = m_pEntity->GetOrCreateComponent<ActionManagerComponent>();
@@ -177,9 +182,11 @@ void Engineer1UnitComponent::ProcessEvent(const SEntityEvent& event)
 SResourceInfo Engineer1UnitComponent::GetCost()
 {
 	SResourceInfo cost;
-	cost.m_moneyAmount = 60;
+	cost.m_moneyAmount = 100;
 	cost.m_oilAmount = 20;
-	cost.m_populationAmount = 3;
+	cost.m_populationAmount = 2;
+	cost.m_bulletAmount = 0;
+	cost.m_ak47Amount = 0;
 	return cost;
 }
 

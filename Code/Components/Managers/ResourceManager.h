@@ -16,6 +16,8 @@ public:
 	int32 m_sulfurAmount = 0;
 	int32 m_gunPowderAmount = 0;
 	int32 m_ironAmount = 0;
+	int32 m_bulletAmount = 0;
+	int32 m_ak47Amount = 0;
 };
 
 class ResourceManagerComponent : public IEntityComponent {
@@ -55,6 +57,8 @@ public:
 	const static int32 m_SulfurPrice = 10;
 	const static int32 m_GunPowderPrice = 50;
 	const static int32 m_IronPrice = 20;
+	const static int32 m_bulletPrice = 100;
+	const static int32 m_ak47Price = 400;
 
 	//Sounds
 	CryAudio::ControlId m_pBuySound;

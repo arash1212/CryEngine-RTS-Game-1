@@ -30,8 +30,6 @@ private:
 
 	//Timers
 	f32 m_builtTimePassed = 0.f;
-
-	IEntity* FindClosestWarehouse();
 public:
 	virtual void Execute();
 	virtual void Cancel();

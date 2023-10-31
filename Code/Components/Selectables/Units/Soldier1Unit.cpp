@@ -145,6 +145,8 @@ SResourceInfo Soldier1UnitComponent::GetCost()
 	SResourceInfo cost;
 	cost.m_moneyAmount = 120;
 	cost.m_oilAmount = 60;
-	cost.m_populationAmount = 5;
+	cost.m_populationAmount = 2;
+	cost.m_bulletAmount = 20;
+	cost.m_ak47Amount = 1;
 	return cost;
 }

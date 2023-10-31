@@ -15,7 +15,9 @@ enum class EResourceType {
 	BREAD,
 	SULFUR,
 	GUN_POWDER,
-	IRON
+	IRON,
+	BULLET,
+	AK47
 };
 
 class ResourceComponent final : public IEntityComponent

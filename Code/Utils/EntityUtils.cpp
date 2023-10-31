@@ -9,6 +9,7 @@
 #include <Components/Info/OwnerInfo.h>
 #include <CryEntitySystem/IEntitySystem.h>
 #include <Components/Managers/ResourceManager.h>
+#include <Components/Selectables/ResourceStorage.h>
 
 IEntity* EntityUtils::SpawnEntity(Vec3 position, Quat rotation, IEntity* owner)
 {
@@ -206,4 +207,29 @@ bool EntityUtils::IsEntityInsideViewPort(Cry::DefaultComponents::CCameraComponen
 	int32 vWidth = gEnv->pRenderer->GetWidth();
 
 	return result.x >= 0 && result.x <= vWidth && result.y >= 0 && result.y <= vHeight;
+}
+
+IEntity* EntityUtils::FindClosestWarehouse(IEntity* to)
+{
+	IEntityItPtr entityItPtr = gEnv->pEntitySystem->GetEntityIterator();
+	entityItPtr->MoveFirst();
+	while (!entityItPtr->IsEnd()) {
+		IEntity* entity = entityItPtr->Next();
+		if (entity) {
+			/*
+			BuildingComponent* pBuildingComponent = entity->GetComponent<BuildingComponent>();
+			if (!pBuildingComponent) {
+				return nullptr;
+			}
+			if (!pBuildingComponent->IsBuilt()) {
+				return nullptr;
+			}
+			*/
+			ResourceStorageComponent* resourceStorage = entity->GetComponent<ResourceStorageComponent>();
+			if (resourceStorage) {
+				return entity;
+			}
+		}
+	}
+	return nullptr;
 }

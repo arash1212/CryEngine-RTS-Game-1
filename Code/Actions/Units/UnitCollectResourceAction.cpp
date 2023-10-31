@@ -28,30 +28,6 @@ UnitCollectResourceAction::UnitCollectResourceAction(IEntity* entity, IEntity* r
 	m_builtTimePassed = this->m_pEngineerComponent->GetEngineerInfo().m_timeBetweenBuilds;
 }
 
-IEntity* UnitCollectResourceAction::FindClosestWarehouse()
-{
-	IEntityItPtr entityItPtr = gEnv->pEntitySystem->GetEntityIterator();
-	entityItPtr->MoveFirst();
-	while (!entityItPtr->IsEnd()) {
-		IEntity* entity = entityItPtr->Next();
-		if (entity) {
-			/*
-			BuildingComponent* pBuildingComponent = entity->GetComponent<BuildingComponent>();
-			if (!pBuildingComponent) {
-				return nullptr;
-			}
-			if (!pBuildingComponent->IsBuilt()) {
-				return nullptr;
-			}
-			*/
-			ResourceStorageComponent* resourceStorage = entity->GetComponent<ResourceStorageComponent>();
-			if (resourceStorage) {
-				return entity;
-			}
-		}
-	}
-	return nullptr;
-}
 
 void UnitCollectResourceAction::Execute()
 {
@@ -139,7 +115,7 @@ void UnitCollectResourceAction::Execute()
 		}
 
 		if (!m_pWarehouseEntity) {
-			m_pWarehouseEntity = FindClosestWarehouse();
+			m_pWarehouseEntity = EntityUtils::FindClosestWarehouse(m_pEntity);
 			this->m_builtTimePassed = 0.2f;
 			return;
 		}

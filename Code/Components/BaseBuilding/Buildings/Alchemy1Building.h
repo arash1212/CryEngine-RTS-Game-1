@@ -58,7 +58,6 @@ private:
 	f32 m_timeBetweenWorks = 5.f;
 	f32 m_workTimePassed = 0.f;
 private:
-	IEntity* FindClosestWarehouse();
 	void UpdateAssignedWorkers();
 
 public:

@@ -76,7 +76,7 @@ void Warehouse1BuildingComponent::Initialize()
 
 	//DecalComponent(Placement) Initialization
 	m_pDecalComponent = m_pEntity->CreateComponent<Cry::DefaultComponents::CDecalComponent>();
-	m_pDecalComponent->SetTransformMatrix(Matrix34::Create(Vec3(6.1f, 5.9f, 3), IDENTITY, Vec3(-0.1f, 0.17f, 0)));
+	m_pDecalComponent->SetTransformMatrix(Matrix34::Create(Vec3(4.1f, 5.9f, 3), IDENTITY, Vec3(-0.0f, -1.85f, 0)));
 	m_pDecalComponent->SetMaterialFileName(BUILDING_PLACEMENT_GREEN_DECAL_MATERIAL);
 	m_pDecalComponent->SetSortPriority(50);
 	m_pDecalComponent->SetDepth(10);
@@ -107,8 +107,8 @@ void Warehouse1BuildingComponent::Initialize()
 	//Update bounding box
 	AABB aabb;
 	m_pEntity->GetLocalBounds(aabb);
-	Vec3 min = Vec3(aabb.min.x - 6.f, aabb.min.y - 2, aabb.min.z - 2);
-	Vec3 max = Vec3(aabb.max.x + 6.f, aabb.max.y + 6, aabb.max.z);;
+	Vec3 min = Vec3(aabb.min.x - 4.0f, aabb.min.y - 4, aabb.min.z - 2);
+	Vec3 max = Vec3(aabb.max.x + 4.1f, aabb.max.y + 4.f, aabb.max.z);;
 	AABB newAABB = AABB(min, max);
 	m_pEntity->SetLocalBounds(newAABB, true);
 

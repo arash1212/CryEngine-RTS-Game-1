@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "Alchemy1Building.h"
+#include "BulletFactory1Building.h"
 #include "GamePlugin.h"
 
 #include <Components/Info/OwnerInfo.h>
@@ -40,25 +40,25 @@
 
 namespace
 {
-	static void RegisterAlchemy1BuildingComponent(Schematyc::IEnvRegistrar& registrar)
+	static void RegisterBulletFactory1BuildingComponent(Schematyc::IEnvRegistrar& registrar)
 	{
 		Schematyc::CEnvRegistrationScope scope = registrar.Scope(IEntity::GetEntityScopeGUID());
 		{
-			Schematyc::CEnvRegistrationScope componentScope = scope.Register(SCHEMATYC_MAKE_ENV_COMPONENT(Alchemy1BuildingComponent));
+			Schematyc::CEnvRegistrationScope componentScope = scope.Register(SCHEMATYC_MAKE_ENV_COMPONENT(BulletFactory1BuildingComponent));
 		}
 	}
 
-	CRY_STATIC_AUTO_REGISTER_FUNCTION(&RegisterAlchemy1BuildingComponent);
+	CRY_STATIC_AUTO_REGISTER_FUNCTION(&RegisterBulletFactory1BuildingComponent);
 }
 
 
-void Alchemy1BuildingComponent::Initialize()
+void BulletFactory1BuildingComponent::Initialize()
 {
 	//AnimationComponent Initializations
 	m_pAnimationComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CAdvancedAnimationComponent>();
 	m_pAnimationComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), IDENTITY, Vec3(0, 0, 0)));
-	m_pAnimationComponent->SetCharacterFile(ALCHEMY_BUILDING_1_MODEL_PATH);
-	m_pAnimationComponent->SetMannequinAnimationDatabaseFile("Animations/Mannequin/ADB/barracks1.adb");
+	m_pAnimationComponent->SetCharacterFile(BULLET_FACTORY_BUILDING_1_MODEL_PATH);
+	m_pAnimationComponent->SetMannequinAnimationDatabaseFile("Animations/Mannequin/ADB/bulletfactory1.adb");
 	m_pAnimationComponent->SetControllerDefinitionFile("Animations/Mannequin/ADB/FirstPersonControllerDefinition.xml");
 	m_pAnimationComponent->SetDefaultScopeContextName("ThirdPersonCharacter");
 	m_pAnimationComponent->SetDefaultFragmentName("Idle");
@@ -68,12 +68,12 @@ void Alchemy1BuildingComponent::Initialize()
 
 	//BoxComponent Initialization
 	m_pBboxComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CBoxPrimitiveComponent>();
-	m_pBboxComponent->m_size = Vec3(6.f, 4.1f, 2.0f);
+	m_pBboxComponent->m_size = Vec3(1.6f, 1.6f, 3.f);
 	m_pBboxComponent->m_bReactToCollisions = true;
 
 	//DecalComponent(Placement) Initialization
 	m_pDecalComponent = m_pEntity->CreateComponent<Cry::DefaultComponents::CDecalComponent>();
-	m_pDecalComponent->SetTransformMatrix(Matrix34::Create(Vec3(7.8f, 6.4f, 3), IDENTITY, Vec3(0.3f, 0.6f, 0)));
+	m_pDecalComponent->SetTransformMatrix(Matrix34::Create(Vec3(5.3f, 3.9f, 3), IDENTITY, Vec3(0.06f, -1.2f, 0)));
 	m_pDecalComponent->SetMaterialFileName(BUILDING_PLACEMENT_GREEN_DECAL_MATERIAL);
 	m_pDecalComponent->SetSortPriority(50);
 	m_pDecalComponent->SetDepth(10);
@@ -81,36 +81,41 @@ void Alchemy1BuildingComponent::Initialize()
 
 	//BuildingComponent initialization
 	m_pBuildingComponent = m_pEntity->GetOrCreateComponent<BuildingComponent>();
-	m_pBuildingComponent->SetPathToTrussMesh(ALCHEMY_BUILDING_1_TRUSS_MODEL_PATH);
+	m_pBuildingComponent->SetPathToTrussMesh(BULLET_FACTORY_1_TRUSS_MODEL_PATH);
 	SBuildingInfo buildingInfo;
 	buildingInfo.m_populationProduces = 0;
 	m_pBuildingComponent->SetBuildingInfo(buildingInfo);
 	//m_pBuildingComponent->SetMaxHealth(700.f);
 	//UIItems
-	m_pBuildingComponent->AddUIItem(new UITrainEngineer1Item(m_pEntity));
 
 	//Update bounding box
 	AABB aabb;
 	m_pEntity->GetLocalBounds(aabb);
-	Vec3 min = Vec3(aabb.min.x - 5.5f, aabb.min.y - 2.0f, aabb.min.z);
-	Vec3 max = Vec3(aabb.max.x + 8.0f, aabb.max.y + 7.0f, aabb.max.z);
+	Vec3 min = Vec3(aabb.min.x - 3.5f, aabb.min.y - 5.0f, aabb.min.z - 4.628f);
+	Vec3 max = Vec3(aabb.max.x + 3.8f, aabb.max.y + 2.5f, aabb.max.z + 3);
 	AABB newAABB = AABB(min, max);
 	m_pEntity->SetLocalBounds(newAABB, true);
 
 	//CostComponent Initializations
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
-	m_pCostComponent->SetCost(Alchemy1BuildingComponent::GetCost());
+	m_pCostComponent->SetCost(BulletFactory1BuildingComponent::GetCost());
 
 	//WorkplaceComponent  Initializations
 	m_pWorkplaceComponent = m_pEntity->GetOrCreateComponent<WorkplaceComponent>();
 	m_pWorkplaceComponent->SetMaxWorkersCount(1);
 
 	//WorkPositionAttachment
+	m_pParticleComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CParticleComponent>();
+	m_pParticleComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), IDENTITY, Vec3(0, 0, 6)));
+	m_pParticleComponent->SetEffectName("Objects/effects/smoke/smoke_particle_1.pfx");
+	m_pParticleComponent->Activate(false);
+
+	//WorkPositionAttachment
 	m_pWorkPositionAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("workPosition1");
 }
 
 
-Cry::Entity::EventFlags Alchemy1BuildingComponent::GetEventMask() const
+Cry::Entity::EventFlags BulletFactory1BuildingComponent::GetEventMask() const
 {
 	return
 		Cry::Entity::EEvent::GameplayStarted |
@@ -118,7 +123,7 @@ Cry::Entity::EventFlags Alchemy1BuildingComponent::GetEventMask() const
 		Cry::Entity::EEvent::Reset;
 }
 
-void Alchemy1BuildingComponent::ProcessEvent(const SEntityEvent& event)
+void BulletFactory1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 {
 	switch (event.event)
 	{
@@ -145,7 +150,7 @@ void Alchemy1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 }
 
 
-void Alchemy1BuildingComponent::UpdateAssignedWorkers()
+void BulletFactory1BuildingComponent::UpdateAssignedWorkers()
 {
 	if (!m_pBuildingComponent) {
 		return;
@@ -177,41 +182,40 @@ void Alchemy1BuildingComponent::UpdateAssignedWorkers()
 	}
 	AIControllerComponent* pAIController = pWorker->GetComponent<AIControllerComponent>();
 	if (!pAIController) {
-		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "Alchemy1BuildingComponent:(UpdateCurrentMoveToAttachment) pAIController is null");
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "BulletFactory1BuildingComponent:(UpdateCurrentMoveToAttachment) pAIController is null");
 		return;
 	}
 	ResourceCollectorComponent* pResourceCollectorComponent = pWorker->GetComponent<ResourceCollectorComponent>();
 	if (!pResourceCollectorComponent) {
-		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "Alchemy1BuildingComponent:(UpdateCurrentMoveToAttachment) pResourceCollectorComponent is null");
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "BulletFactory1BuildingComponent:(UpdateCurrentMoveToAttachment) pResourceCollectorComponent is null");
 		return;
 	}
 	WorkerComponent* pWorkerComponent = pWorker->GetComponent<WorkerComponent>();
 	if (!pWorkerComponent) {
-		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "Alchemy1BuildingComponent:(UpdateCurrentMoveToAttachment) pWorkerComponent is null");
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "BulletFactory1BuildingComponent:(UpdateCurrentMoveToAttachment) pWorkerComponent is null");
 		return;
 	}
 	if (!m_pWorkplaceComponent->GetWorkers()[0] || m_pWorkplaceComponent->GetWorkers()[0]->IsGarbage()) {
 		return;
 	}
 
-	int32 OilRequestAmount = 30;
-	int32 SulfurProducedAmount = 10;
+	int32 GunPowderRequestAmount = 30;
+	int32 IronRequestAmount = 30;
+	int32 BulletProducedAmount = 10;
 
-	//**********************************Move to Warehouse and pickup some Oil
-	if (!bIsCollectedOil) {
+	//**********************************Move to Warehouse and pickup some GunPowder
+	if (!bIsCollectedGunPowder) {
 
-		SResourceInfo pResourceRequest;
-		pResourceRequest.m_oilAmount = OilRequestAmount;
-		if (!pResourceManager->CheckIfResourcesAvailable(pResourceRequest)) {
+		SResourceInfo pSulfurResourceRequest;
+		pSulfurResourceRequest.m_gunPowderAmount = GunPowderRequestAmount;
+		if (!pResourceManager->CheckIfResourcesAvailable(pSulfurResourceRequest)) {
 			return;
 		}
 		if (!m_pWarehouseEntity) {
 			m_pWarehouseEntity = EntityUtils::FindClosestWarehouse(m_pEntity);
-			CryLog("warehouse ???");
 			return;
 		}
 
-		CryLog("move to warehouse ???");
 		Vec3 warehouseExitPoint = m_pWarehouseEntity->GetComponent<BuildingComponent>()->GetExitPoint();
 		//Move closer to warehouse if it's not close
 		f32 distanceToWareHouse = EntityUtils::GetDistance(m_pWorkplaceComponent->GetWorkers()[0]->GetWorldPos(), warehouseExitPoint, nullptr);
@@ -219,22 +223,22 @@ void Alchemy1BuildingComponent::UpdateAssignedWorkers()
 			pAIController->MoveTo(warehouseExitPoint, false);
 			pAIController->LookAtWalkDirection();
 		}
-		//Pickup Oil from Warehouse
+		//Pickup Gun Powder from Warehouse
 		else {
 			pAIController->StopMoving();
 			pAIController->LookAt(m_pWarehouseEntity->GetWorldPos());
-			pResourceManager->RequsetResources(pResourceRequest);
-			pResourceCollectorComponent->AddResource(OilRequestAmount);
-			pResourceCollectorComponent->SetCurrentResourceType(EResourceType::OIL);
+			pResourceManager->RequsetResources(pSulfurResourceRequest);
+			pResourceCollectorComponent->AddResource(GunPowderRequestAmount);
+			pResourceCollectorComponent->SetCurrentResourceType(EResourceType::GUN_POWDER);
 
-			bIsCollectedOil = true;
+			bIsCollectedGunPowder = true;
 		}
 	}
 
-	//**********************************Transfer oil to Alchemy
-	if (bIsCollectedOil && !bIsTransferedOilToAlchemy) {
+	//**********************************Transfer GunPowder to Factory
+	if (bIsCollectedGunPowder && !bIsCollectedIron && !bIsTransferedGunPowderToFactory && !bIsTransferedIronToFactory) {
 		Vec3 workingPoint = m_pWorkPositionAttachment->GetAttWorldAbsolute().t;
-		//Move closer to bakery if it's not close
+		//Move closer to factory if it's not close
 		f32 distanceToBakery = EntityUtils::GetDistance(m_pWorkplaceComponent->GetWorkers()[0]->GetWorldPos(), workingPoint, nullptr);
 		if (m_pWarehouseEntity && distanceToBakery > 1) {
 			pAIController->MoveTo(workingPoint, false);
@@ -247,17 +251,23 @@ void Alchemy1BuildingComponent::UpdateAssignedWorkers()
 			pAIController->LookAt(m_pEntity->GetWorldPos());
 			pResourceCollectorComponent->EmptyResources();
 
-			if (m_workTimePassed >= m_timeBetweenWorks) {
-				bIsTransferedOilToAlchemy = true;
+			//if (m_workTimePassed >= m_timeBetweenWorks) {
+			bIsTransferedGunPowderToFactory = true;
 
-				pResourceCollectorComponent->AddResource(SulfurProducedAmount);
-				pResourceCollectorComponent->SetCurrentResourceType(EResourceType::SULFUR);
-			}
+			//pResourceCollectorComponent->AddResource(GunPowderProducedAmount);
+			//pResourceCollectorComponent->SetCurrentResourceType(EResourceType::GUN_POWDER);
+	//	}
 		}
 	}
 
-	//**********************************Transfer Bread to warehouse Flour
-	if (bIsCollectedOil && bIsTransferedOilToAlchemy) {
+	//**********************************Move to Warehouse and pickup some Iron
+	if (!bIsCollectedIron && bIsCollectedGunPowder && bIsTransferedGunPowderToFactory && !bIsTransferedIronToFactory) {
+
+		SResourceInfo pIronResourceRequest;
+		pIronResourceRequest.m_ironAmount = IronRequestAmount;
+		if (!pResourceManager->CheckIfResourcesAvailable(pIronResourceRequest)) {
+			return;
+		}
 		if (!m_pWarehouseEntity) {
 			m_pWarehouseEntity = EntityUtils::FindClosestWarehouse(m_pEntity);
 			return;
@@ -270,26 +280,81 @@ void Alchemy1BuildingComponent::UpdateAssignedWorkers()
 			pAIController->MoveTo(warehouseExitPoint, false);
 			pAIController->LookAtWalkDirection();
 		}
-		//Transer Bread to Warehouse
+		//Pickup Iron from Warehouse
 		else {
 			pAIController->StopMoving();
 			pAIController->LookAt(m_pWarehouseEntity->GetWorldPos());
-			pResourceManager->AddResource(EResourceType::SULFUR, SulfurProducedAmount);
+			pResourceManager->RequsetResources(pIronResourceRequest);
+			pResourceCollectorComponent->AddResource(IronRequestAmount);
+			pResourceCollectorComponent->SetCurrentResourceType(EResourceType::IRON);
+
+			bIsCollectedIron = true;
+		}
+	}
+
+	//**********************************Transfer Iron to Factory And Create Bullet
+	if (bIsCollectedGunPowder && bIsCollectedIron && bIsTransferedGunPowderToFactory && !bIsTransferedIronToFactory) {
+		Vec3 workingPoint = m_pWorkPositionAttachment->GetAttWorldAbsolute().t;
+		//Move closer to Factory if it's not close
+		f32 distanceToBakery = EntityUtils::GetDistance(m_pWorkplaceComponent->GetWorkers()[0]->GetWorldPos(), workingPoint, nullptr);
+		if (m_pWarehouseEntity && distanceToBakery > 1) {
+			pAIController->MoveTo(workingPoint, false);
+			pAIController->LookAtWalkDirection();
+			m_workTimePassed = 0;
+		}
+		//
+		else {
+			pAIController->StopMoving();
+			pAIController->LookAt(m_pEntity->GetWorldPos());
+			pResourceCollectorComponent->EmptyResources();
+			m_pParticleComponent->Activate(true);
+
+			if (m_workTimePassed >= m_timeBetweenWorks) {
+				bIsTransferedIronToFactory = true;
+
+				pResourceCollectorComponent->AddResource(BulletProducedAmount);
+				pResourceCollectorComponent->SetCurrentResourceType(EResourceType::BULLET);
+				m_pParticleComponent->Activate(false);
+			}
+		}
+	}
+
+	//**********************************Transfer Bullet to warehouse
+	if (bIsCollectedGunPowder && bIsCollectedIron && bIsTransferedGunPowderToFactory && bIsTransferedIronToFactory) {
+		if (!m_pWarehouseEntity) {
+			m_pWarehouseEntity = EntityUtils::FindClosestWarehouse(m_pEntity);
+			return;
+		}
+
+		Vec3 warehouseExitPoint = m_pWarehouseEntity->GetComponent<BuildingComponent>()->GetExitPoint();
+		//Move closer to warehouse if it's not close
+		f32 distanceToWareHouse = EntityUtils::GetDistance(m_pWorkplaceComponent->GetWorkers()[0]->GetWorldPos(), warehouseExitPoint, nullptr);
+		if (m_pWarehouseEntity && distanceToWareHouse > 1) {
+			pAIController->MoveTo(warehouseExitPoint, false);
+			pAIController->LookAtWalkDirection();
+		}
+		//Transer Bullet to Warehouse
+		else {
+			pAIController->StopMoving();
+			pAIController->LookAt(m_pWarehouseEntity->GetWorldPos());
+			pResourceManager->AddResource(EResourceType::BULLET, BulletProducedAmount);
 			pResourceCollectorComponent->EmptyResources();
 
-			bIsCollectedOil = false;
-			bIsTransferedOilToAlchemy = false;
+			bIsCollectedGunPowder = false;
+			bIsTransferedGunPowderToFactory = false;
+			bIsCollectedIron = false;
+			bIsTransferedIronToFactory = false;
 			pWorkerComponent->SetHasEnteredWorkplace(false);
 		}
 	}
 }
 
-SResourceInfo Alchemy1BuildingComponent::GetCost()
+SResourceInfo BulletFactory1BuildingComponent::GetCost()
 {
 	SResourceInfo cost;
 	cost.m_moneyAmount = 180;
-	cost.m_oilAmount = 70;
+	cost.m_oilAmount = 100;
 	cost.m_populationAmount = 2;
-	cost.m_woodAmount = 60;
+	cost.m_woodAmount = 40;
 	return cost;
 }

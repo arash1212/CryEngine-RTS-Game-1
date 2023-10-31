@@ -65,7 +65,7 @@ void HQ1BuildingComponent::Initialize()
 
 	//DecalComponent(Placement) Initialization
 	m_pDecalComponent = m_pEntity->CreateComponent<Cry::DefaultComponents::CDecalComponent>();
-	m_pDecalComponent->SetTransformMatrix(Matrix34::Create(Vec3(6.7f, 4.1f, 3), IDENTITY, Vec3(0.0f, 0, 0)));
+	m_pDecalComponent->SetTransformMatrix(Matrix34::Create(Vec3(5.05f, 3.3f, 3), IDENTITY, Vec3(-0.05f, -0.85f, 0)));
 	m_pDecalComponent->SetMaterialFileName(BUILDING_PLACEMENT_GREEN_DECAL_MATERIAL);
 	m_pDecalComponent->SetSortPriority(50);
 	m_pDecalComponent->SetDepth(10);
@@ -85,8 +85,8 @@ void HQ1BuildingComponent::Initialize()
 	//Update bounding box
 	AABB aabb;
 	m_pEntity->GetLocalBounds(aabb);
-	Vec3 min = Vec3(aabb.min.x - 2, aabb.min.y - 2, aabb.min.z);
-	Vec3 max = Vec3(aabb.max.x + 6.6f, aabb.max.y + 4, aabb.max.z);
+	Vec3 min = Vec3(aabb.min.x - 0.4f, aabb.min.y - 2, aabb.min.z);
+	Vec3 max = Vec3(aabb.max.x + 4.95f, aabb.max.y + 2.4f, aabb.max.z);
 	AABB newAABB = AABB(min, max);
 	m_pEntity->SetLocalBounds(newAABB, true);
 
@@ -128,9 +128,9 @@ void HQ1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 SResourceInfo HQ1BuildingComponent::GetCost()
 {
 	SResourceInfo cost;
-	cost.m_moneyAmount = 500;
-	cost.m_oilAmount = 200;
-	cost.m_populationAmount = 20;
-	cost.m_woodAmount = 600;
+	cost.m_moneyAmount = 50;
+	cost.m_oilAmount = 20;
+	cost.m_populationAmount = 2;
+	cost.m_woodAmount = 60;
 	return cost;
 }
