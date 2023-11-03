@@ -129,9 +129,8 @@ void House1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 SResourceInfo House1BuildingComponent::GetCost()
 {
 	SResourceInfo cost;
-	cost.m_moneyAmount = 80;
-	cost.m_oilAmount = 30;
+	cost.m_moneyAmount = 20;
 	cost.m_populationAmount = 0;
-	cost.m_woodAmount = 50;
+	cost.m_woodAmount = 20;
 	return cost;
 }

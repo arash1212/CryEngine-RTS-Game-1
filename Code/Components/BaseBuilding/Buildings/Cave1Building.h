@@ -57,8 +57,16 @@ private:
 	f32 m_spawnTimePassed = -0.f;
 	int32 m_maxZombiesCount = 40;
 
+	f32 m_timeBetweenAttacks = 15.f;
+	f32 m_attackTimePassed = -0.f;
+
+	DynArray<IEntity*> m_hostilePlayers;
+	bool bIsCheckedForHostiles = false;
 private:
 	void ProcessSpawns();
+	void CommandUnitsToAttack();
+
+	void FindHostilePlayers();
 
 public:
 	static SResourceInfo GetCost();

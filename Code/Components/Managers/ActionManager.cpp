@@ -106,6 +106,11 @@ bool ActionManagerComponent::IsProcessingAnAction()
 	return true;
 }
 
+IBaseAction* ActionManagerComponent::GetCurrentAction()
+{
+	return m_pCurrentAction;
+}
+
 bool ActionManagerComponent::IsBuilding()
 {
 	return bIsBuilding;

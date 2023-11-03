@@ -29,7 +29,7 @@ namespace
 void BulletTracerComponent::Initialize()
 {
 	m_pMeshComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CStaticMeshComponent>();
-	m_pMeshComponent->SetTransformMatrix(Matrix34::Create(Vec3(0.5f), Quat::CreateRotationZ(RAD2DEG(90.5f)), Vec3(0)));
+	m_pMeshComponent->SetTransformMatrix(Matrix34::Create(Vec3(0.7f), Quat::CreateRotationZ(RAD2DEG(90.5f)), Vec3(0)));
 	m_pMeshComponent->SetFilePath("Objects/effects/bulletTracer/bullet_tracer_1.cgf");
 	m_pMeshComponent->LoadFromDisk();
 	m_pMeshComponent->ResetObject();
@@ -41,12 +41,12 @@ void BulletTracerComponent::Initialize()
 	//OwnerComponent Initialization
 	//m_pOwnerInfoComponent = m_pEntity->GetComponent<OwnerInfoComponent>();
 
-	m_pPointLightComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CPointLightComponent>();
-	m_pPointLightComponent->SetTransformMatrix(Matrix34::Create(Vec3(2), IDENTITY, Vec3(0, 0, 0)));
-	m_pPointLightComponent->GetColorParameters().m_diffuseMultiplier = 2.f;
-	m_pPointLightComponent->GetColorParameters().m_color = ColorF(1, 1, 0.6f);
-	m_pPointLightComponent->GetOptions().m_attenuationBulbSize = 250.f;
-	m_pPointLightComponent->Enable(true);
+	//m_pPointLightComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CPointLightComponent>();
+	//m_pPointLightComponent->SetTransformMatrix(Matrix34::Create(Vec3(2), IDENTITY, Vec3(0, 0, 0)));
+	//m_pPointLightComponent->GetColorParameters().m_diffuseMultiplier = 0.4f;
+	//m_pPointLightComponent->GetColorParameters().m_color = ColorF(1.f, 1.f, 1.f);
+	//m_pPointLightComponent->GetOptions().m_attenuationBulbSize = 3.f;
+	//m_pPointLightComponent->Enable(true);
 
 	SEntityPhysicalizeParams physParams;
 	physParams.type = PE_RIGID;
@@ -103,7 +103,7 @@ void BulletTracerComponent::Move()
 	if (auto* pPhysics = GetEntity()->GetPhysics())
 	{
 		pe_action_impulse impulseAction;
-		const float initialVelocity = 3500.f;
+		const float initialVelocity = 1500.f;
 		impulseAction.impulse = GetEntity()->GetWorldRotation().GetColumn1() * initialVelocity;
 
 		pPhysics->Action(&impulseAction);
@@ -117,32 +117,45 @@ void BulletTracerComponent::Destroy()
 
 void BulletTracerComponent::CheckCollision(const EventPhysCollision* physCollision)
 {
+	//TODO : hitEntity khod bullet hast ?!
 	if (!physCollision) {
 		return;
 	}
-	Destroy();
 
-	IEntity* hitEntity = gEnv->pEntitySystem->GetEntityFromPhysics(*physCollision->pEntity);
+	IPhysicalEntity* pEntity = *physCollision->pEntity;
+	IEntity* hitEntity = gEnv->pEntitySystem->GetEntityFromPhysics(pEntity);
 	if (!m_pOwner || !hitEntity) {
 		return;
 	}
 
-	OwnerInfoComponent* pthisOwnerInfoComponent = m_pOwner->GetComponent<OwnerInfoComponent>();
+	//OwnerInfoComponent* pthisOwnerInfoComponent = m_pOwner->GetComponent<OwnerInfoComponent>();
 	AttackerComponent* pAttackerInfoComponent = m_pOwner->GetComponent<AttackerComponent>();
 	if (!pAttackerInfoComponent) {
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "BulletTracerComponent : (CheckCollision) pAttackerInfoComponent is null !");
 		return;
 	}
 
-	OwnerInfoComponent* phitOwnerInfoComponent = hitEntity->GetComponent<OwnerInfoComponent>();
+
+	//OwnerInfoComponent* phitOwnerInfoComponent = hitEntity->GetComponent<OwnerInfoComponent>();
+	//if (!m_pTarget || m_pTarget->IsGarbage()) {
+	//	return;
+	//}
 	HealthComponent* pHitHealthComponent = hitEntity->GetComponent<HealthComponent>();
-	if (!pHitHealthComponent || hitEntity && hitEntity == m_pOwner || phitOwnerInfoComponent && pthisOwnerInfoComponent->GetTeam() == phitOwnerInfoComponent->GetTeam()) {
+	if (!pHitHealthComponent) {
 		return;
 	}
+	//|| hitEntity && hitEntity == m_pOwner || phitOwnerInfoComponent && pthisOwnerInfoComponent->GetTeam() == phitOwnerInfoComponent->GetTeam()
+	Destroy();
 	pHitHealthComponent->ApplyDamage(pAttackerInfoComponent->GetDamageAmount());
+
 }
 
 void BulletTracerComponent::SetOwner(IEntity* owner)
 {
 	this->m_pOwner = owner;
+}
+
+void BulletTracerComponent::SetTarget(IEntity* target)
+{
+	this->m_pTarget = target;
 }

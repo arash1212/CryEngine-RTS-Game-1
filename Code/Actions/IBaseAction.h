@@ -10,4 +10,7 @@ public:
 	virtual void Execute() = 0;
 	virtual void Cancel() = 0;
 	virtual bool IsDone() = 0;
+	virtual bool CanBeSkipped() {
+		return false;
+	}
 };

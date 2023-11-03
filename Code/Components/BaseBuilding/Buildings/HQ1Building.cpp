@@ -128,9 +128,9 @@ void HQ1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 SResourceInfo HQ1BuildingComponent::GetCost()
 {
 	SResourceInfo cost;
-	cost.m_moneyAmount = 50;
-	cost.m_oilAmount = 20;
-	cost.m_populationAmount = 2;
-	cost.m_woodAmount = 60;
+	cost.m_moneyAmount = 2000;
+	cost.m_oilAmount = 1000;
+	cost.m_populationAmount = 30;
+	cost.m_woodAmount = 600;
 	return cost;
 }

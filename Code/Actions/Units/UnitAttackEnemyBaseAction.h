@@ -5,21 +5,21 @@
 class AIControllerComponent;
 class AttackerComponent;
 class UnitStateManagerComponent;
+class ResourceManagerComponent;
 
-class UnitWanderingRandomlyAction : public IBaseAction {
+class UnitAttackEnemyBaseAction : public IBaseAction {
 
 public:
-	UnitWanderingRandomlyAction(IEntity* entity, IEntity* around, bool run);
+	UnitAttackEnemyBaseAction(IEntity* entity, IEntity* target);
 
 private:
+	IEntity* m_pTarget = nullptr;
 	AIControllerComponent* m_pAiControllerComponent = nullptr;
 	AttackerComponent* m_pAttackerComponent = nullptr;
 	UnitStateManagerComponent* m_pStateManagerComponent = nullptr;
-	IEntity* m_pAround = nullptr;
+	ResourceManagerComponent* m_pTargetResourceManagerComponent = nullptr;
 
 private:
-	Vec3 m_movePosition = ZERO;
-	bool bRun = false;
 
 public:
 	virtual void Execute();

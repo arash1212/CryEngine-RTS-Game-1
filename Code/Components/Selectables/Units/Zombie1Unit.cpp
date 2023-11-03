@@ -148,9 +148,7 @@ void Zombie1UnitComponent::ProcessEvent(const SEntityEvent& event)
 SResourceInfo Zombie1UnitComponent::GetCost()
 {
 	SResourceInfo cost;
-	cost.m_moneyAmount = 20;
-	cost.m_oilAmount = 0;
-	cost.m_oilAmount = 1;
+	cost.m_moneyAmount = 5;
 	cost.m_populationAmount = 0;
 	return cost;
 }

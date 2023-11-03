@@ -54,6 +54,8 @@ void UnitAnimationComponent::Initialize()
 	m_pAttackAnimations.append(m_attack1FragmentId);
 	m_pAttackAnimations.append(m_attack2FragmentId);
 	//m_pAttackAnimations.append(m_attack3FragmentId);
+
+	m_pAnimationComponent->ResetCharacter();
 }
 
 

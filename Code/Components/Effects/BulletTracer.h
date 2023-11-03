@@ -30,11 +30,12 @@ private:
 	Cry::DefaultComponents::CPointLightComponent* m_pPointLightComponent = nullptr;
 
 	IEntity* m_pOwner = nullptr;
+	IEntity* m_pTarget = nullptr;
 	//OwnerShip
 //	OwnerInfoComponent* m_pOwnerInfoComponent = nullptr;
 
 private:
-	f32 m_timeBetweenDestroy = 5.0f;
+	f32 m_timeBetweenDestroy = 0.3f;
 	f32 m_destroyTimePassed = 0.f;
 
 private :
@@ -44,4 +45,5 @@ private :
 
 public:
 	void SetOwner(IEntity* owner);
+	void SetTarget(IEntity* target);
 };

@@ -68,7 +68,7 @@ void BulletFactory1BuildingComponent::Initialize()
 
 	//BoxComponent Initialization
 	m_pBboxComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CBoxPrimitiveComponent>();
-	m_pBboxComponent->m_size = Vec3(1.6f, 1.6f, 3.f);
+	m_pBboxComponent->m_size = Vec3(5.f, 2.7f, 2.5f);
 	m_pBboxComponent->m_bReactToCollisions = true;
 
 	//DecalComponent(Placement) Initialization
@@ -352,9 +352,9 @@ void BulletFactory1BuildingComponent::UpdateAssignedWorkers()
 SResourceInfo BulletFactory1BuildingComponent::GetCost()
 {
 	SResourceInfo cost;
-	cost.m_moneyAmount = 180;
-	cost.m_oilAmount = 100;
-	cost.m_populationAmount = 2;
+	cost.m_moneyAmount = 40;
+	cost.m_oilAmount = 10;
+	//cost.m_populationAmount = 2;
 	cost.m_woodAmount = 40;
 	return cost;
 }

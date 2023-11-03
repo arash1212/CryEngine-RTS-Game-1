@@ -344,9 +344,9 @@ void AK47Factory1BuildingComponent::UpdateAssignedWorkers()
 SResourceInfo AK47Factory1BuildingComponent::GetCost()
 {
 	SResourceInfo cost;
-	cost.m_moneyAmount = 180;
-	cost.m_oilAmount = 100;
-	cost.m_populationAmount = 2;
-	cost.m_woodAmount = 40;
+	cost.m_moneyAmount = 50;
+	cost.m_oilAmount = 20;
+	//cost.m_populationAmount = 2;
+	cost.m_woodAmount = 80;
 	return cost;
 }

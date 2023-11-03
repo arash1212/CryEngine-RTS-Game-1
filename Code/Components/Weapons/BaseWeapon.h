@@ -50,7 +50,7 @@ protected:
 
 protected:
 	IEntity* Raycast(Vec3 to);
-	void SpawnProjectile(Vec3 pos);
+	void SpawnProjectile(IEntity* target);
 
 
 	//Shot Timers/Info
@@ -61,7 +61,7 @@ private:
 	void UpdateMuzzleFlashes();
 
 public:
-	void Fire(Vec3 pos);
+	void Fire(IEntity* target);
 	void Draw();
 	void PutAway();
 	Vec3 GetMuzzlePosition();

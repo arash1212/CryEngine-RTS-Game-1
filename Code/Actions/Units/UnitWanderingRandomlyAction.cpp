@@ -20,10 +20,10 @@ UnitWanderingRandomlyAction::UnitWanderingRandomlyAction(IEntity* entity, IEntit
 	//Change unit stance accoriding to run input
 	if (m_pStateManagerComponent) {
 		if (run) {
-			m_pStateManagerComponent->SetStance(EUnitStance::RUNNING);
+			//m_pStateManagerComponent->SetStance(EUnitStance::RUNNING);
 		}
 		if (!run && m_pStateManagerComponent->GetStance() == EUnitStance::RUNNING) {
-			m_pStateManagerComponent->SetStance(EUnitStance::WALKING);
+			//m_pStateManagerComponent->SetStance(EUnitStance::WALKING);
 		}
 	}
 }
@@ -71,4 +71,9 @@ bool UnitWanderingRandomlyAction::IsDone()
 		//bIsDone = m_pAttackerComponent->IsAttacking();
 	}
 	return bIsDone;
+}
+
+bool UnitWanderingRandomlyAction::CanBeSkipped()
+{
+	return true;
 }

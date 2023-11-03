@@ -287,9 +287,9 @@ void Alchemy1BuildingComponent::UpdateAssignedWorkers()
 SResourceInfo Alchemy1BuildingComponent::GetCost()
 {
 	SResourceInfo cost;
-	cost.m_moneyAmount = 180;
-	cost.m_oilAmount = 70;
-	cost.m_populationAmount = 2;
+	cost.m_moneyAmount = 40;
+	cost.m_oilAmount = 30;
+	//cost.m_populationAmount = 2;
 	cost.m_woodAmount = 60;
 	return cost;
 }

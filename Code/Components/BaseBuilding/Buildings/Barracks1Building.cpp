@@ -61,7 +61,7 @@ void Barracks1BuildingComponent::Initialize()
 
 	//BoxComponent Initialization
 	m_pBboxComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CBoxPrimitiveComponent>();
-	m_pBboxComponent->m_size = Vec3(5.9f, 2.7f, 1.3f);
+	m_pBboxComponent->m_size = Vec3(2.7f, 6.2f, 1.3f);
 	m_pBboxComponent->m_bReactToCollisions = true;
 
 	//DecalComponent(Placement) Initialization
@@ -130,9 +130,9 @@ void Barracks1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 SResourceInfo Barracks1BuildingComponent::GetCost()
 {
 	SResourceInfo cost;
-	cost.m_moneyAmount = 150;
-	cost.m_oilAmount = 40;
+	cost.m_moneyAmount = 30;
+	cost.m_oilAmount = 0;
 	cost.m_populationAmount = 0;
-	cost.m_woodAmount = 100;
+	cost.m_oilAmount = 50;
 	return cost;
 }

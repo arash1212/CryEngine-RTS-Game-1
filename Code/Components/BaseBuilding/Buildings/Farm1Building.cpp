@@ -339,9 +339,9 @@ void Farm1BuildingComponent::UpdateAssignedWorkers()
 SResourceInfo Farm1BuildingComponent::GetCost()
 {
 	SResourceInfo cost;
-	cost.m_moneyAmount = 170;
-	cost.m_oilAmount = 60;
-	cost.m_populationAmount = 5;
-	cost.m_woodAmount = 100;
+	cost.m_moneyAmount = 30;
+	cost.m_oilAmount = 10;
+	//cost.m_populationAmount = 5;
+	cost.m_woodAmount = 50;
 	return cost;
 }

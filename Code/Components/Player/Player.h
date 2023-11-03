@@ -75,6 +75,8 @@ private:
 	int32 m_rightClickCount = 0;
 	f32 m_timeBetweenRightClickCountRestart = 0.15f;
 	f32 m_rightClickCountRestartTimePassed = 0.0f;
+	f32 m_timeBetweenMouseOverCheck = 0.03f;
+	f32 m_mouseOverCheckTimePassed = 0.0f;
 
 	//
 	bool bIsLeftClickWorks = false;

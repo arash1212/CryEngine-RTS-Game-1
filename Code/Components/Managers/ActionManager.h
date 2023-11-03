@@ -31,6 +31,7 @@ public:
 	void AddAction(IBaseAction* action);
 	void CancelCurrentAction();
 	bool IsProcessingAnAction();
+	IBaseAction* GetCurrentAction();
 
 	bool IsBuilding();
 	void SetIsBuilding(bool isBuilding);

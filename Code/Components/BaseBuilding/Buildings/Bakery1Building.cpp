@@ -282,9 +282,10 @@ void Bakery1BuildingComponent::UpdateAssignedWorkers()
 SResourceInfo Bakery1BuildingComponent::GetCost()
 {
 	SResourceInfo cost;
-	cost.m_moneyAmount = 130;
-	cost.m_oilAmount = 100;
-	cost.m_populationAmount = 3;
-	cost.m_woodAmount = 150;
+	cost.m_moneyAmount = 30;
+	cost.m_oilAmount = 20;
+	//cost.m_populationAmount = 2;
+	cost.m_woodAmount = 40;
+	cost.m_bulletAmount = 0;
 	return cost;
 }

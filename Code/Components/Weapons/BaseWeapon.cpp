@@ -126,7 +126,7 @@ IEntity* BaseWeaponComponent::Raycast(Vec3 to)
 	return nullptr;
 }
 
-void BaseWeaponComponent::SpawnProjectile(Vec3 pos)
+void BaseWeaponComponent::SpawnProjectile(IEntity* target)
 {
 	if (!m_pWeaponAttachment) {
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "BaseWeaponComponent : (SpawnProjectile) m_pWeaponAttachment is null !.");
@@ -134,18 +134,19 @@ void BaseWeaponComponent::SpawnProjectile(Vec3 pos)
 	}
 
 	Vec3 origin = this->GetMuzzlePosition();
-	Vec3 dir = pos - origin;
+	Vec3 dir = target->GetWorldPos() - origin;
 	Quat Rotation = Quat::CreateRotationVDir(dir.normalized());
 	IEntity* projectileEntity = EntityUtils::SpawnEntity(origin, Rotation, nullptr);
 	BulletTracerComponent* bullet = projectileEntity->GetOrCreateComponent<BulletTracerComponent>();
 	bullet->SetOwner(m_pEntity);
+	bullet->SetTarget(target);
 }
 
-void BaseWeaponComponent::Fire(Vec3 pos)
+void BaseWeaponComponent::Fire(IEntity* target)
 {
 	if (m_shotTimePassed >= m_timeBetweenShots) {
 		//Raycast(pos);
-		SpawnProjectile(pos);
+		SpawnProjectile(target);
 		m_shotTimePassed = 0;
 		m_pAudioComponent->ExecuteTrigger(GetRandomShootSound());
 

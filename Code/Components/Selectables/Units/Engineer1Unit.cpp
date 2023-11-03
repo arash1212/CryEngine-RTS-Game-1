@@ -182,9 +182,8 @@ void Engineer1UnitComponent::ProcessEvent(const SEntityEvent& event)
 SResourceInfo Engineer1UnitComponent::GetCost()
 {
 	SResourceInfo cost;
-	cost.m_moneyAmount = 100;
-	cost.m_oilAmount = 20;
-	cost.m_populationAmount = 2;
+	cost.m_moneyAmount = 20;
+	cost.m_populationAmount = 1;
 	cost.m_bulletAmount = 0;
 	cost.m_ak47Amount = 0;
 	return cost;

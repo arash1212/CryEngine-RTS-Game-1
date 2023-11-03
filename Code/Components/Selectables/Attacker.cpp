@@ -9,6 +9,7 @@
 #include <Components/Selectables/UnitAnimation.h>
 #include <Components/Managers/ActionManager.h>
 #include <Components/Effects/BulletTracer.h>
+#include <Actions/IBaseAction.h>
 
 #include <Components/Managers/ResourceManager.h>
 #include <Utils/MathUtils.h>
@@ -153,7 +154,7 @@ void AttackerComponent::Attack(IEntity* target)
 void AttackerComponent::AttackRandomTarget()
 {
 	//|| m_pStateManagerComponent->IsRunning()
-	if (!m_pRandomAttackTarget || m_pAttackTargetEntity || m_pActionManagerComponent->IsProcessingAnAction()) {
+	if (!m_pRandomAttackTarget || m_pAttackTargetEntity || m_pActionManagerComponent->IsProcessingAnAction() && !m_pActionManagerComponent->GetCurrentAction()->CanBeSkipped()) {
 		return;
 	}
 
@@ -196,7 +197,7 @@ void AttackerComponent::PerformMeleeAttack(IEntity* target)
 
 void AttackerComponent::PerformRangedAttack(IEntity* target)
 {
-	m_pWeaponComponent->Fire(target->GetWorldPos());
+	m_pWeaponComponent->Fire(target);
 
 	ApplyDamageToTarget(target);
 }
@@ -254,23 +255,27 @@ void AttackerComponent::FindRandomTarget()
 
 	for (IEntity* entity : m_hostilePlayers)
 	{
-		for (IEntity* pEntity : entity->GetComponent<ResourceManagerComponent>()->GetOwnedEntities()) {
-
-			f32 distanceToTarget = EntityUtils::GetDistance(m_pEntity->GetWorldPos(), pEntity->GetWorldPos(), pEntity);
-			OwnerInfoComponent* otherEntityOwnerInfo = pEntity->GetComponent<OwnerInfoComponent>();
-
-			BulletTracerComponent* bulletTracerComponent = pEntity->GetComponent<BulletTracerComponent>();
-			//Ignore entity if it's not in detection range
-			if (!otherEntityOwnerInfo || distanceToTarget > m_pAttackInfo.m_detectionDistance || !otherEntityOwnerInfo->CanBeTarget() || bulletTracerComponent) {
-				continue;
-			}
-
-			//set entity as randomAttackTarget if it's team is not same as this unit's team
-			OwnerInfoComponent* pOwnerInfoComponent = m_pEntity->GetComponent<OwnerInfoComponent>();
-			if (pOwnerInfoComponent && otherEntityOwnerInfo && otherEntityOwnerInfo->GetInfo().m_pTeam != pOwnerInfoComponent->GetInfo().m_pTeam) {
-				m_pRandomAttackTarget = pEntity;
-			}
+		//for (IEntity* pEntity : entity->GetComponent<ResourceManagerComponent>()->GetOwnedEntities()) {
+		IEntity* pEntity = EntityUtils::GetClosestEntity(entity->GetComponent<ResourceManagerComponent>()->GetOwnedEntities(), m_pEntity);
+		if (!pEntity || pEntity->IsGarbage()) {
+			return;
 		}
+
+		f32 distanceToTarget = EntityUtils::GetDistance(m_pEntity->GetWorldPos(), pEntity->GetWorldPos(), pEntity);
+		OwnerInfoComponent* otherEntityOwnerInfo = pEntity->GetComponent<OwnerInfoComponent>();
+
+		BulletTracerComponent* bulletTracerComponent = pEntity->GetComponent<BulletTracerComponent>();
+		//Ignore entity if it's not in detection range
+		if (!otherEntityOwnerInfo || distanceToTarget > m_pAttackInfo.m_detectionDistance || !otherEntityOwnerInfo->CanBeTarget() || bulletTracerComponent) {
+			continue;
+		}
+
+		//set entity as randomAttackTarget if it's team is not same as this unit's team
+		OwnerInfoComponent* pOwnerInfoComponent = m_pEntity->GetComponent<OwnerInfoComponent>();
+		if (pOwnerInfoComponent && otherEntityOwnerInfo && otherEntityOwnerInfo->GetInfo().m_pTeam != pOwnerInfoComponent->GetInfo().m_pTeam) {
+			m_pRandomAttackTarget = pEntity;
+		}
+		//}
 	}
 	m_lookingForRandomTargetTimePassed = 0;
 }

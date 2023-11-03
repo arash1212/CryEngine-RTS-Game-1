@@ -17,10 +17,12 @@
 #include<UIItems/Items/Buildings/TrainUnits/UITrainEngineer1Item.h>
 #include<UIItems/Items/Buildings/TrainUnits/UITrainSoldier1Item.h>
 #include <Actions/Units/UnitWanderingRandomlyAction.h>
+#include <Actions/Units/UnitAttackEnemyBaseAction.h>
 
 #include <Components/BaseBuilding/Building.h>
 #include <Utils/MathUtils.h>
 #include <Components/Selectables/Cost.h>
+#include <Components/Selectables/Attacker.h>
 
 #include <Components/Managers/ResourceManager.h>
 
@@ -33,6 +35,8 @@
 #include <Components/Selectables/Units/Zombie1Unit.h>
 #include <Components/Managers/ResourceManager.h>
 #include <Components/Managers/ActionManager.h>
+
+#include <Components/Effects/BulletTracer.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -142,10 +146,17 @@ void Cave1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 		f32 DeltaTime = event.fParam[0];
 
 		ProcessSpawns();
+		FindHostilePlayers();
+		CommandUnitsToAttack();
 
+		//Timers
 		if (m_spawnTimePassed < m_timeBetweenSpawningZombies) {
 			m_spawnTimePassed += 0.5f * DeltaTime;
 		}
+		if (m_attackTimePassed < m_timeBetweenAttacks) {
+			m_attackTimePassed += 0.5f * DeltaTime;
+		}
+
 	}break;
 	case Cry::Entity::EEvent::Reset: {
 
@@ -181,6 +192,34 @@ void Cave1BuildingComponent::ProcessSpawns()
 	}
 }
 
+void Cave1BuildingComponent::CommandUnitsToAttack()
+{
+	if (!bIsCheckedForHostiles) {
+		return;
+	}
+
+	if (m_attackTimePassed >= m_timeBetweenAttacks) {
+		if (m_pResourceManagerComponent->GetOwnedEntities().size() >= m_maxZombiesCount) {
+			int32 unitsCommanded = 0;
+			for (IEntity* entity : m_pResourceManagerComponent->GetOwnedEntities()) {
+				AttackerComponent* pAttackerComponent = entity->GetComponent<AttackerComponent>();
+				if (!pAttackerComponent) {
+					continue;
+				}
+
+				unitsCommanded++;
+				ActionManagerComponent* pActionManagerComponent = entity->GetComponent<ActionManagerComponent>();
+				pActionManagerComponent->AddAction(new UnitAttackEnemyBaseAction(entity, m_hostilePlayers[0]));
+
+				if (unitsCommanded >= 15) {
+					break;
+				}
+			}
+			m_attackTimePassed = 0;
+		}
+	}
+}
+
 
 SResourceInfo Cave1BuildingComponent::GetCost()
 {
@@ -190,4 +229,34 @@ SResourceInfo Cave1BuildingComponent::GetCost()
 	cost.m_populationAmount = 0;
 	cost.m_woodAmount = 50;
 	return cost;
+}
+
+void Cave1BuildingComponent::FindHostilePlayers()
+{
+	if (!bIsCheckedForHostiles) {
+		IEntityItPtr entityItPtr = gEnv->pEntitySystem->GetEntityIterator();
+		entityItPtr->MoveFirst();
+
+		while (!entityItPtr->IsEnd())
+		{
+			IEntity* entity = entityItPtr->Next();
+			ResourceManagerComponent* pResourceManagerComponent = entity->GetComponent<ResourceManagerComponent>();
+			if (!pResourceManagerComponent) {
+				continue;
+			}
+
+			OwnerInfoComponent* otherEntityOwnerInfo = entity->GetComponent<OwnerInfoComponent>();
+			BulletTracerComponent* bulletTracerComponent = entity->GetComponent<BulletTracerComponent>();
+			if (!otherEntityOwnerInfo || bulletTracerComponent) {
+				continue;
+			}
+
+			OwnerInfoComponent* pOwnerInfoComponent = m_pEntity->GetComponent<OwnerInfoComponent>();
+			if (pOwnerInfoComponent && otherEntityOwnerInfo && otherEntityOwnerInfo->GetInfo().m_pTeam != pOwnerInfoComponent->GetInfo().m_pTeam) {
+				m_hostilePlayers.append(entity);
+			}
+		}
+
+		bIsCheckedForHostiles = true;
+	}
 }

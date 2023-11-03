@@ -233,3 +233,18 @@ IEntity* EntityUtils::FindClosestWarehouse(IEntity* to)
 	}
 	return nullptr;
 }
+
+IEntity* EntityUtils::GetClosestEntity(DynArray<IEntity*> entities, IEntity* to)
+{
+	f32 closest = 10000;
+	IEntity* result = nullptr;
+	for (IEntity* entity : entities) {
+		f32 distance = to->GetWorldPos().GetDistance(entity->GetWorldPos());
+		if (distance < closest) {
+			closest = distance;
+			result = entity;
+		}
+	}
+	return result;
+}
+

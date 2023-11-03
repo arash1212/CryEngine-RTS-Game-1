@@ -68,7 +68,7 @@ public:
 	bool bIsinitDone = false;
 
 	//Timers
-	f32 m_timeBetweenEatingFoods = 20.f;
+	f32 m_timeBetweenEatingFoods = 50.f;
 	f32 m_eatingTimePassed = 0.f;
 private:
 	void UpdatePopulation();

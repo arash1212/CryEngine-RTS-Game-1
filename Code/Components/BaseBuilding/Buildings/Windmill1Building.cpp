@@ -282,9 +282,9 @@ void Windmill1BuildingComponent::UpdateAssignedWorkers()
 SResourceInfo Windmill1BuildingComponent::GetCost()
 {
 	SResourceInfo cost;
-	cost.m_moneyAmount = 120;
-	cost.m_oilAmount = 100;
-	cost.m_populationAmount = 3;
-	cost.m_woodAmount = 200;
+	cost.m_moneyAmount = 30;
+	cost.m_oilAmount = 20;
+	//cost.m_populationAmount = 2;
+	cost.m_woodAmount = 40;
 	return cost;
 }

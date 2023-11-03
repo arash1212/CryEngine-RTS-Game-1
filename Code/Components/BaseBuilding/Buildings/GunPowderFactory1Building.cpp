@@ -352,9 +352,9 @@ void GunPowderFactory1BuildingComponent::UpdateAssignedWorkers()
 SResourceInfo GunPowderFactory1BuildingComponent::GetCost()
 {
 	SResourceInfo cost;
-	cost.m_moneyAmount = 180;
-	cost.m_oilAmount = 70;
-	cost.m_populationAmount = 2;
-	cost.m_woodAmount = 60;
+	cost.m_moneyAmount = 30;
+	cost.m_oilAmount = 30;
+	//cost.m_populationAmount = 2;
+	cost.m_ironAmount = 60;
 	return cost;
 }

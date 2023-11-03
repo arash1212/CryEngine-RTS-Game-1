@@ -57,7 +57,7 @@ void PlayerComponent::Initialize()
 {
 	//Camera initialization
 	m_pCameraComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CCameraComponent>();
-	m_pCameraComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), Quat::CreateRotationX(DEG2RAD(-70)), Vec3(0, 0, m_cameraDefaultHeight)));
+	m_pCameraComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), Quat::CreateRotationX(DEG2RAD(-55)), Vec3(0, 0, m_cameraDefaultHeight)));
 
 	//Inputs initialization
 	m_pInputComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CInputComponent>();
@@ -143,6 +143,10 @@ void PlayerComponent::ProcessEvent(const SEntityEvent& event)
 		}
 		else {
 			m_rightClickCount = 0;
+		}
+
+		if (m_mouseOverCheckTimePassed < m_timeBetweenMouseOverCheck) {
+			m_mouseOverCheckTimePassed += 0.5f * DeltaTime;
 		}
 
 	}break;
@@ -629,36 +633,38 @@ void PlayerComponent::AddUIItemsToActionbar()
 
 void PlayerComponent::CheckSelectablesMouseOver()
 {
-	//Turn highligh color to green on entity if it's selectable
-	IEntity* entity = MouseUtils::GetActorUnderCursor();
-	if (entity) {
-		SelectableComponent* selectable = entity->GetComponent<SelectableComponent>();
-		if (selectable) {
-			m_pEntityUnderCursor = entity;
-			selectable->HighLightGreen();
-		}
-	}
-
-	//Turn highligh color back to black on entity if mouse is not over anyomore
-	else if (m_pEntityUnderCursor && !m_pEntityUnderCursor->IsGarbage() && !entity && m_pEntityUnderCursor || entity && entity != m_pEntityUnderCursor) {
-		SelectableComponent* selectable = m_pEntityUnderCursor->GetComponent<SelectableComponent>();
-		if (selectable->IsSelected()) {
+	//if (m_mouseOverCheckTimePassed >= m_timeBetweenMouseOverCheck) {
+		//Turn highligh color to green on entity if it's selectable
+		IEntity* entity = MouseUtils::GetActorUnderCursor();
+		if (!entity && !m_pEntityUnderCursor) {
 			return;
 		}
-		selectable->HighLightBlack();
-		m_pEntityUnderCursor = nullptr;
-	}
 
-	/*
-	IEntity* entity = MouseUtils::GetActorUnderCursor();
-	if (entity) {
-		SelectableComponent* selectable = entity->GetComponent<SelectableComponent>();
-		if (selectable) {
-			//m_pEntityUnderCursor = entity;
-			selectable->MouseOver();
+		if (entity) {
+			SelectableComponent* selectable = entity->GetComponent<SelectableComponent>();
+			if (selectable) {
+				if (m_pEntityUnderCursor && !m_pEntityUnderCursor->IsGarbage() && m_pEntityUnderCursor != entity) {
+					SelectableComponent* oldSelectable = m_pEntityUnderCursor->GetComponent<SelectableComponent>();
+					oldSelectable->HighLightBlack();
+				}
+				m_pEntityUnderCursor = entity;
+				selectable->HighLightGreen();
+				return;
+			}
 		}
-	}
-	*/
+
+		//Turn highligh color back to black on entity if mouse is not over anyomore
+		else if (m_pEntityUnderCursor && !m_pEntityUnderCursor->IsGarbage()) {
+			SelectableComponent* selectable = m_pEntityUnderCursor->GetComponent<SelectableComponent>();
+			if (selectable->IsSelected()) {
+				return;
+			}
+			selectable->HighLightBlack();
+			m_pEntityUnderCursor = nullptr;
+		}
+
+		//m_mouseOverCheckTimePassed = 0;
+	//}
 }
 
 void PlayerComponent::ExecuteActionbarItem(int32 index)

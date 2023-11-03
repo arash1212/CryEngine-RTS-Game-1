@@ -25,6 +25,10 @@
 #include<UIItems/Items/Resources/UIBuyWoodItem.h>
 #include<UIItems/Items/Resources/UISellBreadItem.h>
 #include<UIItems/Items/Resources/UIBuyBreadItem.h>
+#include<UIItems/Items/Resources/UISellIronItem.h>
+#include<UIItems/Items/Resources/UIBuyIronItem.h>
+#include<UIItems/Items/Resources/UISellBulletItem.h>
+#include<UIItems/Items/Resources/UIBuyBulletItem.h>
 
 #include <Components/BaseBuilding/Building.h>
 #include <Utils/MathUtils.h>
@@ -100,6 +104,10 @@ void Warehouse1BuildingComponent::Initialize()
 	m_pBuildingComponent->AddUIItem(new UISellWoodItem(m_pEntity));
 	m_pBuildingComponent->AddUIItem(new UIBuyBreadItem(m_pEntity));
 	m_pBuildingComponent->AddUIItem(new UISellBreadItem(m_pEntity));
+	m_pBuildingComponent->AddUIItem(new UIBuyIronItem(m_pEntity));
+	m_pBuildingComponent->AddUIItem(new UISellIronItem(m_pEntity));
+	m_pBuildingComponent->AddUIItem(new UIBuyBulletItem(m_pEntity));
+	m_pBuildingComponent->AddUIItem(new UISellBulletItem(m_pEntity));
 
 	//ResourceStorageComponent Initialization
 	m_pResourceStorageComponent = m_pEntity->GetOrCreateComponent<ResourceStorageComponent>();
@@ -150,9 +158,8 @@ void Warehouse1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 SResourceInfo Warehouse1BuildingComponent::GetCost()
 {
 	SResourceInfo cost;
-	cost.m_moneyAmount = 150;
-	cost.m_oilAmount = 50;
+	cost.m_moneyAmount = 10;
 	cost.m_populationAmount = 0;
-	cost.m_woodAmount = 100;
+	cost.m_ironAmount = 20;
 	return cost;
 }
