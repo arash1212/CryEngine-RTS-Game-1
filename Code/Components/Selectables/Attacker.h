@@ -110,4 +110,6 @@ public:
 
 	void SetDamageAmount(f32 damage);
 	f32 GetDamageAmount();
+
+	bool IsTargetVisible(IEntity* target);
 };

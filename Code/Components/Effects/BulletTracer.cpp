@@ -128,15 +128,16 @@ void BulletTracerComponent::CheckCollision(const EventPhysCollision* physCollisi
 		return;
 	}
 
-	//OwnerInfoComponent* pthisOwnerInfoComponent = m_pOwner->GetComponent<OwnerInfoComponent>();
+	OwnerInfoComponent* pthisOwnerInfoComponent = m_pOwner->GetComponent<OwnerInfoComponent>();
 	AttackerComponent* pAttackerInfoComponent = m_pOwner->GetComponent<AttackerComponent>();
 	if (!pAttackerInfoComponent) {
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "BulletTracerComponent : (CheckCollision) pAttackerInfoComponent is null !");
 		return;
 	}
 
+	Destroy();
 
-	//OwnerInfoComponent* phitOwnerInfoComponent = hitEntity->GetComponent<OwnerInfoComponent>();
+	OwnerInfoComponent* phitOwnerInfoComponent = hitEntity->GetComponent<OwnerInfoComponent>();
 	//if (!m_pTarget || m_pTarget->IsGarbage()) {
 	//	return;
 	//}
@@ -144,9 +145,9 @@ void BulletTracerComponent::CheckCollision(const EventPhysCollision* physCollisi
 	if (!pHitHealthComponent) {
 		return;
 	}
-	//|| hitEntity && hitEntity == m_pOwner || phitOwnerInfoComponent && pthisOwnerInfoComponent->GetTeam() == phitOwnerInfoComponent->GetTeam()
-	Destroy();
-	pHitHealthComponent->ApplyDamage(pAttackerInfoComponent->GetDamageAmount());
+	if (hitEntity != m_pOwner || phitOwnerInfoComponent && pthisOwnerInfoComponent->GetTeam() != phitOwnerInfoComponent->GetTeam()) {
+		pHitHealthComponent->ApplyDamage(pAttackerInfoComponent->GetDamageAmount());
+	}
 
 }
 

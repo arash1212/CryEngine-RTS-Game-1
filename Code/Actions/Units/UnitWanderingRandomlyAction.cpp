@@ -43,7 +43,7 @@ void UnitWanderingRandomlyAction::Execute()
 
 	//Find new point if lastPoint is Closer than 1
 	f32 distanceToMoveToPos = m_pEntity->GetWorldPos().GetDistance(m_movePosition);
-	if (m_movePosition == ZERO || distanceToMoveToPos < 1) {
+	if (m_movePosition == ZERO || distanceToMoveToPos < 1 || !m_pAiControllerComponent->IsDestinationReachable(m_movePosition)) {
 		m_movePosition = m_pAiControllerComponent->GetRandomPointOnNavmesh(20, m_pAround);
 	}
 

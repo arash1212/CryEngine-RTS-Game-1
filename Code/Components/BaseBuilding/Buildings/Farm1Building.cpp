@@ -189,13 +189,17 @@ void Farm1BuildingComponent::UpdateAssignedWorkers()
 	if (!m_pBuildingComponent->IsBuilt()) {
 		return;
 	}
+	CryLog("here-1");
 	if (m_pWorkplaceComponent->GetCurrentWorkersCount() <= 0) {
 		return;
 	}
+	CryLog("here0");
 	if (m_pWorker1CurrentAssignePos == ZERO) {
 		m_pWorker1CurrentAssignePos = m_pWheatAttachments[m_currentIndex]->GetAttWorldAbsolute().t;
 		m_currentIndex = 0;
 	}
+	CryLog("here1");
+
 	if (!m_pWorkplaceComponent->GetWorkers()[0] || m_pWorkplaceComponent->GetWorkers()[0]->IsGarbage()) {
 		return;
 	}
@@ -204,6 +208,7 @@ void Farm1BuildingComponent::UpdateAssignedWorkers()
 	}
 	IEntity* pWorker = m_pWorkplaceComponent->GetWorkers()[0];
 	if (!pWorker) {
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "Farm1BuildingComponent:(UpdateCurrentMoveToAttachment) worker 0 is null");
 		return;
 	}
 	AIControllerComponent* pAIController = pWorker->GetComponent<AIControllerComponent>();
@@ -221,6 +226,7 @@ void Farm1BuildingComponent::UpdateAssignedWorkers()
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "Farm1BuildingComponent:(UpdateCurrentMoveToAttachment) pWorkerComponent is null");
 		return;
 	}
+	
 
 	//**********************************Plant
 	if (!bIsPlantingDone) {

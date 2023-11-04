@@ -28,7 +28,7 @@ UnitBuildAction::UnitBuildAction(IEntity* entity, IEntity* buildiingEntity)
 
 void UnitBuildAction::Execute()
 {
-	if (!m_pBuildingEntity) {
+	if (!m_pBuildingEntity || m_pBuildingEntity->IsGarbage()) {
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "UnitBuildAction : (Execute) Building entity cannot be null.Action canceled.");
 		Cancel();
 		return;

@@ -9,6 +9,7 @@
 #include <Components/Selectables/UnitAnimation.h>
 #include <Components/Managers/ActionManager.h>
 #include <Components/Effects/BulletTracer.h>
+#include <Components/BaseBuilding/Building.h>
 #include <Actions/IBaseAction.h>
 
 #include <Components/Managers/ResourceManager.h>
@@ -345,6 +346,10 @@ bool AttackerComponent::CanAttack()
 		return false;
 	}
 
+	if (!IsTargetVisible(target)) {
+		return false;
+	}
+
 	return true;
 }
 
@@ -362,6 +367,53 @@ void AttackerComponent::SetDamageAmount(f32 damage)
 f32 AttackerComponent::GetDamageAmount()
 {
 	return m_damageAmount;
+}
+
+bool AttackerComponent::IsTargetVisible(IEntity* target)
+{
+	int flags = rwi_pierceability(9);
+	std::array<ray_hit, 4> hits;
+	static IPhysicalEntity* pSkippedEntities[10];
+	pSkippedEntities[0] = m_pEntity->GetPhysicalEntity();
+
+	Vec3 currentPos = m_pEntity->GetPos();
+
+	Vec3 origin = Vec3(currentPos.x, currentPos.y, currentPos.z + 1.0f);
+
+	Vec3 targetPosition = target->GetWorldPos();
+	//targetPosition.z += 0.3f;
+	Vec3 targetPos = targetPosition;
+	Vec3 dir = targetPos - m_pEntity->GetWorldPos();
+
+	f32 distanceToTarget = m_pEntity->GetWorldPos().GetDistance(target->GetWorldPos());
+
+	IPersistantDebug* pd = gEnv->pGameFramework->GetIPersistantDebug();
+	if (gEnv->pPhysicalWorld->RayWorldIntersection(origin, dir * distanceToTarget/10, ent_all, flags, hits.data(), 4, pSkippedEntities, 4)) {
+		//for (int32 i = 0; i < hits.size(); i++) {
+			if (hits[0].pCollider) {
+
+				//Debug
+				if (pd) {
+					pd->Begin("RaycastDetectionComp", true);
+					pd->AddLine(origin, hits[0].pt, ColorF(1, 0, 0), 1);
+				}
+
+				//return true if hitEntity is target
+				IEntity* hitEntity = gEnv->pEntitySystem->GetEntityFromPhysics(hits[0].pCollider);
+				if (hitEntity) {
+					if (hitEntity == target || hitEntity->GetComponent<Cry::DefaultComponents::CCharacterControllerComponent>()) {
+						return true;
+					}
+				}
+
+				if (hitEntity && !hitEntity->GetComponent<AIControllerComponent>() && !hitEntity->GetComponent<BuildingComponent>()) {
+					CryLog("hit name : %s", hitEntity->GetName());
+					return false;
+				}
+			}
+		//}
+	}
+	return true;
 }
 
 SUnitAttackInfo AttackerComponent::GetAttackInfo()

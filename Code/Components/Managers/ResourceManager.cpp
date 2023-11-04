@@ -66,7 +66,7 @@ void ResourceManagerComponent::ProcessEvent(const SEntityEvent& event)
 			m_pResouceInfo.m_gunPowderAmount = 90;
 			m_pResouceInfo.m_ironAmount = 400;
 			m_pResouceInfo.m_bulletAmount = 60;
-			m_pResouceInfo.m_ak47Amount = 5;
+			m_pResouceInfo.m_ak47Amount = 20;
 
 			//AudioComponent initialization
 			m_pAudioComponent = m_pEntity->GetComponent<IEntityAudioComponent>();
@@ -207,7 +207,7 @@ bool ResourceManagerComponent::RequsetResources(SResourceInfo resourceRequestPar
 		return false;
 	}
 	else if (m_pResouceInfo.m_ak47Amount < resourceRequestParams.m_ak47Amount) {
-		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (RequsetResources) Not Enough Bullet");
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (RequsetResources) Not Enough AK47");
 		return false;
 	}
 
@@ -357,7 +357,7 @@ void ResourceManagerComponent::SellResource(int32 amount, EResourceType type)
 			CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (SellResource) Not Enough Oil to sell");
 			return;
 		}
-		this->m_pResouceInfo.m_oilAmount -= amount * (ResourceManagerComponent::m_oilPrice / 2);
+		this->m_pResouceInfo.m_oilAmount -= amount;
 		this->m_pResouceInfo.m_moneyAmount += (amount * ResourceManagerComponent::m_oilPrice / 2);
 	}break;
 	case EResourceType::WHEAT: {
@@ -365,7 +365,7 @@ void ResourceManagerComponent::SellResource(int32 amount, EResourceType type)
 			CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (SellResource) Not Enough Wheat to sell");
 			return;
 		}
-		this->m_pResouceInfo.m_wheatAmount -= amount * (ResourceManagerComponent::m_WheatPrice / 2);
+		this->m_pResouceInfo.m_wheatAmount -= amount;
 		this->m_pResouceInfo.m_moneyAmount += (amount * ResourceManagerComponent::m_WheatPrice / 2);
 	}break;
 	case EResourceType::FLOUR: {
@@ -373,7 +373,7 @@ void ResourceManagerComponent::SellResource(int32 amount, EResourceType type)
 			CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (SellResource) Not Enough Flour to sell");
 			return;
 		}
-		this->m_pResouceInfo.m_flourAmount -= amount * (ResourceManagerComponent::m_FlourPrice / 2);
+		this->m_pResouceInfo.m_flourAmount -= amount;
 		this->m_pResouceInfo.m_moneyAmount += (amount * ResourceManagerComponent::m_FlourPrice / 2);
 	}break;
 	case EResourceType::WOOD: {
@@ -381,7 +381,7 @@ void ResourceManagerComponent::SellResource(int32 amount, EResourceType type)
 			CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (SellResource) Not Enough Wood to sell");
 			return;
 		}
-		this->m_pResouceInfo.m_woodAmount -= amount * (ResourceManagerComponent::m_WoodPrice / 2);
+		this->m_pResouceInfo.m_woodAmount -= amount;
 		this->m_pResouceInfo.m_moneyAmount += (amount * ResourceManagerComponent::m_WoodPrice / 2);
 	}break;
 	case EResourceType::BREAD: {
@@ -389,7 +389,7 @@ void ResourceManagerComponent::SellResource(int32 amount, EResourceType type)
 			CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (SellResource) Not Enough Bread to sell");
 			return;
 		}
-		this->m_pResouceInfo.m_breadAmount -= amount * (ResourceManagerComponent::m_BreadPrice / 2);
+		this->m_pResouceInfo.m_breadAmount -= amount;
 		this->m_pResouceInfo.m_moneyAmount += (amount * ResourceManagerComponent::m_BreadPrice / 2);
 	}break;
 	case EResourceType::SULFUR: {
@@ -397,7 +397,7 @@ void ResourceManagerComponent::SellResource(int32 amount, EResourceType type)
 			CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (SellResource) Not Enough Sulfur to sell");
 			return;
 		}
-		this->m_pResouceInfo.m_sulfurAmount -= amount * (ResourceManagerComponent::m_SulfurPrice / 2);
+		this->m_pResouceInfo.m_sulfurAmount -= amount;
 		this->m_pResouceInfo.m_moneyAmount += (amount * ResourceManagerComponent::m_SulfurPrice / 2);
 	}break;
 	case EResourceType::GUN_POWDER: {
@@ -405,15 +405,15 @@ void ResourceManagerComponent::SellResource(int32 amount, EResourceType type)
 			CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (SellResource) Not Enough GunPowder to sell");
 			return;
 		}
-		this->m_pResouceInfo.m_gunPowderAmount -= amount * (ResourceManagerComponent::m_GunPowderPrice / 2);
+		this->m_pResouceInfo.m_gunPowderAmount -= amount;
 		this->m_pResouceInfo.m_moneyAmount += (amount * ResourceManagerComponent::m_GunPowderPrice / 2);
 	}break;
 	case EResourceType::IRON: {
-		if (m_pResouceInfo.m_gunPowderAmount < amount) {
+		if (m_pResouceInfo.m_ironAmount < amount) {
 			CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (SellResource) Not Enough Iron to sell");
 			return;
 		}
-		this->m_pResouceInfo.m_ironAmount -= amount * (ResourceManagerComponent::m_IronPrice / 2);
+		this->m_pResouceInfo.m_ironAmount -= amount;
 		this->m_pResouceInfo.m_moneyAmount += (amount * ResourceManagerComponent::m_IronPrice / 2);
 	}break;
 	case EResourceType::BULLET: {
@@ -421,7 +421,7 @@ void ResourceManagerComponent::SellResource(int32 amount, EResourceType type)
 			CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (SellResource) Not Enough Bullet to sell");
 			return;
 		}
-		this->m_pResouceInfo.m_bulletAmount -= amount * (ResourceManagerComponent::m_bulletPrice / 2);
+		this->m_pResouceInfo.m_bulletAmount -= amount;
 		this->m_pResouceInfo.m_moneyAmount += (amount * ResourceManagerComponent::m_bulletPrice / 2);
 	}break;
 	case EResourceType::AK47: {
@@ -429,7 +429,7 @@ void ResourceManagerComponent::SellResource(int32 amount, EResourceType type)
 			CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (SellResource) Not Enough AK47 to sell");
 			return;
 		}
-		this->m_pResouceInfo.m_ak47Amount -= amount * (ResourceManagerComponent::m_ak47Price / 2);
+		this->m_pResouceInfo.m_ak47Amount -= amount;
 		this->m_pResouceInfo.m_moneyAmount += (amount * ResourceManagerComponent::m_ak47Price / 2);
 	}break;
 	default:
@@ -451,7 +451,7 @@ void ResourceManagerComponent::BuyResource(int32 amount, EResourceType type)
 			CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (BuyResource) Not Enough Money to buy");
 			return;
 		}
-		this->m_pResouceInfo.m_oilAmount += amount * ResourceManagerComponent::m_oilPrice;
+		this->m_pResouceInfo.m_oilAmount += amount;
 	}break;
 	case EResourceType::WHEAT: {
 		buyPrice = (amount * ResourceManagerComponent::m_WheatPrice);
@@ -459,7 +459,7 @@ void ResourceManagerComponent::BuyResource(int32 amount, EResourceType type)
 			CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (BuyResource) Not Enough Money to buy");
 			return;
 		}
-		this->m_pResouceInfo.m_wheatAmount += amount * ResourceManagerComponent::m_WheatPrice;
+		this->m_pResouceInfo.m_wheatAmount += amount;
 	}break;
 	case EResourceType::FLOUR: {
 		buyPrice = (amount * ResourceManagerComponent::m_FlourPrice);
@@ -467,7 +467,7 @@ void ResourceManagerComponent::BuyResource(int32 amount, EResourceType type)
 			CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (BuyResource) Not Enough Money to buy");
 			return;
 		}
-		this->m_pResouceInfo.m_flourAmount += amount * ResourceManagerComponent::m_FlourPrice;
+		this->m_pResouceInfo.m_flourAmount += amount;
 	}break;
 	case EResourceType::WOOD: {
 		buyPrice = (amount * ResourceManagerComponent::m_WoodPrice);
@@ -475,7 +475,7 @@ void ResourceManagerComponent::BuyResource(int32 amount, EResourceType type)
 			CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (BuyResource) Not Enough Money to buy");
 			return;
 		}
-		this->m_pResouceInfo.m_woodAmount += amount * ResourceManagerComponent::m_WoodPrice;
+		this->m_pResouceInfo.m_woodAmount += amount;
 	}break;
 	case EResourceType::BREAD: {
 		buyPrice = (amount * ResourceManagerComponent::m_BreadPrice);
@@ -483,7 +483,7 @@ void ResourceManagerComponent::BuyResource(int32 amount, EResourceType type)
 			CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (BuyResource) Not Enough Money to buy");
 			return;
 		}
-		this->m_pResouceInfo.m_breadAmount += amount * ResourceManagerComponent::m_BreadPrice;
+		this->m_pResouceInfo.m_breadAmount += amount;
 	}break;
 	case EResourceType::SULFUR: {
 		buyPrice = (amount * ResourceManagerComponent::m_SulfurPrice);
@@ -491,7 +491,7 @@ void ResourceManagerComponent::BuyResource(int32 amount, EResourceType type)
 			CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (BuyResource) Not Enough Money to buy");
 			return;
 		}
-		this->m_pResouceInfo.m_sulfurAmount += amount * ResourceManagerComponent::m_SulfurPrice;
+		this->m_pResouceInfo.m_sulfurAmount += amount;
 	}break;
 	case EResourceType::GUN_POWDER: {
 		buyPrice = (amount * ResourceManagerComponent::m_GunPowderPrice);
@@ -499,7 +499,7 @@ void ResourceManagerComponent::BuyResource(int32 amount, EResourceType type)
 			CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (BuyResource) Not Enough Money to buy");
 			return;
 		}
-		this->m_pResouceInfo.m_gunPowderAmount += amount * ResourceManagerComponent::m_GunPowderPrice;
+		this->m_pResouceInfo.m_gunPowderAmount += amount;
 	}break;
 	case EResourceType::IRON: {
 		buyPrice = (amount * ResourceManagerComponent::m_IronPrice);
@@ -507,7 +507,7 @@ void ResourceManagerComponent::BuyResource(int32 amount, EResourceType type)
 			CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (BuyResource) Not Enough Money to buy");
 			return;
 		}
-		this->m_pResouceInfo.m_ironAmount += amount * ResourceManagerComponent::m_IronPrice;
+		this->m_pResouceInfo.m_ironAmount += amount;
 	}break;
 	case EResourceType::BULLET: {
 		buyPrice = (amount * ResourceManagerComponent::m_bulletPrice);
@@ -515,7 +515,7 @@ void ResourceManagerComponent::BuyResource(int32 amount, EResourceType type)
 			CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (BuyResource) Not Enough Money to buy");
 			return;
 		}
-		this->m_pResouceInfo.m_bulletAmount += amount * ResourceManagerComponent::m_bulletPrice;
+		this->m_pResouceInfo.m_bulletAmount += amount;
 	}break;
 	case EResourceType::AK47: {
 		buyPrice = (amount * ResourceManagerComponent::m_bulletPrice);
@@ -523,7 +523,7 @@ void ResourceManagerComponent::BuyResource(int32 amount, EResourceType type)
 			CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "ResourceManagerComponent : (BuyResource) Not Enough Money to buy");
 			return;
 		}
-		this->m_pResouceInfo.m_ak47Amount += amount * ResourceManagerComponent::m_ak47Price;
+		this->m_pResouceInfo.m_ak47Amount += amount;
 	}break;
 	default:
 		break;

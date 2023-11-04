@@ -96,7 +96,7 @@ void Soldier1UnitComponent::Initialize()
 	pAttckInfo.m_pAttackType = EAttackType::RANGED;
 	pAttckInfo.bIsHumanoid = true;
 	pAttckInfo.bIsFollower = false;
-	pAttckInfo.m_maxAttackDistance = 30.f;
+	pAttckInfo.m_maxAttackDistance = 25.f;
 	m_pAttackerComponent->SetAttackInfo(pAttckInfo);
 
 	//CostComponent Initializations
@@ -144,9 +144,9 @@ void Soldier1UnitComponent::ProcessEvent(const SEntityEvent& event)
 SResourceInfo Soldier1UnitComponent::GetCost()
 {
 	SResourceInfo cost;
-	cost.m_moneyAmount = 30;
+	cost.m_moneyAmount = 20;
 	cost.m_populationAmount = 1;
-	cost.m_bulletAmount = 10;
+	cost.m_bulletAmount = 5;
 	cost.m_ak47Amount = 1;
 	return cost;
 }

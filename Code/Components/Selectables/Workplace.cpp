@@ -25,7 +25,9 @@ namespace
 
 void WorkplaceComponent::Initialize()
 {
-
+	for (int32 i = 0; i < m_maxWorkersCount; i++) {
+		m_pWorkerEntities[i] = nullptr;
+	}
 }
 
 Cry::Entity::EventFlags WorkplaceComponent::GetEventMask() const
@@ -62,21 +64,44 @@ void WorkplaceComponent::SetMaxWorkersCount(int32 count)
 
 int32 WorkplaceComponent::GetCurrentWorkersCount()
 {
-	return m_pWorkerEntities.size();
+	int32 count = 0;
+	for (int32 i = 0; i < m_maxWorkersCount; i++) {
+		if (m_pWorkerEntities[i] == nullptr || m_pWorkerEntities[i]->IsGarbage()) {
+			continue;
+		}
+
+		count++;
+	}
+	return count;
 }
 
-void WorkplaceComponent::AssignWorkerToPlace(IEntity* worker)
+int32 WorkplaceComponent::AssignWorkerToPlace(IEntity* worker)
 {
-	if (GetCurrentWorkersCount() >= m_maxWorkersCount) {
-		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "WorkplaceComponent : (AssignWorkerToPlace) Workplace Already full.");
-		return;
-	}
+	//if (GetCurrentWorkersCount() >= m_maxWorkersCount) {
+	//	CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "WorkplaceComponent : (AssignWorkerToPlace) Workplace Already full.");
+	//	return -1;
+	//}
+
 	WorkerComponent* wokerComponent = worker->GetComponent<WorkerComponent>();
 	if (!wokerComponent) {
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "WorkplaceComponent : (AssignWorkerToPlace) Selected Entity is not a worker.");
-		return;
+		return -1;
 	}
-	m_pWorkerEntities.append(worker);
+
+	for (int32 i = 0; i < m_maxWorkersCount; i++) {
+		if (m_pWorkerEntities[i] == nullptr) {
+			m_pWorkerEntities[i] = worker;
+			return i;
+		}
+	}
+
+	CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "WorkplaceComponent : (AssignWorkerToPlace) Workplace Already full.");
+	return -1;
+}
+
+void WorkplaceComponent::RemovedWorkerFromWorkplace(int32 index)
+{
+	m_pWorkerEntities[index] = nullptr;
 }
 
 DynArray<IEntity*> WorkplaceComponent::GetWorkers()

@@ -35,7 +35,9 @@ public:
 	void SetMaxWorkersCount(int32 count);
 	int32 GetCurrentWorkersCount();
 
-	void AssignWorkerToPlace(IEntity* worker);
+	int32 AssignWorkerToPlace(IEntity* worker);
+	void RemovedWorkerFromWorkplace(int32 index);
+
 	DynArray<IEntity*> GetWorkers();
 
 	void SetMoveToAttachments(DynArray<IAttachment*> moveToAttachments);

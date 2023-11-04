@@ -7,7 +7,7 @@
 #include <Components/Selectables/Cost.h>
 #include <Components/Info/OwnerInfo.h>
 #include <Components/Managers/ResourceManager.h>
-#include <Components/Selectables/Units/Engineer1Unit.h>
+#include <Components/Selectables/Units/Soldier1Unit.h>
 
 #include <Actions/Train/TrainSoldier1Action.h>
 #include <Components/Managers/ActionManager.h>
@@ -49,8 +49,8 @@ void UITrainSoldier1Item::Execute()
 		return;
 	}
 
-	if (!resouceManager->RequsetResources(Engineer1UnitComponent::GetCost())) {
-		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "UITrainSoldier1Item : (Execute) Not enough resources to train Engineer1 unit !");
+	if (!resouceManager->RequsetResources(Soldier1UnitComponent::GetCost())) {
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "UITrainSoldier1Item : (Execute) Not enough resources to train Soldier1 unit !");
 		return;
 	}
 	if (actionManager) {

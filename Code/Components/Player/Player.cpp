@@ -34,6 +34,7 @@
 #include <Components/BaseBuilding/BaseBuilding.h>
 #include <Components/UI/UIResourcesPanel.h>
 #include <Components/Managers/UnitTypeManager.h>
+#include <Actions/Units/UnitWorkInWorkplaceAction.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -57,7 +58,7 @@ void PlayerComponent::Initialize()
 {
 	//Camera initialization
 	m_pCameraComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CCameraComponent>();
-	m_pCameraComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), Quat::CreateRotationX(DEG2RAD(-55)), Vec3(0, 0, m_cameraDefaultHeight)));
+	m_pCameraComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), Quat::CreateRotationX(DEG2RAD(-65)), Vec3(0, 0, m_cameraDefaultHeight)));
 
 	//Inputs initialization
 	m_pInputComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CInputComponent>();
@@ -451,7 +452,7 @@ void PlayerComponent::CommandUnitsToMove(Vec3 position)
 				if (i != 0) {
 					row++;
 				}
-				if (i != 0 && i % 5 == 0) {
+				if (i != 0 && i % 4 == 0) {
 					column++;
 					row = 0;
 				}
@@ -460,7 +461,7 @@ void PlayerComponent::CommandUnitsToMove(Vec3 position)
 				if (i != 0) {
 					column++;
 				}
-				if (i != 0 && i % 5 == 0) {
+				if (i != 0 && i % 4 == 0) {
 					row++;
 					column = 0;
 				}
@@ -470,7 +471,7 @@ void PlayerComponent::CommandUnitsToMove(Vec3 position)
 			m_selectedUnits[i]->GetWorldBounds(aabb);
 			f32 width = aabb.max.x - aabb.min.x;
 			f32 height = aabb.max.y - aabb.min.y;
-			Vec3 pos = Vec3(position.x + ((column * (width + 1.4f))), position.y - ((row * (height + 1.4f))), position.z);
+			Vec3 pos = Vec3(position.x + ((column * (width + 1.0f))), position.y - ((row * (height + 1.0f))), position.z);
 
 			IPersistantDebug* pd = gEnv->pGameFramework->GetIPersistantDebug();
 			if (pd) {
@@ -569,8 +570,9 @@ void PlayerComponent::AssignWorkplaceToWorkers(IEntity* workplaceEntity)
 		ActionManagerComponent* actionManager = entity->GetComponent<ActionManagerComponent>();
 		if (actionManager) {
 			if (workplaceEntity) {
-				workerComponent->AssignWorkplace(workplaceEntity);
-				workPlaceComponent->AssignWorkerToPlace(entity);
+				//workerComponent->AssignWorkplace(workplaceEntity);
+				//workPlaceComponent->AssignWorkerToPlace(entity);
+				actionManager->AddAction(new UnitWorkInWorkplaceAction(entity, workplaceEntity));
 				CryLog("workplace assigned");
 			}
 		}
@@ -673,7 +675,7 @@ void PlayerComponent::ExecuteActionbarItem(int32 index)
 	for (IEntity* entity : m_selectedUnits) {
 		SelectableComponent* selectable = entity->GetComponent<SelectableComponent>();
 		if (!selectable) {
-			return;
+			continue;
 		}
 
 		if (m_selectedUnits.size() > 1 && !AreSelectedUnitsSameType()) {
@@ -683,7 +685,7 @@ void PlayerComponent::ExecuteActionbarItem(int32 index)
 
 		if (m_selectedUnits.size() == 1 || AreSelectedUnitsSameType()) {
 			selectable->GetAllUIItems()[index]->Execute();
-			break;
+			//break;
 		}
 	}
 }

@@ -16,9 +16,9 @@ enum class EUnitStance {
 };
 
 static constexpr f32 BASE_DEFAULT_PRONE_SPEED = 1.0f;
-static constexpr f32 BASE_DEFAULT_CROUCH_SPEED = 3.f;
-static constexpr f32 BASE_DEFAULT_WALK_SPEED = 4.f;
-static constexpr f32 BASE_DEFAULT_RUN_SPEED = 6.5f;
+static constexpr f32 BASE_DEFAULT_CROUCH_SPEED = 2.f;
+static constexpr f32 BASE_DEFAULT_WALK_SPEED = 3.f;
+static constexpr f32 BASE_DEFAULT_RUN_SPEED = 4.f;
 
 class UnitStateManagerComponent final : public IEntityComponent
 {

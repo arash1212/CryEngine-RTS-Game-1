@@ -127,7 +127,7 @@ void Engineer1UnitComponent::Initialize()
 	m_pEngineerComponent = m_pEntity->GetOrCreateComponent<EngineerComponent>();
 	//engineer info
 	SEngineerInfo engineerInfo;
-	engineerInfo.m_maxBuildDistance = 0.2f;
+	engineerInfo.m_maxBuildDistance = 0.4f;
 	engineerInfo.m_timeBetweenBuilds = 1.f;
 	m_pEngineerComponent->SetEngineerInfo(engineerInfo);
 
@@ -182,7 +182,7 @@ void Engineer1UnitComponent::ProcessEvent(const SEntityEvent& event)
 SResourceInfo Engineer1UnitComponent::GetCost()
 {
 	SResourceInfo cost;
-	cost.m_moneyAmount = 20;
+	cost.m_moneyAmount = 10;
 	cost.m_populationAmount = 1;
 	cost.m_bulletAmount = 0;
 	cost.m_ak47Amount = 0;

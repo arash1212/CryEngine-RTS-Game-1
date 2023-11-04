@@ -41,7 +41,7 @@ void AIControllerComponent::Initialize()
 	IEntityNavigationComponent::SMovementProperties m_movementProps;
 	m_movementProps.normalSpeed = 4.f;
 	m_movementProps.minSpeed = 3.5;
-	m_movementProps.maxSpeed = 7;
+	m_movementProps.maxSpeed = 5;
 	m_movementProps.lookAheadDistance = 0.5f;
 	m_pNavigationComponent->SetMovementProperties(m_movementProps);
 
@@ -118,7 +118,8 @@ bool AIControllerComponent::MoveTo(Vec3 position, bool run)
 		m_pStateManager->SetStance(EUnitStance::RUNNING);
 	}
 
-	m_moveToPosition = this->SnapToNavmesh(position);
+	//this->SnapToNavmesh() ?
+	m_moveToPosition = position;
 	return true;
 }
 
@@ -154,8 +155,9 @@ Vec3 AIControllerComponent::SnapToNavmesh(Vec3 point)
 
 void AIControllerComponent::StopMoving()
 {
-	this->m_moveToPosition = m_pEntity->GetWorldPos();
 	this->m_pCharacterControllerComponent->SetVelocity(ZERO);
+	this->m_pCharacterControllerComponent->ChangeVelocity(ZERO, Cry::DefaultComponents::CCharacterControllerComponent::EChangeVelocityMode::Jump);
+	this->m_moveToPosition = m_pEntity->GetWorldPos();
 	//this->m_pStateManager->SetStance(EUnitStance::WALKING);
 	//this->MoveTo(m_pEntity->GetWorldPos(), false);
 }
@@ -230,6 +232,11 @@ Vec3 AIControllerComponent::GetRandomPointOnNavmesh(float MaxDistance, IEntity* 
 	SAcceptAllQueryTrianglesFilter filter;
 	MNM::SPointOnNavMesh pointOnNavMesh = gEnv->pAISystem->GetNavigationSystem()->SnapToNavMesh(agentTypeId, resultPos, snappingMetrics, &filter, &navMeshId);
 	return pointOnNavMesh.GetWorldPosition();
+}
+
+bool AIControllerComponent::IsDestinationReachable(Vec3 position)
+{
+	return this->m_pNavigationComponent->IsDestinationReachable(position);
 }
 
 bool AIControllerComponent::IsMoving()

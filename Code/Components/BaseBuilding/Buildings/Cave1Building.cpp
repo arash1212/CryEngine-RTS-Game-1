@@ -199,7 +199,7 @@ void Cave1BuildingComponent::CommandUnitsToAttack()
 	}
 
 	if (m_attackTimePassed >= m_timeBetweenAttacks) {
-		if (m_pResourceManagerComponent->GetOwnedEntities().size() >= m_maxZombiesCount) {
+		if (m_pResourceManagerComponent->GetOwnedEntities().size() >= 10) {
 			int32 unitsCommanded = 0;
 			for (IEntity* entity : m_pResourceManagerComponent->GetOwnedEntities()) {
 				AttackerComponent* pAttackerComponent = entity->GetComponent<AttackerComponent>();
@@ -211,7 +211,7 @@ void Cave1BuildingComponent::CommandUnitsToAttack()
 				ActionManagerComponent* pActionManagerComponent = entity->GetComponent<ActionManagerComponent>();
 				pActionManagerComponent->AddAction(new UnitAttackEnemyBaseAction(entity, m_hostilePlayers[0]));
 
-				if (unitsCommanded >= 15) {
+				if (unitsCommanded >= 10) {
 					break;
 				}
 			}

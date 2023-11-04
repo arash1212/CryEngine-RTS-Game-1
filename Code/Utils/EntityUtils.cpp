@@ -3,6 +3,9 @@
 #include "GamePlugin.h"
 
 #include <CryGame/IGameFramework.h>
+#include <CryAISystem/INavigationSystem.h>
+#include <CryAISystem/NavigationSystem/INavigationUpdatesManager.h>
+#include <Components/BaseBuilding/Building.h>
 
 #include <Utils/MathUtils.h>
 
@@ -60,6 +63,12 @@ void EntityUtils::RemoveEntity(IEntity* entity)
 
 	pResourceManagerComponent->RemoveOwnedEntity(entity);
 	gEnv->pEntitySystem->RemoveEntity(entity->GetId());
+
+	if (entity->GetComponent<BuildingComponent>()) {
+		AABB aabb;
+		entity->GetWorldBounds(aabb);
+		gEnv->pAISystem->GetNavigationSystem()->GetUpdateManager()->EntityChanged(entity->GetId(), aabb);
+	}
 }
 
 f32 EntityUtils::GetDistance(Vec3 from, Vec3 to, IEntity* toEntity)
