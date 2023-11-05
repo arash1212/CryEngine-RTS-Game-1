@@ -142,7 +142,6 @@ void Farm1BuildingComponent::Initialize()
 
 	//WorkplaceComponent  Initializations
 	m_pWorkplaceComponent = m_pEntity->GetOrCreateComponent<WorkplaceComponent>();
-	m_pWorkplaceComponent->SetMoveToAttachments(m_pWheatAttachments);
 	m_pWorkplaceComponent->SetMaxWorkersCount(1);
 }
 

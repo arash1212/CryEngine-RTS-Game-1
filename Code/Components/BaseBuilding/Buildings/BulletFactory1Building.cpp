@@ -131,14 +131,9 @@ void BulletFactory1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 
 	}break;
 	case Cry::Entity::EEvent::Update: {
-		f32 DeltaTime = event.fParam[0];
+		//f32 DeltaTime = event.fParam[0];
 
 		UpdateAssignedWorkers();
-
-		//Timers
-		if (m_workTimePassed < m_timeBetweenWorks) {
-			m_workTimePassed += 0.5f * DeltaTime;
-		}
 
 	}break;
 	case Cry::Entity::EEvent::Reset: {
@@ -158,192 +153,70 @@ void BulletFactory1BuildingComponent::UpdateAssignedWorkers()
 	if (!m_pBuildingComponent->IsBuilt()) {
 		return;
 	}
-	if (m_pWorkplaceComponent->GetCurrentWorkersCount() <= 0) {
-		return;
-	}
-	OwnerInfoComponent* ownerInfo = m_pEntity->GetComponent<OwnerInfoComponent>();
-	if (!ownerInfo) {
-		return;
-	}
-	IEntity* pOwner = ownerInfo->GetOwner();
-	if (!pOwner) {
-		return;
-	}
-	ResourceManagerComponent* pResourceManager = pOwner->GetComponent<ResourceManagerComponent>();
-	if (!pResourceManager) {
-		return;
-	}
-	if (!m_pWorkplaceComponent->GetWorkers()[0]->GetComponent<WorkerComponent>()->HasEnteredWorkplace()) {
-		return;
-	}
 	IEntity* pWorker = m_pWorkplaceComponent->GetWorkers()[0];
-	if (!pWorker) {
-		return;
-	}
-	AIControllerComponent* pAIController = pWorker->GetComponent<AIControllerComponent>();
-	if (!pAIController) {
-		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "BulletFactory1BuildingComponent:(UpdateCurrentMoveToAttachment) pAIController is null");
-		return;
-	}
-	ResourceCollectorComponent* pResourceCollectorComponent = pWorker->GetComponent<ResourceCollectorComponent>();
-	if (!pResourceCollectorComponent) {
-		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "BulletFactory1BuildingComponent:(UpdateCurrentMoveToAttachment) pResourceCollectorComponent is null");
+	if (!pWorker || pWorker->IsGarbage()) {
 		return;
 	}
 	WorkerComponent* pWorkerComponent = pWorker->GetComponent<WorkerComponent>();
 	if (!pWorkerComponent) {
-		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "BulletFactory1BuildingComponent:(UpdateCurrentMoveToAttachment) pWorkerComponent is null");
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "Bakery1BuildingComponent:(UpdateCurrentMoveToAttachment) pWorkerComponent is null");
 		return;
 	}
-	if (!m_pWorkplaceComponent->GetWorkers()[0] || m_pWorkplaceComponent->GetWorkers()[0]->IsGarbage()) {
+	if (!pWorkerComponent->HasEnteredWorkplace()) {
 		return;
 	}
 
+	int32 productionWaitAmount = 5;
 	int32 GunPowderRequestAmount = 30;
 	int32 IronRequestAmount = 30;
 	int32 BulletProducedAmount = 10;
+	Vec3 workPosition = m_pWorkPositionAttachment->GetAttWorldAbsolute().t;
 
 	//**********************************Move to Warehouse and pickup some GunPowder
 	if (!bIsCollectedGunPowder) {
-
-		SResourceInfo pSulfurResourceRequest;
-		pSulfurResourceRequest.m_gunPowderAmount = GunPowderRequestAmount;
-		if (!pResourceManager->CheckIfResourcesAvailable(pSulfurResourceRequest)) {
-			return;
-		}
-		if (!m_pWarehouseEntity) {
-			m_pWarehouseEntity = EntityUtils::FindClosestWarehouse(m_pEntity);
-			return;
-		}
-
-		Vec3 warehouseExitPoint = m_pWarehouseEntity->GetComponent<BuildingComponent>()->GetExitPoint();
-		//Move closer to warehouse if it's not close
-		f32 distanceToWareHouse = EntityUtils::GetDistance(m_pWorkplaceComponent->GetWorkers()[0]->GetWorldPos(), warehouseExitPoint, nullptr);
-		if (m_pWarehouseEntity && distanceToWareHouse > 1) {
-			pAIController->MoveTo(warehouseExitPoint, false);
-			pAIController->LookAtWalkDirection();
-		}
-		//Pickup Gun Powder from Warehouse
-		else {
-			pAIController->StopMoving();
-			pAIController->LookAt(m_pWarehouseEntity->GetWorldPos());
-			pResourceManager->RequsetResources(pSulfurResourceRequest);
-			pResourceCollectorComponent->AddResource(GunPowderRequestAmount);
-			pResourceCollectorComponent->SetCurrentResourceType(EResourceType::GUN_POWDER);
-
+		if (pWorkerComponent->PickResourceFromWareHouse(EResourceType::GUN_POWDER, GunPowderRequestAmount)) {
 			bIsCollectedGunPowder = true;
 		}
 	}
 
 	//**********************************Transfer GunPowder to Factory
 	if (bIsCollectedGunPowder && !bIsCollectedIron && !bIsTransferedGunPowderToFactory && !bIsTransferedIronToFactory) {
-		Vec3 workingPoint = m_pWorkPositionAttachment->GetAttWorldAbsolute().t;
-		//Move closer to factory if it's not close
-		f32 distanceToBakery = EntityUtils::GetDistance(m_pWorkplaceComponent->GetWorkers()[0]->GetWorldPos(), workingPoint, nullptr);
-		if (m_pWarehouseEntity && distanceToBakery > 1) {
-			pAIController->MoveTo(workingPoint, false);
-			pAIController->LookAtWalkDirection();
-			m_workTimePassed = 0;
-		}
-		//
-		else {
-			pAIController->StopMoving();
-			pAIController->LookAt(m_pEntity->GetWorldPos());
-			pResourceCollectorComponent->EmptyResources();
-
-			//if (m_workTimePassed >= m_timeBetweenWorks) {
+		if (pWorkerComponent->TransferResourcesToPosition(workPosition)) {
 			bIsTransferedGunPowderToFactory = true;
-
-			//pResourceCollectorComponent->AddResource(GunPowderProducedAmount);
-			//pResourceCollectorComponent->SetCurrentResourceType(EResourceType::GUN_POWDER);
-	//	}
 		}
 	}
 
 	//**********************************Move to Warehouse and pickup some Iron
 	if (!bIsCollectedIron && bIsCollectedGunPowder && bIsTransferedGunPowderToFactory && !bIsTransferedIronToFactory) {
-
-		SResourceInfo pIronResourceRequest;
-		pIronResourceRequest.m_ironAmount = IronRequestAmount;
-		if (!pResourceManager->CheckIfResourcesAvailable(pIronResourceRequest)) {
-			return;
-		}
-		if (!m_pWarehouseEntity) {
-			m_pWarehouseEntity = EntityUtils::FindClosestWarehouse(m_pEntity);
-			return;
-		}
-
-		Vec3 warehouseExitPoint = m_pWarehouseEntity->GetComponent<BuildingComponent>()->GetExitPoint();
-		//Move closer to warehouse if it's not close
-		f32 distanceToWareHouse = EntityUtils::GetDistance(m_pWorkplaceComponent->GetWorkers()[0]->GetWorldPos(), warehouseExitPoint, nullptr);
-		if (m_pWarehouseEntity && distanceToWareHouse > 1) {
-			pAIController->MoveTo(warehouseExitPoint, false);
-			pAIController->LookAtWalkDirection();
-		}
-		//Pickup Iron from Warehouse
-		else {
-			pAIController->StopMoving();
-			pAIController->LookAt(m_pWarehouseEntity->GetWorldPos());
-			pResourceManager->RequsetResources(pIronResourceRequest);
-			pResourceCollectorComponent->AddResource(IronRequestAmount);
-			pResourceCollectorComponent->SetCurrentResourceType(EResourceType::IRON);
-
+		if (pWorkerComponent->PickResourceFromWareHouse(EResourceType::IRON, IronRequestAmount)) {
 			bIsCollectedIron = true;
 		}
 	}
 
 	//**********************************Transfer Iron to Factory And Create Bullet
 	if (bIsCollectedGunPowder && bIsCollectedIron && bIsTransferedGunPowderToFactory && !bIsTransferedIronToFactory) {
-		Vec3 workingPoint = m_pWorkPositionAttachment->GetAttWorldAbsolute().t;
-		//Move closer to Factory if it's not close
-		f32 distanceToBakery = EntityUtils::GetDistance(m_pWorkplaceComponent->GetWorkers()[0]->GetWorldPos(), workingPoint, nullptr);
-		if (m_pWarehouseEntity && distanceToBakery > 1) {
-			pAIController->MoveTo(workingPoint, false);
-			pAIController->LookAtWalkDirection();
-			m_workTimePassed = 0;
-		}
-		//
-		else {
-			pAIController->StopMoving();
-			pAIController->LookAt(m_pEntity->GetWorldPos());
-			pResourceCollectorComponent->EmptyResources();
+		if (pWorkerComponent->TransferResourcesToPosition(workPosition)) {
+			bIsTransferedIronToFactory = true;
 			m_pParticleComponent->Activate(true);
+		}
+	}
 
-			if (m_workTimePassed >= m_timeBetweenWorks) {
-				bIsTransferedIronToFactory = true;
-
-				pResourceCollectorComponent->AddResource(BulletProducedAmount);
-				pResourceCollectorComponent->SetCurrentResourceType(EResourceType::BULLET);
-				m_pParticleComponent->Activate(false);
-			}
+	//**********************************Produce Bullet
+	if (bIsCollectedGunPowder && bIsCollectedIron && bIsTransferedGunPowderToFactory && bIsTransferedIronToFactory && !bIsProducedBullet) {
+		if (pWorkerComponent->WaitAndPickResources(productionWaitAmount, workPosition, EResourceType::BULLET, BulletProducedAmount)) {
+			bIsProducedBullet = true;
+			m_pParticleComponent->Activate(false);
 		}
 	}
 
 	//**********************************Transfer Bullet to warehouse
-	if (bIsCollectedGunPowder && bIsCollectedIron && bIsTransferedGunPowderToFactory && bIsTransferedIronToFactory) {
-		if (!m_pWarehouseEntity) {
-			m_pWarehouseEntity = EntityUtils::FindClosestWarehouse(m_pEntity);
-			return;
-		}
-
-		Vec3 warehouseExitPoint = m_pWarehouseEntity->GetComponent<BuildingComponent>()->GetExitPoint();
-		//Move closer to warehouse if it's not close
-		f32 distanceToWareHouse = EntityUtils::GetDistance(m_pWorkplaceComponent->GetWorkers()[0]->GetWorldPos(), warehouseExitPoint, nullptr);
-		if (m_pWarehouseEntity && distanceToWareHouse > 1) {
-			pAIController->MoveTo(warehouseExitPoint, false);
-			pAIController->LookAtWalkDirection();
-		}
-		//Transer Bullet to Warehouse
-		else {
-			pAIController->StopMoving();
-			pAIController->LookAt(m_pWarehouseEntity->GetWorldPos());
-			pResourceManager->AddResource(EResourceType::BULLET, BulletProducedAmount);
-			pResourceCollectorComponent->EmptyResources();
-
+	if (bIsCollectedGunPowder && bIsCollectedIron && bIsTransferedGunPowderToFactory && bIsTransferedIronToFactory && bIsProducedBullet) {
+		if (pWorkerComponent->TransferResourcesToWarehouse(EResourceType::BULLET, BulletProducedAmount)) {
 			bIsCollectedGunPowder = false;
-			bIsTransferedGunPowderToFactory = false;
 			bIsCollectedIron = false;
+			bIsTransferedGunPowderToFactory = false;
 			bIsTransferedIronToFactory = false;
+			bIsProducedBullet = false;
 			pWorkerComponent->SetHasEnteredWorkplace(false);
 		}
 	}

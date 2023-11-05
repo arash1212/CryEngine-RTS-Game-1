@@ -4,6 +4,9 @@
 
 #include <Components/Info/OwnerInfo.h>
 #include <Components/Selectables/Worker.h>
+#include <Components/BaseBuilding/Building.h>
+#include <Components/Resources/Resource.h>
+#include <Components/Managers/ResourceManager.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -25,8 +28,11 @@ namespace
 
 void WorkplaceComponent::Initialize()
 {
+	//BuildingComponent Initialization
+	m_pBuildingComponent = m_pEntity->GetComponent<BuildingComponent>();
+
 	for (int32 i = 0; i < m_maxWorkersCount; i++) {
-		m_pWorkerEntities[i] = nullptr;
+		m_pWorkerEntities.append(nullptr);
 	}
 }
 
@@ -66,21 +72,26 @@ int32 WorkplaceComponent::GetCurrentWorkersCount()
 {
 	int32 count = 0;
 	for (int32 i = 0; i < m_maxWorkersCount; i++) {
-		if (m_pWorkerEntities[i] == nullptr || m_pWorkerEntities[i]->IsGarbage()) {
+		if (m_pWorkerEntities[i] == nullptr) {
 			continue;
 		}
 
 		count++;
 	}
+
+	CryLog("count %i ++++++++++++++++++++", count);
 	return count;
 }
 
 int32 WorkplaceComponent::AssignWorkerToPlace(IEntity* worker)
 {
-	//if (GetCurrentWorkersCount() >= m_maxWorkersCount) {
-	//	CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "WorkplaceComponent : (AssignWorkerToPlace) Workplace Already full.");
-	//	return -1;
-	//}
+	if (!m_pBuildingComponent->IsBuilt()) {
+		return -1;
+	}
+	if (GetCurrentWorkersCount() >= m_maxWorkersCount) {
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "WorkplaceComponent : (AssignWorkerToPlace) Workplace Already full.");
+		//return -1;
+	}
 
 	WorkerComponent* wokerComponent = worker->GetComponent<WorkerComponent>();
 	if (!wokerComponent) {
@@ -88,8 +99,14 @@ int32 WorkplaceComponent::AssignWorkerToPlace(IEntity* worker)
 		return -1;
 	}
 
+	//TODO : khata dasht ye dafe worker be tamam workplace ha assign mishod (az inja) felan okeye (?)
+	//if (m_pWorkerEntities.size() + 1 < m_maxWorkersCount) {
+	//CryLog("array size : %i", m_pWorkerEntities.size());
+	//	m_pWorkerEntities[0] = worker;
+	//	return 0;
+	//}
 	for (int32 i = 0; i < m_maxWorkersCount; i++) {
-		if (m_pWorkerEntities[i] == nullptr) {
+		if (m_pWorkerEntities[i] == nullptr || m_pWorkerEntities[i]->IsGarbage()) {
 			m_pWorkerEntities[i] = worker;
 			return i;
 		}
@@ -107,11 +124,6 @@ void WorkplaceComponent::RemovedWorkerFromWorkplace(int32 index)
 DynArray<IEntity*> WorkplaceComponent::GetWorkers()
 {
 	return m_pWorkerEntities;
-}
-
-void WorkplaceComponent::SetMoveToAttachments(DynArray<IAttachment*> moveToAttachments)
-{
-	this->m_moveToAttachments = moveToAttachments;
 }
 
 void WorkplaceComponent::SetMoveToAttachment(IAttachment* currentMoveToAttachment)

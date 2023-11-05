@@ -58,8 +58,6 @@ private:
 	bool bIsTransferedWoodToFactory = false;
 	bool bIsProducedGunPowder = false;
 
-	f32 m_timeBetweenWorks = 6.f;
-	f32 m_workTimePassed = 0.f;
 private:
 	void UpdateAssignedWorkers();
 

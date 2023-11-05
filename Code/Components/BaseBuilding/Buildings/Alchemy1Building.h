@@ -55,8 +55,6 @@ private:
 	bool bIsTransferedOilToAlchemy = false;
 	bool bIsProducedSulfur = false;
 
-	f32 m_timeBetweenWorks = 5.f;
-	f32 m_workTimePassed = 0.f;
 private:
 	void UpdateAssignedWorkers();
 

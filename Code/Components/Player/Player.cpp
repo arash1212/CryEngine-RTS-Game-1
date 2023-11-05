@@ -573,7 +573,7 @@ void PlayerComponent::AssignWorkplaceToWorkers(IEntity* workplaceEntity)
 				//workerComponent->AssignWorkplace(workplaceEntity);
 				//workPlaceComponent->AssignWorkerToPlace(entity);
 				actionManager->AddAction(new UnitWorkInWorkplaceAction(entity, workplaceEntity));
-				CryLog("workplace assigned");
+				CryLog("workplace assigned %s:", workplaceEntity->GetName());
 			}
 		}
 		else {

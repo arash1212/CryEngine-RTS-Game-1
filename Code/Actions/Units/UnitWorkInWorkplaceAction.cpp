@@ -7,7 +7,6 @@
 #include <Components/Selectables/Workplace.h>
 #include <Components/Selectables/Worker.h>
 
-#include <Components/Selectables/Attacker.h>
 #include <Components/Controller/AIController.h>
 #include <Components/Managers/UnitStateManager.h>
 
@@ -15,10 +14,9 @@ UnitWorkInWorkplaceAction::UnitWorkInWorkplaceAction(IEntity* entity, IEntity* w
 {
 	this->m_pEntity = entity;
 	this->m_pWorkplaceEntity = workplace;
-	this->m_pAttackerComponent = m_pEntity->GetComponent<AttackerComponent>();
 	this->m_pAiControllerComponent = m_pEntity->GetComponent<AIControllerComponent>();
 	this->m_pStateManagerComponent = m_pEntity->GetComponent<UnitStateManagerComponent>();
-	this->m_pWorkplaceComponent = m_pWorkplaceEntity->GetComponent<WorkplaceComponent>();
+	this->m_pWorkplaceComponent = workplace->GetOrCreateComponent<WorkplaceComponent>();
 	this->m_pWorkerComponent = m_pEntity->GetComponent<WorkerComponent>();
 }
 

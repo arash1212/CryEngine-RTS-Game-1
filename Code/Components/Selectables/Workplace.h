@@ -1,8 +1,5 @@
 #pragma once
 
-#include <Components/Resources/Resource.h>
-#include <Components/Managers/ResourceManager.h>
-
 class WorkplaceComponent final : public IEntityComponent
 {
 
@@ -22,9 +19,10 @@ public:
 		desc.SetGUID("{56217FE4-1133-4D3B-A6E1-B84BFFDD78C1}"_cry_guid);
 		desc.SetEditorCategory("Resource");
 	}
+private:
+	BuildingComponent* m_pBuildingComponent = nullptr;
 
 private:
-	DynArray<IAttachment*> m_moveToAttachments;
 	DynArray<IEntity*> m_pWorkerEntities;
 	IAttachment* m_currentMoveToAttachment = nullptr;
 
@@ -39,8 +37,6 @@ public:
 	void RemovedWorkerFromWorkplace(int32 index);
 
 	DynArray<IEntity*> GetWorkers();
-
-	void SetMoveToAttachments(DynArray<IAttachment*> moveToAttachments);
 
 	void SetMoveToAttachment(IAttachment* currentMoveToAttachment);
 	Vec3 GetCurrentMoveToAttachment();

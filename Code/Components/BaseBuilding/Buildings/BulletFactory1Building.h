@@ -56,10 +56,7 @@ private:
 	bool bIsCollectedIron = false;
 	bool bIsTransferedGunPowderToFactory = false;
 	bool bIsTransferedIronToFactory = false;
-	bool bIsProducedGunPowder = false;
-
-	f32 m_timeBetweenWorks = 6.f;
-	f32 m_workTimePassed = 0.f;
+	bool bIsProducedBullet = false;
 private:
 	void UpdateAssignedWorkers();
 

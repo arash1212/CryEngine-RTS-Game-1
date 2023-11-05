@@ -4,6 +4,7 @@
 #include <DefaultComponents/Geometry/StaticMeshComponent.h>
 #include <DefaultComponents/Physics/BoxPrimitiveComponent.h>
 #include <DefaultComponents/Effects/DecalComponent.h>
+#include <DefaultComponents/Effects/ParticleComponent.h>
 
 class BuildingComponent;
 class SelectableComponent;
@@ -41,6 +42,7 @@ private:
 	Cry::DefaultComponents::CStaticMeshComponent* m_pTrussMeshComponent = nullptr;
 	Cry::DefaultComponents::CBoxPrimitiveComponent* m_pBboxComponent = nullptr;
 	Cry::DefaultComponents::CDecalComponent* m_pDecalComponent = nullptr;
+	Cry::DefaultComponents::CParticleComponent* m_pParticleComponent = nullptr;
 
 	SelectableComponent* m_pSelectableComponent = nullptr;
 	BuildingComponent* m_pBuildingComponent = nullptr;
@@ -54,9 +56,6 @@ private:
 	bool bIsCollectedFlour = false;
 	bool bIsTransferedFlourToBakery = false;
 	bool bIsProducedBread = false;
-
-	f32 m_timeBetweenWorks = 5.f;
-	f32 m_workTimePassed = 0.f;
 
 private:
 	void UpdateAssignedWorkers();

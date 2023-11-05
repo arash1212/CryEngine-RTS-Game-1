@@ -106,6 +106,12 @@ void Bakery1BuildingComponent::Initialize()
 
 	//WorkPositionAttachment
 	m_pWorkPositionAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("workPosition1");
+
+	//ParticleComponent Initialization
+	m_pParticleComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CParticleComponent>();
+	m_pParticleComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), IDENTITY, Vec3(2.5f, -1.2f, 2)));
+	m_pParticleComponent->SetEffectName("Objects/effects/smoke/smoke_particle_1.pfx");
+	m_pParticleComponent->Activate(false);
 }
 
 
@@ -125,14 +131,10 @@ void Bakery1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 
 	}break;
 	case Cry::Entity::EEvent::Update: {
-		f32 DeltaTime = event.fParam[0];
+		//f32 DeltaTime = event.fParam[0];
 
 		UpdateAssignedWorkers();
 
-		//Timers
-		if (m_workTimePassed < m_timeBetweenWorks) {
-			m_workTimePassed += 0.5f * DeltaTime;
-		}
 	}break;
 	case Cry::Entity::EEvent::Reset: {
 
@@ -150,36 +152,8 @@ void Bakery1BuildingComponent::UpdateAssignedWorkers()
 	if (!m_pBuildingComponent->IsBuilt()) {
 		return;
 	}
-	if (m_pWorkplaceComponent->GetCurrentWorkersCount() <= 0) {
-		return;
-	}
-	OwnerInfoComponent* ownerInfo = m_pEntity->GetComponent<OwnerInfoComponent>();
-	if (!ownerInfo) {
-		return;
-	}
-	IEntity* pOwner = ownerInfo->GetOwner();
-	if (!pOwner) {
-		return;
-	}
-	ResourceManagerComponent* pResourceManager = pOwner->GetComponent<ResourceManagerComponent>();
-	if (!pResourceManager) {
-		return;
-	}
-	if (!m_pWorkplaceComponent->GetWorkers()[0]->GetComponent<WorkerComponent>()->HasEnteredWorkplace()) {
-		return;
-	}
 	IEntity* pWorker = m_pWorkplaceComponent->GetWorkers()[0];
-	if (!pWorker) {
-		return;
-	}
-	AIControllerComponent* pAIController = pWorker->GetComponent<AIControllerComponent>();
-	if (!pAIController) {
-		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "Bakery1BuildingComponent:(UpdateCurrentMoveToAttachment) pAIController is null");
-		return;
-	}
-	ResourceCollectorComponent* pResourceCollectorComponent = pWorker->GetComponent<ResourceCollectorComponent>();
-	if (!pResourceCollectorComponent) {
-		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "Bakery1BuildingComponent:(UpdateCurrentMoveToAttachment) pResourceCollectorComponent is null");
+	if (!pWorker || pWorker->IsGarbage()) {
 		return;
 	}
 	WorkerComponent* pWorkerComponent = pWorker->GetComponent<WorkerComponent>();
@@ -187,93 +161,44 @@ void Bakery1BuildingComponent::UpdateAssignedWorkers()
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "Bakery1BuildingComponent:(UpdateCurrentMoveToAttachment) pWorkerComponent is null");
 		return;
 	}
-	if (!m_pWorkplaceComponent->GetWorkers()[0] || m_pWorkplaceComponent->GetWorkers()[0]->IsGarbage()) {
+	if (!pWorkerComponent->HasEnteredWorkplace()) {
 		return;
 	}
 
-	int32 FlourRequestAmount = 30;
+	int32 productionWaitAmount = 5;
+	int32 FlourRequestAmount = 20;
 	int32 BreadProducedAmount = 10;
+	Vec3 workPosition = m_pWorkPositionAttachment->GetAttWorldAbsolute().t;
 
 	//**********************************Move to Warehouse and pickup some Flour
 	if (!bIsCollectedFlour) {
-
-		SResourceInfo pResourceRequest;
-		pResourceRequest.m_flourAmount = FlourRequestAmount;
-		if (!pResourceManager->CheckIfResourcesAvailable(pResourceRequest)) {
-			return;
-		}
-		if (!m_pWarehouseEntity) {
-			m_pWarehouseEntity = EntityUtils::FindClosestWarehouse(m_pEntity);
-			return;
-		}
-
-		Vec3 warehouseExitPoint = m_pWarehouseEntity->GetComponent<BuildingComponent>()->GetExitPoint();
-		//Move closer to warehouse if it's not close
-		f32 distanceToWareHouse = EntityUtils::GetDistance(m_pWorkplaceComponent->GetWorkers()[0]->GetWorldPos(), warehouseExitPoint, nullptr);
-		if (m_pWarehouseEntity && distanceToWareHouse > 1) {
-			pAIController->MoveTo(warehouseExitPoint, false);
-			pAIController->LookAtWalkDirection();
-		}
-		//Pickup Flour from Warehouse
-		else {
-			pAIController->StopMoving();
-			pAIController->LookAt(m_pWarehouseEntity->GetWorldPos());
-			pResourceManager->RequsetResources(pResourceRequest);
-			pResourceCollectorComponent->AddResource(FlourRequestAmount);
-			pResourceCollectorComponent->SetCurrentResourceType(EResourceType::FLOUR);
-
+		if (pWorkerComponent->PickResourceFromWareHouse(EResourceType::FLOUR, FlourRequestAmount)) {
 			bIsCollectedFlour = true;
 		}
 	}
 
 	//**********************************Transfer Flour to Bakery
 	if (bIsCollectedFlour && !bIsTransferedFlourToBakery) {
-		Vec3 workingPoint = m_pWorkPositionAttachment->GetAttWorldAbsolute().t;
-		//Move closer to bakery if it's not close
-		f32 distanceToBakery = EntityUtils::GetDistance(m_pWorkplaceComponent->GetWorkers()[0]->GetWorldPos(), workingPoint, nullptr);
-		if (m_pWarehouseEntity && distanceToBakery > 1) {
-			pAIController->MoveTo(workingPoint, false);
-			pAIController->LookAtWalkDirection();
-			m_workTimePassed = 0;
+		if (pWorkerComponent->TransferResourcesToPosition(workPosition)) {
+			bIsTransferedFlourToBakery = true;
+			m_pParticleComponent->Activate(true);
 		}
-		//
-		else {
-			pAIController->StopMoving();
-			pAIController->LookAt(m_pEntity->GetWorldPos());
-			pResourceCollectorComponent->EmptyResources();
+	}
 
-			if (m_workTimePassed >= m_timeBetweenWorks) {
-				bIsTransferedFlourToBakery = true;
-
-				pResourceCollectorComponent->AddResource(BreadProducedAmount);
-				pResourceCollectorComponent->SetCurrentResourceType(EResourceType::BREAD);
-			}
+	//**********************************Produce Bread
+	if (bIsCollectedFlour && bIsTransferedFlourToBakery && !bIsProducedBread) {
+		if (pWorkerComponent->WaitAndPickResources(productionWaitAmount, workPosition, EResourceType::BREAD, BreadProducedAmount)) {
+			bIsProducedBread = true;
+			m_pParticleComponent->Activate(false);
 		}
 	}
 
 	//**********************************Transfer Bread to warehouse
-	if (bIsCollectedFlour && bIsTransferedFlourToBakery) {
-		if (!m_pWarehouseEntity) {
-			m_pWarehouseEntity = EntityUtils::FindClosestWarehouse(m_pEntity);
-			return;
-		}
-
-		Vec3 warehouseExitPoint = m_pWarehouseEntity->GetComponent<BuildingComponent>()->GetExitPoint();
-		//Move closer to warehouse if it's not close
-		f32 distanceToWareHouse = EntityUtils::GetDistance(m_pWorkplaceComponent->GetWorkers()[0]->GetWorldPos(), warehouseExitPoint, nullptr);
-		if (m_pWarehouseEntity && distanceToWareHouse > 1) {
-			pAIController->MoveTo(warehouseExitPoint, false);
-			pAIController->LookAtWalkDirection();
-		}
-		//Transer Bread to Warehouse
-		else {
-			pAIController->StopMoving();
-			pAIController->LookAt(m_pWarehouseEntity->GetWorldPos());
-			pResourceManager->AddResource(EResourceType::BREAD, BreadProducedAmount);
-			pResourceCollectorComponent->EmptyResources();
-
+	if (bIsCollectedFlour&& bIsTransferedFlourToBakery&& bIsProducedBread) {
+		if (pWorkerComponent->TransferResourcesToWarehouse(EResourceType::BREAD, BreadProducedAmount)) {
 			bIsCollectedFlour = false;
 			bIsTransferedFlourToBakery = false;
+			bIsProducedBread = false;
 			pWorkerComponent->SetHasEnteredWorkplace(false);
 		}
 	}

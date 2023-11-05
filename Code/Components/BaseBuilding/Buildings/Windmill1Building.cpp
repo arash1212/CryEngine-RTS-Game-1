@@ -125,14 +125,9 @@ void Windmill1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 
 	}break;
 	case Cry::Entity::EEvent::Update: {
-		f32 DeltaTime = event.fParam[0];
+		//f32 DeltaTime = event.fParam[0];
 
 		UpdateAssignedWorkers();
-
-		//Timers
-		if (m_workTimePassed < m_timeBetweenWorks) {
-			m_workTimePassed += 0.5f * DeltaTime;
-		}
 
 	}break;
 	case Cry::Entity::EEvent::Reset: {
@@ -151,129 +146,51 @@ void Windmill1BuildingComponent::UpdateAssignedWorkers()
 	if (!m_pBuildingComponent->IsBuilt()) {
 		return;
 	}
-	if (m_pWorkplaceComponent->GetCurrentWorkersCount() <= 0) {
-		return;
-	}
-	OwnerInfoComponent* ownerInfo = m_pEntity->GetComponent<OwnerInfoComponent>();
-	if (!ownerInfo) {
-		return;
-	}
-	IEntity* pOwner = ownerInfo->GetOwner();
-	if (!pOwner) {
-		return;
-	}
-	ResourceManagerComponent* pResourceManager = pOwner->GetComponent<ResourceManagerComponent>();
-	if (!pResourceManager) {
-		return;
-	}
-	if (!m_pWorkplaceComponent->GetWorkers()[0]->GetComponent<WorkerComponent>()->HasEnteredWorkplace()) {
-		return;
-	}
 	IEntity* pWorker = m_pWorkplaceComponent->GetWorkers()[0];
-	if (!pWorker) {
-		return;
-	}
-	AIControllerComponent* pAIController = pWorker->GetComponent<AIControllerComponent>();
-	if (!pAIController) {
-		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "Windmill1BuildingComponent:(UpdateCurrentMoveToAttachment) pAIController is null");
-		return;
-	}
-	ResourceCollectorComponent* pResourceCollectorComponent = pWorker->GetComponent<ResourceCollectorComponent>();
-	if (!pResourceCollectorComponent) {
-		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "Windmill1BuildingComponent:(UpdateCurrentMoveToAttachment) pResourceCollectorComponent is null");
+	if (!pWorker || pWorker->IsGarbage()) {
 		return;
 	}
 	WorkerComponent* pWorkerComponent = pWorker->GetComponent<WorkerComponent>();
 	if (!pWorkerComponent) {
-		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "Windmill1BuildingComponent:(UpdateCurrentMoveToAttachment) pWorkerComponent is null");
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "Bakery1BuildingComponent:(UpdateCurrentMoveToAttachment) pWorkerComponent is null");
 		return;
 	}
-	if (!m_pWorkplaceComponent->GetWorkers()[0] || m_pWorkplaceComponent->GetWorkers()[0]->IsGarbage()) {
+	if (!pWorkerComponent->HasEnteredWorkplace()) {
 		return;
 	}
 
+	int32 productionWaitAmount = 5;
 	int32 WheatRequestAmount = 30;
 	int32 FlourProducedAmount = 10;
+	Vec3 workPosition = m_pBuildingComponent->GetExitPoint();
 
 	//**********************************Move to Warehouse and pickup some wheat
 	if (!bIsCollectedWheat) {
-		SResourceInfo pResourceRequest;
-		pResourceRequest.m_wheatAmount = WheatRequestAmount;
-		if (!pResourceManager->CheckIfResourcesAvailable(pResourceRequest)) {
-			return;
-		}
-		if (!m_pWarehouseEntity) {
-			m_pWarehouseEntity = EntityUtils::FindClosestWarehouse(m_pEntity);
-			return;
-		}
-
-		Vec3 warehouseExitPoint = m_pWarehouseEntity->GetComponent<BuildingComponent>()->GetExitPoint();
-		//Move closer to warehouse if it's not close
-		f32 distanceToWareHouse = EntityUtils::GetDistance(m_pWorkplaceComponent->GetWorkers()[0]->GetWorldPos(), warehouseExitPoint, nullptr);
-		if (m_pWarehouseEntity && distanceToWareHouse > 1) {
-			pAIController->MoveTo(warehouseExitPoint, false);
-			pAIController->LookAtWalkDirection();
-		}
-		//Pickup Wheat from Warehouse
-		else {
-			pAIController->StopMoving();
-			pAIController->LookAt(m_pWarehouseEntity->GetWorldPos());
-			pResourceManager->RequsetResources(pResourceRequest);
-			pResourceCollectorComponent->AddResource(WheatRequestAmount);
-			pResourceCollectorComponent->SetCurrentResourceType(EResourceType::WHEAT);
-
+		if (pWorkerComponent->PickResourceFromWareHouse(EResourceType::WHEAT, WheatRequestAmount)) {
 			bIsCollectedWheat = true;
 		}
 	}
 
-	//**********************************Transfer Wheat to mill && Get Flour
+	//**********************************Transfer Wheat to mill
 	if (bIsCollectedWheat && !bIsTransferedWheatToMill) {
-		Vec3 millExitPoint = m_pBuildingComponent->GetExitPoint();
-		//Move closer to warehouse if it's not close
-		f32 distanceToMill = EntityUtils::GetDistance(m_pWorkplaceComponent->GetWorkers()[0]->GetWorldPos(), millExitPoint, nullptr);
-		if (m_pWarehouseEntity && distanceToMill > 1) {
-			pAIController->MoveTo(millExitPoint, false);
-			pAIController->LookAtWalkDirection();
-			m_workTimePassed = 0;
+		if (pWorkerComponent->TransferResourcesToPosition(workPosition)) {
+			bIsTransferedWheatToMill = true;
 		}
-		//Pickup Resources from Warehouse
-		else {
-			pAIController->StopMoving();
-			pAIController->LookAt(m_pEntity->GetWorldPos());
-			pResourceCollectorComponent->EmptyResources();
+	}
 
-			if (m_workTimePassed >= m_timeBetweenWorks) {
-				bIsTransferedWheatToMill = true;
-
-				pResourceCollectorComponent->AddResource(FlourProducedAmount);
-				pResourceCollectorComponent->SetCurrentResourceType(EResourceType::FLOUR);
-			}
+	//**********************************Produce Flour
+	if (bIsCollectedWheat && bIsTransferedWheatToMill && !bIsProducedFlour) {
+		if (pWorkerComponent->WaitAndPickResources(productionWaitAmount, m_pEntity->GetWorldPos(), EResourceType::FLOUR, FlourProducedAmount)) {
+			bIsProducedFlour = true;
 		}
 	}
 
 	//**********************************Transfer Flour to warehouse
-	if (bIsCollectedWheat && bIsTransferedWheatToMill) {
-		if (!m_pWarehouseEntity) {
-			m_pWarehouseEntity = EntityUtils::FindClosestWarehouse(m_pEntity);
-			return;
-		}
-
-		Vec3 warehouseExitPoint = m_pWarehouseEntity->GetComponent<BuildingComponent>()->GetExitPoint();
-		//Move closer to warehouse if it's not close
-		f32 distanceToWareHouse = EntityUtils::GetDistance(m_pWorkplaceComponent->GetWorkers()[0]->GetWorldPos(), warehouseExitPoint, nullptr);
-		if (m_pWarehouseEntity && distanceToWareHouse > 1) {
-			pAIController->MoveTo(warehouseExitPoint, false);
-			pAIController->LookAtWalkDirection();
-		}
-		//Transer Flour to Warehouse
-		else {
-			pAIController->StopMoving();
-			pAIController->LookAt(m_pWarehouseEntity->GetWorldPos());
-			pResourceManager->AddResource(EResourceType::FLOUR, FlourProducedAmount);
-			pResourceCollectorComponent->EmptyResources();
-
+	if (bIsCollectedWheat && bIsTransferedWheatToMill && bIsProducedFlour) {
+		if (pWorkerComponent->TransferResourcesToWarehouse(EResourceType::FLOUR, FlourProducedAmount)) {
 			bIsCollectedWheat = false;
 			bIsTransferedWheatToMill = false;
+			bIsProducedFlour = false;
 			pWorkerComponent->SetHasEnteredWorkplace(false);
 		}
 	}

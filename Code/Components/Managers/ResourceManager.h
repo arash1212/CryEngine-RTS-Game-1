@@ -20,6 +20,11 @@ public:
 	int32 m_ak47Amount = 0;
 };
 
+struct SResourceRequestParams {
+	EResourceType m_pResourceType;
+	int32 m_amountRequested = 0;
+};
+
 class ResourceManagerComponent : public IEntityComponent {
 
 public:

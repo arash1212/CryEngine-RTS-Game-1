@@ -73,7 +73,7 @@ void GunPowderFactory1BuildingComponent::Initialize()
 
 	//DecalComponent(Placement) Initialization
 	m_pDecalComponent = m_pEntity->CreateComponent<Cry::DefaultComponents::CDecalComponent>();
-	m_pDecalComponent->SetTransformMatrix(Matrix34::Create(Vec3(2.0f, 3.6f, 3), IDENTITY, Vec3(0.14f, -1.7f, 0)));
+	m_pDecalComponent->SetTransformMatrix(Matrix34::Create(Vec3(2.5f, 3.6f, 3), IDENTITY, Vec3(0.7f, -1.7f, 0)));
 	m_pDecalComponent->SetMaterialFileName(BUILDING_PLACEMENT_GREEN_DECAL_MATERIAL);
 	m_pDecalComponent->SetSortPriority(50);
 	m_pDecalComponent->SetDepth(10);
@@ -92,7 +92,7 @@ void GunPowderFactory1BuildingComponent::Initialize()
 	AABB aabb;
 	m_pEntity->GetLocalBounds(aabb);
 	Vec3 min = Vec3(aabb.min.x - 1.8f, aabb.min.y - 5.0f, aabb.min.z);
-	Vec3 max = Vec3(aabb.max.x + 1.3f, aabb.max.y + 1.5f, aabb.max.z);
+	Vec3 max = Vec3(aabb.max.x + 2.3f, aabb.max.y + 1.5f, aabb.max.z);
 	AABB newAABB = AABB(min, max);
 	m_pEntity->SetLocalBounds(newAABB, true);
 
@@ -104,7 +104,7 @@ void GunPowderFactory1BuildingComponent::Initialize()
 	m_pWorkplaceComponent = m_pEntity->GetOrCreateComponent<WorkplaceComponent>();
 	m_pWorkplaceComponent->SetMaxWorkersCount(1);
 
-	//WorkPositionAttachment
+	//ParticleComponent Initialization
 	m_pParticleComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CParticleComponent>();
 	m_pParticleComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), IDENTITY, Vec3(0, 0, 6)));
 	m_pParticleComponent->SetEffectName("Objects/effects/smoke/smoke_particle_1.pfx");
@@ -131,14 +131,9 @@ void GunPowderFactory1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 
 	}break;
 	case Cry::Entity::EEvent::Update: {
-		f32 DeltaTime = event.fParam[0];
+		//f32 DeltaTime = event.fParam[0];
 
 		UpdateAssignedWorkers();
-
-		//Timers
-		if (m_workTimePassed < m_timeBetweenWorks) {
-			m_workTimePassed += 0.5f * DeltaTime;
-		}
 
 	}break;
 	case Cry::Entity::EEvent::Reset: {
@@ -158,192 +153,70 @@ void GunPowderFactory1BuildingComponent::UpdateAssignedWorkers()
 	if (!m_pBuildingComponent->IsBuilt()) {
 		return;
 	}
-	if (m_pWorkplaceComponent->GetCurrentWorkersCount() <= 0) {
-		return;
-	}
-	OwnerInfoComponent* ownerInfo = m_pEntity->GetComponent<OwnerInfoComponent>();
-	if (!ownerInfo) {
-		return;
-	}
-	IEntity* pOwner = ownerInfo->GetOwner();
-	if (!pOwner) {
-		return;
-	}
-	ResourceManagerComponent* pResourceManager = pOwner->GetComponent<ResourceManagerComponent>();
-	if (!pResourceManager) {
-		return;
-	}
-	if (!m_pWorkplaceComponent->GetWorkers()[0]->GetComponent<WorkerComponent>()->HasEnteredWorkplace()) {
-		return;
-	}
 	IEntity* pWorker = m_pWorkplaceComponent->GetWorkers()[0];
-	if (!pWorker) {
-		return;
-	}
-	AIControllerComponent* pAIController = pWorker->GetComponent<AIControllerComponent>();
-	if (!pAIController) {
-		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "GunPowderFactory1BuildingComponent:(UpdateCurrentMoveToAttachment) pAIController is null");
-		return;
-	}
-	ResourceCollectorComponent* pResourceCollectorComponent = pWorker->GetComponent<ResourceCollectorComponent>();
-	if (!pResourceCollectorComponent) {
-		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "GunPowderFactory1BuildingComponent:(UpdateCurrentMoveToAttachment) pResourceCollectorComponent is null");
+	if (!pWorker || pWorker->IsGarbage()) {
 		return;
 	}
 	WorkerComponent* pWorkerComponent = pWorker->GetComponent<WorkerComponent>();
 	if (!pWorkerComponent) {
-		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "GunPowderFactory1BuildingComponent:(UpdateCurrentMoveToAttachment) pWorkerComponent is null");
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "Bakery1BuildingComponent:(UpdateCurrentMoveToAttachment) pWorkerComponent is null");
 		return;
 	}
-	if (!m_pWorkplaceComponent->GetWorkers()[0] || m_pWorkplaceComponent->GetWorkers()[0]->IsGarbage()) {
+	if (!pWorkerComponent->HasEnteredWorkplace()) {
 		return;
 	}
 
+	int32 productionWaitAmount = 6;
 	int32 SulfurRequestAmount = 30;
 	int32 WoodRequestAmount = 30;
 	int32 GunPowderProducedAmount = 10;
+	Vec3 workPosition = m_pWorkPositionAttachment->GetAttWorldAbsolute().t;
 
 	//**********************************Move to Warehouse and pickup some Sulfur
 	if (!bIsCollectedSulfur) {
-
-		SResourceInfo pSulfurResourceRequest;
-		pSulfurResourceRequest.m_sulfurAmount = SulfurRequestAmount;
-		if (!pResourceManager->CheckIfResourcesAvailable(pSulfurResourceRequest)) {
-			return;
-		}
-		if (!m_pWarehouseEntity) {
-			m_pWarehouseEntity = EntityUtils::FindClosestWarehouse(m_pEntity);
-			return;
-		}
-
-		Vec3 warehouseExitPoint = m_pWarehouseEntity->GetComponent<BuildingComponent>()->GetExitPoint();
-		//Move closer to warehouse if it's not close
-		f32 distanceToWareHouse = EntityUtils::GetDistance(m_pWorkplaceComponent->GetWorkers()[0]->GetWorldPos(), warehouseExitPoint, nullptr);
-		if (m_pWarehouseEntity && distanceToWareHouse > 1) {
-			pAIController->MoveTo(warehouseExitPoint, false);
-			pAIController->LookAtWalkDirection();
-		}
-		//Pickup Sulfur from Warehouse
-		else {
-			pAIController->StopMoving();
-			pAIController->LookAt(m_pWarehouseEntity->GetWorldPos());
-			pResourceManager->RequsetResources(pSulfurResourceRequest);
-			pResourceCollectorComponent->AddResource(SulfurRequestAmount);
-			pResourceCollectorComponent->SetCurrentResourceType(EResourceType::SULFUR);
-
+		if (pWorkerComponent->PickResourceFromWareHouse(EResourceType::SULFUR, SulfurRequestAmount)) {
 			bIsCollectedSulfur = true;
 		}
 	}
 
 	//**********************************Transfer Sulfur to Factory
 	if (bIsCollectedSulfur && !bIsCollectedWood && !bIsTransferedSulfurToFactory && !bIsTransferedWoodToFactory) {
-		Vec3 workingPoint = m_pWorkPositionAttachment->GetAttWorldAbsolute().t;
-		//Move closer to bakery if it's not close
-		f32 distanceToBakery = EntityUtils::GetDistance(m_pWorkplaceComponent->GetWorkers()[0]->GetWorldPos(), workingPoint, nullptr);
-		if (m_pWarehouseEntity && distanceToBakery > 1) {
-			pAIController->MoveTo(workingPoint, false);
-			pAIController->LookAtWalkDirection();
-			m_workTimePassed = 0;
-		}
-		//
-		else {
-			pAIController->StopMoving();
-			pAIController->LookAt(m_pEntity->GetWorldPos());
-			pResourceCollectorComponent->EmptyResources();
-
-			//if (m_workTimePassed >= m_timeBetweenWorks) {
-				bIsTransferedSulfurToFactory = true;
-
-				//pResourceCollectorComponent->AddResource(GunPowderProducedAmount);
-				//pResourceCollectorComponent->SetCurrentResourceType(EResourceType::GUN_POWDER);
-		//	}
+		if (pWorkerComponent->TransferResourcesToPosition(workPosition)) {
+			bIsTransferedSulfurToFactory = true;
 		}
 	}
 
 	//**********************************Move to Warehouse and pickup some Wood
 	if (!bIsCollectedWood && bIsCollectedSulfur && bIsTransferedSulfurToFactory && !bIsTransferedWoodToFactory) {
-
-		SResourceInfo pWoodResourceRequest;
-		pWoodResourceRequest.m_woodAmount = WoodRequestAmount;
-		if (!pResourceManager->CheckIfResourcesAvailable(pWoodResourceRequest)) {
-			return;
-		}
-		if (!m_pWarehouseEntity) {
-			m_pWarehouseEntity = EntityUtils::FindClosestWarehouse(m_pEntity);
-			return;
-		}
-
-		Vec3 warehouseExitPoint = m_pWarehouseEntity->GetComponent<BuildingComponent>()->GetExitPoint();
-		//Move closer to warehouse if it's not close
-		f32 distanceToWareHouse = EntityUtils::GetDistance(m_pWorkplaceComponent->GetWorkers()[0]->GetWorldPos(), warehouseExitPoint, nullptr);
-		if (m_pWarehouseEntity && distanceToWareHouse > 1) {
-			pAIController->MoveTo(warehouseExitPoint, false);
-			pAIController->LookAtWalkDirection();
-		}
-		//Pickup Sulfur from Warehouse
-		else {
-			pAIController->StopMoving();
-			pAIController->LookAt(m_pWarehouseEntity->GetWorldPos());
-			pResourceManager->RequsetResources(pWoodResourceRequest);
-			pResourceCollectorComponent->AddResource(WoodRequestAmount);
-			pResourceCollectorComponent->SetCurrentResourceType(EResourceType::WOOD);
-
+		if (pWorkerComponent->PickResourceFromWareHouse(EResourceType::WOOD, WoodRequestAmount)) {
 			bIsCollectedWood = true;
 		}
 	}
 
 	//**********************************Transfer Wood to Factory And Create GunPowder
 	if (bIsCollectedSulfur && bIsCollectedWood && bIsTransferedSulfurToFactory && !bIsTransferedWoodToFactory) {
-		Vec3 workingPoint = m_pWorkPositionAttachment->GetAttWorldAbsolute().t;
-		//Move closer to Factory if it's not close
-		f32 distanceToBakery = EntityUtils::GetDistance(m_pWorkplaceComponent->GetWorkers()[0]->GetWorldPos(), workingPoint, nullptr);
-		if (m_pWarehouseEntity && distanceToBakery > 1) {
-			pAIController->MoveTo(workingPoint, false);
-			pAIController->LookAtWalkDirection();
-			m_workTimePassed = 0;
-		}
-		//
-		else {
-			pAIController->StopMoving();
-			pAIController->LookAt(m_pEntity->GetWorldPos());
-			pResourceCollectorComponent->EmptyResources();
+		if (pWorkerComponent->TransferResourcesToPosition(workPosition)) {
+			bIsTransferedWoodToFactory = true;
 			m_pParticleComponent->Activate(true);
+		}
+	}
 
-			if (m_workTimePassed >= m_timeBetweenWorks) {
-				bIsTransferedWoodToFactory = true;
-
-				pResourceCollectorComponent->AddResource(GunPowderProducedAmount);
-				pResourceCollectorComponent->SetCurrentResourceType(EResourceType::GUN_POWDER);
-				m_pParticleComponent->Activate(false);
-			}
+	//**********************************Produce GunPowder
+	if (bIsCollectedSulfur && bIsCollectedWood && bIsTransferedSulfurToFactory && bIsTransferedWoodToFactory && !bIsProducedGunPowder) {
+		if (pWorkerComponent->WaitAndPickResources(productionWaitAmount, workPosition, EResourceType::GUN_POWDER, GunPowderProducedAmount)) {
+			bIsProducedGunPowder = true;
+			m_pParticleComponent->Activate(false);
 		}
 	}
 
 	//**********************************Transfer GunPowder to warehouse
-	if (bIsCollectedSulfur && bIsCollectedWood && bIsTransferedSulfurToFactory && bIsTransferedWoodToFactory) {
-		if (!m_pWarehouseEntity) {
-			m_pWarehouseEntity = EntityUtils::FindClosestWarehouse(m_pEntity);
-			return;
-		}
-
-		Vec3 warehouseExitPoint = m_pWarehouseEntity->GetComponent<BuildingComponent>()->GetExitPoint();
-		//Move closer to warehouse if it's not close
-		f32 distanceToWareHouse = EntityUtils::GetDistance(m_pWorkplaceComponent->GetWorkers()[0]->GetWorldPos(), warehouseExitPoint, nullptr);
-		if (m_pWarehouseEntity && distanceToWareHouse > 1) {
-			pAIController->MoveTo(warehouseExitPoint, false);
-			pAIController->LookAtWalkDirection();
-		}
-		//Transer GunPowder to Warehouse
-		else {
-			pAIController->StopMoving();
-			pAIController->LookAt(m_pWarehouseEntity->GetWorldPos());
-			pResourceManager->AddResource(EResourceType::GUN_POWDER, GunPowderProducedAmount);
-			pResourceCollectorComponent->EmptyResources();
-
+	if (bIsCollectedSulfur && bIsCollectedWood && bIsTransferedSulfurToFactory && bIsTransferedWoodToFactory && bIsProducedGunPowder) {
+		if (pWorkerComponent->TransferResourcesToWarehouse(EResourceType::GUN_POWDER, GunPowderProducedAmount)) {
 			bIsCollectedSulfur = false;
-			bIsTransferedSulfurToFactory = false;
 			bIsCollectedWood = false;
+			bIsTransferedSulfurToFactory = false;
 			bIsTransferedWoodToFactory = false;
+			bIsProducedGunPowder = false;
 			pWorkerComponent->SetHasEnteredWorkplace(false);
 		}
 	}

@@ -3,7 +3,6 @@
 #include <Actions/IBaseAction.h>
 
 class AIControllerComponent;
-class AttackerComponent;
 class UnitStateManagerComponent;
 class WorkplaceComponent;
 class WorkerComponent;
@@ -15,7 +14,6 @@ public:
 
 private:
 	AIControllerComponent* m_pAiControllerComponent = nullptr;
-	AttackerComponent* m_pAttackerComponent = nullptr;
 	UnitStateManagerComponent* m_pStateManagerComponent = nullptr;
 	WorkplaceComponent* m_pWorkplaceComponent = nullptr;
 	WorkerComponent* m_pWorkerComponent = nullptr;
