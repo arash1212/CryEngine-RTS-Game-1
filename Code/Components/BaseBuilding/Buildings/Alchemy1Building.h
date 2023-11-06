@@ -51,8 +51,7 @@ private:
 	IEntity* m_pWarehouseEntity = nullptr;
 	IAttachment* m_pWorkPositionAttachment = nullptr;
 
-	bool bIsCollectedOil = false;
-	bool bIsTransferedOilToAlchemy = false;
+	bool bIsCollectedOilAndTransferedToAlchemy = false;
 	bool bIsProducedSulfur = false;
 
 private:

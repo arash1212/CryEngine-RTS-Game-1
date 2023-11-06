@@ -49,8 +49,7 @@ private:
 
 	IEntity* m_pWarehouseEntity = nullptr;
 private:
-	bool bIsCollectedWheat = false;
-	bool bIsTransferedWheatToMill = false;
+	bool bIsCollectedWheatAndTransferedWheatToMill = false;
 	bool bIsProducedFlour = false;
 
 private:

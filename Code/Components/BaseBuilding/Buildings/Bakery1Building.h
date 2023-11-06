@@ -53,12 +53,12 @@ private:
 	IAttachment* m_pWorkPositionAttachment = nullptr;
 
 private:
-	bool bIsCollectedFlour = false;
-	bool bIsTransferedFlourToBakery = false;
+	bool bIsCollectedAndTransferedFlour = false;
 	bool bIsProducedBread = false;
 
 private:
 	void UpdateAssignedWorkers();
+	void ResetWorkersJob();
 
 public:
 	static SResourceInfo GetCost();

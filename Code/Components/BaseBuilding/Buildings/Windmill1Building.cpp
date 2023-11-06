@@ -164,32 +164,24 @@ void Windmill1BuildingComponent::UpdateAssignedWorkers()
 	int32 FlourProducedAmount = 10;
 	Vec3 workPosition = m_pBuildingComponent->GetExitPoint();
 
-	//**********************************Move to Warehouse and pickup some wheat
-	if (!bIsCollectedWheat) {
-		if (pWorkerComponent->PickResourceFromWareHouse(EResourceType::WHEAT, WheatRequestAmount)) {
-			bIsCollectedWheat = true;
-		}
-	}
-
-	//**********************************Transfer Wheat to mill
-	if (bIsCollectedWheat && !bIsTransferedWheatToMill) {
-		if (pWorkerComponent->TransferResourcesToPosition(workPosition)) {
-			bIsTransferedWheatToMill = true;
+	//**********************************Move to Warehouse and pickup some wheat And Transer to mill
+	if (!bIsCollectedWheatAndTransferedWheatToMill) {
+		if (pWorkerComponent->PickResourceFromWarehouseAndTransferToPosition(EResourceType::WHEAT, WheatRequestAmount, workPosition)) {
+			bIsCollectedWheatAndTransferedWheatToMill = true;
 		}
 	}
 
 	//**********************************Produce Flour
-	if (bIsCollectedWheat && bIsTransferedWheatToMill && !bIsProducedFlour) {
-		if (pWorkerComponent->WaitAndPickResources(productionWaitAmount, m_pEntity->GetWorldPos(), EResourceType::FLOUR, FlourProducedAmount)) {
+	if (bIsCollectedWheatAndTransferedWheatToMill && !bIsProducedFlour) {
+		if (pWorkerComponent->WaitAndPickResources(productionWaitAmount, workPosition, m_pEntity->GetWorldPos(), EResourceType::FLOUR, FlourProducedAmount)) {
 			bIsProducedFlour = true;
 		}
 	}
 
 	//**********************************Transfer Flour to warehouse
-	if (bIsCollectedWheat && bIsTransferedWheatToMill && bIsProducedFlour) {
+	if (bIsCollectedWheatAndTransferedWheatToMill && bIsProducedFlour) {
 		if (pWorkerComponent->TransferResourcesToWarehouse(EResourceType::FLOUR, FlourProducedAmount)) {
-			bIsCollectedWheat = false;
-			bIsTransferedWheatToMill = false;
+			bIsCollectedWheatAndTransferedWheatToMill = false;
 			bIsProducedFlour = false;
 			pWorkerComponent->SetHasEnteredWorkplace(false);
 		}

@@ -52,10 +52,8 @@ private:
 	IEntity* m_pWarehouseEntity = nullptr;
 	IAttachment* m_pWorkPositionAttachment = nullptr;
 
-	bool bIsCollectedSulfur = false;
-	bool bIsCollectedWood = false;
-	bool bIsTransferedSulfurToFactory = false;
-	bool bIsTransferedWoodToFactory = false;
+	bool bIsCollectedSulfurAndTransferedToFactory = false;
+	bool bIsCollectedWoodAndTransferedToFactory = false;
 	bool bIsProducedGunPowder = false;
 
 private:

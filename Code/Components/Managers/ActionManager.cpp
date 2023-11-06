@@ -3,6 +3,7 @@
 #include "GamePlugin.h"
 
 #include <Actions/IBaseAction.h>
+#include <Components/BaseBuilding/Building.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>

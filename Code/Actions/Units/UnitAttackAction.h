@@ -19,7 +19,7 @@ private:
 
 
 public:
-	virtual void Execute();
-	virtual void Cancel();
-	virtual bool IsDone();
+	virtual void Execute() override;
+	virtual void Cancel() override;
+	virtual bool IsDone() override;
 };

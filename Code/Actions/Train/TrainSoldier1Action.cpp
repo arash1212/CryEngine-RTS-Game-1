@@ -32,13 +32,13 @@ void TrainSoldier1Action::Execute()
 		m_ProcessTimePassesd += 0.5f * gEnv->pTimer->GetFrameTime();
 	}
 	else {
-		m_processAmount += 0.2f;
+		m_processAmount += 10.f;
 		m_ProcessTimePassesd = 0;
 	}
-
-	if (m_processAmount < 1) {
+	if (m_processAmount < GetMaxProgressAmount()) {
 		return;
 	}
+
 	OwnerInfoComponent* onwerInfo = m_pEntity->GetComponent<OwnerInfoComponent>();
 	if (!onwerInfo) {
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "TrainSoldier1Action:(Execute) onwerInfo component does not exist on the building. train action cancelled.");
@@ -65,4 +65,9 @@ void TrainSoldier1Action::Cancel()
 bool TrainSoldier1Action::IsDone()
 {
 	return bIsDone;
+}
+
+f32 TrainSoldier1Action::GetProgressAmount()
+{
+	return crymath::floor(m_processAmount);
 }

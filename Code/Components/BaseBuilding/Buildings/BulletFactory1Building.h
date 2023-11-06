@@ -52,10 +52,8 @@ private:
 	IEntity* m_pWarehouseEntity = nullptr;
 	IAttachment* m_pWorkPositionAttachment = nullptr;
 
-	bool bIsCollectedGunPowder = false;
-	bool bIsCollectedIron = false;
-	bool bIsTransferedGunPowderToFactory = false;
-	bool bIsTransferedIronToFactory = false;
+	bool bIsCollectedGunPowderAndTransferedToFactory = false;
+	bool bIsCollectedIronAndTransferedToFactory = false;
 	bool bIsProducedBullet = false;
 private:
 	void UpdateAssignedWorkers();

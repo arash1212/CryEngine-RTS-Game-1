@@ -132,6 +132,9 @@ void WorkerComponent::CancelAssignedWorkplace()
 	this->bIsReachedAssignedPoint = false;
 	this->m_pAssignedWorkplace = nullptr;
 	this->m_pAIController->StopMoving();
+
+	this->bFirstCondition = false;
+	this->bSecondCondition = false;
 }
 
 bool WorkerComponent::HasEnteredWorkplace()
@@ -203,8 +206,13 @@ bool WorkerComponent::TransferResourcesToPosition(Vec3 position)
 	return false;
 }
 
-bool WorkerComponent::WaitAndPickResources(int32 waitAmount, Vec3 lookAtPos, EResourceType resourceType, int32 amount)
+bool WorkerComponent::WaitAndPickResources(int32 waitAmount, Vec3 standingPos, Vec3 lookAtPos, EResourceType resourceType, int32 amount)
 {	//Timers
+	f32 distanceToWorkplace = EntityUtils::GetDistance(m_pEntity->GetWorldPos(), standingPos, nullptr);
+	if (distanceToWorkplace > 1) {
+		m_pAIController->MoveTo(standingPos, false);
+	}
+
 	if (m_workTimePassed < waitAmount) {
 		m_workTimePassed += 0.5f * gEnv->pTimer->GetFrameTime();
 		m_pAIController->LookAt(lookAtPos);
@@ -243,6 +251,41 @@ bool WorkerComponent::TransferResourcesToWarehouse(EResourceType resourceType, i
 		return true;
 	}
 	return false;
+}
+
+bool WorkerComponent::PickResourceFromWarehouseAndTransferToPosition(EResourceType resourceType, int32 amount, Vec3 position)
+{
+	if (!bFirstCondition && !PickResourceFromWareHouse(resourceType, amount)) {
+		return false;
+	}
+	else {
+		bFirstCondition = true;
+	}
+
+	if (bFirstCondition && !TransferResourcesToPosition(position)) {
+		return false;
+	}
+	
+	bFirstCondition = false;
+	return true;
+}
+
+bool WorkerComponent::WaitAndPickResourcesAndTransferToWarehouse(int32 waitAmount, Vec3 standingPos, Vec3 lookAtPos, EResourceType resourceType, int32 amount)
+{
+	if (!bFirstCondition && !WaitAndPickResources(waitAmount, standingPos, lookAtPos, resourceType, amount)) {
+		return false;
+	}
+	else {
+		bFirstCondition = true;
+	}
+
+	if (bFirstCondition && !TransferResourcesToWarehouse(resourceType, amount)) {
+		return false;
+	}
+
+	bFirstCondition = true;
+	SetHasEnteredWorkplace(false);
+	return true;
 }
 
 SResourceInfo WorkerComponent::GetResourceRequestParams(EResourceType resourceType, int32 amount)

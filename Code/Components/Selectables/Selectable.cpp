@@ -145,3 +145,17 @@ void SelectableComponent::MouseOver()
 	m_pRenderNode->m_nHUDSilhouettesParam = m_greenColor;
 	//m_pRenderNode->m_nHUDSilhouettesParam = m_blackColor;
 }
+
+void SelectableComponent::RotateSelectionDecal()
+{
+	if (!m_pSelectionDecalComponent) {
+		return;
+	}
+	if (!bIsSelected) {
+		return;
+	}
+	Quat oldRot = m_pSelectionDecalComponent->GetTransform().get()->GetRotation().ToQuat();
+	Quat newRot = Quat::CreateRotationZ(oldRot.GetRotZ() + 0.3f * gEnv->pTimer->GetFrameTime());
+	m_pSelectionDecalComponent->SetTransformMatrix(Matrix34::Create(m_pSelectionDecalComponent->GetTransformMatrix().GetScale(), newRot, m_pSelectionDecalComponent->GetTransformMatrix().GetTranslation()));
+	m_pSelectionDecalComponent->Spawn();
+}

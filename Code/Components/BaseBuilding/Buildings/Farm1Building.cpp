@@ -226,6 +226,7 @@ void Farm1BuildingComponent::UpdateAssignedWorkers()
 		return;
 	}
 	
+	int32 WheatProducedAmount = 30;
 
 	//**********************************Plant
 	if (!bIsPlantingDone) {
@@ -311,26 +312,9 @@ void Farm1BuildingComponent::UpdateAssignedWorkers()
 		}
 	}
 
-	//**********************************SendResource to warehouse
+	//**********************************Transfer to warehouse
 	if (bIsPlantingDone && bIsHarvestingDone && bIsHarvestingStarted) {
-		if (!m_pWarehouseEntity) {
-			m_pWarehouseEntity = EntityUtils::FindClosestWarehouse(m_pEntity);
-			return;
-		}
-
-		Vec3 warehouseExitPoint = m_pWarehouseEntity->GetComponent<BuildingComponent>()->GetExitPoint();
-		//Move closer to warehouse if it's not close
-		f32 distanceToWareHouse = EntityUtils::GetDistance(m_pWorkplaceComponent->GetWorkers()[0]->GetWorldPos(), warehouseExitPoint, nullptr);
-		if (m_pWarehouseEntity && distanceToWareHouse > 1) {
-			pAIController->MoveTo(warehouseExitPoint, false);
-			pAIController->LookAtWalkDirection();
-		}
-		//Deliver Resource to Warehouse
-		else {
-			pAIController->StopMoving();
-			pAIController->LookAt(m_pWarehouseEntity->GetWorldPos());
-			pResourceCollectorComponent->SendResourceToWareHouse();
-
+		if (pWorkerComponent->TransferResourcesToWarehouse(EResourceType::BREAD, WheatProducedAmount)) {
 			m_currentIndex = 0;
 			bIsPlantingDone = false;
 			bIsHarvestingDone = false;

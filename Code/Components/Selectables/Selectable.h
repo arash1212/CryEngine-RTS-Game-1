@@ -65,4 +65,6 @@ public:
 	void HighLightBlack();
 
 	void MouseOver();
+
+	void RotateSelectionDecal();
 };

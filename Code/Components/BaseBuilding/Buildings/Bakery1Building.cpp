@@ -170,38 +170,34 @@ void Bakery1BuildingComponent::UpdateAssignedWorkers()
 	int32 BreadProducedAmount = 10;
 	Vec3 workPosition = m_pWorkPositionAttachment->GetAttWorldAbsolute().t;
 
-	//**********************************Move to Warehouse and pickup some Flour
-	if (!bIsCollectedFlour) {
-		if (pWorkerComponent->PickResourceFromWareHouse(EResourceType::FLOUR, FlourRequestAmount)) {
-			bIsCollectedFlour = true;
-		}
-	}
-
-	//**********************************Transfer Flour to Bakery
-	if (bIsCollectedFlour && !bIsTransferedFlourToBakery) {
-		if (pWorkerComponent->TransferResourcesToPosition(workPosition)) {
-			bIsTransferedFlourToBakery = true;
+	//**********************************Move to Warehouse and pickup some Flour And Transfer To Bakery
+	if (!bIsCollectedAndTransferedFlour) {
+		if (pWorkerComponent->PickResourceFromWarehouseAndTransferToPosition(EResourceType::FLOUR, FlourRequestAmount, workPosition)) {
+			bIsCollectedAndTransferedFlour = true;
 			m_pParticleComponent->Activate(true);
 		}
 	}
 
 	//**********************************Produce Bread
-	if (bIsCollectedFlour && bIsTransferedFlourToBakery && !bIsProducedBread) {
-		if (pWorkerComponent->WaitAndPickResources(productionWaitAmount, workPosition, EResourceType::BREAD, BreadProducedAmount)) {
+	if (bIsCollectedAndTransferedFlour && !bIsProducedBread) {
+		if (pWorkerComponent->WaitAndPickResources(productionWaitAmount, workPosition, workPosition, EResourceType::BREAD, BreadProducedAmount)) {
 			bIsProducedBread = true;
 			m_pParticleComponent->Activate(false);
 		}
 	}
 
 	//**********************************Transfer Bread to warehouse
-	if (bIsCollectedFlour&& bIsTransferedFlourToBakery&& bIsProducedBread) {
+	if (bIsCollectedAndTransferedFlour && bIsProducedBread) {
 		if (pWorkerComponent->TransferResourcesToWarehouse(EResourceType::BREAD, BreadProducedAmount)) {
-			bIsCollectedFlour = false;
-			bIsTransferedFlourToBakery = false;
+			bIsCollectedAndTransferedFlour = false;
 			bIsProducedBread = false;
 			pWorkerComponent->SetHasEnteredWorkplace(false);
 		}
 	}
+}
+
+void Bakery1BuildingComponent::ResetWorkersJob()
+{
 }
 
 SResourceInfo Bakery1BuildingComponent::GetCost()

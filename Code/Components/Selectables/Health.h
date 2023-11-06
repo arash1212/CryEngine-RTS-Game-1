@@ -40,9 +40,15 @@ private:
 
 	IUIElement* m_pHealthbarUIElement = nullptr;
 
+	//Progressbar
+	f32 m_lastProgressbarUpdateAmount = -100;
+
 	//Timers
 	f32 m_timeBetweenRemoveingEntity = 0.1f;
 	f32 m_entityRemoveTimePassed = 0.0f;
+
+private:
+	void UpdateProgressAmount();
 
 public:
 	void ApplyDamage(f32 damage);
@@ -60,4 +66,9 @@ public:
 	void SetHealthbarPosition(f32 x, f32 y);
 	void SetHealthAmount(int32 health, bool isRed);
 	void ClearAllHealthbars();
+
+	void AddWorkerSlot(int32 slotNumber, bool isFilled);
+	void ClearWorkersSlots();
+
+	void SetProgressAmount(f32 progressAmount, f32 maxProgressAmount);
 };

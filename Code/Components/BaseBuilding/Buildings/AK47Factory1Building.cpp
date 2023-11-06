@@ -147,44 +147,16 @@ void AK47Factory1BuildingComponent::UpdateAssignedWorkers()
 	if (!m_pBuildingComponent->IsBuilt()) {
 		return;
 	}
-	if (m_pWorkplaceComponent->GetCurrentWorkersCount() <= 0) {
-		return;
-	}
-	OwnerInfoComponent* ownerInfo = m_pEntity->GetComponent<OwnerInfoComponent>();
-	if (!ownerInfo) {
-		return;
-	}
-	IEntity* pOwner = ownerInfo->GetOwner();
-	if (!pOwner) {
-		return;
-	}
-	ResourceManagerComponent* pResourceManager = pOwner->GetComponent<ResourceManagerComponent>();
-	if (!pResourceManager) {
-		return;
-	}
-	if (!m_pWorkplaceComponent->GetWorkers()[0]->GetComponent<WorkerComponent>()->HasEnteredWorkplace()) {
-		return;
-	}
 	IEntity* pWorker = m_pWorkplaceComponent->GetWorkers()[0];
-	if (!pWorker) {
-		return;
-	}
-	AIControllerComponent* pAIController = pWorker->GetComponent<AIControllerComponent>();
-	if (!pAIController) {
-		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "BulletFactory1BuildingComponent:(UpdateCurrentMoveToAttachment) pAIController is null");
-		return;
-	}
-	ResourceCollectorComponent* pResourceCollectorComponent = pWorker->GetComponent<ResourceCollectorComponent>();
-	if (!pResourceCollectorComponent) {
-		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "BulletFactory1BuildingComponent:(UpdateCurrentMoveToAttachment) pResourceCollectorComponent is null");
+	if (!pWorker || pWorker->IsGarbage()) {
 		return;
 	}
 	WorkerComponent* pWorkerComponent = pWorker->GetComponent<WorkerComponent>();
 	if (!pWorkerComponent) {
-		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "BulletFactory1BuildingComponent:(UpdateCurrentMoveToAttachment) pWorkerComponent is null");
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "AK47Factory1BuildingComponent:(UpdateCurrentMoveToAttachment) pWorkerComponent is null");
 		return;
 	}
-	if (!m_pWorkplaceComponent->GetWorkers()[0] || m_pWorkplaceComponent->GetWorkers()[0]->IsGarbage()) {
+	if (!pWorkerComponent->HasEnteredWorkplace()) {
 		return;
 	}
 
@@ -194,48 +166,33 @@ void AK47Factory1BuildingComponent::UpdateAssignedWorkers()
 	int32 AK47ProducedAmount = 1;
 	Vec3 workPosition = m_pWorkPositionAttachment->GetAttWorldAbsolute().t;
 
-	//**********************************Move to Warehouse and pickup some Bullet
-	if (!bIsCollectedBullet) {
-		if (pWorkerComponent->PickResourceFromWareHouse(EResourceType::BULLET, BulletRequestAmount)) {
-			bIsCollectedBullet = true;
+	//**********************************Move to Warehouse and pickup some Bullet And Transfer To Factory
+	if (!bIsPickedupBulletAndTransferedTofactory) {
+		if (pWorkerComponent->PickResourceFromWarehouseAndTransferToPosition(EResourceType::BULLET, BulletRequestAmount, workPosition)) {
+			bIsPickedupBulletAndTransferedTofactory = true;
 		}
 	}
 
-	//**********************************Transfer Bullet to Factory
-	if (bIsCollectedBullet && !bIsCollectedIron && !bIsTransferedBulletToFactory && !bIsTransferedIronToFactory) {
-		if (pWorkerComponent->TransferResourcesToPosition(workPosition)) {
-			bIsTransferedBulletToFactory = true;
-		}
-	}
-
-	//**********************************Move to Warehouse and pickup some Iron
-	if (!bIsCollectedIron && bIsCollectedBullet && bIsTransferedBulletToFactory && !bIsTransferedIronToFactory) {
-		if (pWorkerComponent->PickResourceFromWareHouse(EResourceType::IRON, IronRequestAmount)) {
-			bIsCollectedIron = true;
-		}
-	}
-
-	//**********************************Transfer Iron to Factory And Create AK47
-	if (bIsCollectedBullet && bIsCollectedIron && bIsTransferedBulletToFactory && !bIsTransferedIronToFactory && !bIsProducedAK47) {
-		if (pWorkerComponent->TransferResourcesToPosition(workPosition)) {
-			bIsTransferedIronToFactory = true;
+	//**********************************Move to Warehouse and pickup some Iron And Transfer To Factory
+	if (bIsPickedupBulletAndTransferedTofactory && !bIsPickedupIronAndTransferedTofactory && !bIsProducedAK47) {
+		if (pWorkerComponent->PickResourceFromWarehouseAndTransferToPosition(EResourceType::IRON, IronRequestAmount, workPosition)) {
+			bIsPickedupIronAndTransferedTofactory = true;
 		}
 	}
 
 	//**********************************Produce AK47
-	if (bIsCollectedBullet && bIsCollectedIron && bIsTransferedBulletToFactory && bIsTransferedIronToFactory && !bIsProducedAK47) {
-		if (pWorkerComponent->WaitAndPickResources(productionWaitAmount, workPosition, EResourceType::AK47, AK47ProducedAmount)) {
+	if (bIsPickedupBulletAndTransferedTofactory && bIsPickedupIronAndTransferedTofactory && !bIsProducedAK47) {
+		if (pWorkerComponent->WaitAndPickResources(productionWaitAmount, workPosition, workPosition, EResourceType::AK47, AK47ProducedAmount)) {
 			bIsProducedAK47 = true;
 		}
 	}
 
 	//**********************************Transfer AK47 to warehouse
-	if (bIsCollectedBullet && bIsCollectedIron && bIsTransferedBulletToFactory && bIsTransferedIronToFactory && bIsProducedAK47) {
+	if (bIsPickedupBulletAndTransferedTofactory && bIsPickedupIronAndTransferedTofactory && bIsProducedAK47) {
 		if (pWorkerComponent->TransferResourcesToWarehouse(EResourceType::AK47, AK47ProducedAmount)) {
-			bIsCollectedBullet = false;
-			bIsCollectedIron = false;
-			bIsTransferedBulletToFactory = false;
-			bIsTransferedIronToFactory = false;
+			bIsPickedupBulletAndTransferedTofactory = false;
+			bIsPickedupIronAndTransferedTofactory = true;
+			bIsProducedAK47 = false;
 			pWorkerComponent->SetHasEnteredWorkplace(false);
 		}
 	}

@@ -87,7 +87,6 @@ void Alchemy1BuildingComponent::Initialize()
 	m_pBuildingComponent->SetBuildingInfo(buildingInfo);
 	//m_pBuildingComponent->SetMaxHealth(700.f);
 	//UIItems
-	m_pBuildingComponent->AddUIItem(new UITrainEngineer1Item(m_pEntity));
 
 	//Update bounding box
 	AABB aabb;
@@ -154,7 +153,7 @@ void Alchemy1BuildingComponent::UpdateAssignedWorkers()
 	}
 	WorkerComponent* pWorkerComponent = pWorker->GetComponent<WorkerComponent>();
 	if (!pWorkerComponent) {
-		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "Bakery1BuildingComponent:(UpdateCurrentMoveToAttachment) pWorkerComponent is null");
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "Alchemy1BuildingComponent:(UpdateCurrentMoveToAttachment) pWorkerComponent is null");
 		return;
 	}
 	if (!pWorkerComponent->HasEnteredWorkplace()) {
@@ -166,32 +165,24 @@ void Alchemy1BuildingComponent::UpdateAssignedWorkers()
 	int32 SulfurProducedAmount = 10;
 	Vec3 workPosition = m_pBuildingComponent->GetExitPoint();
 
-	//**********************************Move to Warehouse and pickup some Oil
-	if (!bIsCollectedOil) {
-		if (pWorkerComponent->PickResourceFromWareHouse(EResourceType::OIL, OilRequestAmount)) {
-			bIsCollectedOil = true;
-		}
-	}
-
-	//**********************************Transfer oil to Alchemy
-	if (bIsCollectedOil && !bIsTransferedOilToAlchemy) {
-		if (pWorkerComponent->TransferResourcesToPosition(workPosition)) {
-			bIsTransferedOilToAlchemy = true;
+	//**********************************Move to Warehouse and pickup some Flour And Transfer To Alchemy
+	if (!bIsCollectedOilAndTransferedToAlchemy) {
+		if (pWorkerComponent->PickResourceFromWarehouseAndTransferToPosition(EResourceType::OIL, OilRequestAmount, workPosition)) {
+			bIsCollectedOilAndTransferedToAlchemy = true;
 		}
 	}
 
 	//**********************************Produce Sulfur
-	if (bIsCollectedOil && bIsTransferedOilToAlchemy && !bIsProducedSulfur) {
-		if (pWorkerComponent->WaitAndPickResources(productionWaitAmount, m_pEntity->GetWorldPos(), EResourceType::SULFUR, SulfurProducedAmount)) {
+	if (bIsCollectedOilAndTransferedToAlchemy && !bIsProducedSulfur) {
+		if (pWorkerComponent->WaitAndPickResources(productionWaitAmount, workPosition, m_pEntity->GetWorldPos(), EResourceType::SULFUR, SulfurProducedAmount)) {
 			bIsProducedSulfur = true;
 		}
 	}
 
 	//**********************************Transfer Sulfur to warehouse Flour
-	if (bIsCollectedOil && bIsTransferedOilToAlchemy && bIsProducedSulfur) {
+	if (bIsCollectedOilAndTransferedToAlchemy && bIsProducedSulfur) {
 		if (pWorkerComponent->TransferResourcesToWarehouse(EResourceType::SULFUR, SulfurProducedAmount)) {
-			bIsCollectedOil = false;
-			bIsTransferedOilToAlchemy = false;
+			bIsCollectedOilAndTransferedToAlchemy = false;
 			bIsProducedSulfur = false;
 			pWorkerComponent->SetHasEnteredWorkplace(false);
 		}

@@ -50,10 +50,8 @@ private:
 	IEntity* m_pWarehouseEntity = nullptr;
 	IAttachment* m_pWorkPositionAttachment = nullptr;
 
-	bool bIsCollectedBullet = false;
-	bool bIsCollectedIron = false;
-	bool bIsTransferedBulletToFactory = false;
-	bool bIsTransferedIronToFactory = false;
+	bool bIsPickedupBulletAndTransferedTofactory = false;
+	bool bIsPickedupIronAndTransferedTofactory = false;
 	bool bIsProducedAK47 = false;
 
 private:

@@ -29,8 +29,12 @@ private:
 private:
 	int32 m_maxWorkersCount = 1;
 
+private:
+	void UpdateWorkerSlotsUI();
+
 public:
 	void SetMaxWorkersCount(int32 count);
+	int32 GetMaxWorkersCount();
 	int32 GetCurrentWorkersCount();
 
 	int32 AssignWorkerToPlace(IEntity* worker);

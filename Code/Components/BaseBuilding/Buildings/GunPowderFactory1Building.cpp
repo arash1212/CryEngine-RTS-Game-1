@@ -159,7 +159,7 @@ void GunPowderFactory1BuildingComponent::UpdateAssignedWorkers()
 	}
 	WorkerComponent* pWorkerComponent = pWorker->GetComponent<WorkerComponent>();
 	if (!pWorkerComponent) {
-		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "Bakery1BuildingComponent:(UpdateCurrentMoveToAttachment) pWorkerComponent is null");
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "GunPowderFactory1BuildingComponent:(UpdateCurrentMoveToAttachment) pWorkerComponent is null");
 		return;
 	}
 	if (!pWorkerComponent->HasEnteredWorkplace()) {
@@ -167,55 +167,39 @@ void GunPowderFactory1BuildingComponent::UpdateAssignedWorkers()
 	}
 
 	int32 productionWaitAmount = 6;
-	int32 SulfurRequestAmount = 30;
+	int32 SulfurRequestAmount = 10;
 	int32 WoodRequestAmount = 30;
 	int32 GunPowderProducedAmount = 10;
 	Vec3 workPosition = m_pWorkPositionAttachment->GetAttWorldAbsolute().t;
 
-	//**********************************Move to Warehouse and pickup some Sulfur
-	if (!bIsCollectedSulfur) {
-		if (pWorkerComponent->PickResourceFromWareHouse(EResourceType::SULFUR, SulfurRequestAmount)) {
-			bIsCollectedSulfur = true;
+	//**********************************Move to Warehouse and pickup some Sulfur And Transfer To Factory
+	if (!bIsCollectedSulfurAndTransferedToFactory) {
+		if (pWorkerComponent->PickResourceFromWarehouseAndTransferToPosition(EResourceType::SULFUR, SulfurRequestAmount, workPosition)) {
+			bIsCollectedSulfurAndTransferedToFactory = true;
 		}
 	}
 
-	//**********************************Transfer Sulfur to Factory
-	if (bIsCollectedSulfur && !bIsCollectedWood && !bIsTransferedSulfurToFactory && !bIsTransferedWoodToFactory) {
-		if (pWorkerComponent->TransferResourcesToPosition(workPosition)) {
-			bIsTransferedSulfurToFactory = true;
-		}
-	}
-
-	//**********************************Move to Warehouse and pickup some Wood
-	if (!bIsCollectedWood && bIsCollectedSulfur && bIsTransferedSulfurToFactory && !bIsTransferedWoodToFactory) {
-		if (pWorkerComponent->PickResourceFromWareHouse(EResourceType::WOOD, WoodRequestAmount)) {
-			bIsCollectedWood = true;
-		}
-	}
-
-	//**********************************Transfer Wood to Factory And Create GunPowder
-	if (bIsCollectedSulfur && bIsCollectedWood && bIsTransferedSulfurToFactory && !bIsTransferedWoodToFactory) {
-		if (pWorkerComponent->TransferResourcesToPosition(workPosition)) {
-			bIsTransferedWoodToFactory = true;
+	//**********************************Move to Warehouse and pickup some Wood And Transfer To Factory
+	if (bIsCollectedSulfurAndTransferedToFactory && !bIsCollectedWoodAndTransferedToFactory) {
+		if (pWorkerComponent->PickResourceFromWarehouseAndTransferToPosition(EResourceType::WOOD, WoodRequestAmount, workPosition)) {
+			bIsCollectedWoodAndTransferedToFactory = true;
 			m_pParticleComponent->Activate(true);
 		}
 	}
 
 	//**********************************Produce GunPowder
-	if (bIsCollectedSulfur && bIsCollectedWood && bIsTransferedSulfurToFactory && bIsTransferedWoodToFactory && !bIsProducedGunPowder) {
-		if (pWorkerComponent->WaitAndPickResources(productionWaitAmount, workPosition, EResourceType::GUN_POWDER, GunPowderProducedAmount)) {
+	if (bIsCollectedSulfurAndTransferedToFactory && bIsCollectedWoodAndTransferedToFactory && !bIsProducedGunPowder) {
+		if (pWorkerComponent->WaitAndPickResources(productionWaitAmount, workPosition, workPosition, EResourceType::GUN_POWDER, GunPowderProducedAmount)) {
 			bIsProducedGunPowder = true;
 			m_pParticleComponent->Activate(false);
 		}
 	}
 
 	//**********************************Transfer GunPowder to warehouse
-	if (bIsCollectedSulfur && bIsCollectedWood && bIsTransferedSulfurToFactory && bIsTransferedWoodToFactory && bIsProducedGunPowder) {
+	if (bIsCollectedSulfurAndTransferedToFactory && bIsCollectedWoodAndTransferedToFactory && bIsProducedGunPowder) {
 		if (pWorkerComponent->TransferResourcesToWarehouse(EResourceType::GUN_POWDER, GunPowderProducedAmount)) {
-			bIsCollectedSulfur = false;
-			bIsCollectedWood = false;
-			bIsTransferedSulfurToFactory = false;
-			bIsTransferedWoodToFactory = false;
+			bIsCollectedSulfurAndTransferedToFactory = false;
+			bIsCollectedWoodAndTransferedToFactory = false;
 			bIsProducedGunPowder = false;
 			pWorkerComponent->SetHasEnteredWorkplace(false);
 		}

@@ -83,19 +83,9 @@ void SpawnPointComponent::SpawnPlayerHQBuilding(IEntity* owner)
 {
 	Vec3 position = m_pEntity->GetWorldPos();
 	pHqBuildingEntity = EntityUtils::SpawnEntity(position, IDENTITY, owner);
-
 	pHqBuildingEntity->GetOrCreateComponent<HQ1BuildingComponent>();
 	//pHqBuildingEntity->GetComponent<OwnerInfoComponent>()->SetOwner(owner);
-	pHqBuildingEntity->GetComponent<BuildingComponent>()->Place(pHqBuildingEntity->GetWorldPos());
+	//pHqBuildingEntity->GetComponent<BuildingComponent>()->Place(pHqBuildingEntity->GetWorldPos());
 	pHqBuildingEntity->GetComponent<BuildingComponent>()->SetBuilt();
-
-	/*
-	//testing
-	Vec3 tP = position;
-	tP.y -= 9.f;
-	IEntity* zombieE = EntityUtils::SpawnEntity(tP, IDENTITY, owner);
-	zombieE->GetOrCreateComponent<Zombie1UnitComponent>();
-	zombieE->GetComponent<OwnerInfoComponent>()->SetTeam(EPlayerTeam::FERAL);
-	*/
 
 }

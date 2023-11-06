@@ -32,11 +32,11 @@ void TrainEngineer1Action::Execute()
 		m_ProcessTimePassesd += 0.5f * gEnv->pTimer->GetFrameTime();
 	}
 	else {
-		m_processAmount += 0.2f;
+		m_processAmount += 10.f;
 		m_ProcessTimePassesd = 0;
 	}
 
-	if (m_processAmount < 1) {
+	if (m_processAmount < GetMaxProgressAmount()) {
 		return;
 	}
 	OwnerInfoComponent* onwerInfo = m_pEntity->GetComponent<OwnerInfoComponent>();
@@ -65,4 +65,9 @@ void TrainEngineer1Action::Cancel()
 bool TrainEngineer1Action::IsDone()
 {
 	return bIsDone;
+}
+
+f32 TrainEngineer1Action::GetProgressAmount()
+{
+	return crymath::floor(m_processAmount);
 }

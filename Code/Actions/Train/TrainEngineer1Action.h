@@ -21,7 +21,8 @@ private:
 	f32 m_ProcessTimePassesd = 0.0f;
 
 public:
-	virtual void Execute();
-	virtual void Cancel();
-	virtual bool IsDone();
+	virtual void Execute() override;
+	virtual void Cancel() override;
+	virtual bool IsDone() override;
+	virtual f32 GetProgressAmount() override;
 };

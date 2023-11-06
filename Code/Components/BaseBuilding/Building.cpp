@@ -100,6 +100,7 @@ void BuildingComponent::ProcessEvent(const SEntityEvent& event)
 		//f32 DeltaTime = event.fParam[0];
 
 		UpdateMaterial();
+		RotateSelectionDecal();
 
 	}break;
 	case Cry::Entity::EEvent::PhysicsCollision: {
@@ -281,6 +282,10 @@ void BuildingComponent::SetBuilt()
 	m_pEntity->GetWorldBounds(aabb);
 	gEnv->pAISystem->GetNavigationSystem()->GetUpdateManager()->WorldChanged(aabb);
 
+	//HealthComponent Initialization
+	m_pHealthComponent = m_pEntity->GetOrCreateComponent<HealthComponent>();
+	m_pHealthComponent->SetMaxHealth(m_maxHealth);
+
 	Build();
 }
 
@@ -320,4 +325,22 @@ void BuildingComponent::SetMaxHealth(f32 maxHealth)
 {
 	// this->m_pHealthComponent->SetMaxHealth(maxHealth);
 	this->m_maxHealth = maxHealth;
+}
+
+f32 BuildingComponent::GetCurrentBuildAmount()
+{
+	return m_currentBuiltAmount;
+}
+
+f32 BuildingComponent::GetMaxBuildAmount()
+{
+	return m_pBuildingInfo.m_maxBuildAmount;
+}
+
+void BuildingComponent::RotateSelectionDecal()
+{
+	if (!m_pSelectableComponent) {
+		return;
+	}
+	m_pSelectableComponent->RotateSelectionDecal();
 }

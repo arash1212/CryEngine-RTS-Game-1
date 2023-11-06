@@ -159,7 +159,7 @@ void BulletFactory1BuildingComponent::UpdateAssignedWorkers()
 	}
 	WorkerComponent* pWorkerComponent = pWorker->GetComponent<WorkerComponent>();
 	if (!pWorkerComponent) {
-		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "Bakery1BuildingComponent:(UpdateCurrentMoveToAttachment) pWorkerComponent is null");
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "BulletFactory1BuildingComponent:(UpdateCurrentMoveToAttachment) pWorkerComponent is null");
 		return;
 	}
 	if (!pWorkerComponent->HasEnteredWorkplace()) {
@@ -172,50 +172,34 @@ void BulletFactory1BuildingComponent::UpdateAssignedWorkers()
 	int32 BulletProducedAmount = 10;
 	Vec3 workPosition = m_pWorkPositionAttachment->GetAttWorldAbsolute().t;
 
-	//**********************************Move to Warehouse and pickup some GunPowder
-	if (!bIsCollectedGunPowder) {
-		if (pWorkerComponent->PickResourceFromWareHouse(EResourceType::GUN_POWDER, GunPowderRequestAmount)) {
-			bIsCollectedGunPowder = true;
+	//**********************************Move to Warehouse and pickup some GunPowder And Transfer To Factory
+	if (!bIsCollectedGunPowderAndTransferedToFactory) {
+		if (pWorkerComponent->PickResourceFromWarehouseAndTransferToPosition(EResourceType::GUN_POWDER, GunPowderRequestAmount, workPosition)) {
+			bIsCollectedGunPowderAndTransferedToFactory = true;
 		}
 	}
 
-	//**********************************Transfer GunPowder to Factory
-	if (bIsCollectedGunPowder && !bIsCollectedIron && !bIsTransferedGunPowderToFactory && !bIsTransferedIronToFactory) {
-		if (pWorkerComponent->TransferResourcesToPosition(workPosition)) {
-			bIsTransferedGunPowderToFactory = true;
-		}
-	}
-
-	//**********************************Move to Warehouse and pickup some Iron
-	if (!bIsCollectedIron && bIsCollectedGunPowder && bIsTransferedGunPowderToFactory && !bIsTransferedIronToFactory) {
-		if (pWorkerComponent->PickResourceFromWareHouse(EResourceType::IRON, IronRequestAmount)) {
-			bIsCollectedIron = true;
-		}
-	}
-
-	//**********************************Transfer Iron to Factory And Create Bullet
-	if (bIsCollectedGunPowder && bIsCollectedIron && bIsTransferedGunPowderToFactory && !bIsTransferedIronToFactory) {
-		if (pWorkerComponent->TransferResourcesToPosition(workPosition)) {
-			bIsTransferedIronToFactory = true;
+	//**********************************Move to Warehouse and pickup some Iron And Transfer To Factory
+	if (bIsCollectedGunPowderAndTransferedToFactory && !bIsCollectedIronAndTransferedToFactory) {
+		if (pWorkerComponent->PickResourceFromWarehouseAndTransferToPosition(EResourceType::IRON, IronRequestAmount, workPosition)) {
+			bIsCollectedIronAndTransferedToFactory = true;
 			m_pParticleComponent->Activate(true);
 		}
 	}
 
 	//**********************************Produce Bullet
-	if (bIsCollectedGunPowder && bIsCollectedIron && bIsTransferedGunPowderToFactory && bIsTransferedIronToFactory && !bIsProducedBullet) {
-		if (pWorkerComponent->WaitAndPickResources(productionWaitAmount, workPosition, EResourceType::BULLET, BulletProducedAmount)) {
+	if (bIsCollectedGunPowderAndTransferedToFactory && bIsCollectedIronAndTransferedToFactory && !bIsProducedBullet) {
+		if (pWorkerComponent->WaitAndPickResources(productionWaitAmount, workPosition, workPosition, EResourceType::BULLET, BulletProducedAmount)) {
 			bIsProducedBullet = true;
 			m_pParticleComponent->Activate(false);
 		}
 	}
 
 	//**********************************Transfer Bullet to warehouse
-	if (bIsCollectedGunPowder && bIsCollectedIron && bIsTransferedGunPowderToFactory && bIsTransferedIronToFactory && bIsProducedBullet) {
+	if (bIsCollectedGunPowderAndTransferedToFactory && bIsCollectedIronAndTransferedToFactory && bIsProducedBullet) {
 		if (pWorkerComponent->TransferResourcesToWarehouse(EResourceType::BULLET, BulletProducedAmount)) {
-			bIsCollectedGunPowder = false;
-			bIsCollectedIron = false;
-			bIsTransferedGunPowderToFactory = false;
-			bIsTransferedIronToFactory = false;
+			bIsCollectedGunPowderAndTransferedToFactory = false;
+			bIsCollectedIronAndTransferedToFactory = false;
 			bIsProducedBullet = false;
 			pWorkerComponent->SetHasEnteredWorkplace(false);
 		}

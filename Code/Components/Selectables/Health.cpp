@@ -5,6 +5,8 @@
 #include <Components/Info/OwnerInfo.h>
 #include <Components/Selectables/Units/Zombie1Unit.h>
 #include <Components/Managers/ResourceManager.h>
+#include <Components/Selectables/Workplace.h>
+#include <Components/Managers/ActionManager.h>
 
 #include <Components/Player/Player.h>
 
@@ -73,6 +75,7 @@ void HealthComponent::ProcessEvent(const SEntityEvent& event)
 			m_entityRemoveTimePassed += 0.5f * DeltaTime;
 		}
 
+		UpdateProgressAmount();
 		Die();
 
 		//TODO: player hamishe yeki hast ?
@@ -124,6 +127,27 @@ void HealthComponent::ProcessEvent(const SEntityEvent& event)
 	}
 }
 
+void HealthComponent::UpdateProgressAmount()
+{
+	ActionManagerComponent* pActionManagerComponent = m_pEntity->GetComponent<ActionManagerComponent>();
+	if (!pActionManagerComponent) {
+		return;
+	}
+	if (!pActionManagerComponent->GetCurrentAction()) {
+		if (m_lastProgressbarUpdateAmount != 0) {
+			SetProgressAmount(0, 100);
+			m_lastProgressbarUpdateAmount = 0;
+		}
+		return;
+	}
+	if (m_lastProgressbarUpdateAmount == pActionManagerComponent->GetCurrentAction()->GetProgressAmount()) {
+		return;
+	}
+
+	SetProgressAmount(pActionManagerComponent->GetCurrentAction()->GetProgressAmount(), pActionManagerComponent->GetCurrentAction()->GetMaxProgressAmount());
+	m_lastProgressbarUpdateAmount = pActionManagerComponent->GetCurrentAction()->GetProgressAmount();
+}
+
 void HealthComponent::ApplyDamage(f32 damage)
 {
 	this->m_currentHealth = CLAMP(m_currentHealth - damage, 0, m_maxHealth);
@@ -170,8 +194,8 @@ void HealthComponent::AddHealthBar(bool isRed)
 
 	//Input arguments
 	SUIArguments args;
-	args.AddArgument(50);
-	args.AddArgument(60);
+	args.AddArgument(0);
+	args.AddArgument(0);
 	args.AddArgument(isRed);
 
 	//Returns index
@@ -185,6 +209,13 @@ void HealthComponent::AddHealthBar(bool isRed)
 	m_healthbarIndex = index;
 
 	bHealthBarAdded = true;
+
+	WorkplaceComponent* pWorkplaceComponent = m_pEntity->GetComponent<WorkplaceComponent>();
+	if (pWorkplaceComponent) {
+		for (int32 i = 0; i < pWorkplaceComponent->GetMaxWorkersCount(); i++) {
+			AddWorkerSlot(i, false);
+		}
+	}
 }
 
 void HealthComponent::HideHealthBar()
@@ -227,4 +258,31 @@ void HealthComponent::SetHealthAmount(int32 health, bool isRed)
 void HealthComponent::ClearAllHealthbars()
 {
 	m_pHealthbarUIElement->CallFunction("ClearHealthbars");
+}
+
+void HealthComponent::AddWorkerSlot(int32 slotNumber, bool isFilled)
+{
+	SUIArguments args;
+	args.AddArgument(m_healthbarIndex);
+	args.AddArgument(slotNumber);
+	args.AddArgument(isFilled);
+
+	m_pHealthbarUIElement->CallFunction("AddWorkerSlot", args);
+}
+
+void HealthComponent::ClearWorkersSlots()
+{
+	SUIArguments args;
+	args.AddArgument(m_healthbarIndex);
+
+	m_pHealthbarUIElement->CallFunction("ClearWorkerSlots", args);
+}
+
+void HealthComponent::SetProgressAmount(f32 progressAmount, f32 maxProgressAmount)
+{
+	SUIArguments args;
+	args.AddArgument(m_healthbarIndex);
+	args.AddArgument(progressAmount / maxProgressAmount);
+
+	m_pHealthbarUIElement->CallFunction("SetProgressAmount", args);
 }

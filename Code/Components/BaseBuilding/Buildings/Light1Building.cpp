@@ -98,9 +98,9 @@ void Light1BuildingComponent::Initialize()
 
 	//PointLightComponent Initialization
 	m_pPointLightComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CPointLightComponent>();
-	m_pPointLightComponent->SetTransformMatrix(Matrix34::Create(Vec3(2), IDENTITY, Vec3(0, 0, 4)));
+	m_pPointLightComponent->SetTransformMatrix(Matrix34::Create(Vec3(2), IDENTITY, Vec3(0, 0, 3)));
 	m_pPointLightComponent->GetColorParameters().m_diffuseMultiplier = 2.f;
-	m_pPointLightComponent->GetColorParameters().m_color = ColorF(1, 1, 0.6f);
+	m_pPointLightComponent->GetColorParameters().m_color = ColorF(1, 1, 1.f);
 	m_pPointLightComponent->GetOptions().m_attenuationBulbSize = 250.f;
 	m_pPointLightComponent->GetShadowParameters().m_castShadowSpec = Cry::DefaultComponents::EMiniumSystemSpec::High;
 	m_pPointLightComponent->Enable(true);

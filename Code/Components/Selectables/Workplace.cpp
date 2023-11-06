@@ -7,6 +7,7 @@
 #include <Components/BaseBuilding/Building.h>
 #include <Components/Resources/Resource.h>
 #include <Components/Managers/ResourceManager.h>
+#include <Components/Selectables/Health.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -68,6 +69,11 @@ void WorkplaceComponent::SetMaxWorkersCount(int32 count)
 	m_maxWorkersCount = count;
 }
 
+int32 WorkplaceComponent::GetMaxWorkersCount()
+{
+	return m_maxWorkersCount;
+}
+
 int32 WorkplaceComponent::GetCurrentWorkersCount()
 {
 	int32 count = 0;
@@ -79,7 +85,6 @@ int32 WorkplaceComponent::GetCurrentWorkersCount()
 		count++;
 	}
 
-	CryLog("count %i ++++++++++++++++++++", count);
 	return count;
 }
 
@@ -100,14 +105,10 @@ int32 WorkplaceComponent::AssignWorkerToPlace(IEntity* worker)
 	}
 
 	//TODO : khata dasht ye dafe worker be tamam workplace ha assign mishod (az inja) felan okeye (?)
-	//if (m_pWorkerEntities.size() + 1 < m_maxWorkersCount) {
-	//CryLog("array size : %i", m_pWorkerEntities.size());
-	//	m_pWorkerEntities[0] = worker;
-	//	return 0;
-	//}
 	for (int32 i = 0; i < m_maxWorkersCount; i++) {
 		if (m_pWorkerEntities[i] == nullptr || m_pWorkerEntities[i]->IsGarbage()) {
 			m_pWorkerEntities[i] = worker;
+			UpdateWorkerSlotsUI();
 			return i;
 		}
 	}
@@ -119,6 +120,7 @@ int32 WorkplaceComponent::AssignWorkerToPlace(IEntity* worker)
 void WorkplaceComponent::RemovedWorkerFromWorkplace(int32 index)
 {
 	m_pWorkerEntities[index] = nullptr;
+	UpdateWorkerSlotsUI();
 }
 
 DynArray<IEntity*> WorkplaceComponent::GetWorkers()
@@ -134,4 +136,17 @@ void WorkplaceComponent::SetMoveToAttachment(IAttachment* currentMoveToAttachmen
 Vec3 WorkplaceComponent::GetCurrentMoveToAttachment()
 {
 	return ZERO;
+}
+
+void WorkplaceComponent::UpdateWorkerSlotsUI()
+{
+	HealthComponent* pHealthComponent = m_pEntity->GetComponent<HealthComponent>();
+	if (!pHealthComponent) {
+		return;
+	}
+
+	pHealthComponent->ClearWorkersSlots();
+	for (int32 i = 0; i < m_maxWorkersCount; i++) {
+		pHealthComponent->AddWorkerSlot(i, m_pWorkerEntities[i] != nullptr);
+	}
 }

@@ -74,3 +74,13 @@ bool UnitBuildAction::IsDone()
 {
 	return this->m_pBuildingComponent->IsBuilt() || bIsDone;
 }
+
+f32 UnitBuildAction::GetProgressAmount()
+{
+	return this->m_pBuildingComponent->GetCurrentBuildAmount();
+}
+
+f32 UnitBuildAction::GetMaxProgressAmount()
+{
+	return this->m_pBuildingComponent->GetBuildingInfos().m_maxBuildAmount;
+}

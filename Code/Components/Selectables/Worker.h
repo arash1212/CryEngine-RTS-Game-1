@@ -41,6 +41,9 @@ private:
 	f32 m_timeBetweenWorks = 5.f;
 	f32 m_workTimePassed = 0.f;
 
+	bool bFirstCondition = false;
+	bool bSecondCondition = false;
+
 private:
 	void EnterAssignedWorkplace();
 
@@ -58,6 +61,10 @@ public:
 
 	bool PickResourceFromWareHouse(EResourceType resourceType, int32 amount);
 	bool TransferResourcesToPosition(Vec3 position);
-	bool WaitAndPickResources(int32 waitAmount, Vec3 lookAtPos, EResourceType resourceType, int32 amount);
+	bool WaitAndPickResources(int32 waitAmount, Vec3 standingPos, Vec3 lookAtPos, EResourceType resourceType, int32 amount);
 	bool TransferResourcesToWarehouse(EResourceType resourceType, int32 amount);
+
+
+	bool PickResourceFromWarehouseAndTransferToPosition(EResourceType resourceType, int32 amount, Vec3 position);
+	bool WaitAndPickResourcesAndTransferToWarehouse(int32 waitAmount, Vec3 standingPos, Vec3 lookAtPos, EResourceType resourceType, int32 amount);
 };

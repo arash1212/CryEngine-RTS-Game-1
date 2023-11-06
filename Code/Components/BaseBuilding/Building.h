@@ -75,6 +75,7 @@ private:
 
 private:
 	void UpdateMaterial();
+	void RotateSelectionDecal();
 
 public:
 	void Place(Vec3 at);
@@ -100,4 +101,7 @@ public:
 	bool IsWorkplace();
 
 	void SetMaxHealth(f32 maxHealth);
+
+	f32 GetCurrentBuildAmount();
+	f32 GetMaxBuildAmount();
 };
