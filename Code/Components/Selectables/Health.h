@@ -71,4 +71,7 @@ public:
 	void ClearWorkersSlots();
 
 	void SetProgressAmount(f32 progressAmount, f32 maxProgressAmount);
+
+	void HideProgressbar();
+	void ShowProgressbar();
 };

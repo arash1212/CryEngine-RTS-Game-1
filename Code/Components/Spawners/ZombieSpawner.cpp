@@ -106,7 +106,7 @@ void ZombieSpawnerComponent::SpawnZombies()
 		spawnedEntity->GetOrCreateComponent<Zombie1UnitComponent>();
 
 		ActionManagerComponent* pActionManagerComponent = spawnedEntity->GetComponent<ActionManagerComponent>();
-		pActionManagerComponent->AddAction(new UnitWanderingRandomlyAction(spawnedEntity, point, false));
+		pActionManagerComponent->AddAction(new UnitWanderingRandomlyAction(spawnedEntity, point->GetWorldPos(), false));
 		m_spawnTimePassed = 0;
 	}
 }

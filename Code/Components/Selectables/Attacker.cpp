@@ -79,7 +79,8 @@ void AttackerComponent::ProcessEvent(const SEntityEvent& event)
 		f32 DeltaTime = event.fParam[0];
  
 		if (!bIsCheckedForHstilePlayers) {
-			FindHostilePlayers();
+			m_hostilePlayers = EntityUtils::FindHostilePlayers(m_pEntity);
+			bIsCheckedForHstilePlayers = true;
 		}
 		else {
 			//Target/Attack
@@ -95,7 +96,7 @@ void AttackerComponent::ProcessEvent(const SEntityEvent& event)
 			m_attackCountResetTimePassed += 0.5f * DeltaTime;
 		}
 		else {
-			m_attackCount = 0;
+			m_pAttackInfo.m_attackCount = 0;
 		}
 
 		if (m_lookingForRandomTargetTimePassed < m_timeBetweenLookingForRandomTarget) {
@@ -123,7 +124,7 @@ void AttackerComponent::Attack(IEntity* target)
 	if (!target) {
 		return;
 	}
-	if (m_attackTimePassed < m_pAttackInfo.m_timeBetweenAttacks || m_attackCount >= m_maxAttackCount) {
+	if (m_attackTimePassed < m_pAttackInfo.m_timeBetweenAttacks || m_pAttackInfo.m_attackCount >= m_pAttackInfo.m_maxAttackCount) {
 		return;
 	}
 
@@ -147,7 +148,7 @@ void AttackerComponent::Attack(IEntity* target)
 	}
 
 	m_attackTimePassed = 0;
-	m_attackCount++;
+	m_pAttackInfo.m_attackCount++;
 	m_attackCountResetTimePassed = 0.f;
 }
 
@@ -213,36 +214,6 @@ void AttackerComponent::ApplyDamageToTarget(IEntity* target)
 	healthComponent->ApplyDamage(m_damageAmount);
 }
 
-void AttackerComponent::FindHostilePlayers()
-{
-	IEntityItPtr entityItPtr = gEnv->pEntitySystem->GetEntityIterator();
-	entityItPtr->MoveFirst();
-
-	while (!entityItPtr->IsEnd())
-	{
-		IEntity* entity = entityItPtr->Next();
-		ResourceManagerComponent* pResourceManagerComponent = entity->GetComponent<ResourceManagerComponent>();
-		if (!pResourceManagerComponent) {
-			continue;
-		}
-
-		OwnerInfoComponent* otherEntityOwnerInfo = entity->GetComponent<OwnerInfoComponent>();
-		BulletTracerComponent* bulletTracerComponent = entity->GetComponent<BulletTracerComponent>();
-		//Ignore entity if it's not in detection range
-		if (!otherEntityOwnerInfo || bulletTracerComponent) {
-			continue;
-		}
-
-		//set entity as randomAttackTarget if it's team is not same as this unit's team
-		OwnerInfoComponent* pOwnerInfoComponent = m_pEntity->GetComponent<OwnerInfoComponent>();
-		if (pOwnerInfoComponent && otherEntityOwnerInfo && otherEntityOwnerInfo->GetInfo().m_pTeam != pOwnerInfoComponent->GetInfo().m_pTeam) {
-			m_hostilePlayers.append(entity);
-		}
-	}
-
-	bIsCheckedForHstilePlayers = true;
-}
-
 void AttackerComponent::FindRandomTarget()
 {
 	//|| m_pActionManagerComponent->IsProcessingAnAction()
@@ -254,10 +225,20 @@ void AttackerComponent::FindRandomTarget()
 		return;
 	}
 
+	//TODO : error pure function call midad vaghti entity null mishod (remove mishod)
+	m_hostilePlayers = EntityUtils::FindHostilePlayers(m_pEntity);
 	for (IEntity* entity : m_hostilePlayers)
 	{
+		if (!entity) {
+			return;
+		}
+
 		//for (IEntity* pEntity : entity->GetComponent<ResourceManagerComponent>()->GetOwnedEntities()) {
-		IEntity* pEntity = EntityUtils::GetClosestEntity(entity->GetComponent<ResourceManagerComponent>()->GetOwnedEntities(), m_pEntity);
+		ResourceManagerComponent* pOtherResourceManagerComponent = entity->GetComponent<ResourceManagerComponent>();
+		if (!pOtherResourceManagerComponent) {
+			continue;
+		}
+		IEntity* pEntity = EntityUtils::GetClosestEntity(pOtherResourceManagerComponent->GetOwnedEntities(), m_pEntity);
 		if (!pEntity || pEntity->IsGarbage()) {
 			return;
 		}

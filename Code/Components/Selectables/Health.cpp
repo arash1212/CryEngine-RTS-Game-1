@@ -87,6 +87,9 @@ void HealthComponent::ProcessEvent(const SEntityEvent& event)
 		if (!camera) {
 			return;
 		}
+		if (!m_pOwnerInfoComponent) {
+			return;
+		}
 		OwnerInfoComponent* pPlayerOwnerInfo = player->GetComponent<OwnerInfoComponent>();
 		if (!pPlayerOwnerInfo) {
 			return;
@@ -140,12 +143,18 @@ void HealthComponent::UpdateProgressAmount()
 		}
 		return;
 	}
+
+	//if (!pActionManagerComponent->GetCurrentAction() || pActionManagerComponent->GetCurrentAction()->GetProgressAmount() == 0) {
+	//	HideProgressbar();
+	//}
+
 	if (m_lastProgressbarUpdateAmount == pActionManagerComponent->GetCurrentAction()->GetProgressAmount()) {
 		return;
 	}
 
 	SetProgressAmount(pActionManagerComponent->GetCurrentAction()->GetProgressAmount(), pActionManagerComponent->GetCurrentAction()->GetMaxProgressAmount());
 	m_lastProgressbarUpdateAmount = pActionManagerComponent->GetCurrentAction()->GetProgressAmount();
+	//ShowProgressbar();
 }
 
 void HealthComponent::ApplyDamage(f32 damage)
@@ -285,4 +294,20 @@ void HealthComponent::SetProgressAmount(f32 progressAmount, f32 maxProgressAmoun
 	args.AddArgument(progressAmount / maxProgressAmount);
 
 	m_pHealthbarUIElement->CallFunction("SetProgressAmount", args);
+}
+
+void HealthComponent::HideProgressbar()
+{
+	SUIArguments args;
+	args.AddArgument(m_healthbarIndex);
+
+	m_pHealthbarUIElement->CallFunction("HideProgressbar", args);
+}
+
+void HealthComponent::ShowProgressbar()
+{
+	SUIArguments args;
+	args.AddArgument(m_healthbarIndex);
+
+	m_pHealthbarUIElement->CallFunction("ShowProgressbar", args);
 }

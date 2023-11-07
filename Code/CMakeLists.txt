@@ -27,6 +27,12 @@ add_sources("Actions_uber.cpp"
     SOURCE_GROUP "Actions"
 		"Actions/IBaseAction.h"
 )
+add_sources("Buildings_uber.cpp"
+    PROJECTS Game
+    SOURCE_GROUP "Actions\\\\Buildings"
+		"Actions/Buildings/BuildingSpawnZombiesAction.cpp"
+		"Actions/Buildings/BuildingSpawnZombiesAction.h"
+)
 add_sources("Train_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "Actions\\\\Train"

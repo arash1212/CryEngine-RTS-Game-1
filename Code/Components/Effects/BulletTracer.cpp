@@ -103,7 +103,7 @@ void BulletTracerComponent::Move()
 	if (auto* pPhysics = GetEntity()->GetPhysics())
 	{
 		pe_action_impulse impulseAction;
-		const float initialVelocity = 1500.f;
+		const float initialVelocity = 1000.f;
 		impulseAction.impulse = GetEntity()->GetWorldRotation().GetColumn1() * initialVelocity;
 
 		pPhysics->Action(&impulseAction);
@@ -146,7 +146,7 @@ void BulletTracerComponent::CheckCollision(const EventPhysCollision* physCollisi
 		return;
 	}
 	if (hitEntity != m_pOwner || phitOwnerInfoComponent && pthisOwnerInfoComponent->GetTeam() != phitOwnerInfoComponent->GetTeam()) {
-		pHitHealthComponent->ApplyDamage(pAttackerInfoComponent->GetDamageAmount());
+		//pHitHealthComponent->ApplyDamage(pAttackerInfoComponent->GetDamageAmount());
 	}
 
 }

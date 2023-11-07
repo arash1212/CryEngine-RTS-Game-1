@@ -6,6 +6,7 @@
 #include <CryAISystem/INavigationSystem.h>
 #include <CryAISystem/NavigationSystem/INavigationUpdatesManager.h>
 #include <Components/BaseBuilding/Building.h>
+#include <Components/Effects/BulletTracer.h>
 
 #include <Utils/MathUtils.h>
 
@@ -38,7 +39,7 @@ IEntity* EntityUtils::SpawnEntity(Vec3 position, Quat rotation, IEntity* owner)
 	OwnerInfoComponent* pOwnerInfo = pSpawnedEntity->GetOrCreateComponent<OwnerInfoComponent>();
 	pOwnerInfo->SetOwner(owner);
 	pResourceManagerComponent->AddOwnedEntity(pSpawnedEntity);
-	CryLog("entity spawned and owner set...");
+	//CryLog("entity spawned and owner set...");
 
 	return pSpawnedEntity;
 }
@@ -255,5 +256,35 @@ IEntity* EntityUtils::GetClosestEntity(DynArray<IEntity*> entities, IEntity* to)
 		}
 	}
 	return result;
+}
+
+DynArray<IEntity*> EntityUtils::FindHostilePlayers(IEntity* to)
+{
+	DynArray<IEntity*> m_hostilePlayers;
+	IEntityItPtr entityItPtr = gEnv->pEntitySystem->GetEntityIterator();
+	entityItPtr->MoveFirst();
+
+	while (!entityItPtr->IsEnd())
+	{
+		IEntity* entity = entityItPtr->Next();
+		ResourceManagerComponent* pResourceManagerComponent = entity->GetComponent<ResourceManagerComponent>();
+		if (!pResourceManagerComponent) {
+			continue;
+		}
+
+		OwnerInfoComponent* otherEntityOwnerInfo = entity->GetComponent<OwnerInfoComponent>();
+		BulletTracerComponent* bulletTracerComponent = entity->GetComponent<BulletTracerComponent>();
+		//Ignore entity if it's not in detection range
+		if (!otherEntityOwnerInfo || bulletTracerComponent) {
+			continue;
+		}
+
+		//set entity as randomAttackTarget if it's team is not same as this unit's team
+		OwnerInfoComponent* pOwnerInfoComponent = to->GetComponent<OwnerInfoComponent>();
+		if (pOwnerInfoComponent && otherEntityOwnerInfo && otherEntityOwnerInfo->GetInfo().m_pTeam != pOwnerInfoComponent->GetInfo().m_pTeam) {
+			m_hostilePlayers.append(entity);
+		}
+	}
+	return m_hostilePlayers;
 }
 

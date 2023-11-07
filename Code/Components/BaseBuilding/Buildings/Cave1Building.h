@@ -53,20 +53,15 @@ private:
 private:
 	bool bIsGameStarted = false;
 
-	f32 m_timeBetweenSpawningZombies = 2.f;
-	f32 m_spawnTimePassed = -0.f;
-	int32 m_maxZombiesCount = 40;
-
-	f32 m_timeBetweenAttacks = 60.f;
+	f32 m_timeBetweenAttacks = 120.f;
 	f32 m_attackTimePassed = -0.f;
 
 	DynArray<IEntity*> m_hostilePlayers;
 	bool bIsCheckedForHostiles = false;
-private:
-	void ProcessSpawns();
-	void CommandUnitsToAttack();
 
-	void FindHostilePlayers();
+	bool bSpawnZombiesActionAdded = false;
+private:
+	void CommandUnitsToAttack();
 
 public:
 	static SResourceInfo GetCost();

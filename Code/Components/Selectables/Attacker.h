@@ -22,6 +22,9 @@ public:
 	bool bIsFollower = true; //Follows "RandomAttackTarget" or not if it's not in this unit's attack range.
 	EAttackType m_pAttackType = EAttackType::RANGED;
 	f32 m_timeBetweenAttacks = 0.04f;
+
+	int32 m_maxAttackCount = 10;
+	int32 m_attackCount = 0;
 };
 
 static constexpr f32 DEFAULT_DAMAGE_AMOUNT = 20.F;
@@ -76,10 +79,6 @@ private:
 	f32 m_timeBetweenLookingForRandomTarget = 1.0f;
 	f32 m_lookingForRandomTargetTimePassed = 0.f;
 
-	//Attack Count
-	int32 m_maxAttackCount = 10;
-	int32 m_attackCount = 0;
-
 	DynArray<IEntity*> m_hostilePlayers;
 
 	bool bIsCheckedForHstilePlayers = false;
@@ -93,8 +92,6 @@ private:
 	void PerformRangedAttack(IEntity* target);
 
 	void ApplyDamageToTarget(IEntity* target);
-
-	void FindHostilePlayers();
 
 public:
 	void Attack(IEntity* target);

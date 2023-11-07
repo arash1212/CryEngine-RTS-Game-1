@@ -57,7 +57,7 @@ public:
 	Vec3 GetVelocity();
 	Cry::DefaultComponents::CCharacterControllerComponent* GetCharacterController();
 
-	Vec3 GetRandomPointOnNavmesh(float MaxDistance, IEntity* Around);
+	Vec3 GetRandomPointOnNavmesh(float MaxDistance, Vec3 Around);
 
 	bool IsDestinationReachable(Vec3 position);
 };

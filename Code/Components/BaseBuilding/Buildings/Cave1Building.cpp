@@ -18,6 +18,7 @@
 #include<UIItems/Items/Buildings/TrainUnits/UITrainSoldier1Item.h>
 #include <Actions/Units/UnitWanderingRandomlyAction.h>
 #include <Actions/Units/UnitAttackEnemyBaseAction.h>
+#include <Actions/Buildings/BuildingSpawnZombiesAction.h>
 
 #include <Components/BaseBuilding/Building.h>
 #include <Utils/MathUtils.h>
@@ -107,13 +108,10 @@ void Cave1BuildingComponent::Initialize()
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
 	m_pCostComponent->SetCost(Cave1BuildingComponent::GetCost());
 
-
-	//******************************************Building specifics 
-	m_pBuildingComponent->SetBuilt();
-
 	//ResourceManagerComponent initialization
 	m_pResourceManagerComponent = m_pEntity->GetOrCreateComponent<ResourceManagerComponent>();
 	m_pResourceManagerComponent->SetIsPlayer(false);
+	m_pResourceManagerComponent->AddOwnedEntity(m_pEntity);
 }
 
 
@@ -136,8 +134,10 @@ void Cave1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 		m_pOwnerInfoComponent->SetPlayer(EPlayer::FERAL);
 		m_pOwnerInfoComponent->SetTeam(EPlayerTeam::FERAL);
 		m_pOwnerInfoComponent->SetFaction(EPlayerFaction::FERAL);
+		m_pOwnerInfoComponent->SetOwner(m_pEntity);
 
 		//m_pBuildingComponent->SetMaxHealth(300.f);
+		m_pBuildingComponent->SetBuilt();
 
 		bIsGameStarted = true;
 
@@ -145,50 +145,33 @@ void Cave1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 	case Cry::Entity::EEvent::Update: {
 		f32 DeltaTime = event.fParam[0];
 
-		ProcessSpawns();
-		FindHostilePlayers();
+		//Add action for spawning zombies
+		if (bIsGameStarted && !bSpawnZombiesActionAdded) {
+			ActionManagerComponent* pActionManagerComponent = m_pEntity->GetComponent<ActionManagerComponent>();
+			if (!pActionManagerComponent) {
+				return;
+			}
+			pActionManagerComponent->AddAction(new BuildingSpawnZombiesAction(m_pEntity, 40));
+			bSpawnZombiesActionAdded = true;
+
+			//Find Hostiles
+			m_hostilePlayers = EntityUtils::FindHostilePlayers(m_pEntity);
+		}
+
 		CommandUnitsToAttack();
 
 		//Timers
-		if (m_spawnTimePassed < m_timeBetweenSpawningZombies) {
-			m_spawnTimePassed += 0.5f * DeltaTime;
-		}
 		if (m_attackTimePassed < m_timeBetweenAttacks) {
 			m_attackTimePassed += 0.5f * DeltaTime;
 		}
 
 	}break;
 	case Cry::Entity::EEvent::Reset: {
+		bSpawnZombiesActionAdded = false;
 
 	}break;
 	default:
 		break;
-	}
-}
-
-
-void Cave1BuildingComponent::ProcessSpawns()
-{
-	if (!bIsGameStarted) {
-		return;
-	}
-	if (m_pResourceManagerComponent->GetOwnedEntities().size() >= m_maxZombiesCount) {
-		return;
-	}
-
-	if (m_spawnTimePassed >= m_timeBetweenSpawningZombies) {
-		Vec3 position = m_pEntity->GetWorldPos();
-		Quat rotation = IDENTITY;
-
-		IEntity* spawnedEntity = EntityUtils::SpawnEntity(m_pBuildingComponent->GetExitPoint(), rotation, m_pEntity);
-		if (!spawnedEntity) {
-			return;
-		}
-		spawnedEntity->GetOrCreateComponent<Zombie1UnitComponent>();
-
-		ActionManagerComponent* pActionManagerComponent = spawnedEntity->GetComponent<ActionManagerComponent>();
-		pActionManagerComponent->AddAction(new UnitWanderingRandomlyAction(spawnedEntity, m_pEntity, false));
-		m_spawnTimePassed = 0;
 	}
 }
 
@@ -229,34 +212,4 @@ SResourceInfo Cave1BuildingComponent::GetCost()
 	cost.m_populationAmount = 0;
 	cost.m_woodAmount = 50;
 	return cost;
-}
-
-void Cave1BuildingComponent::FindHostilePlayers()
-{
-	if (!bIsCheckedForHostiles) {
-		IEntityItPtr entityItPtr = gEnv->pEntitySystem->GetEntityIterator();
-		entityItPtr->MoveFirst();
-
-		while (!entityItPtr->IsEnd())
-		{
-			IEntity* entity = entityItPtr->Next();
-			ResourceManagerComponent* pResourceManagerComponent = entity->GetComponent<ResourceManagerComponent>();
-			if (!pResourceManagerComponent) {
-				continue;
-			}
-
-			OwnerInfoComponent* otherEntityOwnerInfo = entity->GetComponent<OwnerInfoComponent>();
-			BulletTracerComponent* bulletTracerComponent = entity->GetComponent<BulletTracerComponent>();
-			if (!otherEntityOwnerInfo || bulletTracerComponent) {
-				continue;
-			}
-
-			OwnerInfoComponent* pOwnerInfoComponent = m_pEntity->GetComponent<OwnerInfoComponent>();
-			if (pOwnerInfoComponent && otherEntityOwnerInfo && otherEntityOwnerInfo->GetInfo().m_pTeam != pOwnerInfoComponent->GetInfo().m_pTeam) {
-				m_hostilePlayers.append(entity);
-			}
-		}
-
-		bIsCheckedForHostiles = true;
-	}
 }

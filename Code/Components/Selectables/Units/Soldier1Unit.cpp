@@ -28,6 +28,8 @@
 
 #include <Components/Selectables/Health.h>
 
+#include <Utils/MathUtils.h>
+
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
 #include <CrySchematyc/Env/IEnvRegistrar.h>
@@ -66,7 +68,7 @@ void Soldier1UnitComponent::Initialize()
 
 	//StateManagerComponent Initialization
 	m_pStateManagerComponent = m_pEntity->GetOrCreateComponent<UnitStateManagerComponent>();
-	m_pStateManagerComponent->SetWalkSpeed(2.5f);
+	m_pStateManagerComponent->SetWalkSpeed(3.5f);
 
 	//AIController Initializations
 	m_pAIController = m_pEntity->GetOrCreateComponent<AIControllerComponent>();
@@ -97,6 +99,8 @@ void Soldier1UnitComponent::Initialize()
 	pAttckInfo.bIsHumanoid = true;
 	pAttckInfo.bIsFollower = false;
 	pAttckInfo.m_maxAttackDistance = 25.f;
+	pAttckInfo.m_maxAttackCount = MathUtils::GetRandomInt(4, 6);
+	pAttckInfo.m_timeBetweenAttacks = 0.13f;
 	m_pAttackerComponent->SetAttackInfo(pAttckInfo);
 
 	//CostComponent Initializations

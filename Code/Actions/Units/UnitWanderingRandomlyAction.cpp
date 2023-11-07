@@ -8,7 +8,7 @@
 #include <Components/Controller/AIController.h>
 #include <Components/Managers/UnitStateManager.h>
 
-UnitWanderingRandomlyAction::UnitWanderingRandomlyAction(IEntity* entity, IEntity* around, bool run)
+UnitWanderingRandomlyAction::UnitWanderingRandomlyAction(IEntity* entity, Vec3 around, bool run)
 {
 	this->m_pEntity = entity;
 	this->m_pAround = around;
@@ -37,10 +37,13 @@ void UnitWanderingRandomlyAction::Execute()
 	}
 	if (m_pAttackerComponent->IsAttacking()) {
 		//m_pStateManagerComponent->SetStance(EUnitStance::RUNNING);
-		Cancel();
+		//Cancel();
 		return;
 	}
 
+	if (m_pStateManagerComponent->GetStance() != EUnitStance::WALKING) {
+		m_pStateManagerComponent->SetStance(EUnitStance::WALKING);
+	}
 	//Find new point if lastPoint is Closer than 1
 	f32 distanceToMoveToPos = m_pEntity->GetWorldPos().GetDistance(m_movePosition);
 	if (m_movePosition == ZERO || distanceToMoveToPos < 1 || !m_pAiControllerComponent->IsDestinationReachable(m_movePosition)) {

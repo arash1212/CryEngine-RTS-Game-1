@@ -10,6 +10,8 @@
 #include <Components/Managers/ActionManager.h>
 #include <Components/Player/Player.h>
 
+#include <Actions/Buildings/BuildingBuildAction.h>
+
 #include <Components/Selectables/Selectable.h>
 #include <UIItems/IBaseUIItem.h>
 #include <UIItems/Items/UICancelItem.h>
@@ -173,6 +175,9 @@ void BuildingComponent::Place(Vec3 at)
 	//HealthComponent Initialization
 	m_pHealthComponent = m_pEntity->GetOrCreateComponent<HealthComponent>();
 	m_pHealthComponent->SetMaxHealth(m_maxHealth);
+
+	//Build Action
+	m_pActionManagerComponent->AddAction(new BuildingBuildAction(m_pEntity));
 }
 
 void BuildingComponent::Build()
@@ -266,6 +271,8 @@ bool BuildingComponent::IsBuilt()
 void BuildingComponent::SetBuilt()
 {
 	m_currentBuiltAmount = m_pBuildingInfo.m_maxBuildAmount;
+
+	Place(m_pEntity->GetWorldPos());
 
 	bIsPlaced = true;
 

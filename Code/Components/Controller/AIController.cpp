@@ -119,7 +119,7 @@ bool AIControllerComponent::MoveTo(Vec3 position, bool run)
 	}
 
 	//this->SnapToNavmesh() ?
-	m_moveToPosition = position;
+	m_moveToPosition = this->SnapToNavmesh(position);
 	return true;
 }
 
@@ -182,13 +182,13 @@ Vec3 AIControllerComponent::GetRandomPointInsideTriangle(Triangle t)
 }
 
 
-Vec3 AIControllerComponent::GetRandomPointOnNavmesh(float MaxDistance, IEntity* Around)
+Vec3 AIControllerComponent::GetRandomPointOnNavmesh(float MaxDistance, Vec3 Around)
 {
 	MNM::TriangleIDArray resultArray;
 	DynArray<Vec3> resultPositions;
 
 	NavigationAgentTypeID agentTypeId = NavigationAgentTypeID::TNavigationID(1);
-	NavigationMeshID navMeshId = gEnv->pAISystem->GetNavigationSystem()->FindEnclosingMeshID(agentTypeId, Around->GetWorldPos());
+	NavigationMeshID navMeshId = gEnv->pAISystem->GetNavigationSystem()->FindEnclosingMeshID(agentTypeId, Around);
 
 	//get Triangles
 	const MNM::INavMesh* navMesh = gEnv->pAISystem->GetNavigationSystem()->GetMNMNavMesh(navMeshId);
@@ -223,9 +223,9 @@ Vec3 AIControllerComponent::GetRandomPointOnNavmesh(float MaxDistance, IEntity* 
 
 	f32 resultMax = MaxDistance - 2;
 	f32 resultMin = 3;
-	Vec3 Dir = resultPos - Around->GetWorldPos();
+	Vec3 Dir = resultPos - Around;
 
-	resultPos = Around->GetWorldPos() + Dir.normalize() * (resultMin + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / resultMax - resultMin)));
+	resultPos = Around + Dir.normalize() * (resultMin + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / resultMax - resultMin)));
 
 	MNM::SOrderedSnappingMetrics snappingMetrics;
 	snappingMetrics.CreateDefault();

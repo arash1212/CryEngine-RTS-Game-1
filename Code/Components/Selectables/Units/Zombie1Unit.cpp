@@ -67,7 +67,8 @@ void Zombie1UnitComponent::Initialize()
 
 	//StateManagerComponent Initialization
 	m_pStateManagerComponent = m_pEntity->GetOrCreateComponent<UnitStateManagerComponent>();
-	m_pStateManagerComponent->SetWalkSpeed(1.f);
+	m_pStateManagerComponent->SetWalkSpeed(1.5f);
+	m_pStateManagerComponent->SetRunSpeed(3.0f);
 
 	//AIController Initializations
 	m_pAIController = m_pEntity->GetOrCreateComponent<AIControllerComponent>();
@@ -87,7 +88,7 @@ void Zombie1UnitComponent::Initialize()
 
 	//////////AttackerComponent Initializations
 	m_pAttackerComponent = m_pEntity->GetOrCreateComponent<AttackerComponent>();
-	m_pAttackerComponent->SetDamageAmount(5.f);
+	m_pAttackerComponent->SetDamageAmount(3.f);
 	//attack info
 	SUnitAttackInfo pAttckInfo;
 	pAttckInfo.m_pAttackType = EAttackType::MELEE;
@@ -108,7 +109,7 @@ void Zombie1UnitComponent::Initialize()
 
 	//HealthComponent Initialization
 	m_pHealthComponent = m_pEntity->GetOrCreateComponent<HealthComponent>();
-	m_pHealthComponent->SetMaxHealth(30);
+	m_pHealthComponent->SetMaxHealth(100);
 }
 
 
@@ -129,12 +130,6 @@ void Zombie1UnitComponent::ProcessEvent(const SEntityEvent& event)
 	}break;
 	case Cry::Entity::EEvent::Update: {
 		//f32 DeltaTime = event.fParam[0];
-
-
-		//Wander around
-		if (m_pActionManagerComponent && m_pOwnerInfoComponent && !m_pAttackerComponent->IsAttacking() && !m_pActionManagerComponent->IsProcessingAnAction()) {
-			m_pActionManagerComponent->AddAction(new UnitWanderingRandomlyAction(m_pEntity, m_pOwnerInfoComponent->GetOwner(), false));
-		}
 
 	}break;
 	case Cry::Entity::EEvent::Reset: {

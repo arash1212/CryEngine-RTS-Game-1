@@ -81,7 +81,7 @@ void Engineer1UnitComponent::Initialize()
 
 	//StateManagerComponent Initialization
 	m_pStateManagerComponent = m_pEntity->GetOrCreateComponent<UnitStateManagerComponent>();
-	m_pStateManagerComponent->SetWalkSpeed(2.5f);
+	m_pStateManagerComponent->SetWalkSpeed(3.5f);
 
 	//AIController Initializations
 	m_pAIController = m_pEntity->GetOrCreateComponent<AIControllerComponent>();

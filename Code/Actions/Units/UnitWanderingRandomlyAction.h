@@ -9,13 +9,13 @@ class UnitStateManagerComponent;
 class UnitWanderingRandomlyAction : public IBaseAction {
 
 public:
-	UnitWanderingRandomlyAction(IEntity* entity, IEntity* around, bool run);
+	UnitWanderingRandomlyAction(IEntity* entity, Vec3 around, bool run);
 
 private:
 	AIControllerComponent* m_pAiControllerComponent = nullptr;
 	AttackerComponent* m_pAttackerComponent = nullptr;
 	UnitStateManagerComponent* m_pStateManagerComponent = nullptr;
-	IEntity* m_pAround = nullptr;
+	Vec3 m_pAround = ZERO;
 
 private:
 	Vec3 m_movePosition = ZERO;
