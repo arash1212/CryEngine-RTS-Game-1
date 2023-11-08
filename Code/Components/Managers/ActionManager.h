@@ -32,7 +32,10 @@ public:
 	void CancelCurrentAction();
 	bool IsProcessingAnAction();
 	IBaseAction* GetCurrentAction();
+	std::deque<IBaseAction*> GetActionsQueue();
 
 	bool IsBuilding();
 	void SetIsBuilding(bool isBuilding);
+
+	int32 GetActiveActionsCount();
 };

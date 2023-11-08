@@ -56,9 +56,12 @@ void BaseWeaponComponent::Initialize()
 	m_pAudioComponent = m_pEntity->GetOrCreateComponent<IEntityAudioComponent>();
 
 	//Sounds
+	/*
 	m_shootSounds.Insert(0, CryAudio::StringToId("bolter_sound_2"));
 	m_shootSounds.Insert(1, CryAudio::StringToId("bolter_sound_3"));
 	m_shootSounds.Insert(2, CryAudio::StringToId("bolter_sound_4"));
+	*/
+
 	/*
 	m_shootSounds.Insert(0, CryAudio::StringToId("ak-47-shoot-sound"));
 	m_shootSounds.Insert(1, CryAudio::StringToId("ak-47-shoot-sound-1"));
@@ -67,7 +70,23 @@ void BaseWeaponComponent::Initialize()
 	m_shootSounds.Insert(4, CryAudio::StringToId("ak-47-shoot-sound-4"));
 	m_shootSounds.Insert(5, CryAudio::StringToId("ak-47-shoot-sound-5"));
 	m_shootSounds.Insert(6, CryAudio::StringToId("ak-47-shoot-sound-6"));
-	m_shootSounds.Insert(6, CryAudio::StringToId("ak-47-shoot-sound-7"));*/
+	m_shootSounds.Insert(6, CryAudio::StringToId("ak-47-shoot-sound-7"));
+	*/
+
+	/*
+	//m_shootSounds.Insert(0, CryAudio::StringToId("bolter_sound_1"));
+	*/
+
+	/*
+	m_shootSounds.Insert(0, CryAudio::StringToId("bolter_sound_5"));
+	m_shootSounds.Insert(1, CryAudio::StringToId("bolter_sound_6"));
+	m_shootSounds.Insert(2, CryAudio::StringToId("bolter_sound_7"));
+	*/
+	m_shootSounds.Insert(0, CryAudio::StringToId("ak-47-shoot-sound-8"));
+	m_shootSounds.Insert(1, CryAudio::StringToId("ak-47-shoot-sound-9"));
+	m_shootSounds.Insert(2, CryAudio::StringToId("ak-47-shoot-sound-10"));
+	m_shootSounds.Insert(3, CryAudio::StringToId("ak-47-shoot-sound-11"));
+
 }
 
 Cry::Entity::EventFlags BaseWeaponComponent::GetEventMask() const

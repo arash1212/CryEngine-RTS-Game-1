@@ -112,6 +112,11 @@ IBaseAction* ActionManagerComponent::GetCurrentAction()
 	return m_pCurrentAction;
 }
 
+std::deque<IBaseAction*> ActionManagerComponent::GetActionsQueue()
+{
+	return this->m_actionsQueue;
+}
+
 bool ActionManagerComponent::IsBuilding()
 {
 	return bIsBuilding;
@@ -120,4 +125,17 @@ bool ActionManagerComponent::IsBuilding()
 void ActionManagerComponent::SetIsBuilding(bool isBuilding)
 {
 	this->bIsBuilding = isBuilding;
+}
+
+int32 ActionManagerComponent::GetActiveActionsCount()
+{
+	int32 count = 0;
+	for (IBaseAction* action : m_actionsQueue) {
+		if (action->IsDone()) {
+			continue;
+		}
+		count++;
+	}
+
+	return count;
 }

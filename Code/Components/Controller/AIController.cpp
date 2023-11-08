@@ -47,7 +47,7 @@ void AIControllerComponent::Initialize()
 
 	//Collision avoidance
 	IEntityNavigationComponent::SCollisionAvoidanceProperties collisionAvoidanceProps;
-	collisionAvoidanceProps.radius = 0.03f;
+	collisionAvoidanceProps.radius = 0.5f;
 	m_pNavigationComponent->SetCollisionAvoidanceProperties(collisionAvoidanceProps);
 
 	//StateManager initialization

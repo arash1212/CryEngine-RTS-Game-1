@@ -21,6 +21,11 @@ void UIElementEventListener::OnUIEvent(IUIElement* pSender, const SUIEventDesc& 
 			args.GetArg(0).GetValueWithConversion(index);
 			m_pPlayerComponent->ExecuteActionbarItem(index);
 		}
+		if (eventName == "info_panel_button_click") {
+			int index = -1;
+			args.GetArg(0).GetValueWithConversion(index);
+			m_pPlayerComponent->ExecuteAInfoPanelItem(index);
+		}
 
 		if (eventName == "mouseOverUI") {
 			bIsMouseOverUI = true;

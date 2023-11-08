@@ -29,7 +29,7 @@ namespace
 void BulletTracerComponent::Initialize()
 {
 	m_pMeshComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CStaticMeshComponent>();
-	m_pMeshComponent->SetTransformMatrix(Matrix34::Create(Vec3(0.7f), Quat::CreateRotationZ(RAD2DEG(90.5f)), Vec3(0)));
+	m_pMeshComponent->SetTransformMatrix(Matrix34::Create(Vec3(0.4f, 1.5f, 1), Quat::CreateRotationZ(RAD2DEG(90.5f)), Vec3(0)));
 	m_pMeshComponent->SetFilePath("Objects/effects/bulletTracer/bullet_tracer_1.cgf");
 	m_pMeshComponent->LoadFromDisk();
 	m_pMeshComponent->ResetObject();
@@ -121,6 +121,7 @@ void BulletTracerComponent::CheckCollision(const EventPhysCollision* physCollisi
 	if (!physCollision) {
 		return;
 	}
+	Destroy();
 
 	IPhysicalEntity* pEntity = *physCollision->pEntity;
 	IEntity* hitEntity = gEnv->pEntitySystem->GetEntityFromPhysics(pEntity);
@@ -135,7 +136,7 @@ void BulletTracerComponent::CheckCollision(const EventPhysCollision* physCollisi
 		return;
 	}
 
-	Destroy();
+
 
 	OwnerInfoComponent* phitOwnerInfoComponent = hitEntity->GetComponent<OwnerInfoComponent>();
 	//if (!m_pTarget || m_pTarget->IsGarbage()) {

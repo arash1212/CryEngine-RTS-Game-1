@@ -5,6 +5,7 @@
 class AIControllerComponent;
 class AttackerComponent;
 class UnitStateManagerComponent;
+class IBaseInfoPanelUIItem;
 
 class TrainEngineer1Action : public IBaseAction {
 
@@ -25,4 +26,5 @@ public:
 	virtual void Cancel() override;
 	virtual bool IsDone() override;
 	virtual f32 GetProgressAmount() override;
+	virtual IBaseInfoPanelUIItem* GetInfoPanelItem() override;
 };

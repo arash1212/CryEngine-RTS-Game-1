@@ -35,6 +35,11 @@
 #include <Components/UI/UIResourcesPanel.h>
 #include <Components/Managers/UnitTypeManager.h>
 #include <Actions/Units/UnitWorkInWorkplaceAction.h>
+#include <Components/UI/UIInfoPanel.h>
+
+#include <Components/Selectables/InfoPanelUIDetail.h>
+#include <UIItems/InfoPanel/IBaseInfoPanelUIItem.h>
+#include <UIItems/InfoPanel/Items/UIBuildingActionInfoPanelItem.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -113,6 +118,10 @@ void PlayerComponent::Initialize()
 //	m_pHealthbarsComponent->SetEventListener(m_pUIElementEventListener);
 	
 	gEnv->p3DEngine->GetTimeOfDay();
+
+	//UIInfoPanelComponent initialization
+	m_pUIInfoPanelComponent = m_pEntity->GetOrCreateComponent<UIInfoPanelComponent>();
+	m_pUIInfoPanelComponent->SetEventListener(m_pUIElementEventListener);
 }
 
 Cry::Entity::EventFlags PlayerComponent::GetEventMask() const
@@ -396,7 +405,9 @@ void PlayerComponent::RotateRight(int activationMode, float value)
 
 void PlayerComponent::DeselectSelectables()
 {
+	m_lastBuildingActionsCheckSize = -1;
 	m_lastSelectablesCheckSize = -1;
+	m_pUIInfoPanelComponent->Clear();
 	for (IEntity* entity : m_selectedUnits) {
 		if (!entity) {
 			continue;
@@ -416,7 +427,13 @@ void PlayerComponent::DeselectSelectables()
 
 void PlayerComponent::SelectSelectables()
 {
-	for (IEntity* entity : m_selectedUnits) {
+	if (m_selectedUnits.size() == 0) {
+		m_pUIInfoPanelComponent->Clear();
+	}
+
+	DynArray<EUnitType> types;
+	for (int32 i = 0; i < m_selectedUnits.size(); i++) {
+		IEntity* entity = m_selectedUnits[i];
 		if (!entity) {
 			continue;
 		}
@@ -427,6 +444,55 @@ void PlayerComponent::SelectSelectables()
 		}
 		else {
 			continue;
+		}
+
+
+		//InfoPanel & Counts**********************************************************************************
+		//Types*****************************************************
+		//Units******************************************
+		UnitTypeManagerComponent* pUnitTypeManagerComponent = entity->GetComponent<UnitTypeManagerComponent>();
+		if (!pUnitTypeManagerComponent) {
+			continue;
+		}
+
+		if (types.empty()) {
+			m_pUIInfoPanelComponent->Clear();
+			types.append(pUnitTypeManagerComponent->GetUnitType());
+
+			//TODO : tekrari ba paeen
+			InfoPanelUIDetailComponent* pInfoPanelUIDetailComponent = entity->GetComponent<InfoPanelUIDetailComponent>();
+			if (!pInfoPanelUIDetailComponent) {
+				continue;
+			}
+			m_pUIInfoPanelComponent->AddItem(pInfoPanelUIDetailComponent->GetInfoPanelUIItem());
+			m_pUIInfoPanelComponent->SetCount(i, 1);
+		}
+		else {
+			bool bShouldAddNewItem = false;
+			int32 index = -1;
+			for (int32 i = 0; i < types.size(); i++) {
+				if (types[i] != pUnitTypeManagerComponent->GetUnitType()) {
+					bShouldAddNewItem = true;
+					index = i;
+				}
+				else {
+					bShouldAddNewItem = false;
+				}
+			}
+
+			if (bShouldAddNewItem) {
+				types.append(pUnitTypeManagerComponent->GetUnitType());
+
+				InfoPanelUIDetailComponent* pInfoPanelUIDetailComponent = entity->GetComponent<InfoPanelUIDetailComponent>();
+				if (!pInfoPanelUIDetailComponent) {
+					continue;
+				}
+				m_pUIInfoPanelComponent->AddItem(pInfoPanelUIDetailComponent->GetInfoPanelUIItem());
+			}
+
+			for (int32 i = 0; i < types.size(); i++) {
+				m_pUIInfoPanelComponent->SetCount(i, CountSelectedUnitType(types[i]));
+			}
 		}
 	}
 }
@@ -439,10 +505,11 @@ void PlayerComponent::CommandUnitsToMove(Vec3 position)
 			continue;
 		}
 
+		IEntity* closestUnit = EntityUtils::GetClosestEntity(m_selectedUnits, position);
 		ActionManagerComponent* actionManager = m_selectedUnits[i]->GetComponent<ActionManagerComponent>();
 		if (actionManager) {
-			f32 diffX = crymath::abs(position.x - m_selectedUnits[0]->GetWorldPos().x);
-			f32 diffY = crymath::abs(position.y - m_selectedUnits[0]->GetWorldPos().y);
+			f32 diffX = crymath::abs(position.x - closestUnit->GetWorldPos().x);
+			f32 diffY = crymath::abs(position.y - closestUnit->GetWorldPos().y);
 
 			if (diffX > diffY) {
 				//int32 temp = row;
@@ -570,8 +637,6 @@ void PlayerComponent::AssignWorkplaceToWorkers(IEntity* workplaceEntity)
 		ActionManagerComponent* actionManager = entity->GetComponent<ActionManagerComponent>();
 		if (actionManager) {
 			if (workplaceEntity) {
-				//workerComponent->AssignWorkplace(workplaceEntity);
-				//workPlaceComponent->AssignWorkerToPlace(entity);
 				actionManager->AddAction(new UnitWorkInWorkplaceAction(entity, workplaceEntity));
 				CryLog("workplace assigned %s:", workplaceEntity->GetName());
 			}
@@ -690,6 +755,12 @@ void PlayerComponent::ExecuteActionbarItem(int32 index)
 	}
 }
 
+void PlayerComponent::ExecuteAInfoPanelItem(int32 index)
+{
+	bIsLeftClickWorks = false;
+	m_pUIInfoPanelComponent->ExecuteItem(index);
+}
+
 bool PlayerComponent::AreSelectedUnitsSameType()
 {
 	UnitTypeManagerComponent* pUnitTypeManager = m_selectedUnits[0]->GetComponent<UnitTypeManagerComponent>();
@@ -733,15 +804,76 @@ void PlayerComponent::UpdateSelectables()
 	if (m_selectedUnits.size() != m_lastSelectablesCheckSize) {
 		m_lastSelectablesCheckSize = m_selectedUnits.size();
 		AddUIItemsToActionbar();
+		SelectSelectables();
 	}
 
 	DynArray<IEntity*> result;
 	for (IEntity* entity : m_selectedUnits) {
-		if (entity->IsGarbage()) {
+		if (!entity || entity->IsGarbage()) {
 			continue;
 		}
 
 		result.append(entity);
 	}
 	m_selectedUnits = result;
+
+	//Buildings infoPanelItems (Actions)
+	if (m_selectedUnits.size() == 1) {
+		IEntity* entity = m_selectedUnits[0];
+		BuildingComponent* pBuildingComponent = entity->GetComponent<BuildingComponent>();
+		if (!pBuildingComponent) {
+			return;
+		}
+		ActionManagerComponent* pActionManagerComponet = entity->GetComponent<ActionManagerComponent>();
+		std::deque<IBaseAction*> queue = pActionManagerComponet->GetActionsQueue();
+		//TODO : agar ziad anjam behse error : pure function call zaman clear mide 
+		if (m_lastBuildingActionsCheckSize != pActionManagerComponet->GetActiveActionsCount()) {
+			m_pUIInfoPanelComponent->Clear();
+			for (IBaseAction* action : queue) {
+				if (action->IsDone()) {
+					continue;
+				}
+				m_pUIInfoPanelComponent->AddItem(action->GetInfoPanelItem());
+			}
+			m_lastBuildingActionsCheckSize = pActionManagerComponet->GetActiveActionsCount();
+		}
+	}
+}
+
+int32 PlayerComponent::CountSelectedUnitType(EUnitType type)
+{
+	int32 count = 0;
+	for (IEntity* entity : m_selectedUnits) {
+		if (!entity) {
+			continue;
+		}
+		UnitTypeManagerComponent* pUnitTypeManagerComponent = entity->GetComponent< UnitTypeManagerComponent>();
+		if (!pUnitTypeManagerComponent) {
+			continue;
+		}
+		if (pUnitTypeManagerComponent->GetUnitType() == type) {
+			count++;
+		}
+	}
+	return count;
+}
+
+void PlayerComponent::DeselectUnitsOfType(EUnitType type)
+{
+	DynArray<IEntity*> result;
+	for (IEntity* entity : m_selectedUnits) {
+		if (!entity) {
+			continue;
+		}
+		UnitTypeManagerComponent* pUnitTypeManagerComponent = entity->GetComponent< UnitTypeManagerComponent>();
+		if (!pUnitTypeManagerComponent) {
+			continue;
+		}
+		if (pUnitTypeManagerComponent->GetUnitType() != type) {
+			result.append(entity);
+		}
+	}
+	DeselectSelectables();
+	m_selectedUnits = result;
+	SelectSelectables();
 }

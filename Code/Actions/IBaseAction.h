@@ -1,5 +1,7 @@
 #pragma once
 
+#include <UIItems/InfoPanel/IBaseInfoPanelUIItem.h>
+
 class IBaseAction {
 
 protected:
@@ -13,4 +15,5 @@ public:
 	virtual bool CanBeSkipped() {return false;}
 	virtual f32 GetProgressAmount() { return 0; }
 	virtual f32 GetMaxProgressAmount() { return 100.f; }
+	virtual IBaseInfoPanelUIItem* GetInfoPanelItem() { return nullptr; }
 };

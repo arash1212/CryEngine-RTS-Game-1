@@ -74,7 +74,7 @@ private:
 
 	//Timers
 	f32 m_attackTimePassed = 0.f;
-	f32 m_timeBetweenAttackCountReset = 0.9f;
+	f32 m_timeBetweenAttackCountReset = 0.45f;
 	f32 m_attackCountResetTimePassed = 0.f;
 	f32 m_timeBetweenLookingForRandomTarget = 1.0f;
 	f32 m_lookingForRandomTargetTimePassed = 0.f;

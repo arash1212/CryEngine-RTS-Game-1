@@ -5,6 +5,8 @@
 #include <CryEntitySystem/IEntitySystem.h>
 #include <Utils/EntityUtils.h>
 
+#include <UIItems/InfoPanel/Items/UIBuildingActionInfoPanelItem.h>
+
 #include <Components/Selectables/Attacker.h>
 #include <Components/Controller/AIController.h>
 #include <Components/Managers/UnitStateManager.h>
@@ -39,26 +41,45 @@ void TrainEngineer1Action::Execute()
 	if (m_processAmount < GetMaxProgressAmount()) {
 		return;
 	}
-	OwnerInfoComponent* onwerInfo = m_pEntity->GetComponent<OwnerInfoComponent>();
-	if (!onwerInfo) {
+	OwnerInfoComponent* pOnwerInfoComponent = m_pEntity->GetComponent<OwnerInfoComponent>();
+	if (!pOnwerInfoComponent) {
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "BuildingTrainEngineer1Action:(Execute) onwerInfo component does not exist on the building. train action cancelled.");
 		Cancel();
 		return;
 	}
-	IEntity* ownerEntity = onwerInfo->GetOwner();
-	if (!ownerEntity) {
+	IEntity* pOwnerEntity = pOnwerInfoComponent->GetOwner();
+	if (!pOwnerEntity) {
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "BuildingTrainEngineer1Action:(Execute) ownerEntity is null.");
 		Cancel();
 		return;
 	}
 
-	IEntity* spawnedEntity = EntityUtils::SpawnEntity(m_exitPosition, IDENTITY, ownerEntity);
+	IEntity* spawnedEntity = EntityUtils::SpawnEntity(m_exitPosition, IDENTITY, pOwnerEntity);
 	spawnedEntity->GetOrCreateComponent<Engineer1UnitComponent>();
 	bIsDone = true;
 }
 
 void TrainEngineer1Action::Cancel()
 {
+	OwnerInfoComponent* pOnwerInfoComponent = m_pEntity->GetComponent<OwnerInfoComponent>();
+	if (!pOnwerInfoComponent) {
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "TrainEngineer1Action:(Cancel) onwerInfo component does not exist on the building. train action cancelled.");
+		Cancel();
+		return;
+	}
+	IEntity* pOwnerEntity = pOnwerInfoComponent->GetOwner();
+	if (!pOwnerEntity) {
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "TrainEngineer1Action:(Cancel) ownerEntity is null.");
+		Cancel();
+		return;
+	}
+	ResourceManagerComponent* resouceManager = pOwnerEntity->GetComponent<ResourceManagerComponent>();
+	if (!resouceManager) {
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "TrainEngineer1Action : (Cancel) resoucwManager is null !");
+		return;
+	}
+
+	resouceManager->RefundResources(Engineer1UnitComponent::GetCost());
 	bIsDone = true;
 }
 
@@ -71,3 +92,9 @@ f32 TrainEngineer1Action::GetProgressAmount()
 {
 	return crymath::floor(m_processAmount);
 }
+
+IBaseInfoPanelUIItem* TrainEngineer1Action::GetInfoPanelItem()
+{
+	return new UIBuildingActionInfoPanelItem(m_pEntity, "engineer_1_icon.png", this);
+}
+

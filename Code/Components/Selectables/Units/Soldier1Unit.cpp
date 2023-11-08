@@ -4,6 +4,10 @@
 
 #include <Components/Selectables/Attacker.h>
 
+#include <Components/Selectables/InfoPanelUIDetail.h>
+#include <UIItems/InfoPanel/IBaseInfoPanelUIItem.h>
+#include <UIItems/InfoPanel/Items/UIUnitInfoPanelItem.h>
+
 #include <Components/Selectables/Selectable.h>
 #include <UIItems/IBaseUIItem.h>
 #include <UIItems/Items/UICancelItem.h>
@@ -99,8 +103,8 @@ void Soldier1UnitComponent::Initialize()
 	pAttckInfo.bIsHumanoid = true;
 	pAttckInfo.bIsFollower = false;
 	pAttckInfo.m_maxAttackDistance = 25.f;
-	pAttckInfo.m_maxAttackCount = MathUtils::GetRandomInt(4, 6);
-	pAttckInfo.m_timeBetweenAttacks = 0.13f;
+	pAttckInfo.m_maxAttackCount = 3;
+	pAttckInfo.m_timeBetweenAttacks = 0.08f;
 	m_pAttackerComponent->SetAttackInfo(pAttckInfo);
 
 	//CostComponent Initializations
@@ -114,6 +118,10 @@ void Soldier1UnitComponent::Initialize()
 	//HealthComponent Initialization
 	m_pHealthComponent = m_pEntity->GetOrCreateComponent<HealthComponent>();
 	m_pHealthComponent->SetConsumesFood(true);
+
+	//InfoPanelUIDetailComponent Initialization
+	InfoPanelUIDetailComponent* m_pInfoPanelUIDetailComponent = m_pEntity->GetOrCreateComponent<InfoPanelUIDetailComponent>();
+	m_pInfoPanelUIDetailComponent->SetInfoPanelUIItem(new UIUnitInfoPanelItem(m_pEntity, "soldier_1_icon.png"));
 }
 
 

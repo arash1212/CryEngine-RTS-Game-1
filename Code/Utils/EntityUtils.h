@@ -12,6 +12,6 @@ public:
 	//static Vec2 GetScreenPosition(Cry::DefaultComponents::CCameraComponent* camera, IEntity* entity);
 	static bool IsEntityInsideViewPort(Cry::DefaultComponents::CCameraComponent* camera, IEntity* entity);
 	static IEntity* FindClosestWarehouse(IEntity* to);
-	static IEntity* GetClosestEntity(DynArray<IEntity*> entities, IEntity* to);
+	static IEntity* GetClosestEntity(DynArray<IEntity*> entities, Vec3 to);
 	static DynArray<IEntity*> FindHostilePlayers(IEntity* to);
 };

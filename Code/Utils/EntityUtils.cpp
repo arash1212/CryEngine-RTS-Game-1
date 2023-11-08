@@ -51,6 +51,7 @@ void EntityUtils::RemoveEntity(IEntity* entity)
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "EntityUtils :(RemoveEntity) No OwnerInfo Found on entity !");
 		return;
 	}
+	//TODO : error pure function call vaghti owner remove shode (?)
 	IEntity* pOwner = pOwnerInfo->GetOwner();
 	if (!pOwner) {
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "EntityUtils :(RemoveEntity) owner Cannot be Empty !");
@@ -244,12 +245,12 @@ IEntity* EntityUtils::FindClosestWarehouse(IEntity* to)
 	return nullptr;
 }
 
-IEntity* EntityUtils::GetClosestEntity(DynArray<IEntity*> entities, IEntity* to)
+IEntity* EntityUtils::GetClosestEntity(DynArray<IEntity*> entities, Vec3 to)
 {
 	f32 closest = 10000;
 	IEntity* result = nullptr;
 	for (IEntity* entity : entities) {
-		f32 distance = to->GetWorldPos().GetDistance(entity->GetWorldPos());
+		f32 distance = to.GetDistance(entity->GetWorldPos());
 		if (distance < closest) {
 			closest = distance;
 			result = entity;

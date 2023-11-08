@@ -12,6 +12,9 @@ class OwnerInfoComponent;
 class UIResourcesPanelComponent;
 class ResourceManagerComponent;
 class UIHealthbarsComponent;
+class UIInfoPanelComponent;
+
+enum class EUnitType;
 
 static const f32 PLAYER_CAMERA_DEFAULT_HEIGHT = 25.f;
 static const f32 PLAYER_CAMERA_DEFAULT_MOVE_SPEED = 28.f;
@@ -54,6 +57,7 @@ private:
 	UIResourcesPanelComponent* m_pResouecesPanelComponent = nullptr;
 	ResourceManagerComponent* m_pResourceManagerComponent = nullptr;
 	UIHealthbarsComponent* m_pHealthbarsComponent = nullptr;
+	UIInfoPanelComponent* m_pUIInfoPanelComponent = nullptr;
 
 	//UI
 	UIElementEventListener* m_pUIElementEventListener = nullptr;
@@ -83,6 +87,7 @@ private:
 
 	//
 	int32 m_lastSelectablesCheckSize = 0;
+	int32 m_lastBuildingActionsCheckSize = 0;
 private:
 	void InitInputs();
 	void Move(f32 DeltaTime);
@@ -122,7 +127,11 @@ private:
 	void BoxSelectEntities(Vec2 mousePos);
 
 	void UpdateSelectables();
+	int32 CountSelectedUnitType(EUnitType type);
 
 public:
 	void ExecuteActionbarItem(int32 index);
+	void ExecuteAInfoPanelItem(int32 index);
+
+	void DeselectUnitsOfType(EUnitType type);
 };

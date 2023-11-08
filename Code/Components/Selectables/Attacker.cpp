@@ -147,7 +147,7 @@ void AttackerComponent::Attack(IEntity* target)
 		break;
 	}
 
-	m_attackTimePassed = 0;
+	m_attackTimePassed = MathUtils::GetRandomFloat(0, 0.07f);
 	m_pAttackInfo.m_attackCount++;
 	m_attackCountResetTimePassed = 0.f;
 }
@@ -238,7 +238,7 @@ void AttackerComponent::FindRandomTarget()
 		if (!pOtherResourceManagerComponent) {
 			continue;
 		}
-		IEntity* pEntity = EntityUtils::GetClosestEntity(pOtherResourceManagerComponent->GetOwnedEntities(), m_pEntity);
+		IEntity* pEntity = EntityUtils::GetClosestEntity(pOtherResourceManagerComponent->GetOwnedEntities(), m_pEntity->GetWorldPos());
 		if (!pEntity || pEntity->IsGarbage()) {
 			return;
 		}

@@ -21,6 +21,10 @@
 #include <UIItems/Items/Buildings/UIBulletFactory1BuildItem.h>
 #include <UIItems/Items/Buildings/UIAK47Factory1BuildItem.h>
 
+#include <Components/Selectables/InfoPanelUIDetail.h>
+#include <UIItems/InfoPanel/IBaseInfoPanelUIItem.h>
+#include <UIItems/InfoPanel/Items/UIUnitInfoPanelItem.h>
+
 #include <Components/Selectables/Worker.h>
 
 #include <Components/Controller/AIController.h>
@@ -148,6 +152,10 @@ void Engineer1UnitComponent::Initialize()
 	//HealthComponent Initialization
 	m_pHealthComponent = m_pEntity->GetOrCreateComponent<HealthComponent>();
 	m_pHealthComponent->SetConsumesFood(true);
+
+	//InfoPanelUIDetailComponent Initialization
+	InfoPanelUIDetailComponent* m_pInfoPanelUIDetailComponent = m_pEntity->GetOrCreateComponent<InfoPanelUIDetailComponent>();
+	m_pInfoPanelUIDetailComponent->SetInfoPanelUIItem(new UIUnitInfoPanelItem(m_pEntity, "engineer_1_icon.png"));
 }
 
 

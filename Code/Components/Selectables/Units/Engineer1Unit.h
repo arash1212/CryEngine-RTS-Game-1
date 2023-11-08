@@ -17,6 +17,7 @@ class ResourceCollectorComponent;
 class WorkerComponent;
 class UnitTypeManagerComponent;
 class HealthComponent;
+class InfoPanelUIDetailComponent;
 
 struct SOwnerInfo;
 struct SResourceInfo;
@@ -55,6 +56,7 @@ private:
 	WorkerComponent* m_pWorkerComponent = nullptr;
 	UnitTypeManagerComponent* m_pUnitTypeManagerComponent = nullptr;
 	HealthComponent* m_pHealthComponent = nullptr;
+	InfoPanelUIDetailComponent* m_pInfoPanelUIDetailComponent = nullptr;
 
 	//OwnerShip
 	OwnerInfoComponent* m_pOwnerInfoComponent = nullptr;
