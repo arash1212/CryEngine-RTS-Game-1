@@ -62,3 +62,8 @@ string UIBarracks1BuildItem::GetImagePath()
 {
 	return "barracks_1_icon.png";
 }
+
+SUIItemDescription UIBarracks1BuildItem::GetDescrption()
+{
+	return SUIItemDescription(Barracks1BuildingComponent::GetCost(), "Build Barraks 1 Building.");
+}

@@ -21,19 +21,29 @@ void UIElementEventListener::OnUIEvent(IUIElement* pSender, const SUIEventDesc& 
 			args.GetArg(0).GetValueWithConversion(index);
 			m_pPlayerComponent->ExecuteActionbarItem(index);
 		}
-		if (eventName == "info_panel_button_click") {
+		else if (eventName == "actionbar_button_mouse_over") {
+			bIsMouseOverUI = true;
 			int index = -1;
 			args.GetArg(0).GetValueWithConversion(index);
-			m_pPlayerComponent->ExecuteAInfoPanelItem(index);
+			m_pPlayerComponent->UpdateDescriptionPanel(index);
+		}
+		else if (eventName == "info_panel_button_click") {
+			int index = -1;
+			args.GetArg(0).GetValueWithConversion(index);
+			m_pPlayerComponent->ExecuteInfoPanelItem(index);
 		}
 
 		if (eventName == "mouseOverUI") {
 			bIsMouseOverUI = true;
+			m_pLastMouseOverUIEventSender = pSender;
+			return;
 		}
-		else {
+		else if (eventName == "mouseNotOverUI" && m_pLastMouseOverUIEventSender && pSender == m_pLastMouseOverUIEventSender) {
+			m_pLastMouseOverUIEventSender = nullptr;
 			bIsMouseOverUI = false;
 		}
 	}
+
 }
 
 bool UIElementEventListener::IsMouseOverUI()

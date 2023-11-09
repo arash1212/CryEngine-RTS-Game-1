@@ -54,19 +54,19 @@ void ResourceManagerComponent::ProcessEvent(const SEntityEvent& event)
 			m_pResouecesPanelComponent = m_pEntity->GetComponent<UIResourcesPanelComponent>();
 
 			//Set Resources Amount
-			m_pResouceInfo.m_moneyAmount = 700;
-			m_pResouceInfo.m_oilAmount = 600;
+			m_pResouceInfo.m_moneyAmount = 1500;
+			m_pResouceInfo.m_oilAmount = 1000;
 			m_pResouceInfo.m_populationAmount = 20;
 			m_pResouceInfo.m_populationUsed = 0;
 			m_pResouceInfo.m_wheatAmount = 100;
 			m_pResouceInfo.m_flourAmount = 50;
-			m_pResouceInfo.m_woodAmount = 600;
-			m_pResouceInfo.m_breadAmount = 30;
+			m_pResouceInfo.m_woodAmount = 1000;
+			m_pResouceInfo.m_breadAmount = 50;
 			m_pResouceInfo.m_sulfurAmount = 50;
 			m_pResouceInfo.m_gunPowderAmount = 90;
-			m_pResouceInfo.m_ironAmount = 400;
-			m_pResouceInfo.m_bulletAmount = 60;
-			m_pResouceInfo.m_ak47Amount = 20;
+			m_pResouceInfo.m_ironAmount = 1000;
+			m_pResouceInfo.m_bulletAmount = 100;
+			m_pResouceInfo.m_ak47Amount = 10;
 
 			//AudioComponent initialization
 			m_pAudioComponent = m_pEntity->GetComponent<IEntityAudioComponent>();

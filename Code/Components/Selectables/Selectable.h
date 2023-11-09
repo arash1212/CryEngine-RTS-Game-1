@@ -36,6 +36,7 @@ private:
 	bool bIsBuilding = false;
 
 	//Highligh Colors
+	uint32  m_redColor = (uint32)(int_round(4 * 255.0f) << 24) | (int_round(1 * 255.0f) << 26) | (int_round(0 * 255.0f) << 8) | (int_round(1 * 255.0f));
 	uint32  m_greenColor = (uint32)(int_round(0 * 255.0f) << 24) | (int_round(1 * 255.0f) << 16) | (int_round(0 * 255.0f) << 8) | (int_round(1 * 255.0f));
 	uint32  m_blackColor = 0;
 
@@ -62,6 +63,7 @@ public:
 	void SetDecalSize(Vec3 size);
 
 	void HighLightGreen();
+	void HighLightRed();
 	void HighLightBlack();
 
 	void MouseOver();

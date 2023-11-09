@@ -25,7 +25,7 @@ UnitCollectResourceAction::UnitCollectResourceAction(IEntity* entity, IEntity* r
 	this->m_pAnimationComponent = m_pEntity->GetComponent<UnitAnimationComponent>();
 	this->m_pResourceCollectorComponent = m_pEntity->GetComponent<ResourceCollectorComponent>();
 
-	m_builtTimePassed = this->m_pEngineerComponent->GetEngineerInfo().m_timeBetweenBuilds;
+	m_collectingTimePassed = this->m_pEngineerComponent->GetEngineerInfo().m_timeBetweenCollecting;
 }
 
 
@@ -53,8 +53,8 @@ void UnitCollectResourceAction::Execute()
 	}
 
 	//Timer
-	if (m_builtTimePassed < m_pEngineerComponent->GetEngineerInfo().m_timeBetweenBuilds) {
-		m_builtTimePassed += 0.5f * gEnv->pTimer->GetFrameTime();
+	if (m_collectingTimePassed < m_pEngineerComponent->GetEngineerInfo().m_timeBetweenCollecting) {
+		m_collectingTimePassed += 0.5f * gEnv->pTimer->GetFrameTime();
 		return;
 	}
 	
@@ -90,8 +90,8 @@ void UnitCollectResourceAction::Execute()
 		}
 
 		this->m_pAnimationComponent->PlayRandomAttackAnimation();
-		this->m_builtTimePassed = 0;
-		this->m_pResourceCollectorComponent->AddResource(5);
+		this->m_collectingTimePassed = 0;
+		this->m_pResourceCollectorComponent->AddResource(1);
 
 		this->m_pResourceComponent->SetIsInUse(true);
 		this->m_pResourceComponent->SetCurrentCollector(m_pEntity);
@@ -116,7 +116,7 @@ void UnitCollectResourceAction::Execute()
 
 		if (!m_pWarehouseEntity) {
 			m_pWarehouseEntity = EntityUtils::FindClosestWarehouse(m_pEntity);
-			this->m_builtTimePassed = 0.2f;
+			this->m_collectingTimePassed = 0.2f;
 			return;
 		}
 
@@ -124,7 +124,7 @@ void UnitCollectResourceAction::Execute()
 		//Move closer to warehouse if it's not close
 		f32 distanceToWareHouse = EntityUtils::GetDistance(m_pEntity->GetWorldPos(), warehouseExitPoint, nullptr);
 		if (m_pWarehouseEntity && distanceToWareHouse > m_pEngineerComponent->GetEngineerInfo().m_maxBuildDistance) {
-			this->m_pAiControllerComponent->MoveTo(warehouseExitPoint, false);
+			this->m_pAiControllerComponent->MoveTo(warehouseExitPoint, true);
 			this->m_pAiControllerComponent->LookAtWalkDirection();
 		}
 		//Deliver Resource to Warehouse

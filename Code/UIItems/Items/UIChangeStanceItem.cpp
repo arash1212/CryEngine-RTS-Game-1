@@ -26,3 +26,9 @@ string UIChangeStanceItem::GetImagePath()
 {
 	return "UI_Stance_Icon.png";
 }
+
+SUIItemDescription UIChangeStanceItem::GetDescrption()
+{
+	SResourceInfo pInfo;
+	return SUIItemDescription(pInfo, "Change Unit Stance.");
+}

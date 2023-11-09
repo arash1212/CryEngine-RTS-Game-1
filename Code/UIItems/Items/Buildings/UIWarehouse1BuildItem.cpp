@@ -63,3 +63,9 @@ string UIWarehouse1BuildItem::GetImagePath()
 {
 	return "warehouse_1_Icon.png";
 }
+
+
+SUIItemDescription UIWarehouse1BuildItem::GetDescrption()
+{
+	return SUIItemDescription(Warehouse1BuildingComponent::GetCost(), "Build Warehouse 1 Building.");
+}

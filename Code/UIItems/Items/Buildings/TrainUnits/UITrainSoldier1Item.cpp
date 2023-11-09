@@ -62,3 +62,8 @@ string UITrainSoldier1Item::GetImagePath()
 {
 	return "soldier_1_icon.png";
 }
+
+SUIItemDescription UITrainSoldier1Item::GetDescrption()
+{
+	return SUIItemDescription(Soldier1UnitComponent::GetCost(), "Train Soldier 1");
+}

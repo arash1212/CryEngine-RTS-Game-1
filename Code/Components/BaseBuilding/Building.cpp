@@ -188,10 +188,10 @@ void BuildingComponent::Build()
 
 	//build
 	if (m_currentBuiltAmount < m_pBuildingInfo.m_maxBuildAmount) {
-		m_currentBuiltAmount += 2.f;
+		m_currentBuiltAmount += 0.5f;
 
 		Vec3 currentPos = m_pAnimationComponent->GetTransformMatrix().GetTranslation();
-		currentPos.z += 0.5f;
+		currentPos.z += 0.12f;
 		m_pAnimationComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), IDENTITY, currentPos));
 	}
 

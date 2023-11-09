@@ -63,3 +63,8 @@ string UITrainEngineer1Item::GetImagePath()
 {
 	return "engineer_1_icon.png";
 }
+
+SUIItemDescription UITrainEngineer1Item::GetDescrption()
+{
+	return SUIItemDescription(Engineer1UnitComponent::GetCost(), "Train Engineer 1");
+}

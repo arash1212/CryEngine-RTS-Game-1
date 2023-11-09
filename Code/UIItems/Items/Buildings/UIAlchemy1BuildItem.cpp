@@ -62,3 +62,8 @@ string UIAlchemy1BuildItem::GetImagePath()
 {
 	return "alchemy_1_icon.png";
 }
+
+SUIItemDescription UIAlchemy1BuildItem::GetDescrption()
+{
+	return SUIItemDescription(Alchemy1BuildingComponent::GetCost(), "Build Alchemy 1 Building.");
+}

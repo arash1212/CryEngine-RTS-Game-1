@@ -54,16 +54,16 @@ private:
 private:
 	int32 m_lastPopulationCheclAmount = 0;
 public:
-	const static int32 m_oilPrice = 8;
-	const static int32 m_WheatPrice = 5;
-	const static int32 m_FlourPrice = 8;
+	const static int32 m_oilPrice = 2;
+	const static int32 m_WheatPrice = 2;
+	const static int32 m_FlourPrice = 4;
 	const static int32 m_WoodPrice = 1;
-	const static int32 m_BreadPrice = 6;
-	const static int32 m_SulfurPrice = 10;
-	const static int32 m_GunPowderPrice = 12;
-	const static int32 m_IronPrice = 7;
-	const static int32 m_bulletPrice = 30;
-	const static int32 m_ak47Price = 50;
+	const static int32 m_BreadPrice = 3;
+	const static int32 m_SulfurPrice = 4;
+	const static int32 m_GunPowderPrice = 4;
+	const static int32 m_IronPrice = 2;
+	const static int32 m_bulletPrice = 5;
+	const static int32 m_ak47Price = 10;
 
 	//Sounds
 	CryAudio::ControlId m_pBuySound;

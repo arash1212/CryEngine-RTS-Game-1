@@ -130,9 +130,10 @@ void Barracks1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 SResourceInfo Barracks1BuildingComponent::GetCost()
 {
 	SResourceInfo cost;
-	cost.m_moneyAmount = 30;
+	cost.m_moneyAmount = 250;
 	cost.m_oilAmount = 0;
 	cost.m_populationAmount = 0;
-	cost.m_oilAmount = 50;
+	cost.m_ironAmount = 700;
+	cost.m_woodAmount = 500;
 	return cost;
 }

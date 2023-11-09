@@ -203,10 +203,11 @@ void Bakery1BuildingComponent::ResetWorkersJob()
 SResourceInfo Bakery1BuildingComponent::GetCost()
 {
 	SResourceInfo cost;
-	cost.m_moneyAmount = 30;
-	cost.m_oilAmount = 20;
+	cost.m_moneyAmount = 300;
+	cost.m_oilAmount = 300;
 	//cost.m_populationAmount = 2;
-	cost.m_woodAmount = 40;
+	cost.m_woodAmount = 700;
+	cost.m_ironAmount = 500;
 	cost.m_bulletAmount = 0;
 	return cost;
 }

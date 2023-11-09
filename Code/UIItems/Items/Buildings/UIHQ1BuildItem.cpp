@@ -63,3 +63,8 @@ string UIHQ1BuildItem::GetImagePath()
 {
 	return "hq_1_Icon.png";
 }
+
+SUIItemDescription UIHQ1BuildItem::GetDescrption()
+{
+	return SUIItemDescription(HQ1BuildingComponent::GetCost(), "Build HQ 1 Building.");
+}

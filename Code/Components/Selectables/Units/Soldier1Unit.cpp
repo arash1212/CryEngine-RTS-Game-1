@@ -156,9 +156,9 @@ void Soldier1UnitComponent::ProcessEvent(const SEntityEvent& event)
 SResourceInfo Soldier1UnitComponent::GetCost()
 {
 	SResourceInfo cost;
-	cost.m_moneyAmount = 20;
+	cost.m_moneyAmount = 120;
 	cost.m_populationAmount = 1;
-	cost.m_bulletAmount = 5;
+	cost.m_bulletAmount = 50;
 	cost.m_ak47Amount = 1;
 	return cost;
 }

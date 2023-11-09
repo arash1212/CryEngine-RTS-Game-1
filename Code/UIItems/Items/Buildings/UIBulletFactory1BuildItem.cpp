@@ -62,3 +62,8 @@ string UIBulletFactory1BuildItem::GetImagePath()
 {
 	return "bulletfactory_1_icon.png";
 }
+
+SUIItemDescription UIBulletFactory1BuildItem::GetDescrption()
+{
+	return SUIItemDescription(BulletFactory1BuildingComponent::GetCost(), "Build Bullet Factory 1 Building.");
+}

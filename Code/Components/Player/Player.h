@@ -13,6 +13,8 @@ class UIResourcesPanelComponent;
 class ResourceManagerComponent;
 class UIHealthbarsComponent;
 class UIInfoPanelComponent;
+class UIDescriptionsPanelComponent;
+class IBaseUIItem;
 
 enum class EUnitType;
 
@@ -58,11 +60,14 @@ private:
 	ResourceManagerComponent* m_pResourceManagerComponent = nullptr;
 	UIHealthbarsComponent* m_pHealthbarsComponent = nullptr;
 	UIInfoPanelComponent* m_pUIInfoPanelComponent = nullptr;
+	UIDescriptionsPanelComponent* m_pUIDescriptionsPanelComponent = nullptr;
 
 	//UI
 	UIElementEventListener* m_pUIElementEventListener = nullptr;
 
 	IEntity* m_pEntityUnderCursor = nullptr;
+
+	DynArray<IBaseUIItem*> m_currentUIItems;
 
 private:
 	f32 m_cameraDefaultHeight = PLAYER_CAMERA_DEFAULT_HEIGHT;
@@ -82,8 +87,9 @@ private:
 	f32 m_timeBetweenMouseOverCheck = 0.03f;
 	f32 m_mouseOverCheckTimePassed = 0.0f;
 
+	int32 m_lastIndecCheck = -1;
 	//
-	bool bIsLeftClickWorks = false;
+	//bool bIsLeftClickWorks = false;
 
 	//
 	int32 m_lastSelectablesCheckSize = 0;
@@ -131,7 +137,8 @@ private:
 
 public:
 	void ExecuteActionbarItem(int32 index);
-	void ExecuteAInfoPanelItem(int32 index);
+	void ExecuteInfoPanelItem(int32 index);
+	void UpdateDescriptionPanel(int32 index);
 
 	void DeselectUnitsOfType(EUnitType type);
 };

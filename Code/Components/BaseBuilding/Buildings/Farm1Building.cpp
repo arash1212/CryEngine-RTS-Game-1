@@ -188,16 +188,13 @@ void Farm1BuildingComponent::UpdateAssignedWorkers()
 	if (!m_pBuildingComponent->IsBuilt()) {
 		return;
 	}
-	CryLog("here-1");
 	if (m_pWorkplaceComponent->GetCurrentWorkersCount() <= 0) {
 		return;
 	}
-	CryLog("here0");
 	if (m_pWorker1CurrentAssignePos == ZERO) {
 		m_pWorker1CurrentAssignePos = m_pWheatAttachments[m_currentIndex]->GetAttWorldAbsolute().t;
 		m_currentIndex = 0;
 	}
-	CryLog("here1");
 
 	if (!m_pWorkplaceComponent->GetWorkers()[0] || m_pWorkplaceComponent->GetWorkers()[0]->IsGarbage()) {
 		return;
@@ -328,9 +325,10 @@ void Farm1BuildingComponent::UpdateAssignedWorkers()
 SResourceInfo Farm1BuildingComponent::GetCost()
 {
 	SResourceInfo cost;
-	cost.m_moneyAmount = 30;
-	cost.m_oilAmount = 10;
+	cost.m_moneyAmount = 250;
+	cost.m_oilAmount = 100;
 	//cost.m_populationAmount = 5;
-	cost.m_woodAmount = 50;
+	cost.m_woodAmount = 540;
+	cost.m_ironAmount = 300;
 	return cost;
 }

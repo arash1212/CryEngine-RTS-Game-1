@@ -140,8 +140,8 @@ void Light1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 SResourceInfo Light1BuildingComponent::GetCost()
 {
 	SResourceInfo cost;
-	cost.m_moneyAmount = 10;
+	cost.m_moneyAmount = 100;
 	cost.m_populationAmount = 0;
-	cost.m_ironAmount = 20;
+	cost.m_ironAmount = 300;
 	return cost;
 }

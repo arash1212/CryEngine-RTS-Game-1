@@ -135,6 +135,11 @@ void SelectableComponent::HighLightGreen()
 	m_pRenderNode->m_nHUDSilhouettesParam = m_greenColor;
 }
 
+void SelectableComponent::HighLightRed()
+{
+	m_pRenderNode->m_nHUDSilhouettesParam = m_redColor;
+}
+
 void SelectableComponent::HighLightBlack()
 {
 	m_pRenderNode->m_nHUDSilhouettesParam = m_blackColor;

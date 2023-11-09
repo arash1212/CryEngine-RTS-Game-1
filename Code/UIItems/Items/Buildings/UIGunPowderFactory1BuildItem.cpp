@@ -63,3 +63,8 @@ string UIGunPowderFactory1BuildItem::GetImagePath()
 {
 	return "gun_powder_factory_1_icon.png";
 }
+
+SUIItemDescription UIGunPowderFactory1BuildItem::GetDescrption()
+{
+	return SUIItemDescription(GunPowderFactory1BuildingComponent::GetCost(), "Build GunPowder 1 Building.");
+}

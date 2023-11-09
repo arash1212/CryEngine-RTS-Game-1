@@ -35,7 +35,11 @@
 #include <Components/UI/UIResourcesPanel.h>
 #include <Components/Managers/UnitTypeManager.h>
 #include <Actions/Units/UnitWorkInWorkplaceAction.h>
+
 #include <Components/UI/UIInfoPanel.h>
+
+#include <Components/UI/UIDescriptionsPanel.h>
+#include <UIItems/DescriptionPanel/BaseDescriptionPanelItem.h>
 
 #include <Components/Selectables/InfoPanelUIDetail.h>
 #include <UIItems/InfoPanel/IBaseInfoPanelUIItem.h>
@@ -122,6 +126,10 @@ void PlayerComponent::Initialize()
 	//UIInfoPanelComponent initialization
 	m_pUIInfoPanelComponent = m_pEntity->GetOrCreateComponent<UIInfoPanelComponent>();
 	m_pUIInfoPanelComponent->SetEventListener(m_pUIElementEventListener);
+
+	//UIDescriptionsPanelComponent initialization
+	m_pUIDescriptionsPanelComponent = m_pEntity->GetOrCreateComponent<UIDescriptionsPanelComponent>();
+	m_pUIDescriptionsPanelComponent->SetEventListener(m_pUIElementEventListener);
 }
 
 Cry::Entity::EventFlags PlayerComponent::GetEventMask() const
@@ -157,6 +165,10 @@ void PlayerComponent::ProcessEvent(const SEntityEvent& event)
 
 		if (m_mouseOverCheckTimePassed < m_timeBetweenMouseOverCheck) {
 			m_mouseOverCheckTimePassed += 0.5f * DeltaTime;
+		}
+
+		if (!m_pUIElementEventListener->IsMouseOverUI()) {
+			m_pUIDescriptionsPanelComponent->Clear();
 		}
 
 	}break;
@@ -276,10 +288,10 @@ void PlayerComponent::LeftMouseDown(int activationMode, float value)
 			return;
 		}
 		//TODO :
-		if (!bIsLeftClickWorks) {
-			bIsLeftClickWorks = true;
-			return;
-		}
+		//if (!bIsLeftClickWorks) {
+		//	bIsLeftClickWorks = true;
+		//	return;
+		//}
 
 		///////////////////////////Building
 		if (m_pBaseBuildingComponent && m_pBaseBuildingComponent->HasBuildingAssigned()) {
@@ -408,6 +420,8 @@ void PlayerComponent::DeselectSelectables()
 	m_lastBuildingActionsCheckSize = -1;
 	m_lastSelectablesCheckSize = -1;
 	m_pUIInfoPanelComponent->Clear();
+	m_currentUIItems.clear();
+
 	for (IEntity* entity : m_selectedUnits) {
 		if (!entity) {
 			continue;
@@ -676,24 +690,18 @@ void PlayerComponent::AddUIItemsToActionbar()
 		return;
 	}
 
-	//TODO : UPDATE BESHE
+	SelectableComponent* selectable = m_selectedUnits[0]->GetComponent<SelectableComponent>();
 	if (m_selectedUnits.size() > 1 && !AreSelectedUnitsSameType()) {
-		SelectableComponent* selectable = m_selectedUnits[0]->GetComponent<SelectableComponent>();
-		if (selectable) {
-			for (IBaseUIItem* uiItem : selectable->GetGeneralUIItems()) {
-				m_pUIActionbarComponent->AddButton(uiItem->GetImagePath());
-			}
-			return;
-		}
+		m_currentUIItems = selectable->GetGeneralUIItems();
 	}
 
 	if (m_selectedUnits.size() == 1 || AreSelectedUnitsSameType()) {
-		SelectableComponent* selectable = m_selectedUnits[0]->GetComponent<SelectableComponent>();
-		if (selectable) {
-			for (IBaseUIItem* uiItem : selectable->GetAllUIItems()) {
-				m_pUIActionbarComponent->AddButton(uiItem->GetImagePath());
-			}
-			return;
+		m_currentUIItems = selectable->GetAllUIItems();
+	}
+
+	if (selectable) {
+		for (IBaseUIItem* uiItem : m_currentUIItems) {
+			m_pUIActionbarComponent->AddButton(uiItem->GetImagePath());
 		}
 	}
 }
@@ -710,12 +718,22 @@ void PlayerComponent::CheckSelectablesMouseOver()
 		if (entity) {
 			SelectableComponent* selectable = entity->GetComponent<SelectableComponent>();
 			if (selectable) {
+				if (selectable->IsSelected()) {
+					return;
+				}
+
 				if (m_pEntityUnderCursor && !m_pEntityUnderCursor->IsGarbage() && m_pEntityUnderCursor != entity) {
 					SelectableComponent* oldSelectable = m_pEntityUnderCursor->GetComponent<SelectableComponent>();
 					oldSelectable->HighLightBlack();
 				}
 				m_pEntityUnderCursor = entity;
-				selectable->HighLightGreen();
+
+				if (m_pOwnerInfoComponent->IsEntityHostile(entity)) {
+					selectable->HighLightRed();
+				}
+				else {
+					selectable->HighLightGreen();
+				}
 				return;
 			}
 		}
@@ -723,9 +741,6 @@ void PlayerComponent::CheckSelectablesMouseOver()
 		//Turn highligh color back to black on entity if mouse is not over anyomore
 		else if (m_pEntityUnderCursor && !m_pEntityUnderCursor->IsGarbage()) {
 			SelectableComponent* selectable = m_pEntityUnderCursor->GetComponent<SelectableComponent>();
-			if (selectable->IsSelected()) {
-				return;
-			}
 			selectable->HighLightBlack();
 			m_pEntityUnderCursor = nullptr;
 		}
@@ -736,7 +751,7 @@ void PlayerComponent::CheckSelectablesMouseOver()
 
 void PlayerComponent::ExecuteActionbarItem(int32 index)
 {
-	bIsLeftClickWorks = false;
+	//bIsLeftClickWorks = false;
 	for (IEntity* entity : m_selectedUnits) {
 		SelectableComponent* selectable = entity->GetComponent<SelectableComponent>();
 		if (!selectable) {
@@ -744,21 +759,70 @@ void PlayerComponent::ExecuteActionbarItem(int32 index)
 		}
 
 		if (m_selectedUnits.size() > 1 && !AreSelectedUnitsSameType()) {
-			selectable->GetGeneralUIItems()[index]->Execute();
+			m_currentUIItems[index]->Execute();
 			continue;
 		}
 
 		if (m_selectedUnits.size() == 1 || AreSelectedUnitsSameType()) {
-			selectable->GetAllUIItems()[index]->Execute();
+			m_currentUIItems = selectable->GetAllUIItems();
+			m_currentUIItems[index]->Execute();
 			//break;
 		}
 	}
 }
 
-void PlayerComponent::ExecuteAInfoPanelItem(int32 index)
+void PlayerComponent::ExecuteInfoPanelItem(int32 index)
 {
-	bIsLeftClickWorks = false;
+	//bIsLeftClickWorks = false;
 	m_pUIInfoPanelComponent->ExecuteItem(index);
+}
+
+//TODO :++++++++++++++++++++++++
+void PlayerComponent::UpdateDescriptionPanel(int32 index)
+{
+	//bIsLeftClickWorks = false;
+	m_pUIDescriptionsPanelComponent->Clear();
+
+	SUIItemDescription pDescription = m_currentUIItems[index]->GetDescrption();
+	if (pDescription.cost.m_moneyAmount > 0) {
+		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("money_Icon_ui.png", pDescription.cost.m_moneyAmount));
+	}
+	if (pDescription.cost.m_ironAmount > 0) {
+		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("iron_buy_icon.png", pDescription.cost.m_ironAmount));
+	}
+	if (pDescription.cost.m_woodAmount > 0) {
+		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("wood_buy_icon.png", pDescription.cost.m_woodAmount));
+	}
+	if (pDescription.cost.m_oilAmount > 0) {
+		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("oil_barrel_icon.png", pDescription.cost.m_oilAmount));
+	}
+	if (pDescription.cost.m_breadAmount > 0) {
+		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("bread_buy_icon.png", pDescription.cost.m_breadAmount));
+	}
+	if (pDescription.cost.m_wheatAmount > 0) {
+		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("wheat_buy_icon.png", pDescription.cost.m_wheatAmount));
+	}
+	if (pDescription.cost.m_ak47Amount > 0) {
+		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("ak47_buy_icon.png", pDescription.cost.m_ak47Amount));
+	}
+	if (pDescription.cost.m_bulletAmount > 0) {
+		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("bullet_buy_icon.png", pDescription.cost.m_bulletAmount));
+	}
+	if (pDescription.cost.m_flourAmount > 0) {
+		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("flour_buy_icon.png", pDescription.cost.m_flourAmount));
+	}
+	if (pDescription.cost.m_gunPowderAmount > 0) {
+		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("gun_powder_buy_icon.png", pDescription.cost.m_gunPowderAmount));
+	}
+	if (pDescription.cost.m_populationAmount > 0) {
+		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("population_Icon_ui.png", pDescription.cost.m_populationAmount));
+	}
+	if (pDescription.cost.m_sulfurAmount > 0) {
+		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("sulfur_buy_icon.png", pDescription.cost.m_sulfurAmount));
+	}
+	m_pUIDescriptionsPanelComponent->SetDescriptionText(pDescription.m_description);
+
+	CryLog("index over : %i", index);
 }
 
 bool PlayerComponent::AreSelectedUnitsSameType()

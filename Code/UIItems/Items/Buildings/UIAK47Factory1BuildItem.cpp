@@ -62,3 +62,8 @@ string UIAK47Factory1BuildItem::GetImagePath()
 {
 	return "ak47factory_1_icon.png";
 }
+
+SUIItemDescription UIAK47Factory1BuildItem::GetDescrption()
+{
+	return SUIItemDescription(AK47Factory1BuildingComponent::GetCost(), "Build AK47 Factory Building.");
+}

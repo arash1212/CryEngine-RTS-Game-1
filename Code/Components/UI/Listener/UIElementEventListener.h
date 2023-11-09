@@ -4,6 +4,8 @@
 
 class PlayerComponent;
 
+struct IUIElement;
+
 class UIElementEventListener : public IUIElementEventListener {
 public:
 	UIElementEventListener(PlayerComponent* playerComponent);
@@ -13,6 +15,7 @@ private:
 
 private:
 	bool bIsMouseOverUI = false;
+	IUIElement* m_pLastMouseOverUIEventSender = nullptr;
 
 public:
 	virtual void OnUIEvent(IUIElement* pSender, const SUIEventDesc& event, const SUIArguments& args) override;

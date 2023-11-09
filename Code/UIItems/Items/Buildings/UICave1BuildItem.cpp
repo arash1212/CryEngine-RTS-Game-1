@@ -63,3 +63,8 @@ string UICave1BuildItem::GetImagePath()
 {
 	return "cave_1_icon.png";
 }
+
+SUIItemDescription UICave1BuildItem::GetDescrption()
+{
+	return SUIItemDescription(Cave1BuildingComponent::GetCost(), "Build Cave 1 Building.");
+}

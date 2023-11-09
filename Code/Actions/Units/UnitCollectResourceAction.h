@@ -29,7 +29,7 @@ private:
 	bool bRun = false;
 
 	//Timers
-	f32 m_builtTimePassed = 0.f;
+	f32 m_collectingTimePassed = 0.f;
 public:
 	virtual void Execute() override;
 	virtual void Cancel() override;

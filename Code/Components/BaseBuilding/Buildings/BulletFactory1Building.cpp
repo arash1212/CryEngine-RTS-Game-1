@@ -209,9 +209,10 @@ void BulletFactory1BuildingComponent::UpdateAssignedWorkers()
 SResourceInfo BulletFactory1BuildingComponent::GetCost()
 {
 	SResourceInfo cost;
-	cost.m_moneyAmount = 40;
-	cost.m_oilAmount = 10;
+	cost.m_moneyAmount = 400;
+	cost.m_oilAmount = 400;
 	//cost.m_populationAmount = 2;
-	cost.m_woodAmount = 40;
+	cost.m_woodAmount = 900;
+	cost.m_ironAmount = 800;
 	return cost;
 }

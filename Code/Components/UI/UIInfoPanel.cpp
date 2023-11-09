@@ -68,6 +68,10 @@ void UIInfoPanelComponent::ProcessEvent(const SEntityEvent& event)
 
 void UIInfoPanelComponent::AddItem(IBaseInfoPanelUIItem* item)
 {
+	if (!item) {
+		return;
+	}
+
 	if (!m_pInfoPanelUIElement) {
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "UIInfoPanelComponent : (AddItem) InfoPanelUIElement is null !");
 		return;

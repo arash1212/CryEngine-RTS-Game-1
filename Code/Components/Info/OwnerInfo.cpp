@@ -77,7 +77,8 @@ bool OwnerInfoComponent::IsEntityHostile(IEntity* entity)
 	if (!otherOwner) {
 		return false;
 	}
-	return otherOwner->GetInfo().m_pTeam != this->m_pOwnerInfo.m_pTeam && bCanBeTarget;
+	//&& bCanBeTarget (hazf shod ?)
+	return otherOwner->GetInfo().m_pTeam != this->m_pOwnerInfo.m_pTeam;
 }
 
 bool OwnerInfoComponent::CanBeTarget()

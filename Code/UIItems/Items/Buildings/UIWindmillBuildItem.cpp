@@ -63,3 +63,8 @@ string UIWindmillBuildItem::GetImagePath()
 {
 	return "windmill_1_icon.png";
 }
+
+SUIItemDescription UIWindmillBuildItem::GetDescrption()
+{
+	return SUIItemDescription(Windmill1BuildingComponent::GetCost(), "Build Windmill 1 Building.");
+}

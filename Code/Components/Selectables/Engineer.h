@@ -3,6 +3,7 @@
 struct SEngineerInfo {
 public:
 	f32 m_timeBetweenBuilds = 1.f;
+	f32 m_timeBetweenCollecting = 1.f;
 	f32 m_maxBuildDistance = 1.f;
 };
 

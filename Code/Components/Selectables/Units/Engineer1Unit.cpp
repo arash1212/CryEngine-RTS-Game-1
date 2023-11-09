@@ -117,7 +117,7 @@ void Engineer1UnitComponent::Initialize()
 
 	//////////AttackerComponent Initializations
 	m_pAttackerComponent = m_pEntity->GetOrCreateComponent<AttackerComponent>();
-	m_pAttackerComponent->SetDamageAmount(10.f);
+	m_pAttackerComponent->SetDamageAmount(2.f);
 	//attack info
 	SUnitAttackInfo pAttckInfo;
 	pAttckInfo.m_pAttackType = EAttackType::MELEE;
@@ -190,7 +190,7 @@ void Engineer1UnitComponent::ProcessEvent(const SEntityEvent& event)
 SResourceInfo Engineer1UnitComponent::GetCost()
 {
 	SResourceInfo cost;
-	cost.m_moneyAmount = 10;
+	cost.m_moneyAmount = 60;
 	cost.m_populationAmount = 1;
 	cost.m_bulletAmount = 0;
 	cost.m_ak47Amount = 0;

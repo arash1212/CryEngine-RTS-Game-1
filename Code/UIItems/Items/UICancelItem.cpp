@@ -25,3 +25,9 @@ string UICancelItem::GetImagePath()
 {
 	return "cancel.png";
 }
+
+SUIItemDescription UICancelItem::GetDescrption()
+{
+	SResourceInfo pInfo;
+	return SUIItemDescription(pInfo, "Cancel Units Current Action.");
+}

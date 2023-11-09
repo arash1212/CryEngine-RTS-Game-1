@@ -63,3 +63,8 @@ string UILight1BuildItem::GetImagePath()
 {
 	return "light_1_icon.png";
 }
+
+SUIItemDescription UILight1BuildItem::GetDescrption()
+{
+	return SUIItemDescription(Light1BuildingComponent::GetCost(), "Build Light 1 Building.");
+}

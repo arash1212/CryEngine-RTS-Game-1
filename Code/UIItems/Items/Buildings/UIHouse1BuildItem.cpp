@@ -63,3 +63,8 @@ string UIHouse1BuildItem::GetImagePath()
 {
 	return "house_1_icon.png";
 }
+
+SUIItemDescription UIHouse1BuildItem::GetDescrption()
+{
+	return SUIItemDescription(House1BuildingComponent::GetCost(), "Build House 1 Building.");
+}
