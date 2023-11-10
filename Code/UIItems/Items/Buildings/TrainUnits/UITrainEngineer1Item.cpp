@@ -49,7 +49,7 @@ void UITrainEngineer1Item::Execute()
 		return;
 	}
 
-	if (!resouceManager->RequsetResources(Engineer1UnitComponent::GetCost())) {
+	if (!resouceManager->RequsetResources(Engineer1UnitComponent::GetDescription().cost)) {
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "UITrainEngineer1Item : (Execute) Not enough resources to train Engineer1 unit !");
 		return;
 	}
@@ -61,10 +61,10 @@ void UITrainEngineer1Item::Execute()
 
 string UITrainEngineer1Item::GetImagePath()
 {
-	return "engineer_1_icon.png";
+	return Engineer1UnitComponent::GetDescription().m_imagePath;
 }
 
 SUIItemDescription UITrainEngineer1Item::GetDescrption()
 {
-	return SUIItemDescription(Engineer1UnitComponent::GetCost(), "Train Engineer 1");
+	return SUIItemDescription(Engineer1UnitComponent::GetDescription().cost, Engineer1UnitComponent::GetDescription().m_buildDescription);
 }

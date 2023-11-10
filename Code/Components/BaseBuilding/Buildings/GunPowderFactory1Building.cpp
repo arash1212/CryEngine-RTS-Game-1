@@ -85,6 +85,7 @@ void GunPowderFactory1BuildingComponent::Initialize()
 	SBuildingInfo buildingInfo;
 	buildingInfo.m_populationProduces = 0;
 	m_pBuildingComponent->SetBuildingInfo(buildingInfo);
+	m_pBuildingComponent->SetImagePath(GunPowderFactory1BuildingComponent::GetDescription().m_imagePath);
 	//m_pBuildingComponent->SetMaxHealth(700.f);
 	//UIItems
 
@@ -98,7 +99,7 @@ void GunPowderFactory1BuildingComponent::Initialize()
 
 	//CostComponent Initializations
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
-	m_pCostComponent->SetCost(GunPowderFactory1BuildingComponent::GetCost());
+	m_pCostComponent->SetCost(GunPowderFactory1BuildingComponent::GetDescription().cost);
 
 	//WorkplaceComponent  Initializations
 	m_pWorkplaceComponent = m_pEntity->GetOrCreateComponent<WorkplaceComponent>();
@@ -206,13 +207,20 @@ void GunPowderFactory1BuildingComponent::UpdateAssignedWorkers()
 	}
 }
 
-SResourceInfo GunPowderFactory1BuildingComponent::GetCost()
+SDescription GunPowderFactory1BuildingComponent::GetDescription()
 {
 	SResourceInfo cost;
 	cost.m_moneyAmount = 300;
 	cost.m_oilAmount = 600;
-	//cost.m_populationAmount = 2;
 	cost.m_ironAmount = 800;
 	cost.m_woodAmount = 300;
-	return cost;
+
+	SDescription m_pDescription;
+	m_pDescription.m_name = "GunPowder Factory 1";
+	m_pDescription.m_description = "GunPowder Factory 1 Building.";
+	m_pDescription.m_buildDescription = "Build GunPowder Factory 1 Building.";
+	m_pDescription.cost = cost;
+	m_pDescription.m_imagePath = "gun_powder_factory_1_icon.png";
+
+	return m_pDescription;
 }

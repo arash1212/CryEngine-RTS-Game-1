@@ -56,6 +56,7 @@ public:
 
 	void SetMaxHealth(f32 maxHealth);
 	f32 GetCurrentHealth();
+	f32 GetMaxHealth();
 
 	bool IsConsumesFood();
 	void SetConsumesFood(bool consumesFood);

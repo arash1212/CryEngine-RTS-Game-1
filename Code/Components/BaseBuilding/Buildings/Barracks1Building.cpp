@@ -78,6 +78,7 @@ void Barracks1BuildingComponent::Initialize()
 	SBuildingInfo buildingInfo;
 	buildingInfo.m_populationProduces = 0;
 	m_pBuildingComponent->SetBuildingInfo(buildingInfo);
+	m_pBuildingComponent->SetImagePath(Barracks1BuildingComponent::GetDescription().m_imagePath);
 	//m_pBuildingComponent->SetMaxHealth(700.f);
 	//UIItems
 	m_pBuildingComponent->AddUIItem(new UITrainEngineer1Item(m_pEntity));
@@ -93,7 +94,7 @@ void Barracks1BuildingComponent::Initialize()
 
 	//CostComponent Initializations
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
-	m_pCostComponent->SetCost(Barracks1BuildingComponent::GetCost());
+	m_pCostComponent->SetCost(Barracks1BuildingComponent::GetDescription().cost);
 
 }
 
@@ -127,7 +128,7 @@ void Barracks1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 	}
 }
 
-SResourceInfo Barracks1BuildingComponent::GetCost()
+SDescription Barracks1BuildingComponent::GetDescription()
 {
 	SResourceInfo cost;
 	cost.m_moneyAmount = 250;
@@ -135,5 +136,14 @@ SResourceInfo Barracks1BuildingComponent::GetCost()
 	cost.m_populationAmount = 0;
 	cost.m_ironAmount = 700;
 	cost.m_woodAmount = 500;
-	return cost;
+
+
+	SDescription m_pDescription;
+	m_pDescription.m_name = "Barraks 1";
+	m_pDescription.m_description = "Barraks 1 Building.";
+	m_pDescription.m_buildDescription = "Build Barraks 1 Building.";
+	m_pDescription.cost = cost;
+	m_pDescription.m_imagePath = "barracks_1_icon.png";
+
+	return m_pDescription;
 }

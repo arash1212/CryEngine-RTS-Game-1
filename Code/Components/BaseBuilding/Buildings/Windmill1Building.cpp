@@ -84,6 +84,8 @@ void Windmill1BuildingComponent::Initialize()
 	//BuildingComponent initialization
 	m_pBuildingComponent = m_pEntity->GetOrCreateComponent<BuildingComponent>();
 	m_pBuildingComponent->SetPathToTrussMesh(WINDMILL_BUILDING_1_TRUSS_MODEL_PATH);
+	m_pBuildingComponent->SetImagePath(Windmill1BuildingComponent::GetDescription().m_imagePath);
+
 	SBuildingInfo buildingInfo;
 	buildingInfo.m_populationProduces = 0;
 	m_pBuildingComponent->SetBuildingInfo(buildingInfo);
@@ -101,7 +103,7 @@ void Windmill1BuildingComponent::Initialize()
 
 	//CostComponent Initializations
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
-	m_pCostComponent->SetCost(Windmill1BuildingComponent::GetCost());
+	m_pCostComponent->SetCost(Windmill1BuildingComponent::GetDescription().cost);
 
 	//WorkplaceComponent  Initializations
 	m_pWorkplaceComponent = m_pEntity->GetOrCreateComponent<WorkplaceComponent>();
@@ -188,12 +190,19 @@ void Windmill1BuildingComponent::UpdateAssignedWorkers()
 	}
 }
 
-SResourceInfo Windmill1BuildingComponent::GetCost()
+SDescription Windmill1BuildingComponent::GetDescription()
 {
 	SResourceInfo cost;
 	cost.m_moneyAmount = 350;
 	cost.m_oilAmount = 200;
-	//cost.m_populationAmount = 2;
 	cost.m_woodAmount = 700;
-	return cost;
+
+	SDescription m_pDescription;
+	m_pDescription.m_name = "Windmill 1";
+	m_pDescription.m_description = "Windmill 1 Building.";
+	m_pDescription.m_buildDescription = "Build Windmill 1 Building.";
+	m_pDescription.cost = cost;
+	m_pDescription.m_imagePath = "windmill_1_icon.png";
+
+	return m_pDescription;
 }

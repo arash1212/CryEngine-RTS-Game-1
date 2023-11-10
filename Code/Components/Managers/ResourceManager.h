@@ -25,6 +25,14 @@ struct SResourceRequestParams {
 	int32 m_amountRequested = 0;
 };
 
+struct SDescription {
+	string m_name = "Name Place Holder";
+	string m_description = "Description Place Holder";
+	string m_imagePath = "cancel.png";
+	string m_buildDescription = "Build Description Place Holder";
+	SResourceInfo cost;
+};
+
 class ResourceManagerComponent : public IEntityComponent {
 
 public:

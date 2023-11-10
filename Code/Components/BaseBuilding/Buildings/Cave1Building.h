@@ -13,6 +13,7 @@ class OwnerInfoComponent;
 class ResourceManagerComponent;
 
 struct SResourceInfo;
+struct SDescription;
 
 static string CAVE_BUILDING_1_MODEL_PATH = "Objects/buildings/cave1/cave1.cdf";
 static string CAVE_BUILDING_1_TRUSS_MODEL_PATH = "Objects/buildings/house1/truss/house1_truss.cgf";
@@ -64,5 +65,5 @@ private:
 	void CommandUnitsToAttack();
 
 public:
-	static SResourceInfo GetCost();
+	static SDescription GetDescription();
 };

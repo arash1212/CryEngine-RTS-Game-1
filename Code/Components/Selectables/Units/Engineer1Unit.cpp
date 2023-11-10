@@ -46,6 +46,7 @@
 #include <Components/Managers/UnitTypeManager.h>
 
 #include <Components/Selectables/Health.h>
+#include <Components/Selectables/Visibility.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -137,7 +138,7 @@ void Engineer1UnitComponent::Initialize()
 
 	//CostComponent Initializations
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
-	m_pCostComponent->SetCost(Engineer1UnitComponent::GetCost());
+	m_pCostComponent->SetCost(Engineer1UnitComponent::GetDescription().cost);
 
 	//ResourceCollectorComponent Initialization
 	m_pResourceCollectorComponent = m_pEntity->GetOrCreateComponent<ResourceCollectorComponent>();
@@ -156,6 +157,9 @@ void Engineer1UnitComponent::Initialize()
 	//InfoPanelUIDetailComponent Initialization
 	InfoPanelUIDetailComponent* m_pInfoPanelUIDetailComponent = m_pEntity->GetOrCreateComponent<InfoPanelUIDetailComponent>();
 	m_pInfoPanelUIDetailComponent->SetInfoPanelUIItem(new UIUnitInfoPanelItem(m_pEntity, "engineer_1_icon.png"));
+
+	//VisibilityComponent Initialization
+	m_pVisibilityComponent = m_pEntity->GetOrCreateComponent<VisibilityComponent>();
 }
 
 
@@ -187,13 +191,21 @@ void Engineer1UnitComponent::ProcessEvent(const SEntityEvent& event)
 	}
 }
 
-SResourceInfo Engineer1UnitComponent::GetCost()
+SDescription Engineer1UnitComponent::GetDescription()
 {
 	SResourceInfo cost;
 	cost.m_moneyAmount = 60;
 	cost.m_populationAmount = 1;
 	cost.m_bulletAmount = 0;
 	cost.m_ak47Amount = 0;
-	return cost;
+
+	SDescription m_pDescription;
+	m_pDescription.m_name = "Engineer 1";
+	m_pDescription.m_description = "Engineer 1 Unit.";
+	m_pDescription.m_buildDescription = "Tran Engineer 1 Unit.";
+	m_pDescription.cost = cost;
+	m_pDescription.m_imagePath = "engineer_1_icon.png";
+
+	return m_pDescription;
 }
 

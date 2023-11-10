@@ -45,7 +45,7 @@ void UIFarm1BuildItem::Execute()
 		return;
 	}
 
-	if (!resourceManager->RequsetResources(Farm1BuildingComponent::GetCost())) {
+	if (!resourceManager->RequsetResources(Farm1BuildingComponent::GetDescription().cost)) {
 		return;
 	}
 
@@ -61,10 +61,10 @@ void UIFarm1BuildItem::Execute()
 
 string UIFarm1BuildItem::GetImagePath()
 {
-	return "farm_1_icon.png";
+	return  Farm1BuildingComponent::GetDescription().m_imagePath;
 }
 
 SUIItemDescription UIFarm1BuildItem::GetDescrption()
 {
-	return SUIItemDescription(Farm1BuildingComponent::GetCost(), "Build Farm 1 Building.");
+	return SUIItemDescription(Farm1BuildingComponent::GetDescription().cost, Farm1BuildingComponent::GetDescription().m_description);
 }

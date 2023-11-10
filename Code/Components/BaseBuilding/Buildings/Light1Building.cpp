@@ -79,6 +79,7 @@ void Light1BuildingComponent::Initialize()
 	buildingInfo.m_populationProduces = 20;
 	m_pBuildingComponent->SetBuildingInfo(buildingInfo);
 	m_pBuildingComponent->SetMaxHealth(100.f);
+	m_pBuildingComponent->SetImagePath(Light1BuildingComponent::GetDescription().m_imagePath);
 	//UIItems
 
 	//Update bounding box
@@ -91,20 +92,19 @@ void Light1BuildingComponent::Initialize()
 
 	//CostComponent Initialization
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
-	m_pCostComponent->SetCost(Light1BuildingComponent::GetCost());
+	m_pCostComponent->SetCost(Light1BuildingComponent::GetDescription().cost);
 
 	//LightPosAttachment Initialization
 	m_pLightPosAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("lightPos");
 
 	//PointLightComponent Initialization
 	m_pPointLightComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CPointLightComponent>();
-	m_pPointLightComponent->SetTransformMatrix(Matrix34::Create(Vec3(2), IDENTITY, Vec3(0, 0, 3)));
+	m_pPointLightComponent->SetTransformMatrix(Matrix34::Create(Vec3(2), IDENTITY, Vec3(0, -2, 5)));
 	m_pPointLightComponent->GetColorParameters().m_diffuseMultiplier = 2.f;
 	m_pPointLightComponent->GetColorParameters().m_color = ColorF(1, 1, 1.f);
 	m_pPointLightComponent->GetOptions().m_attenuationBulbSize = 250.f;
 	m_pPointLightComponent->GetShadowParameters().m_castShadowSpec = Cry::DefaultComponents::EMiniumSystemSpec::High;
 	m_pPointLightComponent->Enable(true);
-
 }
 
 
@@ -137,11 +137,19 @@ void Light1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 	}
 }
 
-SResourceInfo Light1BuildingComponent::GetCost()
+SDescription Light1BuildingComponent::GetDescription()
 {
 	SResourceInfo cost;
 	cost.m_moneyAmount = 100;
 	cost.m_populationAmount = 0;
 	cost.m_ironAmount = 300;
-	return cost;
+
+	SDescription m_pDescription;
+	m_pDescription.m_name = "Light 1";
+	m_pDescription.m_description = "Light 1 Building.";
+	m_pDescription.m_buildDescription = "Build Light 1 Building.";
+	m_pDescription.cost = cost;
+	m_pDescription.m_imagePath = "light_1_icon.png";
+
+	return m_pDescription;
 }

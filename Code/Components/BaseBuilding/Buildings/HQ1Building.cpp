@@ -79,6 +79,7 @@ void HQ1BuildingComponent::Initialize()
 	buildingInfo.m_populationProduces = 20;
 	m_pBuildingComponent->SetBuildingInfo(buildingInfo);
 	m_pBuildingComponent->SetMaxHealth(1000.f);
+	m_pBuildingComponent->SetImagePath(HQ1BuildingComponent::GetDescription().m_imagePath);
 	//UIItems
 	m_pBuildingComponent->AddUIItem(new UITrainEngineer1Item(m_pEntity));
 
@@ -92,7 +93,7 @@ void HQ1BuildingComponent::Initialize()
 
 	//CostComponent Initializations
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
-	m_pCostComponent->SetCost(HQ1BuildingComponent::GetCost());
+	m_pCostComponent->SetCost(HQ1BuildingComponent::GetDescription().cost);
 }
 
 
@@ -125,12 +126,20 @@ void HQ1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 	}
 }
 
-SResourceInfo HQ1BuildingComponent::GetCost()
+SDescription HQ1BuildingComponent::GetDescription()
 {
 	SResourceInfo cost;
 	cost.m_moneyAmount = 2000;
 	cost.m_oilAmount = 1000;
 	cost.m_populationAmount = 30;
 	cost.m_woodAmount = 600;
-	return cost;
+
+	SDescription m_pDescription;
+	m_pDescription.m_name = "HQ 1";
+	m_pDescription.m_description = "HQ 1 Building.";
+	m_pDescription.m_buildDescription = "Build HQ 1 Building.";
+	m_pDescription.cost = cost;
+	m_pDescription.m_imagePath = "hq_1_Icon.png";
+
+	return m_pDescription;
 }

@@ -85,6 +85,7 @@ void Bakery1BuildingComponent::Initialize()
 	SBuildingInfo buildingInfo;
 	buildingInfo.m_populationProduces = 0;
 	m_pBuildingComponent->SetBuildingInfo(buildingInfo);
+	m_pBuildingComponent->SetImagePath(Bakery1BuildingComponent::GetDescription().m_imagePath);
 	//UIItems
 	m_pBuildingComponent->SetMaxHealth(500.f);
 
@@ -98,7 +99,7 @@ void Bakery1BuildingComponent::Initialize()
 
 	//CostComponent Initializations
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
-	m_pCostComponent->SetCost(Bakery1BuildingComponent::GetCost());
+	m_pCostComponent->SetCost(Bakery1BuildingComponent::GetDescription().cost);
 
 	//WorkplaceComponent  Initializations
 	m_pWorkplaceComponent = m_pEntity->GetOrCreateComponent<WorkplaceComponent>();
@@ -200,14 +201,21 @@ void Bakery1BuildingComponent::ResetWorkersJob()
 {
 }
 
-SResourceInfo Bakery1BuildingComponent::GetCost()
+SDescription Bakery1BuildingComponent::GetDescription()
 {
 	SResourceInfo cost;
 	cost.m_moneyAmount = 300;
 	cost.m_oilAmount = 300;
-	//cost.m_populationAmount = 2;
 	cost.m_woodAmount = 700;
 	cost.m_ironAmount = 500;
 	cost.m_bulletAmount = 0;
-	return cost;
+
+	SDescription m_pDescription;
+	m_pDescription.m_name = "Bakery 1";
+	m_pDescription.m_description = "Bakery 1 Building.";
+	m_pDescription.m_buildDescription = "Build Bakery 1 Building.";
+	m_pDescription.cost = cost;
+	m_pDescription.m_imagePath = "bakery_1_icon.png";
+
+	return m_pDescription;
 }

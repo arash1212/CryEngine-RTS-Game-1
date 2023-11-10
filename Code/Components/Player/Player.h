@@ -15,6 +15,7 @@ class UIHealthbarsComponent;
 class UIInfoPanelComponent;
 class UIDescriptionsPanelComponent;
 class IBaseUIItem;
+class VisibilityManagerComponent;
 
 enum class EUnitType;
 
@@ -61,6 +62,7 @@ private:
 	UIHealthbarsComponent* m_pHealthbarsComponent = nullptr;
 	UIInfoPanelComponent* m_pUIInfoPanelComponent = nullptr;
 	UIDescriptionsPanelComponent* m_pUIDescriptionsPanelComponent = nullptr;
+	VisibilityManagerComponent* m_pVisibilityManagerComponent = nullptr;
 
 	//UI
 	UIElementEventListener* m_pUIElementEventListener = nullptr;
@@ -94,6 +96,7 @@ private:
 	//
 	int32 m_lastSelectablesCheckSize = 0;
 	int32 m_lastBuildingActionsCheckSize = 0;
+	f32 m_lastMainIconHealthAmount = 0;
 private:
 	void InitInputs();
 	void Move(f32 DeltaTime);
@@ -134,6 +137,8 @@ private:
 
 	void UpdateSelectables();
 	int32 CountSelectedUnitType(EUnitType type);
+
+	void UpdateInfoPanel(IEntity* entity);
 
 public:
 	void ExecuteActionbarItem(int32 index);

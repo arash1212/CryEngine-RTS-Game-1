@@ -85,6 +85,7 @@ void BulletFactory1BuildingComponent::Initialize()
 	SBuildingInfo buildingInfo;
 	buildingInfo.m_populationProduces = 0;
 	m_pBuildingComponent->SetBuildingInfo(buildingInfo);
+	m_pBuildingComponent->SetImagePath(BulletFactory1BuildingComponent::GetDescription().m_imagePath);
 	//m_pBuildingComponent->SetMaxHealth(700.f);
 	//UIItems
 
@@ -98,7 +99,7 @@ void BulletFactory1BuildingComponent::Initialize()
 
 	//CostComponent Initializations
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
-	m_pCostComponent->SetCost(BulletFactory1BuildingComponent::GetCost());
+	m_pCostComponent->SetCost(BulletFactory1BuildingComponent::GetDescription().cost);
 
 	//WorkplaceComponent  Initializations
 	m_pWorkplaceComponent = m_pEntity->GetOrCreateComponent<WorkplaceComponent>();
@@ -206,13 +207,20 @@ void BulletFactory1BuildingComponent::UpdateAssignedWorkers()
 	}
 }
 
-SResourceInfo BulletFactory1BuildingComponent::GetCost()
+SDescription BulletFactory1BuildingComponent::GetDescription()
 {
 	SResourceInfo cost;
 	cost.m_moneyAmount = 400;
 	cost.m_oilAmount = 400;
-	//cost.m_populationAmount = 2;
 	cost.m_woodAmount = 900;
 	cost.m_ironAmount = 800;
-	return cost;
+
+	SDescription m_pDescription;
+	m_pDescription.m_name = "Bullet Factory 1";
+	m_pDescription.m_description = "Bullet Factory 1 Building.";
+	m_pDescription.m_buildDescription = "Build Bullet Factory 1 Building.";
+	m_pDescription.cost = cost;
+	m_pDescription.m_imagePath = "bulletfactory_1_icon.png";
+
+	return m_pDescription;
 }

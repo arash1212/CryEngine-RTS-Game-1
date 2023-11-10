@@ -14,9 +14,12 @@ class UnitAnimationComponent;
 class CostComponent;
 class UnitTypeManagerComponent;
 class HealthComponent;
+class VisibilityComponent;
+
 
 struct SOwnerInfo;
 struct SResourceInfo;
+struct SDescription;
 
 class Zombie1UnitComponent final : public IEntityComponent
 {
@@ -51,6 +54,7 @@ private:
 	CostComponent* m_pCostComponent = nullptr;
 	UnitTypeManagerComponent* m_pUnitTypeManagerComponent = nullptr;
 	HealthComponent* m_pHealthComponent = nullptr;
+	VisibilityComponent* m_pVisibilityComponent = nullptr;
 
 	//OwnerShip
 	OwnerInfoComponent* m_pOwnerInfoComponent = nullptr;
@@ -58,5 +62,5 @@ private:
 private:
 
 public:
-	static SResourceInfo GetCost();
+	static SDescription GetDescription();
 };

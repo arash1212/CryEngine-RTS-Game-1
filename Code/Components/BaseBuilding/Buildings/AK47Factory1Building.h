@@ -11,6 +11,7 @@ class CostComponent;
 class WorkplaceComponent;
 
 struct SResourceInfo;
+struct SDescription;
 
 static string AK47_FACTORY_BUILDING_1_MODEL_PATH = "Objects/buildings/ak47factory1/ak47factory1.cdf";
 static string AK47_FACTORY_1_TRUSS_MODEL_PATH = "Objects/buildings/gunpowderfactory1/truss/gunpowderfactory1_truss.cgf";
@@ -58,6 +59,6 @@ private:
 	void UpdateAssignedWorkers();
 
 public:
-	static SResourceInfo GetCost();
+	static SDescription GetDescription();
 };
 

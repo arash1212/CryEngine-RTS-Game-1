@@ -85,6 +85,7 @@ void Alchemy1BuildingComponent::Initialize()
 	SBuildingInfo buildingInfo;
 	buildingInfo.m_populationProduces = 0;
 	m_pBuildingComponent->SetBuildingInfo(buildingInfo);
+	m_pBuildingComponent->SetImagePath(Alchemy1BuildingComponent::GetDescription().m_imagePath);
 	//m_pBuildingComponent->SetMaxHealth(700.f);
 	//UIItems
 
@@ -98,7 +99,7 @@ void Alchemy1BuildingComponent::Initialize()
 
 	//CostComponent Initializations
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
-	m_pCostComponent->SetCost(Alchemy1BuildingComponent::GetCost());
+	m_pCostComponent->SetCost(Alchemy1BuildingComponent::GetDescription().cost);
 
 	//WorkplaceComponent  Initializations
 	m_pWorkplaceComponent = m_pEntity->GetOrCreateComponent<WorkplaceComponent>();
@@ -189,13 +190,20 @@ void Alchemy1BuildingComponent::UpdateAssignedWorkers()
 	}
 }
 
-SResourceInfo Alchemy1BuildingComponent::GetCost()
+SDescription Alchemy1BuildingComponent::GetDescription()
 {
 	SResourceInfo cost;
 	cost.m_moneyAmount = 450;
 	cost.m_oilAmount = 500;
-	//cost.m_populationAmount = 2;
 	cost.m_woodAmount = 400;
 	cost.m_ironAmount = 800;
-	return cost;
+
+	SDescription m_pDescription;
+	m_pDescription.m_name = "Alchemy 1";
+	m_pDescription.m_description = "Alchemy 1 Building.";
+	m_pDescription.m_buildDescription = "Build Alchemy 1 Building.";
+	m_pDescription.cost = cost;
+	m_pDescription.m_imagePath = "alchemy_1_icon.png";
+
+	return m_pDescription;
 }

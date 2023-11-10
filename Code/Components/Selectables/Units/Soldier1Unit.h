@@ -16,9 +16,11 @@ class CostComponent;
 class UnitTypeManagerComponent;
 class HealthComponent;
 class InfoPanelUIDetailComponent;
+class VisibilityComponent;
 
 struct SOwnerInfo;
 struct SResourceInfo;
+struct SDescription;
 
 class Soldier1UnitComponent final : public IEntityComponent
 {
@@ -54,10 +56,11 @@ private:
 	UnitTypeManagerComponent* m_pUnitTypeManagerComponent = nullptr;
 	HealthComponent* m_pHealthComponent = nullptr;
 	InfoPanelUIDetailComponent* m_pInfoPanelUIDetailComponent = nullptr;
+	VisibilityComponent* m_pVisibilityComponent = nullptr;
 
 	//OwnerShip
 	OwnerInfoComponent* m_pOwnerInfoComponent = nullptr;
 
 public:
-	static SResourceInfo GetCost();
+	static SDescription GetDescription();
 };

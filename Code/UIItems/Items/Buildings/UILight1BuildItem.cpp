@@ -45,7 +45,7 @@ void UILight1BuildItem::Execute()
 		return;
 	}
 
-	if (!resourceManager->RequsetResources(Light1BuildingComponent::GetCost())) {
+	if (!resourceManager->RequsetResources(Light1BuildingComponent::GetDescription().cost)) {
 		return;
 	}
 
@@ -61,10 +61,10 @@ void UILight1BuildItem::Execute()
 
 string UILight1BuildItem::GetImagePath()
 {
-	return "light_1_icon.png";
+	return Light1BuildingComponent::GetDescription().m_imagePath;
 }
 
 SUIItemDescription UILight1BuildItem::GetDescrption()
 {
-	return SUIItemDescription(Light1BuildingComponent::GetCost(), "Build Light 1 Building.");
+	return SUIItemDescription(Light1BuildingComponent::GetDescription().cost, Light1BuildingComponent::GetDescription().m_description);
 }

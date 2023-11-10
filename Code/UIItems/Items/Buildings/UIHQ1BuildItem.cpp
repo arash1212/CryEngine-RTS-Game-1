@@ -45,7 +45,7 @@ void UIHQ1BuildItem::Execute()
 		return;
 	}
 
-	if (!resourceManager->RequsetResources(HQ1BuildingComponent::GetCost())) {
+	if (!resourceManager->RequsetResources(HQ1BuildingComponent::GetDescription().cost)) {
 		return;
 	}
 
@@ -61,10 +61,10 @@ void UIHQ1BuildItem::Execute()
 
 string UIHQ1BuildItem::GetImagePath()
 {
-	return "hq_1_Icon.png";
+	return HQ1BuildingComponent::GetDescription().m_imagePath;
 }
 
 SUIItemDescription UIHQ1BuildItem::GetDescrption()
 {
-	return SUIItemDescription(HQ1BuildingComponent::GetCost(), "Build HQ 1 Building.");
+	return SUIItemDescription(HQ1BuildingComponent::GetDescription().cost, HQ1BuildingComponent::GetDescription().m_description);
 }

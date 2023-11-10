@@ -10,6 +10,7 @@ class SelectableComponent;
 class CostComponent;
 
 struct SResourceInfo;
+struct SDescription;
 
 static string BARRACKS_BUILDING_1_MODEL_PATH = "Objects/buildings/barracks1/barracks1.cdf";
 static string BARRACKS_BUILDING_1_TRUSS_MODEL_PATH = "Objects/buildings/barracks1/truss/barracks1_truss.cgf";
@@ -48,5 +49,5 @@ private:
 private:
 
 public:
-	static SResourceInfo GetCost();
+	static SDescription GetDescription();
 };

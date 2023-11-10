@@ -84,6 +84,7 @@ void Farm1BuildingComponent::Initialize()
 	buildingInfo.m_populationProduces = 0;
 	m_pBuildingComponent->SetBuildingInfo(buildingInfo);
 	m_pBuildingComponent->SetMaxHealth(500.f);
+	m_pBuildingComponent->SetImagePath(Farm1BuildingComponent::GetDescription().m_imagePath);
 	//UIItems
 
 	//Update bounding box
@@ -96,7 +97,7 @@ void Farm1BuildingComponent::Initialize()
 
 	//CostComponent Initializations
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
-	m_pCostComponent->SetCost(Barracks1BuildingComponent::GetCost());
+	m_pCostComponent->SetCost(Barracks1BuildingComponent::GetDescription().cost);
 
 	//Wheat positions
 	IAttachment* m_pWheat1Attachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("wheatPos1");
@@ -322,13 +323,20 @@ void Farm1BuildingComponent::UpdateAssignedWorkers()
 	}
 }
 
-SResourceInfo Farm1BuildingComponent::GetCost()
+SDescription Farm1BuildingComponent::GetDescription()
 {
 	SResourceInfo cost;
 	cost.m_moneyAmount = 250;
 	cost.m_oilAmount = 100;
-	//cost.m_populationAmount = 5;
 	cost.m_woodAmount = 540;
 	cost.m_ironAmount = 300;
-	return cost;
+
+	SDescription m_pDescription;
+	m_pDescription.m_name = "Farm 1";
+	m_pDescription.m_description = "Farm 1 Building.";
+	m_pDescription.m_description = "Biuld Farm 1 Building.";
+	m_pDescription.cost = cost;
+	m_pDescription.m_imagePath = "farm_1_icon.png";
+
+	return m_pDescription;
 }

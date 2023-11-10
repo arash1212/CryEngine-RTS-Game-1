@@ -79,7 +79,7 @@ void TrainEngineer1Action::Cancel()
 		return;
 	}
 
-	resouceManager->RefundResources(Engineer1UnitComponent::GetCost());
+	resouceManager->RefundResources(Engineer1UnitComponent::GetDescription().cost);
 	bIsDone = true;
 }
 
@@ -95,6 +95,6 @@ f32 TrainEngineer1Action::GetProgressAmount()
 
 IBaseInfoPanelUIItem* TrainEngineer1Action::GetInfoPanelItem()
 {
-	return new UIBuildingActionInfoPanelItem(m_pEntity, "engineer_1_icon.png", this);
+	return new UIBuildingActionInfoPanelItem(m_pEntity, Engineer1UnitComponent::GetDescription().m_imagePath, this);
 }
 

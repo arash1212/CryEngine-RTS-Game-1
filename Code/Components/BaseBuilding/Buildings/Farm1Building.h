@@ -11,6 +11,7 @@ class CostComponent;
 class WorkplaceComponent;
 
 struct SResourceInfo;
+struct SDescription;
 
 static string FARM_BUILDING_1_MODEL_PATH = "Objects/buildings/farm1/farm1.cdf";
 static string WHEAT_1_FARM_1_MODEL_PATH = "Objects/buildings/farm1/wheat/wheat1.cgf";
@@ -66,5 +67,5 @@ private:
 	void UpdateAssignedWorkers();
 
 public:
-	static SResourceInfo GetCost();
+	static SDescription GetDescription();
 };

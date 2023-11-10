@@ -29,6 +29,7 @@
 #include <Cry3DEngine/IMaterial.h>
 
 #include <Components/Selectables/Health.h>
+#include <Components/Selectables/Visibility.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -178,6 +179,9 @@ void BuildingComponent::Place(Vec3 at)
 
 	//Build Action
 	m_pActionManagerComponent->AddAction(new BuildingBuildAction(m_pEntity));
+
+	//VisibilityComponent Initialization
+	m_pVisibilityComponent = m_pEntity->GetOrCreateComponent<VisibilityComponent>();
 }
 
 void BuildingComponent::Build()
@@ -342,6 +346,16 @@ f32 BuildingComponent::GetCurrentBuildAmount()
 f32 BuildingComponent::GetMaxBuildAmount()
 {
 	return m_pBuildingInfo.m_maxBuildAmount;
+}
+
+void BuildingComponent::SetImagePath(string imagePath)
+{
+	this->m_imagePath = imagePath;
+}
+
+string BuildingComponent::GetImagePath()
+{
+	return this->m_imagePath;
 }
 
 void BuildingComponent::RotateSelectionDecal()

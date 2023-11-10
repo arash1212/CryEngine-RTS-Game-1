@@ -33,6 +33,7 @@
 #include <Components/Selectables/Health.h>
 
 #include <Utils/MathUtils.h>
+#include <Components/Selectables/Visibility.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -109,7 +110,7 @@ void Soldier1UnitComponent::Initialize()
 
 	//CostComponent Initializations
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
-	m_pCostComponent->SetCost(Soldier1UnitComponent::GetCost());
+	m_pCostComponent->SetCost(Soldier1UnitComponent::GetDescription().cost);
 
 	//UnitTypeManagerComponent
 	m_pUnitTypeManagerComponent = m_pEntity->GetOrCreateComponent<UnitTypeManagerComponent>();
@@ -122,6 +123,9 @@ void Soldier1UnitComponent::Initialize()
 	//InfoPanelUIDetailComponent Initialization
 	InfoPanelUIDetailComponent* m_pInfoPanelUIDetailComponent = m_pEntity->GetOrCreateComponent<InfoPanelUIDetailComponent>();
 	m_pInfoPanelUIDetailComponent->SetInfoPanelUIItem(new UIUnitInfoPanelItem(m_pEntity, "soldier_1_icon.png"));
+
+	//VisibilityComponent Initialization
+	m_pVisibilityComponent = m_pEntity->GetOrCreateComponent<VisibilityComponent>();
 }
 
 
@@ -153,12 +157,20 @@ void Soldier1UnitComponent::ProcessEvent(const SEntityEvent& event)
 	}
 }
 
-SResourceInfo Soldier1UnitComponent::GetCost()
+SDescription Soldier1UnitComponent::GetDescription()
 {
 	SResourceInfo cost;
 	cost.m_moneyAmount = 120;
 	cost.m_populationAmount = 1;
 	cost.m_bulletAmount = 50;
 	cost.m_ak47Amount = 1;
-	return cost;
+
+	SDescription m_pDescription;
+	m_pDescription.m_name = "Soldier 1";
+	m_pDescription.m_description = "Soldier 1 Unit.";
+	m_pDescription.m_buildDescription = "Train Solfier 1 Unit.";
+	m_pDescription.cost = cost;
+	m_pDescription.m_imagePath = "soldier_1_icon.png";
+
+	return m_pDescription;
 }

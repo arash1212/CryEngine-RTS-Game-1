@@ -13,6 +13,7 @@
 
 #include <Components/Selectables/Selectable.h>
 #include <Components/Selectables/Engineer.h>
+#include <Components/Selectables/Health.h>
 
 #include <Components/Selectables/Units/Engineer1Unit.h>
 #include <Components/Selectables/Units/Soldier1Unit.h>
@@ -44,6 +45,8 @@
 #include <Components/Selectables/InfoPanelUIDetail.h>
 #include <UIItems/InfoPanel/IBaseInfoPanelUIItem.h>
 #include <UIItems/InfoPanel/Items/UIBuildingActionInfoPanelItem.h>
+
+#include <Components/Managers/VisibilityManager.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -130,6 +133,9 @@ void PlayerComponent::Initialize()
 	//UIDescriptionsPanelComponent initialization
 	m_pUIDescriptionsPanelComponent = m_pEntity->GetOrCreateComponent<UIDescriptionsPanelComponent>();
 	m_pUIDescriptionsPanelComponent->SetEventListener(m_pUIElementEventListener);
+
+	//VisibilityManagerComponent
+	m_pVisibilityManagerComponent = m_pEntity->GetOrCreateComponent<VisibilityManagerComponent>();
 }
 
 Cry::Entity::EventFlags PlayerComponent::GetEventMask() const
@@ -417,6 +423,7 @@ void PlayerComponent::RotateRight(int activationMode, float value)
 
 void PlayerComponent::DeselectSelectables()
 {
+	m_lastMainIconHealthAmount = -1;
 	m_lastBuildingActionsCheckSize = -1;
 	m_lastSelectablesCheckSize = -1;
 	m_pUIInfoPanelComponent->Clear();
@@ -445,7 +452,6 @@ void PlayerComponent::SelectSelectables()
 		m_pUIInfoPanelComponent->Clear();
 	}
 
-	DynArray<EUnitType> types;
 	for (int32 i = 0; i < m_selectedUnits.size(); i++) {
 		IEntity* entity = m_selectedUnits[i];
 		if (!entity) {
@@ -462,8 +468,7 @@ void PlayerComponent::SelectSelectables()
 
 
 		//InfoPanel & Counts**********************************************************************************
-		//Types*****************************************************
-		//Units******************************************
+		DynArray<EUnitType> types;
 		UnitTypeManagerComponent* pUnitTypeManagerComponent = entity->GetComponent<UnitTypeManagerComponent>();
 		if (!pUnitTypeManagerComponent) {
 			continue;
@@ -739,7 +744,7 @@ void PlayerComponent::CheckSelectablesMouseOver()
 		}
 
 		//Turn highligh color back to black on entity if mouse is not over anyomore
-		else if (m_pEntityUnderCursor && !m_pEntityUnderCursor->IsGarbage()) {
+		else if (m_pEntityUnderCursor) {
 			SelectableComponent* selectable = m_pEntityUnderCursor->GetComponent<SelectableComponent>();
 			selectable->HighLightBlack();
 			m_pEntityUnderCursor = nullptr;
@@ -888,11 +893,13 @@ void PlayerComponent::UpdateSelectables()
 		if (!pBuildingComponent) {
 			return;
 		}
+
 		ActionManagerComponent* pActionManagerComponet = entity->GetComponent<ActionManagerComponent>();
 		std::deque<IBaseAction*> queue = pActionManagerComponet->GetActionsQueue();
 		//TODO : agar ziad anjam behse error : pure function call zaman clear mide 
 		if (m_lastBuildingActionsCheckSize != pActionManagerComponet->GetActiveActionsCount()) {
 			m_pUIInfoPanelComponent->Clear();
+			m_lastMainIconHealthAmount = -1;
 			for (IBaseAction* action : queue) {
 				if (action->IsDone()) {
 					continue;
@@ -900,6 +907,14 @@ void PlayerComponent::UpdateSelectables()
 				m_pUIInfoPanelComponent->AddItem(action->GetInfoPanelItem());
 			}
 			m_lastBuildingActionsCheckSize = pActionManagerComponet->GetActiveActionsCount();
+		}
+
+		HealthComponent* pHealthComponent = entity->GetComponent<HealthComponent>();
+		if (m_lastMainIconHealthAmount!= pHealthComponent->GetCurrentHealth()) {
+			m_lastMainIconHealthAmount = pHealthComponent->GetCurrentHealth();
+			string text = "";
+			text.AppendFormat("%f / %f", crymath::floor(pHealthComponent->GetCurrentHealth()), crymath::floor(pHealthComponent->GetMaxHealth()));
+			m_pUIInfoPanelComponent->SetMainIcon(pBuildingComponent->GetImagePath(), text);
 		}
 	}
 }
@@ -920,6 +935,11 @@ int32 PlayerComponent::CountSelectedUnitType(EUnitType type)
 		}
 	}
 	return count;
+}
+
+void PlayerComponent::UpdateInfoPanel(IEntity* entity)
+{
+
 }
 
 void PlayerComponent::DeselectUnitsOfType(EUnitType type)

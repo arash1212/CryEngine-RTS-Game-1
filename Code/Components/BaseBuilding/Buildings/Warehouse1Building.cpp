@@ -93,6 +93,7 @@ void Warehouse1BuildingComponent::Initialize()
 	buildingInfo.m_populationProduces = 0;
 	m_pBuildingComponent->SetBuildingInfo(buildingInfo);
 	m_pBuildingComponent->SetMaxHealth(800.f);
+	m_pBuildingComponent->SetImagePath(Warehouse1BuildingComponent::GetDescription().m_imagePath);
 	//UIItems
 	m_pBuildingComponent->AddUIItem(new UIBuyOilItem(m_pEntity));
 	m_pBuildingComponent->AddUIItem(new UISellOilItem(m_pEntity));
@@ -122,7 +123,7 @@ void Warehouse1BuildingComponent::Initialize()
 
 	//CostComponent Initializations
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
-	m_pCostComponent->SetCost(Warehouse1BuildingComponent::GetCost());
+	m_pCostComponent->SetCost(Warehouse1BuildingComponent::GetDescription().cost);
 }
 
 
@@ -155,12 +156,20 @@ void Warehouse1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 	}
 }
 
-SResourceInfo Warehouse1BuildingComponent::GetCost()
+SDescription Warehouse1BuildingComponent::GetDescription()
 {
 	SResourceInfo cost;
 	cost.m_moneyAmount = 100;
 	cost.m_populationAmount = 0;
 	cost.m_ironAmount = 400;
 	cost.m_woodAmount = 400;
-	return cost;
+
+	SDescription m_pDescription;
+	m_pDescription.m_name = "Warehouse 1";
+	m_pDescription.m_description = "Warehouse 1 Building.";
+	m_pDescription.m_buildDescription = "Build Warehouse 1 Building.";
+	m_pDescription.cost = cost;
+	m_pDescription.m_imagePath = "warehouse_1_Icon.png";
+
+	return m_pDescription;
 }

@@ -45,7 +45,7 @@ void UIHouse1BuildItem::Execute()
 		return;
 	}
 
-	if (!resourceManager->RequsetResources(House1BuildingComponent::GetCost())) {
+	if (!resourceManager->RequsetResources(House1BuildingComponent::GetDescription().cost)) {
 		return;
 	}
 
@@ -61,10 +61,10 @@ void UIHouse1BuildItem::Execute()
 
 string UIHouse1BuildItem::GetImagePath()
 {
-	return "house_1_icon.png";
+	return House1BuildingComponent::GetDescription().m_imagePath;
 }
 
 SUIItemDescription UIHouse1BuildItem::GetDescrption()
 {
-	return SUIItemDescription(House1BuildingComponent::GetCost(), "Build House 1 Building.");
+	return SUIItemDescription(House1BuildingComponent::GetDescription().cost, House1BuildingComponent::GetDescription().m_description);
 }

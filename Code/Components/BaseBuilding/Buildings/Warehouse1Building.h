@@ -11,6 +11,7 @@ class CostComponent;
 class ResourceStorageComponent;
 
 struct SResourceInfo;
+struct SDescription;
 
 static string WAREHOUSE_BUILDING_1_MODEL_PATH = "Objects/buildings/warehouse1/warehouse1.cdf";
 static string WAREHOUSE_BUILDING_1_TRUSS_MODEL_PATH = "Objects/buildings/warehouse1/truss/warehouse1_truss.cgf";
@@ -51,5 +52,5 @@ private:
 private:
 
 public:
-	static SResourceInfo GetCost();
+	static SDescription GetDescription();
 };

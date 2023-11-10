@@ -44,7 +44,7 @@ void UIBakery1BuildItem::Execute()
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "UIBakery1BuildItem : (Execute) resourceManager is null !");
 		return;
 	}
-	if (!resourceManager->RequsetResources(Bakery1BuildingComponent::GetCost())) {
+	if (!resourceManager->RequsetResources(Bakery1BuildingComponent::GetDescription().cost)) {
 		return;
 	}
 
@@ -60,10 +60,10 @@ void UIBakery1BuildItem::Execute()
 
 string UIBakery1BuildItem::GetImagePath()
 {
-	return "bakery_1_icon.png";
+	return Bakery1BuildingComponent::GetDescription().m_imagePath;
 }
 
 SUIItemDescription UIBakery1BuildItem::GetDescrption()
 {
-	return SUIItemDescription(Bakery1BuildingComponent::GetCost(), "Build Bakery 1 Building.");
+	return SUIItemDescription(Bakery1BuildingComponent::GetDescription().cost, Bakery1BuildingComponent::GetDescription().m_description);
 }

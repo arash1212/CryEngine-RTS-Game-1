@@ -80,7 +80,7 @@ void TrainSoldier1Action::Cancel()
 		return;
 	}
 
-	resouceManager->RefundResources(Soldier1UnitComponent::GetCost());
+	resouceManager->RefundResources(Soldier1UnitComponent::GetDescription().cost);
 	bIsDone = true;
 }
 
@@ -96,5 +96,5 @@ f32 TrainSoldier1Action::GetProgressAmount()
 
 IBaseInfoPanelUIItem* TrainSoldier1Action::GetInfoPanelItem()
 {
-	return new UIBuildingActionInfoPanelItem(m_pEntity, "soldier_1_icon.png", this);
+	return new UIBuildingActionInfoPanelItem(m_pEntity, Soldier1UnitComponent::GetDescription().m_imagePath, this);
 }

@@ -45,7 +45,7 @@ void UIGunPowderFactory1BuildItem::Execute()
 		return;
 	}
 
-	if (!resourceManager->RequsetResources(GunPowderFactory1BuildingComponent::GetCost())) {
+	if (!resourceManager->RequsetResources(GunPowderFactory1BuildingComponent::GetDescription().cost)) {
 		return;
 	}
 
@@ -61,10 +61,10 @@ void UIGunPowderFactory1BuildItem::Execute()
 
 string UIGunPowderFactory1BuildItem::GetImagePath()
 {
-	return "gun_powder_factory_1_icon.png";
+	return GunPowderFactory1BuildingComponent::GetDescription().m_imagePath;
 }
 
 SUIItemDescription UIGunPowderFactory1BuildItem::GetDescrption()
 {
-	return SUIItemDescription(GunPowderFactory1BuildingComponent::GetCost(), "Build GunPowder 1 Building.");
+	return SUIItemDescription(GunPowderFactory1BuildingComponent::GetDescription().cost, GunPowderFactory1BuildingComponent::GetDescription().m_description);
 }

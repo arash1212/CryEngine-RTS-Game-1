@@ -90,6 +90,7 @@ void Cave1BuildingComponent::Initialize()
 	m_pBuildingComponent = m_pEntity->GetOrCreateComponent<BuildingComponent>();
 	m_pBuildingComponent->SetPathToTrussMesh(CAVE_BUILDING_1_TRUSS_MODEL_PATH);
 	m_pBuildingComponent->SetIsHouse(false);
+	m_pBuildingComponent->SetImagePath(Cave1BuildingComponent::GetDescription().m_imagePath);
 
 	SBuildingInfo buildingInfo;
 	buildingInfo.m_populationProduces = 10;
@@ -106,7 +107,7 @@ void Cave1BuildingComponent::Initialize()
 
 	//CostComponent Initializations
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
-	m_pCostComponent->SetCost(Cave1BuildingComponent::GetCost());
+	m_pCostComponent->SetCost(Cave1BuildingComponent::GetDescription().cost);
 
 	//ResourceManagerComponent initialization
 	m_pResourceManagerComponent = m_pEntity->GetOrCreateComponent<ResourceManagerComponent>();
@@ -204,13 +205,20 @@ void Cave1BuildingComponent::CommandUnitsToAttack()
 	}
 }
 
-
-SResourceInfo Cave1BuildingComponent::GetCost()
+SDescription Cave1BuildingComponent::GetDescription()
 {
 	SResourceInfo cost;
 	cost.m_moneyAmount = 80;
 	cost.m_oilAmount = 30;
 	cost.m_populationAmount = 0;
 	cost.m_woodAmount = 50;
-	return cost;
+
+	SDescription m_pDescription;
+	m_pDescription.m_name = "Cave 1";
+	m_pDescription.m_description = "Cave 1 Building.";
+	m_pDescription.m_buildDescription = "Build Cave 1 Building.";
+	m_pDescription.cost = cost;
+	m_pDescription.m_imagePath = "cave_1_icon.png";
+
+	return m_pDescription;
 }

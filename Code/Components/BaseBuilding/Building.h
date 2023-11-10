@@ -11,6 +11,7 @@ class SelectableComponent;
 class IBaseUIItem;
 class OwnerInfoComponent;
 class HealthComponent;
+class VisibilityComponent;
 
 struct SBuildingInfo {
 public:
@@ -51,6 +52,7 @@ private:
 	SelectableComponent* m_pSelectableComponent = nullptr;
 	OwnerInfoComponent* m_pOwnerInfoComponent = nullptr;
 	HealthComponent* m_pHealthComponent = nullptr;
+	VisibilityComponent* m_pVisibilityComponent = nullptr;
 
 	SBuildingInfo m_pBuildingInfo;
 
@@ -72,6 +74,8 @@ private:
 	DynArray< IBaseUIItem*> m_pAllUIItems;
 
 	f32 m_maxHealth = 100.f;
+
+	string m_imagePath = "cancel.png";
 
 private:
 	void UpdateMaterial();
@@ -104,4 +108,7 @@ public:
 
 	f32 GetCurrentBuildAmount();
 	f32 GetMaxBuildAmount();
+
+	void SetImagePath(string imagePath);
+	string GetImagePath();
 };

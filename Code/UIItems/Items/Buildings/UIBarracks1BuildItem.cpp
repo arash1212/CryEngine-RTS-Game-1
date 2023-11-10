@@ -44,7 +44,7 @@ void UIBarracks1BuildItem::Execute()
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "UIBarracks1BuildItem : (Execute) resourceManager is null !");
 		return;
 	}
-	if (!resourceManager->RequsetResources(Barracks1BuildingComponent::GetCost())) {
+	if (!resourceManager->RequsetResources(Barracks1BuildingComponent::GetDescription().cost)) {
 		return;
 	}
 
@@ -60,10 +60,10 @@ void UIBarracks1BuildItem::Execute()
 
 string UIBarracks1BuildItem::GetImagePath()
 {
-	return "barracks_1_icon.png";
+	return Barracks1BuildingComponent::GetDescription().m_imagePath;
 }
 
 SUIItemDescription UIBarracks1BuildItem::GetDescrption()
 {
-	return SUIItemDescription(Barracks1BuildingComponent::GetCost(), "Build Barraks 1 Building.");
+	return SUIItemDescription(Barracks1BuildingComponent::GetDescription().cost, Barracks1BuildingComponent::GetDescription().m_description);
 }

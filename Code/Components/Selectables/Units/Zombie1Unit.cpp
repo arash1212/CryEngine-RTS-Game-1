@@ -28,6 +28,7 @@
 #include <Components/Managers/UnitTypeManager.h>
 
 #include <Components/Selectables/Health.h>
+#include <Components/Selectables/Visibility.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -101,7 +102,7 @@ void Zombie1UnitComponent::Initialize()
 
 	/////////CostComponent Initializations
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
-	m_pCostComponent->SetCost(Zombie1UnitComponent::GetCost());
+	m_pCostComponent->SetCost(Zombie1UnitComponent::GetDescription().cost);
 
 	//UnitTypeManagerComponent
 	m_pUnitTypeManagerComponent = m_pEntity->GetOrCreateComponent<UnitTypeManagerComponent>();
@@ -110,6 +111,9 @@ void Zombie1UnitComponent::Initialize()
 	//HealthComponent Initialization
 	m_pHealthComponent = m_pEntity->GetOrCreateComponent<HealthComponent>();
 	m_pHealthComponent->SetMaxHealth(100);
+
+	//VisibilityComponent Initialization
+	m_pVisibilityComponent = m_pEntity->GetOrCreateComponent<VisibilityComponent>();
 }
 
 
@@ -141,11 +145,19 @@ void Zombie1UnitComponent::ProcessEvent(const SEntityEvent& event)
 	}
 }
 
-SResourceInfo Zombie1UnitComponent::GetCost()
+SDescription Zombie1UnitComponent::GetDescription()
 {
 	SResourceInfo cost;
 	cost.m_moneyAmount = 5;
 	cost.m_populationAmount = 0;
-	return cost;
+
+	SDescription m_pDescription;
+	m_pDescription.m_name = "Zombie 1";
+	m_pDescription.m_description = "Zombie 1 Unit.";
+	m_pDescription.m_buildDescription = "Train Zombie 1 Unit.";
+	m_pDescription.cost = cost;
+	m_pDescription.m_imagePath = "cancel.png";
+
+	return m_pDescription;
 }
 

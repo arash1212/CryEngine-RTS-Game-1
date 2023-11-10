@@ -81,6 +81,7 @@ void House1BuildingComponent::Initialize()
 	SBuildingInfo buildingInfo;
 	buildingInfo.m_populationProduces = 10;
 	m_pBuildingComponent->SetBuildingInfo(buildingInfo);
+	m_pBuildingComponent->SetImagePath(House1BuildingComponent::GetDescription().m_imagePath);
 	//UIItems
 
 	//Update bounding box
@@ -93,7 +94,7 @@ void House1BuildingComponent::Initialize()
 
 	//CostComponent Initializations
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
-	m_pCostComponent->SetCost(House1BuildingComponent::GetCost());
+	m_pCostComponent->SetCost(House1BuildingComponent::GetDescription().cost);
 }
 
 
@@ -126,12 +127,20 @@ void House1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 	}
 }
 
-SResourceInfo House1BuildingComponent::GetCost()
+SDescription House1BuildingComponent::GetDescription()
 {
 	SResourceInfo cost;
 	cost.m_moneyAmount = 200;
 	cost.m_populationAmount = 0;
 	cost.m_woodAmount = 600;
 	cost.m_ironAmount = 500;
-	return cost;
+
+	SDescription m_pDescription;
+	m_pDescription.m_name = "House 1";
+	m_pDescription.m_description = "House 1 Building.";
+	m_pDescription.m_buildDescription = "Build House 1 Building.";
+	m_pDescription.cost = cost;
+	m_pDescription.m_imagePath = "house_1_icon.png";
+
+	return m_pDescription;
 }

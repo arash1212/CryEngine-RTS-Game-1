@@ -12,6 +12,7 @@ class CostComponent;
 class WorkplaceComponent;
 
 struct SResourceInfo;
+struct SDescription;
 
 static string BAKERY_BUILDING_1_MODEL_PATH = "Objects/buildings/bakery1/bakery1.cdf";
 static string BAKERY_BUILDING_1_TRUSS_MODEL_PATH = "Objects/buildings/bakery1/truss/bakery1_truss.cgf";
@@ -61,5 +62,5 @@ private:
 	void ResetWorkersJob();
 
 public:
-	static SResourceInfo GetCost();
+	static SDescription GetDescription();
 };

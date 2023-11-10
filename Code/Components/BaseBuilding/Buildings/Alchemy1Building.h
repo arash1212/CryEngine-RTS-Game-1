@@ -11,6 +11,7 @@ class CostComponent;
 class WorkplaceComponent;
 
 struct SResourceInfo;
+struct SDescription;
 
 static string ALCHEMY_BUILDING_1_MODEL_PATH = "Objects/buildings/alchemy1/alchemy1.cdf";
 static string ALCHEMY_BUILDING_1_TRUSS_MODEL_PATH = "Objects/buildings/alchemy1/truss/alchemy1_truss.cgf";
@@ -58,5 +59,5 @@ private:
 	void UpdateAssignedWorkers();
 
 public:
-	static SResourceInfo GetCost();
+	static SDescription GetDescription();
 };

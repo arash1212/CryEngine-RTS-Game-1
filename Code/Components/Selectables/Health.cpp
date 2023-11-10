@@ -7,6 +7,7 @@
 #include <Components/Managers/ResourceManager.h>
 #include <Components/Selectables/Workplace.h>
 #include <Components/Managers/ActionManager.h>
+#include <Components/Selectables/Visibility.h>
 
 #include <Components/Player/Player.h>
 
@@ -94,11 +95,16 @@ void HealthComponent::ProcessEvent(const SEntityEvent& event)
 		if (!pPlayerOwnerInfo) {
 			return;
 		}
-		if (EntityUtils::IsEntityInsideViewPort(camera, m_pEntity) && m_currentHealth > 0) {
+		VisibilityComponent* pVisibilityComponent = m_pEntity->GetComponent<VisibilityComponent>();
+		if (!pVisibilityComponent) {
+			return;
+		}
+
+		if (EntityUtils::IsEntityInsideViewPort(camera, m_pEntity) && m_currentHealth > 0 && pVisibilityComponent->IsVisible()) {
 			ShowHealthBar();
 			m_entityRemoveTimePassed = 0;
 		}
-		else if (!EntityUtils::IsEntityInsideViewPort(camera, m_pEntity) || m_currentHealth <= 0) {
+		else if (!EntityUtils::IsEntityInsideViewPort(camera, m_pEntity) || !pVisibilityComponent->IsVisible() || m_currentHealth <= 0) {
 			HideHealthBar();
 			return;
 		}
@@ -183,6 +189,11 @@ void HealthComponent::SetMaxHealth(f32 maxHealth)
 f32 HealthComponent::GetCurrentHealth()
 {
 	return m_currentHealth;
+}
+
+f32 HealthComponent::GetMaxHealth()
+{
+	return m_maxHealth;
 }
 
 bool HealthComponent::IsConsumesFood()

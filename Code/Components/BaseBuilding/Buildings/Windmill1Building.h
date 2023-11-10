@@ -12,6 +12,7 @@ class ResourceStorageComponent;
 class WorkplaceComponent;
 
 struct SResourceInfo;
+struct SDescription;
 
 static string WINDMILL_BUILDING_1_MODEL_PATH = "Objects/buildings/windmill/windmill.cdf";
 static string WINDMILL_BUILDING_1_TRUSS_MODEL_PATH = "Objects/buildings/windmill/truss/windmill_truss.cgf";
@@ -56,5 +57,5 @@ private:
 	void UpdateAssignedWorkers();
 
 public:
-	static SResourceInfo GetCost();
+	static SDescription GetDescription();
 };
