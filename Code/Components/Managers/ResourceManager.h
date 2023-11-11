@@ -26,10 +26,11 @@ struct SResourceRequestParams {
 };
 
 struct SDescription {
-	string m_name = "Name Place Holder";
-	string m_description = "Description Place Holder";
-	string m_imagePath = "cancel.png";
-	string m_buildDescription = "Build Description Place Holder";
+	string sIcon = "cancel.png";
+	string sName = "Name Place Holder";
+	string sDescription = "Description Place Holder";
+	string sBuyDescription = "Buy Description Place Holder";
+	string sSellDescription = "Sell Description Place Holder";
 	SResourceInfo cost;
 };
 

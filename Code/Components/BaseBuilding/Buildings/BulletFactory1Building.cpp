@@ -85,7 +85,7 @@ void BulletFactory1BuildingComponent::Initialize()
 	SBuildingInfo buildingInfo;
 	buildingInfo.m_populationProduces = 0;
 	m_pBuildingComponent->SetBuildingInfo(buildingInfo);
-	m_pBuildingComponent->SetImagePath(BulletFactory1BuildingComponent::GetDescription().m_imagePath);
+	m_pBuildingComponent->SetImagePath(BulletFactory1BuildingComponent::GetDescription().sIcon);
 	//m_pBuildingComponent->SetMaxHealth(700.f);
 	//UIItems
 
@@ -216,11 +216,11 @@ SDescription BulletFactory1BuildingComponent::GetDescription()
 	cost.m_ironAmount = 800;
 
 	SDescription m_pDescription;
-	m_pDescription.m_name = "Bullet Factory 1";
-	m_pDescription.m_description = "Bullet Factory 1 Building.";
-	m_pDescription.m_buildDescription = "Build Bullet Factory 1 Building.";
+	m_pDescription.sName = "Bullet Factory 1";
+	m_pDescription.sDescription = "Bullet Factory 1 Building.";
+	m_pDescription.sBuyDescription = "Build Bullet Factory 1 Building.";
 	m_pDescription.cost = cost;
-	m_pDescription.m_imagePath = "bulletfactory_1_icon.png";
+	m_pDescription.sIcon = "bulletfactory_1_icon.png";
 
 	return m_pDescription;
 }

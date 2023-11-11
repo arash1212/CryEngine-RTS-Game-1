@@ -144,7 +144,7 @@ void AttackerComponent::Attack(IEntity* target)
 	}break;
 
 	default:
-		break;
+break;
 	}
 
 	m_attackTimePassed = MathUtils::GetRandomFloat(0, 0.07f);
@@ -218,7 +218,7 @@ void AttackerComponent::FindRandomTarget()
 {
 	//|| m_pActionManagerComponent->IsProcessingAnAction()
 	if (m_pRandomAttackTarget || m_pAttackTargetEntity) {
-	//	m_pRandomAttackTarget = nullptr;
+		//	m_pRandomAttackTarget = nullptr;
 		return;
 	}
 	if (m_lookingForRandomTargetTimePassed < m_timeBetweenLookingForRandomTarget) {
@@ -240,7 +240,12 @@ void AttackerComponent::FindRandomTarget()
 		}
 		IEntity* pEntity = EntityUtils::GetClosestEntity(pOtherResourceManagerComponent->GetOwnedEntities(), m_pEntity->GetWorldPos());
 		if (!pEntity || pEntity->IsGarbage()) {
-			return;
+			continue;
+		}
+
+		BuildingComponent* pBuildingComponent = pEntity->GetComponent<BuildingComponent>();
+		if (pBuildingComponent && !pBuildingComponent->IsPlaced()) {
+			continue;
 		}
 
 		f32 distanceToTarget = EntityUtils::GetDistance(m_pEntity->GetWorldPos(), pEntity->GetWorldPos(), pEntity);

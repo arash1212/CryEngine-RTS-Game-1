@@ -85,7 +85,7 @@ void GunPowderFactory1BuildingComponent::Initialize()
 	SBuildingInfo buildingInfo;
 	buildingInfo.m_populationProduces = 0;
 	m_pBuildingComponent->SetBuildingInfo(buildingInfo);
-	m_pBuildingComponent->SetImagePath(GunPowderFactory1BuildingComponent::GetDescription().m_imagePath);
+	m_pBuildingComponent->SetImagePath(GunPowderFactory1BuildingComponent::GetDescription().sIcon);
 	//m_pBuildingComponent->SetMaxHealth(700.f);
 	//UIItems
 
@@ -216,11 +216,11 @@ SDescription GunPowderFactory1BuildingComponent::GetDescription()
 	cost.m_woodAmount = 300;
 
 	SDescription m_pDescription;
-	m_pDescription.m_name = "GunPowder Factory 1";
-	m_pDescription.m_description = "GunPowder Factory 1 Building.";
-	m_pDescription.m_buildDescription = "Build GunPowder Factory 1 Building.";
+	m_pDescription.sName = "GunPowder Factory 1";
+	m_pDescription.sDescription = "GunPowder Factory 1 Building.";
+	m_pDescription.sBuyDescription = "Build GunPowder Factory 1 Building.";
 	m_pDescription.cost = cost;
-	m_pDescription.m_imagePath = "gun_powder_factory_1_icon.png";
+	m_pDescription.sIcon = "gun_powder_factory_1_icon.png";
 
 	return m_pDescription;
 }

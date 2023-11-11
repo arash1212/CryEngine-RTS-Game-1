@@ -60,10 +60,10 @@ void UITrainSoldier1Item::Execute()
 
 string UITrainSoldier1Item::GetImagePath()
 {
-	return Soldier1UnitComponent::GetDescription().m_imagePath;
+	return Soldier1UnitComponent::GetDescription().sIcon;
 }
 
 SUIItemDescription UITrainSoldier1Item::GetDescrption()
 {
-	return SUIItemDescription(Soldier1UnitComponent::GetDescription().cost, Soldier1UnitComponent::GetDescription().m_buildDescription);
+	return SUIItemDescription(Soldier1UnitComponent::GetDescription().cost, Soldier1UnitComponent::GetDescription().sBuyDescription);
 }

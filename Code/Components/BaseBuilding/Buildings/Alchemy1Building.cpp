@@ -85,7 +85,7 @@ void Alchemy1BuildingComponent::Initialize()
 	SBuildingInfo buildingInfo;
 	buildingInfo.m_populationProduces = 0;
 	m_pBuildingComponent->SetBuildingInfo(buildingInfo);
-	m_pBuildingComponent->SetImagePath(Alchemy1BuildingComponent::GetDescription().m_imagePath);
+	m_pBuildingComponent->SetImagePath(Alchemy1BuildingComponent::GetDescription().sIcon);
 	//m_pBuildingComponent->SetMaxHealth(700.f);
 	//UIItems
 
@@ -199,11 +199,11 @@ SDescription Alchemy1BuildingComponent::GetDescription()
 	cost.m_ironAmount = 800;
 
 	SDescription m_pDescription;
-	m_pDescription.m_name = "Alchemy 1";
-	m_pDescription.m_description = "Alchemy 1 Building.";
-	m_pDescription.m_buildDescription = "Build Alchemy 1 Building.";
+	m_pDescription.sName = "Alchemy 1";
+	m_pDescription.sDescription = "Alchemy 1 Building.";
+	m_pDescription.sBuyDescription = "Build Alchemy 1 Building.";
 	m_pDescription.cost = cost;
-	m_pDescription.m_imagePath = "alchemy_1_icon.png";
+	m_pDescription.sIcon = "alchemy_1_icon.png";
 
 	return m_pDescription;
 }

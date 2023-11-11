@@ -2,23 +2,9 @@
 
 #include <DefaultComponents/Geometry/AdvancedAnimationComponent.h>
 #include <Components/Managers/ResourceManager.h>
+#include <Resources/IResource.h>
 
 class SelectableComponent;
-
-enum class EResourceType {
-	Money,
-	OIL,
-	POPULATION,
-	WHEAT,
-	FLOUR,
-	WOOD,
-	BREAD,
-	SULFUR,
-	GUN_POWDER,
-	IRON,
-	BULLET,
-	AK47
-};
 
 class ResourceComponent final : public IEntityComponent
 {

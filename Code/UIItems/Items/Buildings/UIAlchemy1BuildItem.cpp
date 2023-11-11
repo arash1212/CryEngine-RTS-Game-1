@@ -60,10 +60,10 @@ void UIAlchemy1BuildItem::Execute()
 
 string UIAlchemy1BuildItem::GetImagePath()
 {
-	return Alchemy1BuildingComponent::GetDescription().m_imagePath;
+	return Alchemy1BuildingComponent::GetDescription().sIcon;
 }
 
 SUIItemDescription UIAlchemy1BuildItem::GetDescrption()
 {
-	return SUIItemDescription(Alchemy1BuildingComponent::GetDescription().cost, Alchemy1BuildingComponent::GetDescription().m_description);
+	return SUIItemDescription(Alchemy1BuildingComponent::GetDescription().cost, Alchemy1BuildingComponent::GetDescription().sDescription);
 }

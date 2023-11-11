@@ -60,10 +60,10 @@ void UIAK47Factory1BuildItem::Execute()
 
 string UIAK47Factory1BuildItem::GetImagePath()
 {
-	return AK47Factory1BuildingComponent::GetDescription().m_imagePath;
+	return AK47Factory1BuildingComponent::GetDescription().sIcon;
 }
 
 SUIItemDescription UIAK47Factory1BuildItem::GetDescrption()
 {
-	return SUIItemDescription(AK47Factory1BuildingComponent::GetDescription().cost, AK47Factory1BuildingComponent::GetDescription().m_description);
+	return SUIItemDescription(AK47Factory1BuildingComponent::GetDescription().cost, AK47Factory1BuildingComponent::GetDescription().sDescription);
 }

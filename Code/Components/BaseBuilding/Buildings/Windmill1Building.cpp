@@ -31,6 +31,7 @@
 
 #include <Components/Managers/ResourceManager.h>
 #include <Components/Selectables/ResourceStorage.h>
+#include <Resources/IResource.h>
 
 #include <Components/Selectables/Health.h>
 
@@ -84,7 +85,7 @@ void Windmill1BuildingComponent::Initialize()
 	//BuildingComponent initialization
 	m_pBuildingComponent = m_pEntity->GetOrCreateComponent<BuildingComponent>();
 	m_pBuildingComponent->SetPathToTrussMesh(WINDMILL_BUILDING_1_TRUSS_MODEL_PATH);
-	m_pBuildingComponent->SetImagePath(Windmill1BuildingComponent::GetDescription().m_imagePath);
+	m_pBuildingComponent->SetImagePath(Windmill1BuildingComponent::GetDescription().sIcon);
 
 	SBuildingInfo buildingInfo;
 	buildingInfo.m_populationProduces = 0;
@@ -198,11 +199,11 @@ SDescription Windmill1BuildingComponent::GetDescription()
 	cost.m_woodAmount = 700;
 
 	SDescription m_pDescription;
-	m_pDescription.m_name = "Windmill 1";
-	m_pDescription.m_description = "Windmill 1 Building.";
-	m_pDescription.m_buildDescription = "Build Windmill 1 Building.";
+	m_pDescription.sName = "Windmill 1";
+	m_pDescription.sDescription = "Windmill 1 Building.";
+	m_pDescription.sBuyDescription = "Build Windmill 1 Building.";
 	m_pDescription.cost = cost;
-	m_pDescription.m_imagePath = "windmill_1_icon.png";
+	m_pDescription.sIcon = "windmill_1_icon.png";
 
 	return m_pDescription;
 }

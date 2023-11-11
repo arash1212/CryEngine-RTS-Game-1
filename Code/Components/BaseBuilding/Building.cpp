@@ -297,6 +297,9 @@ void BuildingComponent::SetBuilt()
 	m_pHealthComponent = m_pEntity->GetOrCreateComponent<HealthComponent>();
 	m_pHealthComponent->SetMaxHealth(m_maxHealth);
 
+	//VisibilityComponent Initialization
+	m_pVisibilityComponent = m_pEntity->GetOrCreateComponent<VisibilityComponent>();
+
 	Build();
 }
 

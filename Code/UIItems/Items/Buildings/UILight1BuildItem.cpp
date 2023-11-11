@@ -61,10 +61,10 @@ void UILight1BuildItem::Execute()
 
 string UILight1BuildItem::GetImagePath()
 {
-	return Light1BuildingComponent::GetDescription().m_imagePath;
+	return Light1BuildingComponent::GetDescription().sIcon;
 }
 
 SUIItemDescription UILight1BuildItem::GetDescrption()
 {
-	return SUIItemDescription(Light1BuildingComponent::GetDescription().cost, Light1BuildingComponent::GetDescription().m_description);
+	return SUIItemDescription(Light1BuildingComponent::GetDescription().cost, Light1BuildingComponent::GetDescription().sDescription);
 }

@@ -79,7 +79,7 @@ void HQ1BuildingComponent::Initialize()
 	buildingInfo.m_populationProduces = 20;
 	m_pBuildingComponent->SetBuildingInfo(buildingInfo);
 	m_pBuildingComponent->SetMaxHealth(1000.f);
-	m_pBuildingComponent->SetImagePath(HQ1BuildingComponent::GetDescription().m_imagePath);
+	m_pBuildingComponent->SetImagePath(HQ1BuildingComponent::GetDescription().sIcon);
 	//UIItems
 	m_pBuildingComponent->AddUIItem(new UITrainEngineer1Item(m_pEntity));
 
@@ -135,11 +135,11 @@ SDescription HQ1BuildingComponent::GetDescription()
 	cost.m_woodAmount = 600;
 
 	SDescription m_pDescription;
-	m_pDescription.m_name = "HQ 1";
-	m_pDescription.m_description = "HQ 1 Building.";
-	m_pDescription.m_buildDescription = "Build HQ 1 Building.";
+	m_pDescription.sName = "HQ 1";
+	m_pDescription.sDescription = "HQ 1 Building.";
+	m_pDescription.sBuyDescription = "Build HQ 1 Building.";
 	m_pDescription.cost = cost;
-	m_pDescription.m_imagePath = "hq_1_Icon.png";
+	m_pDescription.sIcon = "hq_1_Icon.png";
 
 	return m_pDescription;
 }

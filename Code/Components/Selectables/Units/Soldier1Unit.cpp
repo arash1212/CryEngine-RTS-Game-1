@@ -166,11 +166,11 @@ SDescription Soldier1UnitComponent::GetDescription()
 	cost.m_ak47Amount = 1;
 
 	SDescription m_pDescription;
-	m_pDescription.m_name = "Soldier 1";
-	m_pDescription.m_description = "Soldier 1 Unit.";
-	m_pDescription.m_buildDescription = "Train Solfier 1 Unit.";
+	m_pDescription.sName = "Soldier 1";
+	m_pDescription.sDescription = "Soldier 1 Unit.";
+	m_pDescription.sBuyDescription = "Train Solfier 1 Unit.";
 	m_pDescription.cost = cost;
-	m_pDescription.m_imagePath = "soldier_1_icon.png";
+	m_pDescription.sIcon = "soldier_1_icon.png";
 
 	return m_pDescription;
 }

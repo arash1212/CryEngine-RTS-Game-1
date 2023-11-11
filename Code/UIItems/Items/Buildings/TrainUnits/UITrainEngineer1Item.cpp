@@ -61,10 +61,10 @@ void UITrainEngineer1Item::Execute()
 
 string UITrainEngineer1Item::GetImagePath()
 {
-	return Engineer1UnitComponent::GetDescription().m_imagePath;
+	return Engineer1UnitComponent::GetDescription().sIcon;
 }
 
 SUIItemDescription UITrainEngineer1Item::GetDescrption()
 {
-	return SUIItemDescription(Engineer1UnitComponent::GetDescription().cost, Engineer1UnitComponent::GetDescription().m_buildDescription);
+	return SUIItemDescription(Engineer1UnitComponent::GetDescription().cost, Engineer1UnitComponent::GetDescription().sBuyDescription);
 }

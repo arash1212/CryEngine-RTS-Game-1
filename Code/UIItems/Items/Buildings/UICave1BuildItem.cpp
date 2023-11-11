@@ -61,10 +61,10 @@ void UICave1BuildItem::Execute()
 
 string UICave1BuildItem::GetImagePath()
 {
-	return  Cave1BuildingComponent::GetDescription().m_imagePath;
+	return  Cave1BuildingComponent::GetDescription().sIcon;
 }
 
 SUIItemDescription UICave1BuildItem::GetDescrption()
 {
-	return SUIItemDescription(Cave1BuildingComponent::GetDescription().cost, Cave1BuildingComponent::GetDescription().m_description);
+	return SUIItemDescription(Cave1BuildingComponent::GetDescription().cost, Cave1BuildingComponent::GetDescription().sDescription);
 }

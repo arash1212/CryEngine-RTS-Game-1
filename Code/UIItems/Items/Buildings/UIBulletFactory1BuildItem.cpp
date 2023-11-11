@@ -60,10 +60,10 @@ void UIBulletFactory1BuildItem::Execute()
 
 string UIBulletFactory1BuildItem::GetImagePath()
 {
-	return  BulletFactory1BuildingComponent::GetDescription().m_imagePath;
+	return  BulletFactory1BuildingComponent::GetDescription().sIcon;
 }
 
 SUIItemDescription UIBulletFactory1BuildItem::GetDescrption()
 {
-	return SUIItemDescription(BulletFactory1BuildingComponent::GetDescription().cost, BulletFactory1BuildingComponent::GetDescription().m_description);
+	return SUIItemDescription(BulletFactory1BuildingComponent::GetDescription().cost, BulletFactory1BuildingComponent::GetDescription().sDescription);
 }

@@ -85,7 +85,7 @@ void AK47Factory1BuildingComponent::Initialize()
 	SBuildingInfo buildingInfo;
 	buildingInfo.m_populationProduces = 0;
 	m_pBuildingComponent->SetBuildingInfo(buildingInfo);
-	m_pBuildingComponent->SetImagePath(AK47Factory1BuildingComponent::GetDescription().m_imagePath);
+	m_pBuildingComponent->SetImagePath(AK47Factory1BuildingComponent::GetDescription().sIcon);
 	//m_pBuildingComponent->SetMaxHealth(700.f);
 	//UIItems
 
@@ -208,11 +208,11 @@ SDescription AK47Factory1BuildingComponent::GetDescription()
 	cost.m_ironAmount = 700;
 
 	SDescription m_pDescription;
-	m_pDescription.m_name = "AK47 Factory 1";
-	m_pDescription.m_description = "AK47 Factory 1 Building.";
-	m_pDescription.m_buildDescription = "Build AK47 Factory 1 Building.";
+	m_pDescription.sName = "AK47 Factory 1";
+	m_pDescription.sDescription = "AK47 Factory 1 Building.";
+	m_pDescription.sBuyDescription = "Build AK47 Factory 1 Building.";
 	m_pDescription.cost = cost;
-	m_pDescription.m_imagePath = "ak47factory_1_icon.png";
+	m_pDescription.sIcon = "ak47factory_1_icon.png";
 
 	return m_pDescription;
 }

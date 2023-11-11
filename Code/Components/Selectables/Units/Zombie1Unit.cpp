@@ -152,11 +152,11 @@ SDescription Zombie1UnitComponent::GetDescription()
 	cost.m_populationAmount = 0;
 
 	SDescription m_pDescription;
-	m_pDescription.m_name = "Zombie 1";
-	m_pDescription.m_description = "Zombie 1 Unit.";
-	m_pDescription.m_buildDescription = "Train Zombie 1 Unit.";
+	m_pDescription.sName = "Zombie 1";
+	m_pDescription.sDescription = "Zombie 1 Unit.";
+	m_pDescription.sBuyDescription = "Train Zombie 1 Unit.";
 	m_pDescription.cost = cost;
-	m_pDescription.m_imagePath = "cancel.png";
+	m_pDescription.sIcon = "cancel.png";
 
 	return m_pDescription;
 }

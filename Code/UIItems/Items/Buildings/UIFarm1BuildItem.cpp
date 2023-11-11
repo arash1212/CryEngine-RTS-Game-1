@@ -61,10 +61,10 @@ void UIFarm1BuildItem::Execute()
 
 string UIFarm1BuildItem::GetImagePath()
 {
-	return  Farm1BuildingComponent::GetDescription().m_imagePath;
+	return  Farm1BuildingComponent::GetDescription().sIcon;
 }
 
 SUIItemDescription UIFarm1BuildItem::GetDescrption()
 {
-	return SUIItemDescription(Farm1BuildingComponent::GetDescription().cost, Farm1BuildingComponent::GetDescription().m_description);
+	return SUIItemDescription(Farm1BuildingComponent::GetDescription().cost, Farm1BuildingComponent::GetDescription().sDescription);
 }

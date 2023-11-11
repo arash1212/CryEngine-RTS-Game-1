@@ -60,10 +60,10 @@ void UIBakery1BuildItem::Execute()
 
 string UIBakery1BuildItem::GetImagePath()
 {
-	return Bakery1BuildingComponent::GetDescription().m_imagePath;
+	return Bakery1BuildingComponent::GetDescription().sIcon;
 }
 
 SUIItemDescription UIBakery1BuildItem::GetDescrption()
 {
-	return SUIItemDescription(Bakery1BuildingComponent::GetDescription().cost, Bakery1BuildingComponent::GetDescription().m_description);
+	return SUIItemDescription(Bakery1BuildingComponent::GetDescription().cost, Bakery1BuildingComponent::GetDescription().sDescription);
 }

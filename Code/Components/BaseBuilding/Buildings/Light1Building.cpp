@@ -79,7 +79,7 @@ void Light1BuildingComponent::Initialize()
 	buildingInfo.m_populationProduces = 20;
 	m_pBuildingComponent->SetBuildingInfo(buildingInfo);
 	m_pBuildingComponent->SetMaxHealth(100.f);
-	m_pBuildingComponent->SetImagePath(Light1BuildingComponent::GetDescription().m_imagePath);
+	m_pBuildingComponent->SetImagePath(Light1BuildingComponent::GetDescription().sIcon);
 	//UIItems
 
 	//Update bounding box
@@ -145,11 +145,11 @@ SDescription Light1BuildingComponent::GetDescription()
 	cost.m_ironAmount = 300;
 
 	SDescription m_pDescription;
-	m_pDescription.m_name = "Light 1";
-	m_pDescription.m_description = "Light 1 Building.";
-	m_pDescription.m_buildDescription = "Build Light 1 Building.";
+	m_pDescription.sName = "Light 1";
+	m_pDescription.sDescription = "Light 1 Building.";
+	m_pDescription.sBuyDescription = "Build Light 1 Building.";
 	m_pDescription.cost = cost;
-	m_pDescription.m_imagePath = "light_1_icon.png";
+	m_pDescription.sIcon = "light_1_icon.png";
 
 	return m_pDescription;
 }

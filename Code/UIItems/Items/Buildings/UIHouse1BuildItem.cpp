@@ -61,10 +61,10 @@ void UIHouse1BuildItem::Execute()
 
 string UIHouse1BuildItem::GetImagePath()
 {
-	return House1BuildingComponent::GetDescription().m_imagePath;
+	return House1BuildingComponent::GetDescription().sIcon;
 }
 
 SUIItemDescription UIHouse1BuildItem::GetDescrption()
 {
-	return SUIItemDescription(House1BuildingComponent::GetDescription().cost, House1BuildingComponent::GetDescription().m_description);
+	return SUIItemDescription(House1BuildingComponent::GetDescription().cost, House1BuildingComponent::GetDescription().sDescription);
 }

@@ -95,6 +95,6 @@ f32 TrainEngineer1Action::GetProgressAmount()
 
 IBaseInfoPanelUIItem* TrainEngineer1Action::GetInfoPanelItem()
 {
-	return new UIBuildingActionInfoPanelItem(m_pEntity, Engineer1UnitComponent::GetDescription().m_imagePath, this);
+	return new UIBuildingActionInfoPanelItem(m_pEntity, Engineer1UnitComponent::GetDescription().sIcon, this);
 }
 

@@ -61,10 +61,10 @@ void UIWindmillBuildItem::Execute()
 
 string UIWindmillBuildItem::GetImagePath()
 {
-	return Windmill1BuildingComponent::GetDescription().m_imagePath;
+	return Windmill1BuildingComponent::GetDescription().sIcon;
 }
 
 SUIItemDescription UIWindmillBuildItem::GetDescrption()
 {
-	return SUIItemDescription(Windmill1BuildingComponent::GetDescription().cost, Windmill1BuildingComponent::GetDescription().m_description);
+	return SUIItemDescription(Windmill1BuildingComponent::GetDescription().cost, Windmill1BuildingComponent::GetDescription().sDescription);
 }

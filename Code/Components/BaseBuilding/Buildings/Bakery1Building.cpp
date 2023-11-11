@@ -85,7 +85,7 @@ void Bakery1BuildingComponent::Initialize()
 	SBuildingInfo buildingInfo;
 	buildingInfo.m_populationProduces = 0;
 	m_pBuildingComponent->SetBuildingInfo(buildingInfo);
-	m_pBuildingComponent->SetImagePath(Bakery1BuildingComponent::GetDescription().m_imagePath);
+	m_pBuildingComponent->SetImagePath(Bakery1BuildingComponent::GetDescription().sIcon);
 	//UIItems
 	m_pBuildingComponent->SetMaxHealth(500.f);
 
@@ -211,11 +211,11 @@ SDescription Bakery1BuildingComponent::GetDescription()
 	cost.m_bulletAmount = 0;
 
 	SDescription m_pDescription;
-	m_pDescription.m_name = "Bakery 1";
-	m_pDescription.m_description = "Bakery 1 Building.";
-	m_pDescription.m_buildDescription = "Build Bakery 1 Building.";
+	m_pDescription.sName = "Bakery 1";
+	m_pDescription.sDescription = "Bakery 1 Building.";
+	m_pDescription.sBuyDescription = "Build Bakery 1 Building.";
 	m_pDescription.cost = cost;
-	m_pDescription.m_imagePath = "bakery_1_icon.png";
+	m_pDescription.sIcon = "bakery_1_icon.png";
 
 	return m_pDescription;
 }

@@ -81,7 +81,7 @@ void House1BuildingComponent::Initialize()
 	SBuildingInfo buildingInfo;
 	buildingInfo.m_populationProduces = 10;
 	m_pBuildingComponent->SetBuildingInfo(buildingInfo);
-	m_pBuildingComponent->SetImagePath(House1BuildingComponent::GetDescription().m_imagePath);
+	m_pBuildingComponent->SetImagePath(House1BuildingComponent::GetDescription().sIcon);
 	//UIItems
 
 	//Update bounding box
@@ -136,11 +136,11 @@ SDescription House1BuildingComponent::GetDescription()
 	cost.m_ironAmount = 500;
 
 	SDescription m_pDescription;
-	m_pDescription.m_name = "House 1";
-	m_pDescription.m_description = "House 1 Building.";
-	m_pDescription.m_buildDescription = "Build House 1 Building.";
+	m_pDescription.sName = "House 1";
+	m_pDescription.sDescription = "House 1 Building.";
+	m_pDescription.sBuyDescription = "Build House 1 Building.";
 	m_pDescription.cost = cost;
-	m_pDescription.m_imagePath = "house_1_icon.png";
+	m_pDescription.sIcon = "house_1_icon.png";
 
 	return m_pDescription;
 }

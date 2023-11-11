@@ -84,7 +84,7 @@ void Farm1BuildingComponent::Initialize()
 	buildingInfo.m_populationProduces = 0;
 	m_pBuildingComponent->SetBuildingInfo(buildingInfo);
 	m_pBuildingComponent->SetMaxHealth(500.f);
-	m_pBuildingComponent->SetImagePath(Farm1BuildingComponent::GetDescription().m_imagePath);
+	m_pBuildingComponent->SetImagePath(Farm1BuildingComponent::GetDescription().sIcon);
 	//UIItems
 
 	//Update bounding box
@@ -332,11 +332,11 @@ SDescription Farm1BuildingComponent::GetDescription()
 	cost.m_ironAmount = 300;
 
 	SDescription m_pDescription;
-	m_pDescription.m_name = "Farm 1";
-	m_pDescription.m_description = "Farm 1 Building.";
-	m_pDescription.m_description = "Biuld Farm 1 Building.";
+	m_pDescription.sName = "Farm 1";
+	m_pDescription.sDescription = "Farm 1 Building.";
+	m_pDescription.sBuyDescription = "Biuld Farm 1 Building.";
 	m_pDescription.cost = cost;
-	m_pDescription.m_imagePath = "farm_1_icon.png";
+	m_pDescription.sIcon = "farm_1_icon.png";
 
 	return m_pDescription;
 }

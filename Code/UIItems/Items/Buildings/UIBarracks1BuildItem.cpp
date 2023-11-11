@@ -60,10 +60,10 @@ void UIBarracks1BuildItem::Execute()
 
 string UIBarracks1BuildItem::GetImagePath()
 {
-	return Barracks1BuildingComponent::GetDescription().m_imagePath;
+	return Barracks1BuildingComponent::GetDescription().sIcon;
 }
 
 SUIItemDescription UIBarracks1BuildItem::GetDescrption()
 {
-	return SUIItemDescription(Barracks1BuildingComponent::GetDescription().cost, Barracks1BuildingComponent::GetDescription().m_description);
+	return SUIItemDescription(Barracks1BuildingComponent::GetDescription().cost, Barracks1BuildingComponent::GetDescription().sDescription);
 }

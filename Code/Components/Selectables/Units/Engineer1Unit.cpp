@@ -200,11 +200,11 @@ SDescription Engineer1UnitComponent::GetDescription()
 	cost.m_ak47Amount = 0;
 
 	SDescription m_pDescription;
-	m_pDescription.m_name = "Engineer 1";
-	m_pDescription.m_description = "Engineer 1 Unit.";
-	m_pDescription.m_buildDescription = "Tran Engineer 1 Unit.";
+	m_pDescription.sName = "Engineer 1";
+	m_pDescription.sDescription = "Engineer 1 Unit.";
+	m_pDescription.sBuyDescription = "Tran Engineer 1 Unit.";
 	m_pDescription.cost = cost;
-	m_pDescription.m_imagePath = "engineer_1_icon.png";
+	m_pDescription.sIcon = "engineer_1_icon.png";
 
 	return m_pDescription;
 }

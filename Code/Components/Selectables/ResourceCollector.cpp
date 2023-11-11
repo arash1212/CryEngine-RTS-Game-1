@@ -10,6 +10,7 @@
 #include <Components/Managers/ResourceManager.h>
 
 #include <Components/Info/OwnerInfo.h>
+#include <Resources/IResource.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>

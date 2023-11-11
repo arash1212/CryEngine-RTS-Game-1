@@ -90,7 +90,7 @@ void Cave1BuildingComponent::Initialize()
 	m_pBuildingComponent = m_pEntity->GetOrCreateComponent<BuildingComponent>();
 	m_pBuildingComponent->SetPathToTrussMesh(CAVE_BUILDING_1_TRUSS_MODEL_PATH);
 	m_pBuildingComponent->SetIsHouse(false);
-	m_pBuildingComponent->SetImagePath(Cave1BuildingComponent::GetDescription().m_imagePath);
+	m_pBuildingComponent->SetImagePath(Cave1BuildingComponent::GetDescription().sIcon);
 
 	SBuildingInfo buildingInfo;
 	buildingInfo.m_populationProduces = 10;
@@ -214,11 +214,11 @@ SDescription Cave1BuildingComponent::GetDescription()
 	cost.m_woodAmount = 50;
 
 	SDescription m_pDescription;
-	m_pDescription.m_name = "Cave 1";
-	m_pDescription.m_description = "Cave 1 Building.";
-	m_pDescription.m_buildDescription = "Build Cave 1 Building.";
+	m_pDescription.sName = "Cave 1";
+	m_pDescription.sDescription = "Cave 1 Building.";
+	m_pDescription.sBuyDescription = "Build Cave 1 Building.";
 	m_pDescription.cost = cost;
-	m_pDescription.m_imagePath = "cave_1_icon.png";
+	m_pDescription.sIcon = "cave_1_icon.png";
 
 	return m_pDescription;
 }

@@ -61,10 +61,10 @@ void UIHQ1BuildItem::Execute()
 
 string UIHQ1BuildItem::GetImagePath()
 {
-	return HQ1BuildingComponent::GetDescription().m_imagePath;
+	return HQ1BuildingComponent::GetDescription().sIcon;
 }
 
 SUIItemDescription UIHQ1BuildItem::GetDescrption()
 {
-	return SUIItemDescription(HQ1BuildingComponent::GetDescription().cost, HQ1BuildingComponent::GetDescription().m_description);
+	return SUIItemDescription(HQ1BuildingComponent::GetDescription().cost, HQ1BuildingComponent::GetDescription().sBuyDescription);
 }

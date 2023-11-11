@@ -61,10 +61,10 @@ void UIGunPowderFactory1BuildItem::Execute()
 
 string UIGunPowderFactory1BuildItem::GetImagePath()
 {
-	return GunPowderFactory1BuildingComponent::GetDescription().m_imagePath;
+	return GunPowderFactory1BuildingComponent::GetDescription().sIcon;
 }
 
 SUIItemDescription UIGunPowderFactory1BuildItem::GetDescrption()
 {
-	return SUIItemDescription(GunPowderFactory1BuildingComponent::GetDescription().cost, GunPowderFactory1BuildingComponent::GetDescription().m_description);
+	return SUIItemDescription(GunPowderFactory1BuildingComponent::GetDescription().cost, GunPowderFactory1BuildingComponent::GetDescription().sDescription);
 }

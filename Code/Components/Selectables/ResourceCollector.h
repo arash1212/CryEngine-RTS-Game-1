@@ -3,6 +3,7 @@
 #include <DefaultComponents/Geometry/AdvancedAnimationComponent.h>
 #include <Components/Resources/Resource.h>
 #include <Components/Managers/ResourceManager.h>
+#include <Resources/IResource.h>
 
 class OwnerInfoComponent;
 

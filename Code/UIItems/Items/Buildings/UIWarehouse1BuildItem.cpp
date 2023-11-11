@@ -61,11 +61,11 @@ void UIWarehouse1BuildItem::Execute()
 
 string UIWarehouse1BuildItem::GetImagePath()
 {
-	return Warehouse1BuildingComponent::GetDescription().m_imagePath;
+	return Warehouse1BuildingComponent::GetDescription().sIcon;
 }
 
 
 SUIItemDescription UIWarehouse1BuildItem::GetDescrption()
 {
-	return SUIItemDescription(Warehouse1BuildingComponent::GetDescription().cost, Warehouse1BuildingComponent::GetDescription().m_description);
+	return SUIItemDescription(Warehouse1BuildingComponent::GetDescription().cost, Warehouse1BuildingComponent::GetDescription().sDescription);
 }
