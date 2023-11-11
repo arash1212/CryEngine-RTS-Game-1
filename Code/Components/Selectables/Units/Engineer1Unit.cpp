@@ -138,7 +138,7 @@ void Engineer1UnitComponent::Initialize()
 
 	//CostComponent Initializations
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
-	m_pCostComponent->SetCost(Engineer1UnitComponent::GetDescription().cost);
+	m_pCostComponent->SetCost(Engineer1UnitComponent::GetDescription().price);
 
 	//ResourceCollectorComponent Initialization
 	m_pResourceCollectorComponent = m_pEntity->GetOrCreateComponent<ResourceCollectorComponent>();
@@ -193,17 +193,17 @@ void Engineer1UnitComponent::ProcessEvent(const SEntityEvent& event)
 
 SDescription Engineer1UnitComponent::GetDescription()
 {
-	SResourceInfo cost;
-	cost.m_moneyAmount = 60;
-	cost.m_populationAmount = 1;
-	cost.m_bulletAmount = 0;
-	cost.m_ak47Amount = 0;
+	SResourceInfo price;
+	price.m_moneyAmount = 60;
+	price.m_populationAmount = 1;
+	price.m_bulletAmount = 0;
+	price.m_ak47Amount = 0;
 
 	SDescription m_pDescription;
 	m_pDescription.sName = "Engineer 1";
 	m_pDescription.sDescription = "Engineer 1 Unit.";
 	m_pDescription.sBuyDescription = "Tran Engineer 1 Unit.";
-	m_pDescription.cost = cost;
+	m_pDescription.price = price;
 	m_pDescription.sIcon = "engineer_1_icon.png";
 
 	return m_pDescription;

@@ -7,7 +7,7 @@
 #include <Components/BaseBuilding/Building.h>
 #include <CryEntitySystem/IEntitySystem.h>
 #include <Components/Selectables/ResourceStorage.h>
-#include <Components/Resources/Resource.h>
+#include <Components/ResourcePoints/ResourcePoint.h>
 #include <Components/Selectables/Engineer.h>
 #include <Components/Controller/AIController.h>
 #include <Components/Managers/UnitStateManager.h>

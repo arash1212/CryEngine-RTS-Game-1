@@ -4,7 +4,7 @@
 
 #include <Components/Info/OwnerInfo.h>
 #include <Components/Managers/ResourceManager.h>
-#include <Components/Resources/Resource.h>
+#include <Resources/Resources/BulletResource.h>
 
 UISellBulletItem::UISellBulletItem(IEntity* entity)
 {
@@ -38,5 +38,11 @@ void UISellBulletItem::Execute()
 
 string UISellBulletItem::GetImagePath()
 {
-	return "bullet_sell_icon.png";
+	return this->GetDescrption().sSellIcon;
+}
+
+SDescription UISellBulletItem::GetDescrption()
+{
+	BulletResource pBulletResource;
+	return pBulletResource.GetDescription();
 }

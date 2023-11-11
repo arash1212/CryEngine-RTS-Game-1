@@ -44,7 +44,7 @@ void UIBakery1BuildItem::Execute()
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "UIBakery1BuildItem : (Execute) resourceManager is null !");
 		return;
 	}
-	if (!resourceManager->RequsetResources(Bakery1BuildingComponent::GetDescription().cost)) {
+	if (!resourceManager->RequsetResources(Bakery1BuildingComponent::GetDescription().price)) {
 		return;
 	}
 
@@ -63,7 +63,7 @@ string UIBakery1BuildItem::GetImagePath()
 	return Bakery1BuildingComponent::GetDescription().sIcon;
 }
 
-SUIItemDescription UIBakery1BuildItem::GetDescrption()
+SDescription UIBakery1BuildItem::GetDescrption()
 {
-	return SUIItemDescription(Bakery1BuildingComponent::GetDescription().cost, Bakery1BuildingComponent::GetDescription().sDescription);
+	return Bakery1BuildingComponent::GetDescription();
 }

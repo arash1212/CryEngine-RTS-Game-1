@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "ResourceWood.h"
+#include "IronResourcePoint.h"
 #include "GamePlugin.h"
 
 #include <UIItems/IBaseUIItem.h>
@@ -7,6 +7,7 @@
 #include <UIItems/Items/UIChangeStanceItem.h>
 #include <UIItems/Items/Buildings/UIHQ1BuildItem.h>
 #include <Resources/IResource.h>
+#include <Components/ResourcePoints/ResourcePoint.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -15,24 +16,24 @@
 
 namespace
 {
-	static void RegisterResourceWoodComponent(Schematyc::IEnvRegistrar& registrar)
+	static void RegisterIronResourcePointComponent(Schematyc::IEnvRegistrar& registrar)
 	{
 		Schematyc::CEnvRegistrationScope scope = registrar.Scope(IEntity::GetEntityScopeGUID());
 		{
-			Schematyc::CEnvRegistrationScope componentScope = scope.Register(SCHEMATYC_MAKE_ENV_COMPONENT(ResourceWoodComponent));
+			Schematyc::CEnvRegistrationScope componentScope = scope.Register(SCHEMATYC_MAKE_ENV_COMPONENT(IronResourcePointComponent));
 		}
 	}
 
-	CRY_STATIC_AUTO_REGISTER_FUNCTION(&RegisterResourceWoodComponent);
+	CRY_STATIC_AUTO_REGISTER_FUNCTION(&RegisterIronResourcePointComponent);
 }
 
-void ResourceWoodComponent::Initialize()
+void IronResourcePointComponent::Initialize()
 {
 	//AnimationComponent Initializations
 	m_pAnimationComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CAdvancedAnimationComponent>();
 	m_pAnimationComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), Quat::CreateRotationXYZ(Ang3(DEG2RAD(0), 0, DEG2RAD(0))), Vec3(0)));
-	m_pAnimationComponent->SetCharacterFile("objects/resource/tree1/tree1.cdf");
-	m_pAnimationComponent->SetMannequinAnimationDatabaseFile("Animations/Mannequin/ADB/resourceOil.adb");
+	m_pAnimationComponent->SetCharacterFile("Objects/resource/iron/resource_iron.cdf");
+	m_pAnimationComponent->SetMannequinAnimationDatabaseFile("Animations/Mannequin/ADB/resourceiron.adb");
 	m_pAnimationComponent->SetControllerDefinitionFile("Animations/Mannequin/ADB/FirstPersonControllerDefinition.xml");
 	m_pAnimationComponent->SetDefaultScopeContextName("ThirdPersonCharacter");
 	m_pAnimationComponent->SetDefaultFragmentName("Idle");
@@ -41,21 +42,21 @@ void ResourceWoodComponent::Initialize()
 	m_pAnimationComponent->ResetCharacter();
 
 	//ResourceComponent Initialization
-	m_pResourceComponent = m_pEntity->GetOrCreateComponent<ResourceComponent>();
-	m_pResourceComponent->SetType(EResourceType::WOOD);
-	m_pResourceComponent->SetIsSingleUse(false);
-	m_pResourceComponent->SetHasCollectingLocation(false);
+	m_pResourcePointComponent = m_pEntity->GetOrCreateComponent<ResourcePointComponent>();
+	m_pResourcePointComponent->SetType(EResourceType::IRON);
+	m_pResourcePointComponent->SetIsSingleUse(false);
+	m_pResourcePointComponent->SetHasCollectingLocation(false);
 
 	//BoxComponent Initialization
 	m_pBboxComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CBoxPrimitiveComponent>();
-	m_pBboxComponent->m_size = Vec3(0.2f, 0.3f, 2.5f);
+	m_pBboxComponent->m_size = Vec3(2.2f, 2.4f, 1.4f);
 	m_pBboxComponent->m_bReactToCollisions = true;
 
 	//Update bounding box
 	AABB aabb;
 	m_pEntity->GetLocalBounds(aabb);
-	Vec3 min = Vec3(aabb.min.x - 1.1f, aabb.min.y - 1.1f, aabb.min.z);
-	Vec3 max = Vec3(aabb.max.x + 1.5f, aabb.max.y + 1, aabb.max.z);
+	Vec3 min = Vec3(aabb.min.x - 2.5f, aabb.min.y - 2.5f, aabb.min.z);
+	Vec3 max = Vec3(aabb.max.x + 3.f, aabb.max.y + 2.0f, aabb.max.z);
 	AABB newAABB = AABB(min, max);
 	m_pEntity->SetLocalBounds(newAABB, true);
 
@@ -66,7 +67,7 @@ void ResourceWoodComponent::Initialize()
 	m_pEntity->Physicalize(physParams);
 }
 
-Cry::Entity::EventFlags ResourceWoodComponent::GetEventMask() const
+Cry::Entity::EventFlags IronResourcePointComponent::GetEventMask() const
 {
 	return
 		Cry::Entity::EEvent::GameplayStarted |
@@ -74,7 +75,7 @@ Cry::Entity::EventFlags ResourceWoodComponent::GetEventMask() const
 		Cry::Entity::EEvent::Reset;
 }
 
-void ResourceWoodComponent::ProcessEvent(const SEntityEvent& event)
+void IronResourcePointComponent::ProcessEvent(const SEntityEvent& event)
 {
 	switch (event.event)
 	{

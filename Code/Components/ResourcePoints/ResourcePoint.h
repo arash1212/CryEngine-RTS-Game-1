@@ -6,12 +6,12 @@
 
 class SelectableComponent;
 
-class ResourceComponent final : public IEntityComponent
+class ResourcePointComponent final : public IEntityComponent
 {
 
 public:
-	ResourceComponent() = default;
-	virtual ~ResourceComponent() = default;
+	ResourcePointComponent() = default;
+	virtual ~ResourcePointComponent() = default;
 
 	// IEntityComponent
 	virtual void Initialize() override;
@@ -20,10 +20,10 @@ public:
 	virtual void ProcessEvent(const SEntityEvent& event) override;
 
 	// Reflect type to set a unique identifier for this component
-	static void ReflectType(Schematyc::CTypeDesc<ResourceComponent>& desc)
+	static void ReflectType(Schematyc::CTypeDesc<ResourcePointComponent>& desc)
 	{
 		desc.SetGUID("{B5845C7E-9991-43CC-AF41-B38B8467131B}"_cry_guid);
-		desc.SetEditorCategory("Resource");
+		desc.SetEditorCategory("ResourcePoint");
 	}
 
 private:

@@ -99,7 +99,7 @@ void Alchemy1BuildingComponent::Initialize()
 
 	//CostComponent Initializations
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
-	m_pCostComponent->SetCost(Alchemy1BuildingComponent::GetDescription().cost);
+	m_pCostComponent->SetCost(Alchemy1BuildingComponent::GetDescription().price);
 
 	//WorkplaceComponent  Initializations
 	m_pWorkplaceComponent = m_pEntity->GetOrCreateComponent<WorkplaceComponent>();
@@ -192,17 +192,17 @@ void Alchemy1BuildingComponent::UpdateAssignedWorkers()
 
 SDescription Alchemy1BuildingComponent::GetDescription()
 {
-	SResourceInfo cost;
-	cost.m_moneyAmount = 450;
-	cost.m_oilAmount = 500;
-	cost.m_woodAmount = 400;
-	cost.m_ironAmount = 800;
+	SResourceInfo price;
+	price.m_moneyAmount = 450;
+	price.m_oilAmount = 500;
+	price.m_woodAmount = 400;
+	price.m_ironAmount = 800;
 
 	SDescription m_pDescription;
 	m_pDescription.sName = "Alchemy 1";
 	m_pDescription.sDescription = "Alchemy 1 Building.";
 	m_pDescription.sBuyDescription = "Build Alchemy 1 Building.";
-	m_pDescription.cost = cost;
+	m_pDescription.price = price;
 	m_pDescription.sIcon = "alchemy_1_icon.png";
 
 	return m_pDescription;

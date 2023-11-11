@@ -44,7 +44,7 @@ void UIAK47Factory1BuildItem::Execute()
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "UIAK47Factory1BuildItem : (Execute) resourceManager is null !");
 		return;
 	}
-	if (!resourceManager->RequsetResources(AK47Factory1BuildingComponent::GetDescription().cost)) {
+	if (!resourceManager->RequsetResources(AK47Factory1BuildingComponent::GetDescription().price)) {
 		return;
 	}
 
@@ -63,7 +63,7 @@ string UIAK47Factory1BuildItem::GetImagePath()
 	return AK47Factory1BuildingComponent::GetDescription().sIcon;
 }
 
-SUIItemDescription UIAK47Factory1BuildItem::GetDescrption()
+SDescription UIAK47Factory1BuildItem::GetDescrption()
 {
-	return SUIItemDescription(AK47Factory1BuildingComponent::GetDescription().cost, AK47Factory1BuildingComponent::GetDescription().sDescription);
+	return AK47Factory1BuildingComponent::GetDescription();
 }

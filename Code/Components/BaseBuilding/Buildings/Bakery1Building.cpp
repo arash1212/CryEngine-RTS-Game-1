@@ -99,7 +99,7 @@ void Bakery1BuildingComponent::Initialize()
 
 	//CostComponent Initializations
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
-	m_pCostComponent->SetCost(Bakery1BuildingComponent::GetDescription().cost);
+	m_pCostComponent->SetCost(Bakery1BuildingComponent::GetDescription().price);
 
 	//WorkplaceComponent  Initializations
 	m_pWorkplaceComponent = m_pEntity->GetOrCreateComponent<WorkplaceComponent>();
@@ -203,18 +203,18 @@ void Bakery1BuildingComponent::ResetWorkersJob()
 
 SDescription Bakery1BuildingComponent::GetDescription()
 {
-	SResourceInfo cost;
-	cost.m_moneyAmount = 300;
-	cost.m_oilAmount = 300;
-	cost.m_woodAmount = 700;
-	cost.m_ironAmount = 500;
-	cost.m_bulletAmount = 0;
+	SResourceInfo price;
+	price.m_moneyAmount = 300;
+	price.m_oilAmount = 300;
+	price.m_woodAmount = 700;
+	price.m_ironAmount = 500;
+	price.m_bulletAmount = 0;
 
 	SDescription m_pDescription;
 	m_pDescription.sName = "Bakery 1";
 	m_pDescription.sDescription = "Bakery 1 Building.";
 	m_pDescription.sBuyDescription = "Build Bakery 1 Building.";
-	m_pDescription.cost = cost;
+	m_pDescription.price = price;
 	m_pDescription.sIcon = "bakery_1_icon.png";
 
 	return m_pDescription;

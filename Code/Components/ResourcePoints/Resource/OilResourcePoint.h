@@ -4,14 +4,15 @@
 #include <DefaultComponents/Physics/BoxPrimitiveComponent.h>
 
 #include <Components/Managers/ResourceManager.h>
-#include <Components/Resources/Resource.h>
 
-class ResourceIronComponent final : public IEntityComponent
+class ResourcePointComponent;
+
+class OilResourcePointComponent final : public IEntityComponent
 {
 
 public:
-	ResourceIronComponent() = default;
-	virtual ~ResourceIronComponent() = default;
+	OilResourcePointComponent() = default;
+	virtual ~OilResourcePointComponent() = default;
 
 	// IEntityComponent
 	virtual void Initialize() override;
@@ -20,18 +21,17 @@ public:
 	virtual void ProcessEvent(const SEntityEvent& event) override;
 
 	// Reflect type to set a unique identifier for this component
-	static void ReflectType(Schematyc::CTypeDesc<ResourceIronComponent>& desc)
+	static void ReflectType(Schematyc::CTypeDesc<OilResourcePointComponent>& desc)
 	{
-		desc.SetGUID("{E7D9A867-E0B8-44D3-9EDB-50DD2F2871B6}"_cry_guid);
-		desc.SetEditorCategory("Resource");
+		desc.SetGUID("{6B6643B8-7880-4829-80FD-F88A89EF6DCD}"_cry_guid);
+		desc.SetEditorCategory("ResourcePoint");
 	}
-
 
 private:
 	Cry::DefaultComponents::CAdvancedAnimationComponent* m_pAnimationComponent = nullptr;
 	Cry::DefaultComponents::CBoxPrimitiveComponent* m_pBboxComponent = nullptr;
 
-	ResourceComponent* m_pResourceComponent = nullptr;
+	ResourcePointComponent* m_pResourcePointComponent = nullptr;
 
 public:
 };

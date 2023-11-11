@@ -10,8 +10,8 @@ private:
 	string sBuyDescription = "Buy Money.";
 	string sSellDescription = "Sell Money.";
 	string sIcon = "money_Icon_ui.png";
-	string sBuyIcon = "cancel.png";
-	string sSellIcon = "cancel.png";
+	string sBuyIcon = "money_buy_icon.png";
+	string sSellIcon = "money_sell_icon.pngg";
 	string sAttachmentName = "";
 	EResourceType mResourceType = EResourceType::Money;
 
@@ -25,13 +25,19 @@ public:
 	virtual EResourceType GetType() override;
 
 	virtual SDescription GetDescription() override {
-		SResourceInfo cost;
-		cost.m_moneyAmount = nPrice;
+		SResourceInfo price;
+		price.m_moneyAmount = 1;
+
+		SResourceInfo sellPrice;
+		sellPrice.m_sulfurAmount = 1;
 
 		SDescription description;
-		description.cost = cost;
-		description.sIcon = sIcon;
+		description.price = price;
+		description.sellPrice = sellPrice;
 		description.sName = sName;
+		description.sIcon = sIcon;
+		description.sBuyIcon = sBuyIcon;
+		description.sSellIcon = sSellIcon;
 		description.sDescription = sDescription;
 		description.sBuyDescription = sBuyDescription;
 		description.sSellDescription = sSellDescription;

@@ -23,11 +23,15 @@ void UICancelItem::Execute()
 
 string UICancelItem::GetImagePath()
 {
-	return "cancel.png";
+	return this->GetDescrption().sIcon;
 }
 
-SUIItemDescription UICancelItem::GetDescrption()
+SDescription UICancelItem::GetDescrption()
 {
-	SResourceInfo pInfo;
-	return SUIItemDescription(pInfo, "Cancel Units Current Action.");
+	SResourceInfo cost;
+
+	SDescription description;
+	description.sDescription = "Cancel Selected Units Action";
+	description.sIcon = "cancel.png";
+	return description;
 }

@@ -25,13 +25,19 @@ public:
 	virtual string GetAttachmentName() override;
 
 	virtual SDescription GetDescription() override {
-		SResourceInfo cost;
-		cost.m_moneyAmount = nPrice;
+		SResourceInfo price;
+		price.m_moneyAmount = 1;
+
+		SResourceInfo sellPrice;
+		sellPrice.m_sulfurAmount = 1;
 
 		SDescription description;
-		description.cost = cost;
-		description.sIcon = sIcon;
+		description.price = price;
+		description.sellPrice = sellPrice;
 		description.sName = sName;
+		description.sIcon = sIcon;
+		description.sBuyIcon = sBuyIcon;
+		description.sSellIcon = sSellIcon;
 		description.sDescription = sDescription;
 		description.sBuyDescription = sBuyDescription;
 		description.sSellDescription = sSellDescription;

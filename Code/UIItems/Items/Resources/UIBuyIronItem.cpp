@@ -4,7 +4,7 @@
 
 #include <Components/Info/OwnerInfo.h>
 #include <Components/Managers/ResourceManager.h>
-#include <Components/Resources/Resource.h>
+#include <Resources/Resources/IronResource.h>
 
 UIBuyIronItem::UIBuyIronItem(IEntity* entity)
 {
@@ -38,5 +38,11 @@ void UIBuyIronItem::Execute()
 
 string UIBuyIronItem::GetImagePath()
 {
-	return "iron_buy_icon.png";
+	return this->GetDescrption().sBuyIcon;
+}
+
+SDescription UIBuyIronItem::GetDescrption()
+{
+	IronResource pIronResource;
+	return pIronResource.GetDescription();
 }

@@ -2,11 +2,6 @@
 #include "SulfurResource.h"
 #include "GamePlugin.h"
 
-int32 SulfurResource::GetPrice()
-{
-	return nPrice;
-}
-
 string SulfurResource::GetName()
 {
 	return sName;

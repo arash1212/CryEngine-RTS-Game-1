@@ -102,7 +102,7 @@ void Zombie1UnitComponent::Initialize()
 
 	/////////CostComponent Initializations
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
-	m_pCostComponent->SetCost(Zombie1UnitComponent::GetDescription().cost);
+	m_pCostComponent->SetCost(Zombie1UnitComponent::GetDescription().price);
 
 	//UnitTypeManagerComponent
 	m_pUnitTypeManagerComponent = m_pEntity->GetOrCreateComponent<UnitTypeManagerComponent>();
@@ -147,15 +147,15 @@ void Zombie1UnitComponent::ProcessEvent(const SEntityEvent& event)
 
 SDescription Zombie1UnitComponent::GetDescription()
 {
-	SResourceInfo cost;
-	cost.m_moneyAmount = 5;
-	cost.m_populationAmount = 0;
+	SResourceInfo price;
+	price.m_moneyAmount = 5;
+	price.m_populationAmount = 0;
 
 	SDescription m_pDescription;
 	m_pDescription.sName = "Zombie 1";
 	m_pDescription.sDescription = "Zombie 1 Unit.";
 	m_pDescription.sBuyDescription = "Train Zombie 1 Unit.";
-	m_pDescription.cost = cost;
+	m_pDescription.price = price;
 	m_pDescription.sIcon = "cancel.png";
 
 	return m_pDescription;

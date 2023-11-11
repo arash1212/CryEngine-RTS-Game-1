@@ -4,7 +4,7 @@
 
 #include <Actions/IBaseAction.h>
 #include <Components/UI/UIResourcesPanel.h>
-#include <Components/Resources/Resource.h>
+#include <Resources/IResource.h>
 #include <Components/BaseBuilding/Building.h>
 #include <Components/Selectables/Health.h>
 

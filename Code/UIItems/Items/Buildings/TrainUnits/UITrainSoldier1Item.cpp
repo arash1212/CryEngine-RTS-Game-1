@@ -49,7 +49,7 @@ void UITrainSoldier1Item::Execute()
 		return;
 	}
 
-	if (!resouceManager->RequsetResources(Soldier1UnitComponent::GetDescription().cost)) {
+	if (!resouceManager->RequsetResources(Soldier1UnitComponent::GetDescription().price)) {
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "UITrainSoldier1Item : (Execute) Not enough resources to train Soldier1 unit !");
 		return;
 	}
@@ -63,7 +63,7 @@ string UITrainSoldier1Item::GetImagePath()
 	return Soldier1UnitComponent::GetDescription().sIcon;
 }
 
-SUIItemDescription UITrainSoldier1Item::GetDescrption()
+SDescription UITrainSoldier1Item::GetDescrption()
 {
-	return SUIItemDescription(Soldier1UnitComponent::GetDescription().cost, Soldier1UnitComponent::GetDescription().sBuyDescription);
+	return Soldier1UnitComponent::GetDescription();
 }

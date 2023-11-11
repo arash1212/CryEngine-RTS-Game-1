@@ -45,7 +45,7 @@ void UIGunPowderFactory1BuildItem::Execute()
 		return;
 	}
 
-	if (!resourceManager->RequsetResources(GunPowderFactory1BuildingComponent::GetDescription().cost)) {
+	if (!resourceManager->RequsetResources(GunPowderFactory1BuildingComponent::GetDescription().price)) {
 		return;
 	}
 
@@ -64,7 +64,7 @@ string UIGunPowderFactory1BuildItem::GetImagePath()
 	return GunPowderFactory1BuildingComponent::GetDescription().sIcon;
 }
 
-SUIItemDescription UIGunPowderFactory1BuildItem::GetDescrption()
+SDescription UIGunPowderFactory1BuildItem::GetDescrption()
 {
-	return SUIItemDescription(GunPowderFactory1BuildingComponent::GetDescription().cost, GunPowderFactory1BuildingComponent::GetDescription().sDescription);
+	return GunPowderFactory1BuildingComponent::GetDescription();
 }

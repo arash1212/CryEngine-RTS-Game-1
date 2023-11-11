@@ -45,7 +45,7 @@ void UIWindmillBuildItem::Execute()
 		return;
 	}
 
-	if (!resourceManager->RequsetResources(Windmill1BuildingComponent::GetDescription().cost)) {
+	if (!resourceManager->RequsetResources(Windmill1BuildingComponent::GetDescription().price)) {
 		return;
 	}
 
@@ -64,7 +64,7 @@ string UIWindmillBuildItem::GetImagePath()
 	return Windmill1BuildingComponent::GetDescription().sIcon;
 }
 
-SUIItemDescription UIWindmillBuildItem::GetDescrption()
+SDescription UIWindmillBuildItem::GetDescrption()
 {
-	return SUIItemDescription(Windmill1BuildingComponent::GetDescription().cost, Windmill1BuildingComponent::GetDescription().sDescription);
+	return Windmill1BuildingComponent::GetDescription();
 }

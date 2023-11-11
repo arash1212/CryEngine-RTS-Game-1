@@ -4,7 +4,7 @@
 
 #include <Components/Info/OwnerInfo.h>
 #include <Components/Managers/ResourceManager.h>
-#include <Components/Resources/Resource.h>
+#include <Resources/Resources/OilResource.h>
 
 UISellOilItem::UISellOilItem(IEntity* entity)
 {
@@ -38,5 +38,11 @@ void UISellOilItem::Execute()
 
 string UISellOilItem::GetImagePath()
 {
-	return "oil_barrel_sell_icon.png";
+	return  this->GetDescrption().sSellIcon;
+}
+
+SDescription UISellOilItem::GetDescrption()
+{
+	OilResource pOilResource;
+	return pOilResource.GetDescription();
 }

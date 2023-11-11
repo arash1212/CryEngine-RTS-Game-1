@@ -94,7 +94,7 @@ void Barracks1BuildingComponent::Initialize()
 
 	//CostComponent Initializations
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
-	m_pCostComponent->SetCost(Barracks1BuildingComponent::GetDescription().cost);
+	m_pCostComponent->SetCost(Barracks1BuildingComponent::GetDescription().price);
 
 }
 
@@ -130,19 +130,19 @@ void Barracks1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 
 SDescription Barracks1BuildingComponent::GetDescription()
 {
-	SResourceInfo cost;
-	cost.m_moneyAmount = 250;
-	cost.m_oilAmount = 0;
-	cost.m_populationAmount = 0;
-	cost.m_ironAmount = 700;
-	cost.m_woodAmount = 500;
+	SResourceInfo price;
+	price.m_moneyAmount = 250;
+	price.m_oilAmount = 0;
+	price.m_populationAmount = 0;
+	price.m_ironAmount = 700;
+	price.m_woodAmount = 500;
 
 
 	SDescription m_pDescription;
 	m_pDescription.sName = "Barraks 1";
 	m_pDescription.sDescription = "Barraks 1 Building.";
 	m_pDescription.sBuyDescription = "Build Barraks 1 Building.";
-	m_pDescription.cost = cost;
+	m_pDescription.price = price;
 	m_pDescription.sIcon = "barracks_1_icon.png";
 
 	return m_pDescription;

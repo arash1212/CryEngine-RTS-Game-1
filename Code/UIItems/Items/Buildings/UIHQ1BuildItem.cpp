@@ -45,7 +45,7 @@ void UIHQ1BuildItem::Execute()
 		return;
 	}
 
-	if (!resourceManager->RequsetResources(HQ1BuildingComponent::GetDescription().cost)) {
+	if (!resourceManager->RequsetResources(HQ1BuildingComponent::GetDescription().price)) {
 		return;
 	}
 
@@ -64,7 +64,7 @@ string UIHQ1BuildItem::GetImagePath()
 	return HQ1BuildingComponent::GetDescription().sIcon;
 }
 
-SUIItemDescription UIHQ1BuildItem::GetDescrption()
+SDescription UIHQ1BuildItem::GetDescrption()
 {
-	return SUIItemDescription(HQ1BuildingComponent::GetDescription().cost, HQ1BuildingComponent::GetDescription().sBuyDescription);
+	return HQ1BuildingComponent::GetDescription();
 }

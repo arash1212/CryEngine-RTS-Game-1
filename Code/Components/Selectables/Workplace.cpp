@@ -5,7 +5,6 @@
 #include <Components/Info/OwnerInfo.h>
 #include <Components/Selectables/Worker.h>
 #include <Components/BaseBuilding/Building.h>
-#include <Components/Resources/Resource.h>
 #include <Components/Managers/ResourceManager.h>
 #include <Components/Selectables/Health.h>
 

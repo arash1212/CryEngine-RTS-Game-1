@@ -45,7 +45,7 @@ void UIWarehouse1BuildItem::Execute()
 		return;
 	}
 
-	if (!resourceManager->RequsetResources(Warehouse1BuildingComponent::GetDescription().cost)) {
+	if (!resourceManager->RequsetResources(Warehouse1BuildingComponent::GetDescription().price)) {
 		return;
 	}
 
@@ -65,7 +65,7 @@ string UIWarehouse1BuildItem::GetImagePath()
 }
 
 
-SUIItemDescription UIWarehouse1BuildItem::GetDescrption()
+SDescription UIWarehouse1BuildItem::GetDescrption()
 {
-	return SUIItemDescription(Warehouse1BuildingComponent::GetDescription().cost, Warehouse1BuildingComponent::GetDescription().sDescription);
+	return Warehouse1BuildingComponent::GetDescription();
 }

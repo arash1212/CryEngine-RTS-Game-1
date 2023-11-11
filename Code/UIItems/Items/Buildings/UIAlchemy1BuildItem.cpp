@@ -44,7 +44,7 @@ void UIAlchemy1BuildItem::Execute()
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "UIAlchemy1BuildItem : (Execute) resourceManager is null !");
 		return;
 	}
-	if (!resourceManager->RequsetResources(Alchemy1BuildingComponent::GetDescription().cost)) {
+	if (!resourceManager->RequsetResources(Alchemy1BuildingComponent::GetDescription().price)) {
 		return;
 	}
 
@@ -63,7 +63,7 @@ string UIAlchemy1BuildItem::GetImagePath()
 	return Alchemy1BuildingComponent::GetDescription().sIcon;
 }
 
-SUIItemDescription UIAlchemy1BuildItem::GetDescrption()
+SDescription UIAlchemy1BuildItem::GetDescrption()
 {
-	return SUIItemDescription(Alchemy1BuildingComponent::GetDescription().cost, Alchemy1BuildingComponent::GetDescription().sDescription);
+	return Alchemy1BuildingComponent::GetDescription();
 }

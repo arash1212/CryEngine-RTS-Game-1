@@ -4,7 +4,6 @@
 
 #include <Components/Info/OwnerInfo.h>
 #include <Components/Managers/ResourceManager.h>
-#include <Components/Resources/Resource.h>
 
 UISellIronItem::UISellIronItem(IEntity* entity)
 {
@@ -38,5 +37,11 @@ void UISellIronItem::Execute()
 
 string UISellIronItem::GetImagePath()
 {
-	return "iron_sell_icon.png";
+	return this->GetDescrption().sSellIcon;
+}
+
+SDescription UISellIronItem::GetDescrption()
+{
+	IronResource pIronResource;
+	return pIronResource.GetDescription();
 }

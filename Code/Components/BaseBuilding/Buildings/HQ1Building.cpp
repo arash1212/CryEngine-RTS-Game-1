@@ -93,7 +93,7 @@ void HQ1BuildingComponent::Initialize()
 
 	//CostComponent Initializations
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
-	m_pCostComponent->SetCost(HQ1BuildingComponent::GetDescription().cost);
+	m_pCostComponent->SetCost(HQ1BuildingComponent::GetDescription().price);
 }
 
 
@@ -128,17 +128,17 @@ void HQ1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 
 SDescription HQ1BuildingComponent::GetDescription()
 {
-	SResourceInfo cost;
-	cost.m_moneyAmount = 2000;
-	cost.m_oilAmount = 1000;
-	cost.m_populationAmount = 30;
-	cost.m_woodAmount = 600;
+	SResourceInfo price;
+	price.m_moneyAmount = 2000;
+	price.m_oilAmount = 1000;
+	price.m_populationAmount = 30;
+	price.m_woodAmount = 600;
 
 	SDescription m_pDescription;
 	m_pDescription.sName = "HQ 1";
 	m_pDescription.sDescription = "HQ 1 Building.";
 	m_pDescription.sBuyDescription = "Build HQ 1 Building.";
-	m_pDescription.cost = cost;
+	m_pDescription.price = price;
 	m_pDescription.sIcon = "hq_1_Icon.png";
 
 	return m_pDescription;

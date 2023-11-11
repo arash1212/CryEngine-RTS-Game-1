@@ -16,6 +16,7 @@ protected:
 public:
 	virtual void Execute() override;
 	virtual string GetImagePath() override;
+	virtual SDescription GetDescrption() override;
 };
 
 

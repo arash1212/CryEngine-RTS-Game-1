@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "Resource.h"
+#include "ResourcePoint.h"
 #include "GamePlugin.h"
 
 #include <UIItems/IBaseUIItem.h>
@@ -15,18 +15,18 @@
 
 namespace
 {
-	static void RegisterResourceComponent(Schematyc::IEnvRegistrar& registrar)
+	static void RegisterResourcePointComponent(Schematyc::IEnvRegistrar& registrar)
 	{
 		Schematyc::CEnvRegistrationScope scope = registrar.Scope(IEntity::GetEntityScopeGUID());
 		{
-			Schematyc::CEnvRegistrationScope componentScope = scope.Register(SCHEMATYC_MAKE_ENV_COMPONENT(ResourceComponent));
+			Schematyc::CEnvRegistrationScope componentScope = scope.Register(SCHEMATYC_MAKE_ENV_COMPONENT(ResourcePointComponent));
 		}
 	}
 
-	CRY_STATIC_AUTO_REGISTER_FUNCTION(&RegisterResourceComponent);
+	CRY_STATIC_AUTO_REGISTER_FUNCTION(&RegisterResourcePointComponent);
 }
 
-void ResourceComponent::Initialize()
+void ResourcePointComponent::Initialize()
 {
 	//AnimationComponent Initialization
 	m_pAnimationComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CAdvancedAnimationComponent>();
@@ -41,7 +41,7 @@ void ResourceComponent::Initialize()
 	}
 }
 
-Cry::Entity::EventFlags ResourceComponent::GetEventMask() const
+Cry::Entity::EventFlags ResourcePointComponent::GetEventMask() const
 {
 	return
 		Cry::Entity::EEvent::GameplayStarted |
@@ -49,7 +49,7 @@ Cry::Entity::EventFlags ResourceComponent::GetEventMask() const
 		Cry::Entity::EEvent::Reset;
 }
 
-void ResourceComponent::ProcessEvent(const SEntityEvent& event)
+void ResourcePointComponent::ProcessEvent(const SEntityEvent& event)
 {
 	switch (event.event)
 	{
@@ -68,59 +68,59 @@ void ResourceComponent::ProcessEvent(const SEntityEvent& event)
 	}
 }
 
-Vec3 ResourceComponent::GetCollectingLocation()
+Vec3 ResourcePointComponent::GetCollectingLocation()
 {
 	Vec3 pos = m_pCollectingLocationAttachment->GetAttWorldAbsolute().t;
 	pos.z = m_pEntity->GetWorldPos().z;
 	return pos;
 }
 
-void ResourceComponent::SetType(EResourceType type)
+void ResourcePointComponent::SetType(EResourceType type)
 {
 	this->m_type = type;
 }
 
-EResourceType ResourceComponent::GetType()
+EResourceType ResourcePointComponent::GetType()
 {
 	return m_type;
 }
 
-void ResourceComponent::SetIsSingleUse(bool singleUse)
+void ResourcePointComponent::SetIsSingleUse(bool singleUse)
 {
 	this->bIsSingleUse = singleUse;
 }
 
-bool ResourceComponent::IsSingleUse()
+bool ResourcePointComponent::IsSingleUse()
 {
 	return bIsSingleUse;
 }
 
-bool ResourceComponent::IsInUse()
+bool ResourcePointComponent::IsInUse()
 {
 	return bIsInUse;
 }
 
-void ResourceComponent::SetIsInUse(bool inUse)
+void ResourcePointComponent::SetIsInUse(bool inUse)
 {
 	this->bIsInUse = inUse;
 }
 
-void ResourceComponent::SetCurrentCollector(IEntity* currentCollector)
+void ResourcePointComponent::SetCurrentCollector(IEntity* currentCollector)
 {
 	this->m_pCurrentCollector = currentCollector;
 }
 
-IEntity* ResourceComponent::GetCurrentCollector()
+IEntity* ResourcePointComponent::GetCurrentCollector()
 {
 	return m_pCurrentCollector;
 }
 
-void ResourceComponent::SetHasCollectingLocation(bool hasCollectingLocation)
+void ResourcePointComponent::SetHasCollectingLocation(bool hasCollectingLocation)
 {
 	this->bHasCollectingLocation = hasCollectingLocation;
 }
 
-bool ResourceComponent::HasCollectingLocation()
+bool ResourcePointComponent::HasCollectingLocation()
 {
 	return this->bHasCollectingLocation;
 }

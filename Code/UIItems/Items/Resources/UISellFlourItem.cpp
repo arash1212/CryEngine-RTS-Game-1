@@ -4,7 +4,7 @@
 
 #include <Components/Info/OwnerInfo.h>
 #include <Components/Managers/ResourceManager.h>
-#include <Components/Resources/Resource.h>
+#include <Resources/Resources/FlourResource.h>
 
 UISellFlourItem::UISellFlourItem(IEntity* entity)
 {
@@ -38,5 +38,11 @@ void UISellFlourItem::Execute()
 
 string UISellFlourItem::GetImagePath()
 {
-	return "flour_sell_icon.png";
+	return this->GetDescrption().sSellIcon;
+}
+
+SDescription UISellFlourItem::GetDescrption()
+{
+	FlourResource pFlourResource;
+	return pFlourResource.GetDescription();
 }

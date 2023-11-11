@@ -99,7 +99,7 @@ void AK47Factory1BuildingComponent::Initialize()
 
 	//CostComponent Initializations
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
-	m_pCostComponent->SetCost(AK47Factory1BuildingComponent::GetDescription().cost);
+	m_pCostComponent->SetCost(AK47Factory1BuildingComponent::GetDescription().price);
 
 	//WorkplaceComponent  Initializations
 	m_pWorkplaceComponent = m_pEntity->GetOrCreateComponent<WorkplaceComponent>();
@@ -201,17 +201,17 @@ void AK47Factory1BuildingComponent::UpdateAssignedWorkers()
 
 SDescription AK47Factory1BuildingComponent::GetDescription()
 {
-	SResourceInfo cost;
-	cost.m_moneyAmount = 400;
-	cost.m_oilAmount = 400;
-	cost.m_woodAmount = 800;
-	cost.m_ironAmount = 700;
+	SResourceInfo price;
+	price.m_moneyAmount = 400;
+	price.m_oilAmount = 400;
+	price.m_woodAmount = 800;
+	price.m_ironAmount = 700;
 
 	SDescription m_pDescription;
 	m_pDescription.sName = "AK47 Factory 1";
 	m_pDescription.sDescription = "AK47 Factory 1 Building.";
 	m_pDescription.sBuyDescription = "Build AK47 Factory 1 Building.";
-	m_pDescription.cost = cost;
+	m_pDescription.price = price;
 	m_pDescription.sIcon = "ak47factory_1_icon.png";
 
 	return m_pDescription;

@@ -4,7 +4,7 @@
 
 #include <Components/Info/OwnerInfo.h>
 #include <Components/Managers/ResourceManager.h>
-#include <Components/Resources/Resource.h>
+#include <Resources/Resources/WoodResource.h>
 
 UISellWoodItem::UISellWoodItem(IEntity* entity)
 {
@@ -38,5 +38,11 @@ void UISellWoodItem::Execute()
 
 string UISellWoodItem::GetImagePath()
 {
-	return "wood_sell_icon.png";
+	return  this->GetDescrption().sSellIcon;
+}
+
+SDescription UISellWoodItem::GetDescrption()
+{
+	WoodResource pWoodResource;
+	return pWoodResource.GetDescription();
 }

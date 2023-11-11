@@ -80,7 +80,7 @@ void TrainSoldier1Action::Cancel()
 		return;
 	}
 
-	resouceManager->RefundResources(Soldier1UnitComponent::GetDescription().cost);
+	resouceManager->RefundResources(Soldier1UnitComponent::GetDescription().price);
 	bIsDone = true;
 }
 

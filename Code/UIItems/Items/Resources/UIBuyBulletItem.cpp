@@ -4,7 +4,7 @@
 
 #include <Components/Info/OwnerInfo.h>
 #include <Components/Managers/ResourceManager.h>
-#include <Components/Resources/Resource.h>
+#include <Resources/Resources/BulletResource.h>
 
 UIBuyBulletItem::UIBuyBulletItem(IEntity* entity)
 {
@@ -38,5 +38,11 @@ void UIBuyBulletItem::Execute()
 
 string UIBuyBulletItem::GetImagePath()
 {
-	return "bullet_buy_icon.png";
+	return this->GetDescrption().sBuyIcon;
+}
+
+SDescription UIBuyBulletItem::GetDescrption()
+{
+	BulletResource pBulletResource;
+	return pBulletResource.GetDescription();
 }

@@ -4,14 +4,15 @@
 #include <DefaultComponents/Physics/BoxPrimitiveComponent.h>
 
 #include <Components/Managers/ResourceManager.h>
-#include <Components/Resources/Resource.h>
 
-class ResourceOilComponent final : public IEntityComponent
+class ResourcePointComponent;
+
+class WoodResourcePointComponent final : public IEntityComponent
 {
 
 public:
-	ResourceOilComponent() = default;
-	virtual ~ResourceOilComponent() = default;
+	WoodResourcePointComponent() = default;
+	virtual ~WoodResourcePointComponent() = default;
 
 	// IEntityComponent
 	virtual void Initialize() override;
@@ -20,17 +21,18 @@ public:
 	virtual void ProcessEvent(const SEntityEvent& event) override;
 
 	// Reflect type to set a unique identifier for this component
-	static void ReflectType(Schematyc::CTypeDesc<ResourceOilComponent>& desc)
+	static void ReflectType(Schematyc::CTypeDesc<WoodResourcePointComponent>& desc)
 	{
-		desc.SetGUID("{6B6643B8-7880-4829-80FD-F88A89EF6DCD}"_cry_guid);
-		desc.SetEditorCategory("Resource");
+		desc.SetGUID("{67BAE116-7A99-4323-B257-339303AAC59F}"_cry_guid);
+		desc.SetEditorCategory("ResourcePoint");
 	}
 
 private:
 	Cry::DefaultComponents::CAdvancedAnimationComponent* m_pAnimationComponent = nullptr;
 	Cry::DefaultComponents::CBoxPrimitiveComponent* m_pBboxComponent = nullptr;
 
-	ResourceComponent* m_pResourceComponent= nullptr;
+	ResourcePointComponent* m_pResourceComponent = nullptr;
 
 public:
+
 };

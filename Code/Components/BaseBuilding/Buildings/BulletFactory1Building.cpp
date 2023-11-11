@@ -99,7 +99,7 @@ void BulletFactory1BuildingComponent::Initialize()
 
 	//CostComponent Initializations
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
-	m_pCostComponent->SetCost(BulletFactory1BuildingComponent::GetDescription().cost);
+	m_pCostComponent->SetCost(BulletFactory1BuildingComponent::GetDescription().price);
 
 	//WorkplaceComponent  Initializations
 	m_pWorkplaceComponent = m_pEntity->GetOrCreateComponent<WorkplaceComponent>();
@@ -209,17 +209,17 @@ void BulletFactory1BuildingComponent::UpdateAssignedWorkers()
 
 SDescription BulletFactory1BuildingComponent::GetDescription()
 {
-	SResourceInfo cost;
-	cost.m_moneyAmount = 400;
-	cost.m_oilAmount = 400;
-	cost.m_woodAmount = 900;
-	cost.m_ironAmount = 800;
+	SResourceInfo price;
+	price.m_moneyAmount = 400;
+	price.m_oilAmount = 400;
+	price.m_woodAmount = 900;
+	price.m_ironAmount = 800;
 
 	SDescription m_pDescription;
 	m_pDescription.sName = "Bullet Factory 1";
 	m_pDescription.sDescription = "Bullet Factory 1 Building.";
 	m_pDescription.sBuyDescription = "Build Bullet Factory 1 Building.";
-	m_pDescription.cost = cost;
+	m_pDescription.price = price;
 	m_pDescription.sIcon = "bulletfactory_1_icon.png";
 
 	return m_pDescription;

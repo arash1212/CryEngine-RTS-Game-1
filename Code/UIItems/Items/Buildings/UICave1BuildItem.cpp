@@ -45,7 +45,7 @@ void UICave1BuildItem::Execute()
 		return;
 	}
 
-	if (!resourceManager->RequsetResources(Cave1BuildingComponent::GetDescription().cost)) {
+	if (!resourceManager->RequsetResources(Cave1BuildingComponent::GetDescription().price)) {
 		return;
 	}
 
@@ -64,7 +64,7 @@ string UICave1BuildItem::GetImagePath()
 	return  Cave1BuildingComponent::GetDescription().sIcon;
 }
 
-SUIItemDescription UICave1BuildItem::GetDescrption()
+SDescription UICave1BuildItem::GetDescrption()
 {
-	return SUIItemDescription(Cave1BuildingComponent::GetDescription().cost, Cave1BuildingComponent::GetDescription().sDescription);
+	return Cave1BuildingComponent::GetDescription();
 }

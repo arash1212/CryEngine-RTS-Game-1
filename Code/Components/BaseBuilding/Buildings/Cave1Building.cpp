@@ -107,7 +107,7 @@ void Cave1BuildingComponent::Initialize()
 
 	//CostComponent Initializations
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
-	m_pCostComponent->SetCost(Cave1BuildingComponent::GetDescription().cost);
+	m_pCostComponent->SetCost(Cave1BuildingComponent::GetDescription().price);
 
 	//ResourceManagerComponent initialization
 	m_pResourceManagerComponent = m_pEntity->GetOrCreateComponent<ResourceManagerComponent>();
@@ -207,17 +207,17 @@ void Cave1BuildingComponent::CommandUnitsToAttack()
 
 SDescription Cave1BuildingComponent::GetDescription()
 {
-	SResourceInfo cost;
-	cost.m_moneyAmount = 80;
-	cost.m_oilAmount = 30;
-	cost.m_populationAmount = 0;
-	cost.m_woodAmount = 50;
+	SResourceInfo price;
+	price.m_moneyAmount = 80;
+	price.m_oilAmount = 30;
+	price.m_populationAmount = 0;
+	price.m_woodAmount = 50;
 
 	SDescription m_pDescription;
 	m_pDescription.sName = "Cave 1";
 	m_pDescription.sDescription = "Cave 1 Building.";
 	m_pDescription.sBuyDescription = "Build Cave 1 Building.";
-	m_pDescription.cost = cost;
+	m_pDescription.price = price;
 	m_pDescription.sIcon = "cave_1_icon.png";
 
 	return m_pDescription;

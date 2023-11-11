@@ -4,7 +4,7 @@
 
 #include <Components/Info/OwnerInfo.h>
 #include <Components/Managers/ResourceManager.h>
-#include <Components/Resources/Resource.h>
+#include <Resources/Resources/BreadResource.h>
 
 UIBuyBreadItem::UIBuyBreadItem(IEntity* entity)
 {
@@ -38,5 +38,11 @@ void UIBuyBreadItem::Execute()
 
 string UIBuyBreadItem::GetImagePath()
 {
-	return "bread_buy_icon.png";
+	return this->GetDescrption().sBuyIcon;
+}
+
+SDescription UIBuyBreadItem::GetDescrption()
+{
+	BreadResource pBreadResource;
+	return pBreadResource.GetDescription();
 }

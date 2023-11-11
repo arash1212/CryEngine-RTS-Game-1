@@ -99,7 +99,7 @@ void GunPowderFactory1BuildingComponent::Initialize()
 
 	//CostComponent Initializations
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
-	m_pCostComponent->SetCost(GunPowderFactory1BuildingComponent::GetDescription().cost);
+	m_pCostComponent->SetCost(GunPowderFactory1BuildingComponent::GetDescription().price);
 
 	//WorkplaceComponent  Initializations
 	m_pWorkplaceComponent = m_pEntity->GetOrCreateComponent<WorkplaceComponent>();
@@ -209,17 +209,17 @@ void GunPowderFactory1BuildingComponent::UpdateAssignedWorkers()
 
 SDescription GunPowderFactory1BuildingComponent::GetDescription()
 {
-	SResourceInfo cost;
-	cost.m_moneyAmount = 300;
-	cost.m_oilAmount = 600;
-	cost.m_ironAmount = 800;
-	cost.m_woodAmount = 300;
+	SResourceInfo price;
+	price.m_moneyAmount = 300;
+	price.m_oilAmount = 600;
+	price.m_ironAmount = 800;
+	price.m_woodAmount = 300;
 
 	SDescription m_pDescription;
 	m_pDescription.sName = "GunPowder Factory 1";
 	m_pDescription.sDescription = "GunPowder Factory 1 Building.";
 	m_pDescription.sBuyDescription = "Build GunPowder Factory 1 Building.";
-	m_pDescription.cost = cost;
+	m_pDescription.price = price;
 	m_pDescription.sIcon = "gun_powder_factory_1_icon.png";
 
 	return m_pDescription;

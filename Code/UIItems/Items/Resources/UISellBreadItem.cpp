@@ -4,7 +4,7 @@
 
 #include <Components/Info/OwnerInfo.h>
 #include <Components/Managers/ResourceManager.h>
-#include <Components/Resources/Resource.h>
+#include <Resources/Resources/BreadResource.h>
 
 UISellBreadItem::UISellBreadItem(IEntity* entity)
 {
@@ -38,5 +38,11 @@ void UISellBreadItem::Execute()
 
 string UISellBreadItem::GetImagePath()
 {
-	return "bread_sell_icon.png";
+	return  this->GetDescrption().sSellIcon;
+}
+
+SDescription UISellBreadItem::GetDescrption()
+{
+	BreadResource pBreadResource;
+	return pBreadResource.GetDescription();
 }

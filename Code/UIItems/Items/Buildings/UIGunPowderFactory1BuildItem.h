@@ -12,7 +12,7 @@ protected:
 public:
 	virtual void Execute() override;
 	virtual string GetImagePath() override;
-	virtual SUIItemDescription GetDescrption() override;
+	virtual SDescription GetDescrption() override;
 };
 
 

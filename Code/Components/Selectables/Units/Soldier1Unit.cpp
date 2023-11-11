@@ -110,7 +110,7 @@ void Soldier1UnitComponent::Initialize()
 
 	//CostComponent Initializations
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
-	m_pCostComponent->SetCost(Soldier1UnitComponent::GetDescription().cost);
+	m_pCostComponent->SetCost(Soldier1UnitComponent::GetDescription().price);
 
 	//UnitTypeManagerComponent
 	m_pUnitTypeManagerComponent = m_pEntity->GetOrCreateComponent<UnitTypeManagerComponent>();
@@ -159,17 +159,17 @@ void Soldier1UnitComponent::ProcessEvent(const SEntityEvent& event)
 
 SDescription Soldier1UnitComponent::GetDescription()
 {
-	SResourceInfo cost;
-	cost.m_moneyAmount = 120;
-	cost.m_populationAmount = 1;
-	cost.m_bulletAmount = 50;
-	cost.m_ak47Amount = 1;
+	SResourceInfo price;
+	price.m_moneyAmount = 120;
+	price.m_populationAmount = 1;
+	price.m_bulletAmount = 50;
+	price.m_ak47Amount = 1;
 
 	SDescription m_pDescription;
 	m_pDescription.sName = "Soldier 1";
 	m_pDescription.sDescription = "Soldier 1 Unit.";
 	m_pDescription.sBuyDescription = "Train Solfier 1 Unit.";
-	m_pDescription.cost = cost;
+	m_pDescription.price = price;
 	m_pDescription.sIcon = "soldier_1_icon.png";
 
 	return m_pDescription;

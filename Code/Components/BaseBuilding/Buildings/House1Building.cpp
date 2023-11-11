@@ -94,7 +94,7 @@ void House1BuildingComponent::Initialize()
 
 	//CostComponent Initializations
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
-	m_pCostComponent->SetCost(House1BuildingComponent::GetDescription().cost);
+	m_pCostComponent->SetCost(House1BuildingComponent::GetDescription().price);
 }
 
 
@@ -129,17 +129,17 @@ void House1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 
 SDescription House1BuildingComponent::GetDescription()
 {
-	SResourceInfo cost;
-	cost.m_moneyAmount = 200;
-	cost.m_populationAmount = 0;
-	cost.m_woodAmount = 600;
-	cost.m_ironAmount = 500;
+	SResourceInfo price;
+	price.m_moneyAmount = 200;
+	price.m_populationAmount = 0;
+	price.m_woodAmount = 600;
+	price.m_ironAmount = 500;
 
 	SDescription m_pDescription;
 	m_pDescription.sName = "House 1";
 	m_pDescription.sDescription = "House 1 Building.";
 	m_pDescription.sBuyDescription = "Build House 1 Building.";
-	m_pDescription.cost = cost;
+	m_pDescription.price = price;
 	m_pDescription.sIcon = "house_1_icon.png";
 
 	return m_pDescription;

@@ -5,7 +5,7 @@
 class AIControllerComponent;
 class EngineerComponent;
 class UnitStateManagerComponent;
-class ResourceComponent;
+class ResourcePointComponent;
 class UnitAnimationComponent;
 class ResourceCollectorComponent;
 
@@ -18,11 +18,11 @@ private:
 	AIControllerComponent* m_pAiControllerComponent = nullptr;
 	EngineerComponent* m_pEngineerComponent = nullptr;
 	UnitStateManagerComponent* m_pStateManagerComponent = nullptr;
-	ResourceComponent* m_pResourceComponent = nullptr;
+	ResourcePointComponent* m_pResourcePointComponent = nullptr;
 	UnitAnimationComponent* m_pAnimationComponent = nullptr;
 	ResourceCollectorComponent* m_pResourceCollectorComponent = nullptr;
 
-	IEntity* m_pResourceEntity = nullptr;
+	IEntity* m_pResourcePointEntity = nullptr;
 	IEntity* m_pWarehouseEntity = nullptr;
 private:
 	Vec3 m_movePosition = ZERO;

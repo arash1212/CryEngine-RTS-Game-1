@@ -25,7 +25,6 @@
 #include <Components/Info/OwnerInfo.h>
 #include <Components/BaseBuilding/Building.h>
 #include <Components/Managers/ResourceManager.h>
-#include <Components/Resources/Resource.h>
 #include <Actions/Units/UnitCollectResourceAction.h>
 #include <Components/Selectables/ResourceCollector.h>
 #include <Components/Selectables/Worker.h>
@@ -382,7 +381,7 @@ void PlayerComponent::RightMouseDown(int activationMode, float value)
 				return;
 			}
 
-			ResourceComponent* resource = entity->GetComponent<ResourceComponent>();
+			ResourcePointComponent* resource = entity->GetComponent<ResourcePointComponent>();
 			if (resource) {
 				AssignResourceToEngineers(entity);
 				return;
@@ -788,44 +787,44 @@ void PlayerComponent::UpdateDescriptionPanel(int32 index)
 	//bIsLeftClickWorks = false;
 	m_pUIDescriptionsPanelComponent->Clear();
 
-	SUIItemDescription pDescription = m_currentUIItems[index]->GetDescrption();
-	if (pDescription.cost.m_moneyAmount > 0) {
-		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("money_Icon_ui.png", pDescription.cost.m_moneyAmount));
+	SDescription pDescription = m_currentUIItems[index]->GetDescrption();
+	if (pDescription.price.m_moneyAmount > 0) {
+		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("money_Icon_ui.png", pDescription.price.m_moneyAmount));
 	}
-	if (pDescription.cost.m_ironAmount > 0) {
-		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("iron_buy_icon.png", pDescription.cost.m_ironAmount));
+	if (pDescription.price.m_ironAmount > 0) {
+		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("iron_buy_icon.png", pDescription.price.m_ironAmount));
 	}
-	if (pDescription.cost.m_woodAmount > 0) {
-		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("wood_buy_icon.png", pDescription.cost.m_woodAmount));
+	if (pDescription.price.m_woodAmount > 0) {
+		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("wood_buy_icon.png", pDescription.price.m_woodAmount));
 	}
-	if (pDescription.cost.m_oilAmount > 0) {
-		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("oil_barrel_icon.png", pDescription.cost.m_oilAmount));
+	if (pDescription.price.m_oilAmount > 0) {
+		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("oil_barrel_icon.png", pDescription.price.m_oilAmount));
 	}
-	if (pDescription.cost.m_breadAmount > 0) {
-		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("bread_buy_icon.png", pDescription.cost.m_breadAmount));
+	if (pDescription.price.m_breadAmount > 0) {
+		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("bread_buy_icon.png", pDescription.price.m_breadAmount));
 	}
-	if (pDescription.cost.m_wheatAmount > 0) {
-		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("wheat_buy_icon.png", pDescription.cost.m_wheatAmount));
+	if (pDescription.price.m_wheatAmount > 0) {
+		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("wheat_buy_icon.png", pDescription.price.m_wheatAmount));
 	}
-	if (pDescription.cost.m_ak47Amount > 0) {
-		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("ak47_buy_icon.png", pDescription.cost.m_ak47Amount));
+	if (pDescription.price.m_ak47Amount > 0) {
+		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("ak47_buy_icon.png", pDescription.price.m_ak47Amount));
 	}
-	if (pDescription.cost.m_bulletAmount > 0) {
-		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("bullet_buy_icon.png", pDescription.cost.m_bulletAmount));
+	if (pDescription.price.m_bulletAmount > 0) {
+		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("bullet_buy_icon.png", pDescription.price.m_bulletAmount));
 	}
-	if (pDescription.cost.m_flourAmount > 0) {
-		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("flour_buy_icon.png", pDescription.cost.m_flourAmount));
+	if (pDescription.price.m_flourAmount > 0) {
+		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("flour_buy_icon.png", pDescription.price.m_flourAmount));
 	}
-	if (pDescription.cost.m_gunPowderAmount > 0) {
-		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("gun_powder_buy_icon.png", pDescription.cost.m_gunPowderAmount));
+	if (pDescription.price.m_gunPowderAmount > 0) {
+		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("gun_powder_buy_icon.png", pDescription.price.m_gunPowderAmount));
 	}
-	if (pDescription.cost.m_populationAmount > 0) {
-		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("population_Icon_ui.png", pDescription.cost.m_populationAmount));
+	if (pDescription.price.m_populationAmount > 0) {
+		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("population_Icon_ui.png", pDescription.price.m_populationAmount));
 	}
-	if (pDescription.cost.m_sulfurAmount > 0) {
-		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("sulfur_buy_icon.png", pDescription.cost.m_sulfurAmount));
+	if (pDescription.price.m_sulfurAmount > 0) {
+		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("sulfur_buy_icon.png", pDescription.price.m_sulfurAmount));
 	}
-	m_pUIDescriptionsPanelComponent->SetDescriptionText(pDescription.m_description);
+	m_pUIDescriptionsPanelComponent->SetDescriptionText(pDescription.sDescription);
 
 	CryLog("index over : %i", index);
 }

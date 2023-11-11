@@ -4,7 +4,7 @@
 
 #include <Components/Info/OwnerInfo.h>
 #include <Components/Managers/ResourceManager.h>
-#include <Components/Resources/Resource.h>
+#include <Resources/Resources/WheatResource.h>
 
 UISellWheatItem::UISellWheatItem(IEntity* entity)
 {
@@ -38,5 +38,11 @@ void UISellWheatItem::Execute()
 
 string UISellWheatItem::GetImagePath()
 {
-	return "wheat_sell_icon.png";
+	return  this->GetDescrption().sSellIcon;
+}
+
+SDescription UISellWheatItem::GetDescrption()
+{
+	WheatResource pWheatResource;
+	return pWheatResource.GetDescription();
 }

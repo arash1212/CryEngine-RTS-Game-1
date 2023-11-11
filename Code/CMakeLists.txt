@@ -143,21 +143,21 @@ add_sources("Player_uber.cpp"
 		"Components/Player/Player.cpp"
 		"Components/Player/Player.h"
 )
-add_sources("Resources_uber.cpp"
+add_sources("ResourcePoints_uber.cpp"
     PROJECTS Game
-    SOURCE_GROUP "Components\\\\Resources"
-		"Components/Resources/Resource.cpp"
-		"Components/Resources/Resource.h"
+    SOURCE_GROUP "Components\\\\ResourcePoints"
+		"Components/ResourcePoints/ResourcePoint.cpp"
+		"Components/ResourcePoints/ResourcePoint.h"
 )
 add_sources("Resource_uber.cpp"
     PROJECTS Game
-    SOURCE_GROUP "Components\\\\Resources\\\\Resource"
-		"Components/Resources/Resource/ResourceIron.cpp"
-		"Components/Resources/Resource/ResourceOil.cpp"
-		"Components/Resources/Resource/ResourceWood.cpp"
-		"Components/Resources/Resource/ResourceIron.h"
-		"Components/Resources/Resource/ResourceOil.h"
-		"Components/Resources/Resource/ResourceWood.h"
+    SOURCE_GROUP "Components\\\\ResourcePoints\\\\Resource"
+		"Components/ResourcePoints/Resource/IronResourcePoint.cpp"
+		"Components/ResourcePoints/Resource/OilResourcePoint.cpp"
+		"Components/ResourcePoints/Resource/WoodResourcePoint.cpp"
+		"Components/ResourcePoints/Resource/IronResourcePoint.h"
+		"Components/ResourcePoints/Resource/OilResourcePoint.h"
+		"Components/ResourcePoints/Resource/WoodResourcePoint.h"
 )
 add_sources("Selectables_uber.cpp"
     PROJECTS Game

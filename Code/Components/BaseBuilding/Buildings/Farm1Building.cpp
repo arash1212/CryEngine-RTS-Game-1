@@ -97,7 +97,7 @@ void Farm1BuildingComponent::Initialize()
 
 	//CostComponent Initializations
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
-	m_pCostComponent->SetCost(Barracks1BuildingComponent::GetDescription().cost);
+	m_pCostComponent->SetCost(Barracks1BuildingComponent::GetDescription().price);
 
 	//Wheat positions
 	IAttachment* m_pWheat1Attachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("wheatPos1");
@@ -325,17 +325,17 @@ void Farm1BuildingComponent::UpdateAssignedWorkers()
 
 SDescription Farm1BuildingComponent::GetDescription()
 {
-	SResourceInfo cost;
-	cost.m_moneyAmount = 250;
-	cost.m_oilAmount = 100;
-	cost.m_woodAmount = 540;
-	cost.m_ironAmount = 300;
+	SResourceInfo price;
+	price.m_moneyAmount = 250;
+	price.m_oilAmount = 100;
+	price.m_woodAmount = 540;
+	price.m_ironAmount = 300;
 
 	SDescription m_pDescription;
 	m_pDescription.sName = "Farm 1";
 	m_pDescription.sDescription = "Farm 1 Building.";
 	m_pDescription.sBuyDescription = "Biuld Farm 1 Building.";
-	m_pDescription.cost = cost;
+	m_pDescription.price = price;
 	m_pDescription.sIcon = "farm_1_icon.png";
 
 	return m_pDescription;

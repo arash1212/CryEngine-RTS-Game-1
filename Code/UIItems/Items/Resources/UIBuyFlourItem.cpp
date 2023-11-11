@@ -4,7 +4,7 @@
 
 #include <Components/Info/OwnerInfo.h>
 #include <Components/Managers/ResourceManager.h>
-#include <Components/Resources/Resource.h>
+#include <Resources/Resources/FlourResource.h>
 
 UIBuyFlourItem::UIBuyFlourItem(IEntity* entity)
 {
@@ -38,5 +38,11 @@ void UIBuyFlourItem::Execute()
 
 string UIBuyFlourItem::GetImagePath()
 {
-	return "flour_buy_icon.png";
+	return  this->GetDescrption().sBuyIcon;
+}
+
+SDescription UIBuyFlourItem::GetDescrption()
+{
+	FlourResource pFlourResource;
+	return pFlourResource.GetDescription();
 }

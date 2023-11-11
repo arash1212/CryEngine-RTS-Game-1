@@ -1,7 +1,7 @@
 #pragma once
 
 #include <DefaultComponents/Geometry/AdvancedAnimationComponent.h>
-#include <Components/Resources/Resource.h>
+#include <Components/ResourcePoints/ResourcePoint.h>
 #include <Components/Managers/ResourceManager.h>
 #include <Resources/IResource.h>
 

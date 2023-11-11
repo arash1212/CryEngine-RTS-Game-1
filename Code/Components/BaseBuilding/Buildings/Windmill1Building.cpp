@@ -104,7 +104,7 @@ void Windmill1BuildingComponent::Initialize()
 
 	//CostComponent Initializations
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
-	m_pCostComponent->SetCost(Windmill1BuildingComponent::GetDescription().cost);
+	m_pCostComponent->SetCost(Windmill1BuildingComponent::GetDescription().price);
 
 	//WorkplaceComponent  Initializations
 	m_pWorkplaceComponent = m_pEntity->GetOrCreateComponent<WorkplaceComponent>();
@@ -193,16 +193,16 @@ void Windmill1BuildingComponent::UpdateAssignedWorkers()
 
 SDescription Windmill1BuildingComponent::GetDescription()
 {
-	SResourceInfo cost;
-	cost.m_moneyAmount = 350;
-	cost.m_oilAmount = 200;
-	cost.m_woodAmount = 700;
+	SResourceInfo price;
+	price.m_moneyAmount = 350;
+	price.m_oilAmount = 200;
+	price.m_woodAmount = 700;
 
 	SDescription m_pDescription;
 	m_pDescription.sName = "Windmill 1";
 	m_pDescription.sDescription = "Windmill 1 Building.";
 	m_pDescription.sBuyDescription = "Build Windmill 1 Building.";
-	m_pDescription.cost = cost;
+	m_pDescription.price = price;
 	m_pDescription.sIcon = "windmill_1_icon.png";
 
 	return m_pDescription;

@@ -44,7 +44,7 @@ void UIBulletFactory1BuildItem::Execute()
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "UIBulletFactory1BuildItem : (Execute) resourceManager is null !");
 		return;
 	}
-	if (!resourceManager->RequsetResources(BulletFactory1BuildingComponent::GetDescription().cost)) {
+	if (!resourceManager->RequsetResources(BulletFactory1BuildingComponent::GetDescription().price)) {
 		return;
 	}
 
@@ -63,7 +63,7 @@ string UIBulletFactory1BuildItem::GetImagePath()
 	return  BulletFactory1BuildingComponent::GetDescription().sIcon;
 }
 
-SUIItemDescription UIBulletFactory1BuildItem::GetDescrption()
+SDescription UIBulletFactory1BuildItem::GetDescrption()
 {
-	return SUIItemDescription(BulletFactory1BuildingComponent::GetDescription().cost, BulletFactory1BuildingComponent::GetDescription().sDescription);
+	return BulletFactory1BuildingComponent::GetDescription();
 }

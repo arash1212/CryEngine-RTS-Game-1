@@ -27,11 +27,14 @@ struct SResourceRequestParams {
 
 struct SDescription {
 	string sIcon = "cancel.png";
+	string sBuyIcon = "cancel.png";
+	string sSellIcon = "cancel.png";
 	string sName = "Name Place Holder";
 	string sDescription = "Description Place Holder";
 	string sBuyDescription = "Buy Description Place Holder";
 	string sSellDescription = "Sell Description Place Holder";
-	SResourceInfo cost;
+	SResourceInfo price;
+	SResourceInfo sellPrice;
 };
 
 class ResourceManagerComponent : public IEntityComponent {

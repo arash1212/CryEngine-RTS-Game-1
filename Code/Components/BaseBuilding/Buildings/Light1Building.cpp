@@ -92,7 +92,7 @@ void Light1BuildingComponent::Initialize()
 
 	//CostComponent Initialization
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
-	m_pCostComponent->SetCost(Light1BuildingComponent::GetDescription().cost);
+	m_pCostComponent->SetCost(Light1BuildingComponent::GetDescription().price);
 
 	//LightPosAttachment Initialization
 	m_pLightPosAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("lightPos");
@@ -139,16 +139,16 @@ void Light1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 
 SDescription Light1BuildingComponent::GetDescription()
 {
-	SResourceInfo cost;
-	cost.m_moneyAmount = 100;
-	cost.m_populationAmount = 0;
-	cost.m_ironAmount = 300;
+	SResourceInfo price;
+	price.m_moneyAmount = 100;
+	price.m_populationAmount = 0;
+	price.m_ironAmount = 300;
 
 	SDescription m_pDescription;
 	m_pDescription.sName = "Light 1";
 	m_pDescription.sDescription = "Light 1 Building.";
 	m_pDescription.sBuyDescription = "Build Light 1 Building.";
-	m_pDescription.cost = cost;
+	m_pDescription.price = price;
 	m_pDescription.sIcon = "light_1_icon.png";
 
 	return m_pDescription;

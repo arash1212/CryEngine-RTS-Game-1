@@ -45,7 +45,7 @@ void UIFarm1BuildItem::Execute()
 		return;
 	}
 
-	if (!resourceManager->RequsetResources(Farm1BuildingComponent::GetDescription().cost)) {
+	if (!resourceManager->RequsetResources(Farm1BuildingComponent::GetDescription().price)) {
 		return;
 	}
 
@@ -64,7 +64,7 @@ string UIFarm1BuildItem::GetImagePath()
 	return  Farm1BuildingComponent::GetDescription().sIcon;
 }
 
-SUIItemDescription UIFarm1BuildItem::GetDescrption()
+SDescription UIFarm1BuildItem::GetDescrption()
 {
-	return SUIItemDescription(Farm1BuildingComponent::GetDescription().cost, Farm1BuildingComponent::GetDescription().sDescription);
+	return Farm1BuildingComponent::GetDescription();
 }

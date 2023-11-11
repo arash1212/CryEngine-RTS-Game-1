@@ -79,7 +79,7 @@ void TrainEngineer1Action::Cancel()
 		return;
 	}
 
-	resouceManager->RefundResources(Engineer1UnitComponent::GetDescription().cost);
+	resouceManager->RefundResources(Engineer1UnitComponent::GetDescription().price);
 	bIsDone = true;
 }
 

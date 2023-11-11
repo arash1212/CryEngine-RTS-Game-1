@@ -24,11 +24,15 @@ void UIChangeStanceItem::Execute()
 
 string UIChangeStanceItem::GetImagePath()
 {
-	return "UI_Stance_Icon.png";
+	return this->GetDescrption().sIcon;
 }
 
-SUIItemDescription UIChangeStanceItem::GetDescrption()
+SDescription UIChangeStanceItem::GetDescrption()
 {
-	SResourceInfo pInfo;
-	return SUIItemDescription(pInfo, "Change Unit Stance.");
+	SResourceInfo cost;
+
+	SDescription description;
+	description.sDescription = "Change Selected Units Stance";
+	description.sIcon = "ui_stance_Icon.png";
+	return description;
 }
