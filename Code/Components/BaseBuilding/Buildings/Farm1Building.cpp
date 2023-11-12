@@ -97,7 +97,7 @@ void Farm1BuildingComponent::Initialize()
 
 	//CostComponent Initializations
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
-	m_pCostComponent->SetCost(Barracks1BuildingComponent::GetDescription().price);
+	m_pCostComponent->SetCost(Farm1BuildingComponent::GetDescription().price);
 
 	//Wheat positions
 	IAttachment* m_pWheat1Attachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("wheatPos1");
@@ -328,7 +328,7 @@ SDescription Farm1BuildingComponent::GetDescription()
 	SResourceInfo price;
 	price.m_moneyAmount = 250;
 	price.m_oilAmount = 100;
-	price.m_woodAmount = 540;
+	price.m_woodAmount = 500;
 	price.m_ironAmount = 300;
 
 	SDescription m_pDescription;

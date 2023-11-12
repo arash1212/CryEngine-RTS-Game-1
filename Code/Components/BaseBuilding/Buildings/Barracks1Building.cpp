@@ -134,8 +134,8 @@ SDescription Barracks1BuildingComponent::GetDescription()
 	price.m_moneyAmount = 250;
 	price.m_oilAmount = 0;
 	price.m_populationAmount = 0;
-	price.m_ironAmount = 700;
-	price.m_woodAmount = 500;
+	price.m_ironAmount = 500;
+	price.m_woodAmount = 300;
 
 
 	SDescription m_pDescription;

@@ -286,10 +286,8 @@ add_sources("Items_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "UIItems\\\\InfoPanel\\\\Items"
 		"UIItems/InfoPanel/Items/UIActionInfoPanelItem.cpp"
-		"UIItems/InfoPanel/Items/UIBuildingActionInfoPanelItem.cpp"
 		"UIItems/InfoPanel/Items/UIUnitInfoPanelItem.cpp"
 		"UIItems/InfoPanel/Items/UIActionInfoPanelItem.h"
-		"UIItems/InfoPanel/Items/UIBuildingActionInfoPanelItem.h"
 		"UIItems/InfoPanel/Items/UIUnitInfoPanelItem.h"
 )
 add_sources("Items_uber.cpp"

@@ -5,7 +5,7 @@
 #include <CryEntitySystem/IEntitySystem.h>
 #include <Utils/EntityUtils.h>
 
-#include <UIItems/InfoPanel/Items/UIBuildingActionInfoPanelItem.h>
+#include <UIItems/InfoPanel/Items/UIActionInfoPanelItem.h>
 
 #include <Components/Selectables/Attacker.h>
 #include <Components/Controller/AIController.h>
@@ -95,6 +95,6 @@ f32 TrainEngineer1Action::GetProgressAmount()
 
 IBaseInfoPanelUIItem* TrainEngineer1Action::GetInfoPanelItem()
 {
-	return new UIBuildingActionInfoPanelItem(m_pEntity, Engineer1UnitComponent::GetDescription().sIcon, this);
+	return new UIActionInfoPanelItem(m_pEntity, Engineer1UnitComponent::GetDescription().sIcon, this);
 }
 

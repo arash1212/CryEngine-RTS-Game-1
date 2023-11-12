@@ -43,7 +43,7 @@
 
 #include <Components/Selectables/InfoPanelUIDetail.h>
 #include <UIItems/InfoPanel/IBaseInfoPanelUIItem.h>
-#include <UIItems/InfoPanel/Items/UIBuildingActionInfoPanelItem.h>
+#include <UIItems/InfoPanel/Items/UIActionInfoPanelItem.h>
 
 #include <Components/Managers/VisibilityManager.h>
 
@@ -316,7 +316,8 @@ void PlayerComponent::LeftMouseDown(int activationMode, float value)
 		IEntity* entity = MouseUtils::GetActorUnderCursor();
 		if (entity && !m_pUISelectionBoxComponent->IsBoxSelectionTriggered(mousePos)) {
 			OwnerInfoComponent* pOwnerComponent = entity->GetComponent<OwnerInfoComponent>();
-			if (!pOwnerComponent || pOwnerComponent->GetPlayer() != m_pOwnerInfoComponent->GetPlayer()) {
+			BuildingComponent* pBuildingComponent = entity->GetComponent<BuildingComponent>();
+			if (!pOwnerComponent || pOwnerComponent->GetPlayer() != m_pOwnerInfoComponent->GetPlayer() || pBuildingComponent && !pBuildingComponent->IsBuilt()) {
 				return;
 			}
 			m_selectedUnits.push_back(entity);
@@ -447,9 +448,7 @@ void PlayerComponent::DeselectSelectables()
 
 void PlayerComponent::SelectSelectables()
 {
-	if (m_selectedUnits.size() == 0) {
-		m_pUIInfoPanelComponent->Clear();
-	}
+	DynArray<EUnitType> types;
 
 	for (int32 i = 0; i < m_selectedUnits.size(); i++) {
 		IEntity* entity = m_selectedUnits[i];
@@ -465,52 +464,41 @@ void PlayerComponent::SelectSelectables()
 			continue;
 		}
 
-
 		//InfoPanel & Counts**********************************************************************************
-		DynArray<EUnitType> types;
 		UnitTypeManagerComponent* pUnitTypeManagerComponent = entity->GetComponent<UnitTypeManagerComponent>();
 		if (!pUnitTypeManagerComponent) {
 			continue;
 		}
+		InfoPanelUIDetailComponent* pInfoPanelUIDetailComponent = entity->GetComponent<InfoPanelUIDetailComponent>();
+		if (!pInfoPanelUIDetailComponent) {
+			continue;
+		}
 
 		if (types.empty()) {
-			m_pUIInfoPanelComponent->Clear();
+			//m_pUIInfoPanelComponent->Clear();
 			types.append(pUnitTypeManagerComponent->GetUnitType());
 
-			//TODO : tekrari ba paeen
-			InfoPanelUIDetailComponent* pInfoPanelUIDetailComponent = entity->GetComponent<InfoPanelUIDetailComponent>();
-			if (!pInfoPanelUIDetailComponent) {
-				continue;
-			}
 			m_pUIInfoPanelComponent->AddItem(pInfoPanelUIDetailComponent->GetInfoPanelUIItem());
 			m_pUIInfoPanelComponent->SetCount(i, 1);
 		}
 		else {
 			bool bShouldAddNewItem = false;
-			int32 index = -1;
 			for (int32 i = 0; i < types.size(); i++) {
 				if (types[i] != pUnitTypeManagerComponent->GetUnitType()) {
 					bShouldAddNewItem = true;
-					index = i;
 				}
 				else {
 					bShouldAddNewItem = false;
 				}
 			}
-
 			if (bShouldAddNewItem) {
 				types.append(pUnitTypeManagerComponent->GetUnitType());
-
-				InfoPanelUIDetailComponent* pInfoPanelUIDetailComponent = entity->GetComponent<InfoPanelUIDetailComponent>();
-				if (!pInfoPanelUIDetailComponent) {
-					continue;
-				}
 				m_pUIInfoPanelComponent->AddItem(pInfoPanelUIDetailComponent->GetInfoPanelUIItem());
 			}
+		}
 
-			for (int32 i = 0; i < types.size(); i++) {
-				m_pUIInfoPanelComponent->SetCount(i, CountSelectedUnitType(types[i]));
-			}
+		for (int32 j = 0; j < types.size(); j++) {
+			m_pUIInfoPanelComponent->SetCount(j, CountSelectedUnitType(types[j]));
 		}
 	}
 }
@@ -786,8 +774,12 @@ void PlayerComponent::UpdateDescriptionPanel(int32 index)
 {
 	//bIsLeftClickWorks = false;
 	m_pUIDescriptionsPanelComponent->Clear();
-
-	SDescription pDescription = m_currentUIItems[index]->GetDescrption();
+	IBaseUIItem* pUIItem = m_currentUIItems[index];
+	if (!pUIItem) {
+		return;
+	}
+	CryLog("count items %i : %i", index, m_currentUIItems.size());
+	SDescription pDescription = pUIItem->GetDescrption();
 	if (pDescription.price.m_moneyAmount > 0) {
 		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("money_Icon_ui.png", pDescription.price.m_moneyAmount));
 	}
@@ -824,7 +816,7 @@ void PlayerComponent::UpdateDescriptionPanel(int32 index)
 	if (pDescription.price.m_sulfurAmount > 0) {
 		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("sulfur_buy_icon.png", pDescription.price.m_sulfurAmount));
 	}
-	m_pUIDescriptionsPanelComponent->SetDescriptionText(pDescription.sDescription);
+	m_pUIDescriptionsPanelComponent->SetDescriptionText(pDescription.sBuyDescription);
 
 	CryLog("index over : %i", index);
 }

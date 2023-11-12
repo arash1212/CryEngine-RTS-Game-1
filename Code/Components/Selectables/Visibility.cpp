@@ -38,7 +38,11 @@ void VisibilityComponent::Initialize()
 	int32 attachmentCount = m_pAttachmentManager->GetAttachmentCount();
 	for (int32 i = 0; i < attachmentCount; i++) {
 		int32 index = i > 0 ? i - 1 : 0;
-		IAttachmentObject* pAttachmentObject = m_pAttachmentManager->GetInterfaceByIndex(index)->GetIAttachmentObject();
+		IAttachment* pAttachment = m_pAttachmentManager->GetInterfaceByIndex(index);
+		IAttachmentObject* pAttachmentObject = pAttachment->GetIAttachmentObject();
+		if (!pAttachmentObject) {
+			continue;
+		}
 		m_defaultMaterials.append(pAttachmentObject->GetReplacementMaterial());
 	}
 }

@@ -202,7 +202,7 @@ SDescription Engineer1UnitComponent::GetDescription()
 	SDescription m_pDescription;
 	m_pDescription.sName = "Engineer 1";
 	m_pDescription.sDescription = "Engineer 1 Unit.";
-	m_pDescription.sBuyDescription = "Tran Engineer 1 Unit.";
+	m_pDescription.sBuyDescription = "Train Engineer 1 Unit.";
 	m_pDescription.price = price;
 	m_pDescription.sIcon = "engineer_1_icon.png";
 
