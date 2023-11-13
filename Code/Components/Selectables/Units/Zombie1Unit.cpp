@@ -156,8 +156,12 @@ SDescription Zombie1UnitComponent::GetDescription()
 	m_pDescription.sDescription = "Zombie 1 Unit.";
 	m_pDescription.sBuyDescription = "Train Zombie 1 Unit.";
 	m_pDescription.price = price;
-	m_pDescription.sIcon = "cancel.png";
+	m_pDescription.sIcon = "zombie_1_icon.png";
 
 	return m_pDescription;
 }
 
+IBaseInfoPanelUIItem* Zombie1UnitComponent::GetInfoPanelItem()
+{
+	return new UIUnitInfoPanelItem(m_pEntity, "zombie_1_icon.png");
+}

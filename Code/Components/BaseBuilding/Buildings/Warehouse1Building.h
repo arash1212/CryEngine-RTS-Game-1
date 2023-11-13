@@ -16,7 +16,7 @@ struct SDescription;
 static string WAREHOUSE_BUILDING_1_MODEL_PATH = "Objects/buildings/warehouse1/warehouse1.cdf";
 static string WAREHOUSE_BUILDING_1_TRUSS_MODEL_PATH = "Objects/buildings/warehouse1/truss/warehouse1_truss.cgf";
 
-class Warehouse1BuildingComponent final : public IEntityComponent
+class Warehouse1BuildingComponent final : public BuildingComponent
 {
 
 public:
@@ -34,19 +34,10 @@ public:
 	{
 		desc.SetGUID("{7F0FD288-E898-4AC7-9A4D-6C9520E7124E}"_cry_guid);
 		desc.SetEditorCategory("Building");
+		desc.AddBase<BuildingComponent>();
 	}
 
-
-
 private:
-	Cry::DefaultComponents::CAdvancedAnimationComponent* m_pAnimationComponent = nullptr;
-	Cry::DefaultComponents::CStaticMeshComponent* m_pTrussMeshComponent = nullptr;
-	Cry::DefaultComponents::CBoxPrimitiveComponent* m_pBboxComponent = nullptr;
-	Cry::DefaultComponents::CDecalComponent* m_pDecalComponent = nullptr;
-
-	SelectableComponent* m_pSelectableComponent = nullptr;
-	BuildingComponent* m_pBuildingComponent = nullptr;
-	CostComponent* m_pCostComponent = nullptr;
 	ResourceStorageComponent* m_pResourceStorageComponent = nullptr;
 
 private:

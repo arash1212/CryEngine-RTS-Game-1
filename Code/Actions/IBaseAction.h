@@ -1,8 +1,9 @@
 #pragma once
 
 #include <UIItems/InfoPanel/IBaseInfoPanelUIItem.h>
+#include <Interfaces/IUIInfoPanelItem.h>
 
-class IBaseAction {
+class IBaseAction :public IUIInfoPanelItem {
 
 protected:
 	IEntity* m_pEntity = nullptr;
@@ -15,5 +16,5 @@ public:
 	virtual bool CanBeSkipped() {return false;}
 	virtual f32 GetProgressAmount() { return 0; }
 	virtual f32 GetMaxProgressAmount() { return 100.f; }
-	virtual IBaseInfoPanelUIItem* GetInfoPanelItem() { return nullptr; }
+	virtual IBaseInfoPanelUIItem* GetInfoPanelItem() override { return nullptr; }
 };

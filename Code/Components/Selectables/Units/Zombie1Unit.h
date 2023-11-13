@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Components/Selectables/Units/BaseUnit.h>
 #include <DefaultComponents/Geometry/AdvancedAnimationComponent.h>
 
 class SelectableComponent;
@@ -21,7 +22,7 @@ struct SOwnerInfo;
 struct SResourceInfo;
 struct SDescription;
 
-class Zombie1UnitComponent final : public IEntityComponent
+class Zombie1UnitComponent final : public BaseUnitComponent
 {
 
 public:
@@ -63,4 +64,5 @@ private:
 
 public:
 	static SDescription GetDescription();
+	virtual IBaseInfoPanelUIItem* GetInfoPanelItem() override;
 };

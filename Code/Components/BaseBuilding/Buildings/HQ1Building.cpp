@@ -72,16 +72,15 @@ void HQ1BuildingComponent::Initialize()
 	m_pDecalComponent->Spawn();
 
 	//BuildingComponent initialization
-	m_pBuildingComponent = m_pEntity->GetOrCreateComponent<BuildingComponent>();
-	m_pBuildingComponent->SetPathToTrussMesh(HQ_BUILDING_1_TRUSS_MODEL_PATH);
-	m_pBuildingComponent->SetIsHouse(true);
+	SetPathToTrussMesh(HQ_BUILDING_1_TRUSS_MODEL_PATH);
+	SetIsHouse(true);
 	SBuildingInfo buildingInfo;
 	buildingInfo.m_populationProduces = 20;
-	m_pBuildingComponent->SetBuildingInfo(buildingInfo);
-	m_pBuildingComponent->SetMaxHealth(1000.f);
-	m_pBuildingComponent->SetImagePath(HQ1BuildingComponent::GetDescription().sIcon);
+	SetBuildingInfo(buildingInfo);
+	SetMaxHealth(1000.f);
+	SetImagePath(HQ1BuildingComponent::GetDescription().sIcon);
 	//UIItems
-	m_pBuildingComponent->AddUIItem(new UITrainEngineer1Item(m_pEntity));
+	AddUIItem(new UITrainEngineer1Item(m_pEntity));
 
 	//Update bounding box
 	AABB aabb;
@@ -94,6 +93,20 @@ void HQ1BuildingComponent::Initialize()
 	//CostComponent Initializations
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
 	m_pCostComponent->SetCost(HQ1BuildingComponent::GetDescription().price);
+
+	//ActionManager Initializations
+	m_pActionManagerComponent = m_pEntity->GetOrCreateComponent<ActionManagerComponent>();
+	m_pActionManagerComponent->SetIsBuilding(true);
+
+	//ActionManager Initializations
+	m_pActionManagerComponent = m_pEntity->GetOrCreateComponent<ActionManagerComponent>();
+	m_pActionManagerComponent->SetIsBuilding(true);
+
+	//SkinAttachment Initialization
+	m_pSkinAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByIndex(0);
+
+	//Materials Initializations
+	m_pDefaultMaterial = m_pSkinAttachment->GetIAttachmentObject()->GetBaseMaterial();
 }
 
 
@@ -115,7 +128,10 @@ void HQ1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 	case Cry::Entity::EEvent::Update: {
 		//f32 DeltaTime = event.fParam[0];
 
-
+		UpdateMaterial();
+		RotateSelectionDecal();
+		UpdateMaterial();
+		RotateSelectionDecal();
 
 	}break;
 	case Cry::Entity::EEvent::Reset: {

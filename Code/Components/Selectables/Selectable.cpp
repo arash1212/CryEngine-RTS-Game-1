@@ -160,7 +160,7 @@ void SelectableComponent::RotateSelectionDecal()
 		return;
 	}
 	Quat oldRot = m_pSelectionDecalComponent->GetTransform().get()->GetRotation().ToQuat();
-	Quat newRot = Quat::CreateRotationZ(oldRot.GetRotZ() + 0.3f * gEnv->pTimer->GetFrameTime());
+	Quat newRot = Quat::CreateRotationZ(oldRot.GetRotZ() + 0.15f * gEnv->pTimer->GetFrameTime());
 	m_pSelectionDecalComponent->SetTransformMatrix(Matrix34::Create(m_pSelectionDecalComponent->GetTransformMatrix().GetScale(), newRot, m_pSelectionDecalComponent->GetTransformMatrix().GetTranslation()));
 	m_pSelectionDecalComponent->Spawn();
 }

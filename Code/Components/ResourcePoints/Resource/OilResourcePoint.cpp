@@ -7,7 +7,8 @@
 #include <UIItems/Items/UIChangeStanceItem.h>
 #include <UIItems/Items/Buildings/UIHQ1BuildItem.h>
 #include <Resources/IResource.h>
-#include <Components/ResourcePoints/ResourcePoint.h>
+#include <Components/ResourcePoints/BaseResourcePoint.h>
+#include <Components/Selectables/Selectable.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -41,11 +42,10 @@ void OilResourcePointComponent::Initialize()
 	m_pAnimationComponent->LoadFromDisk();
 	m_pAnimationComponent->ResetCharacter();
 
-	//ResourceComponent Initialization
-	m_pResourcePointComponent = m_pEntity->GetOrCreateComponent<ResourcePointComponent>();
-	m_pResourcePointComponent->SetType(EResourceType::OIL);
-	m_pResourcePointComponent->SetIsSingleUse(true);
-	m_pResourcePointComponent->SetHasCollectingLocation(true);
+	//ResourcePointComponent Initialization
+	SetType(EResourceType::OIL);
+	SetIsSingleUse(true);
+	SetHasCollectingLocation(true);
 
 	//BoxComponent Initialization
 	m_pBboxComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CBoxPrimitiveComponent>();
@@ -59,6 +59,18 @@ void OilResourcePointComponent::Initialize()
 	Vec3 max = Vec3(aabb.max.x + 4.5f, aabb.max.y + 3, aabb.max.z);
 	AABB newAABB = AABB(min, max);
 	m_pEntity->SetLocalBounds(newAABB, true);
+
+	//AnimationComponent Initialization
+	m_pAnimationComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CAdvancedAnimationComponent>();
+
+	//SelectableComponent Initialization
+	m_pSelectableComponent = m_pEntity->GetOrCreateComponent<SelectableComponent>();
+	m_pSelectableComponent->SetIsBuilding(true);
+
+	//CollectingLocationAttachment Initialization
+	if (bHasCollectingLocation) {
+		m_pCollectingLocationAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("collectingLocation");
+	}
 
 	//Physicalize
 	SEntityPhysicalizeParams physParams;

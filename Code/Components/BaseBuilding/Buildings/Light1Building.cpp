@@ -72,14 +72,13 @@ void Light1BuildingComponent::Initialize()
 	m_pDecalComponent->Spawn();
 
 	//BuildingComponent initialization
-	m_pBuildingComponent = m_pEntity->GetOrCreateComponent<BuildingComponent>();
-	m_pBuildingComponent->SetPathToTrussMesh(LIGHT_BUILDING_1_TRUSS_MODEL_PATH);
-	m_pBuildingComponent->SetIsHouse(false);
+	SetPathToTrussMesh(LIGHT_BUILDING_1_TRUSS_MODEL_PATH);
+	SetIsHouse(false);
 	SBuildingInfo buildingInfo;
 	buildingInfo.m_populationProduces = 20;
-	m_pBuildingComponent->SetBuildingInfo(buildingInfo);
-	m_pBuildingComponent->SetMaxHealth(100.f);
-	m_pBuildingComponent->SetImagePath(Light1BuildingComponent::GetDescription().sIcon);
+	SetBuildingInfo(buildingInfo);
+	SetMaxHealth(100.f);
+	SetImagePath(Light1BuildingComponent::GetDescription().sIcon);
 	//UIItems
 
 	//Update bounding box
@@ -93,6 +92,16 @@ void Light1BuildingComponent::Initialize()
 	//CostComponent Initialization
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
 	m_pCostComponent->SetCost(Light1BuildingComponent::GetDescription().price);
+
+	//ActionManager Initializations
+	m_pActionManagerComponent = m_pEntity->GetOrCreateComponent<ActionManagerComponent>();
+	m_pActionManagerComponent->SetIsBuilding(true);
+
+	//SkinAttachment Initialization
+	m_pSkinAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByIndex(0);
+
+	//Materials Initializations
+	m_pDefaultMaterial = m_pSkinAttachment->GetIAttachmentObject()->GetBaseMaterial();
 
 	//LightPosAttachment Initialization
 	m_pLightPosAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("lightPos");
@@ -126,7 +135,8 @@ void Light1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 	case Cry::Entity::EEvent::Update: {
 		//f32 DeltaTime = event.fParam[0];
 
-
+		UpdateMaterial();
+		RotateSelectionDecal();
 
 	}break;
 	case Cry::Entity::EEvent::Reset: {

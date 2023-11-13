@@ -1,6 +1,8 @@
 #pragma once
 
+#include <Components/Selectables/Units/BaseUnit.h>
 #include <DefaultComponents/Geometry/AdvancedAnimationComponent.h>
+
 
 class SelectableComponent;
 class AIControllerComponent;
@@ -17,14 +19,13 @@ class ResourceCollectorComponent;
 class WorkerComponent;
 class UnitTypeManagerComponent;
 class HealthComponent;
-class InfoPanelUIDetailComponent;
 class VisibilityComponent;
 
 struct SOwnerInfo;
 struct SResourceInfo;
 struct SDescription;
 
-class Engineer1UnitComponent final : public IEntityComponent
+class Engineer1UnitComponent final : public BaseUnitComponent
 {
 
 public:
@@ -42,6 +43,7 @@ public:
 	{
 		desc.SetGUID("{0A695E55-3956-420A-B972-6FB32EB76802}"_cry_guid);
 		desc.SetEditorCategory("Units");
+		desc.AddBase< BaseUnitComponent>();
 	}
 
 private:
@@ -58,7 +60,6 @@ private:
 	WorkerComponent* m_pWorkerComponent = nullptr;
 	UnitTypeManagerComponent* m_pUnitTypeManagerComponent = nullptr;
 	HealthComponent* m_pHealthComponent = nullptr;
-	InfoPanelUIDetailComponent* m_pInfoPanelUIDetailComponent = nullptr;
 	VisibilityComponent* m_pVisibilityComponent = nullptr;
 
 	//OwnerShip
@@ -68,4 +69,5 @@ private:
 
 public:
 	static SDescription GetDescription();
+	virtual IBaseInfoPanelUIItem* GetInfoPanelItem() override;
 };

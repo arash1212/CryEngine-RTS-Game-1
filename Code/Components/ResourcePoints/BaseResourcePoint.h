@@ -1,17 +1,18 @@
 #pragma once
 
 #include <DefaultComponents/Geometry/AdvancedAnimationComponent.h>
+#include <DefaultComponents/Physics/BoxPrimitiveComponent.h>
 #include <Components/Managers/ResourceManager.h>
 #include <Resources/IResource.h>
 
 class SelectableComponent;
 
-class ResourcePointComponent final : public IEntityComponent
+class BaseResourcePointComponent : public IEntityComponent
 {
 
 public:
-	ResourcePointComponent() = default;
-	virtual ~ResourcePointComponent() = default;
+	BaseResourcePointComponent() = default;
+	virtual ~BaseResourcePointComponent() = default;
 
 	// IEntityComponent
 	virtual void Initialize() override;
@@ -20,14 +21,15 @@ public:
 	virtual void ProcessEvent(const SEntityEvent& event) override;
 
 	// Reflect type to set a unique identifier for this component
-	static void ReflectType(Schematyc::CTypeDesc<ResourcePointComponent>& desc)
+	static void ReflectType(Schematyc::CTypeDesc<BaseResourcePointComponent>& desc)
 	{
 		desc.SetGUID("{B5845C7E-9991-43CC-AF41-B38B8467131B}"_cry_guid);
 		desc.SetEditorCategory("ResourcePoint");
 	}
 
-private:
+protected:
 	Cry::DefaultComponents::CAdvancedAnimationComponent* m_pAnimationComponent = nullptr;
+	Cry::DefaultComponents::CBoxPrimitiveComponent* m_pBboxComponent = nullptr;
 	SelectableComponent* m_pSelectableComponent = nullptr;
 	IAttachment* m_pCollectingLocationAttachment = nullptr;
 

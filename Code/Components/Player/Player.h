@@ -16,6 +16,7 @@ class UIInfoPanelComponent;
 class UIDescriptionsPanelComponent;
 class IBaseUIItem;
 class VisibilityManagerComponent;
+class FogOfWarComponent;
 
 enum class EUnitType;
 
@@ -63,6 +64,7 @@ private:
 	UIInfoPanelComponent* m_pUIInfoPanelComponent = nullptr;
 	UIDescriptionsPanelComponent* m_pUIDescriptionsPanelComponent = nullptr;
 	VisibilityManagerComponent* m_pVisibilityManagerComponent = nullptr;
+	FogOfWarComponent* m_pFogOfWarComponent = nullptr;
 
 	//UI
 	UIElementEventListener* m_pUIElementEventListener = nullptr;
@@ -96,6 +98,7 @@ private:
 	//
 	int32 m_lastSelectablesCheckSize = 0;
 	int32 m_lastBuildingActionsCheckSize = 0;
+	int32 m_lastTypesSizeCheck = 0;
 	f32 m_lastMainIconHealthAmount = 0;
 private:
 	void InitInputs();
@@ -138,7 +141,7 @@ private:
 	void UpdateSelectables();
 	int32 CountSelectedUnitType(EUnitType type);
 
-	void UpdateInfoPanel(IEntity* entity);
+	void UpdateInfoPanel();
 
 public:
 	void ExecuteActionbarItem(int32 index);

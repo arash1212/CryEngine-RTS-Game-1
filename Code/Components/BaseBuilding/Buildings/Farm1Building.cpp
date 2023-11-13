@@ -78,13 +78,12 @@ void Farm1BuildingComponent::Initialize()
 	m_pDecalComponent->Spawn();
 
 	//BuildingComponent initialization
-	m_pBuildingComponent = m_pEntity->GetOrCreateComponent<BuildingComponent>();
-	m_pBuildingComponent->SetPathToTrussMesh(FARM_BUILDING_1_TRUSS_MODEL_PATH);
+	SetPathToTrussMesh(FARM_BUILDING_1_TRUSS_MODEL_PATH);
 	SBuildingInfo buildingInfo;
 	buildingInfo.m_populationProduces = 0;
-	m_pBuildingComponent->SetBuildingInfo(buildingInfo);
-	m_pBuildingComponent->SetMaxHealth(500.f);
-	m_pBuildingComponent->SetImagePath(Farm1BuildingComponent::GetDescription().sIcon);
+	SetBuildingInfo(buildingInfo);
+	SetMaxHealth(500.f);
+	SetImagePath(Farm1BuildingComponent::GetDescription().sIcon);
 	//UIItems
 
 	//Update bounding box
@@ -98,6 +97,16 @@ void Farm1BuildingComponent::Initialize()
 	//CostComponent Initializations
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
 	m_pCostComponent->SetCost(Farm1BuildingComponent::GetDescription().price);
+
+	//ActionManager Initializations
+	m_pActionManagerComponent = m_pEntity->GetOrCreateComponent<ActionManagerComponent>();
+	m_pActionManagerComponent->SetIsBuilding(true);
+
+	//SkinAttachment Initialization
+	m_pSkinAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByIndex(0);
+
+	//Materials Initializations
+	m_pDefaultMaterial = m_pSkinAttachment->GetIAttachmentObject()->GetBaseMaterial();
 
 	//Wheat positions
 	IAttachment* m_pWheat1Attachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("wheatPos1");
@@ -165,6 +174,8 @@ void Farm1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 	case Cry::Entity::EEvent::Update: {
 		f32 DeltaTime = event.fParam[0];
 
+		UpdateMaterial();
+		RotateSelectionDecal();
 		UpdateAssignedWorkers();
 
 		//Timers
@@ -183,10 +194,7 @@ void Farm1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 
 void Farm1BuildingComponent::UpdateAssignedWorkers()
 {
-	if (!m_pBuildingComponent) {
-		return;
-	}
-	if (!m_pBuildingComponent->IsBuilt()) {
+	if (!IsBuilt()) {
 		return;
 	}
 	if (m_pWorkplaceComponent->GetCurrentWorkersCount() <= 0) {
@@ -253,7 +261,7 @@ void Farm1BuildingComponent::UpdateAssignedWorkers()
 
 	//**********************************Wait
 	if (bIsPlantingDone && !bIsHarvestingStarted || bIsHarvestingDone) {
-		f32 DistanceToExitPos = EntityUtils::GetDistance(pWorker->GetWorldPos(), m_pBuildingComponent->GetExitPoint(), nullptr);
+		f32 DistanceToExitPos = EntityUtils::GetDistance(pWorker->GetWorldPos(), GetExitPoint(), nullptr);
 		if (DistanceToExitPos > 1.0f) {
 			pAIController->MoveTo(m_pWheatAttachments[2]->GetAttWorldAbsolute().t, false);
 			pAIController->LookAtWalkDirection();

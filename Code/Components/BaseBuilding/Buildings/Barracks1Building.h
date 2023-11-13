@@ -15,7 +15,7 @@ struct SDescription;
 static string BARRACKS_BUILDING_1_MODEL_PATH = "Objects/buildings/barracks1/barracks1.cdf";
 static string BARRACKS_BUILDING_1_TRUSS_MODEL_PATH = "Objects/buildings/barracks1/truss/barracks1_truss.cgf";
 
-class Barracks1BuildingComponent final : public IEntityComponent
+class Barracks1BuildingComponent final : public BuildingComponent
 {
 
 public:
@@ -33,17 +33,10 @@ public:
 	{
 		desc.SetGUID("{A1FAAEAA-4E21-48B7-848B-AE93C1FFBFD6}"_cry_guid);
 		desc.SetEditorCategory("Building");
+		desc.AddBase<BuildingComponent>();
 	}
 
-
 private:
-	Cry::DefaultComponents::CAdvancedAnimationComponent* m_pAnimationComponent = nullptr;
-	Cry::DefaultComponents::CStaticMeshComponent* m_pTrussMeshComponent = nullptr;
-	Cry::DefaultComponents::CBoxPrimitiveComponent* m_pBboxComponent = nullptr;
-	Cry::DefaultComponents::CDecalComponent* m_pDecalComponent = nullptr;
-
-	SelectableComponent* m_pSelectableComponent = nullptr;
-	BuildingComponent* m_pBuildingComponent = nullptr;
 	CostComponent* m_pCostComponent = nullptr;
 
 private:

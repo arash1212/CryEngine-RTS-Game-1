@@ -109,7 +109,7 @@ void UIInfoPanelComponent::SetCount(int32 index, int32 count)
 	m_pInfoPanelUIElement->CallFunction("SetCount", args);
 }
 
-void UIInfoPanelComponent::SetMainIcon(string imagePath, string text)
+void UIInfoPanelComponent::SetMainIcon(string imagePath)
 {
 	if (!m_pInfoPanelUIElement) {
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "UIInfoPanelComponent : (AddItem) InfoPanelUIElement is null !");
@@ -118,9 +118,21 @@ void UIInfoPanelComponent::SetMainIcon(string imagePath, string text)
 
 	SUIArguments args;
 	args.AddArgument(imagePath);
-	args.AddArgument(text);
 
 	m_pInfoPanelUIElement->CallFunction("SetMainIcon", args);
+}
+
+void UIInfoPanelComponent::SetMainIconText(string text)
+{
+	if (!m_pInfoPanelUIElement) {
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "UIInfoPanelComponent : (AddItem) InfoPanelUIElement is null !");
+		return;
+	}
+
+	SUIArguments args;
+	args.AddArgument(text);
+
+	m_pInfoPanelUIElement->CallFunction("SetMainIconText", args);
 }
 
 void UIInfoPanelComponent::ExecuteItem(int32 index)

@@ -1,13 +1,10 @@
 #pragma once
 
+#include <Components/ResourcePoints/BaseResourcePoint.h>
 #include <DefaultComponents/Geometry/AdvancedAnimationComponent.h>
-#include <DefaultComponents/Physics/BoxPrimitiveComponent.h>
-
 #include <Components/Managers/ResourceManager.h>
 
-class ResourcePointComponent;
-
-class WoodResourcePointComponent final : public IEntityComponent
+class WoodResourcePointComponent final : public BaseResourcePointComponent
 {
 
 public:
@@ -28,10 +25,6 @@ public:
 	}
 
 private:
-	Cry::DefaultComponents::CAdvancedAnimationComponent* m_pAnimationComponent = nullptr;
-	Cry::DefaultComponents::CBoxPrimitiveComponent* m_pBboxComponent = nullptr;
-
-	ResourcePointComponent* m_pResourceComponent = nullptr;
 
 public:
 

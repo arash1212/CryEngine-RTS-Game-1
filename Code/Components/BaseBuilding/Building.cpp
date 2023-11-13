@@ -3,10 +3,6 @@
 #include "GamePlugin.h"
 
 #include <Components/Info/OwnerInfo.h>
-#include <Components/Managers/UnitStateManager.h>
-#include <Components/Controller/AIController.h>
-#include <Components/Weapons/BaseWeapon.h>
-#include <Components/Selectables/UnitAnimation.h>
 #include <Components/Managers/ActionManager.h>
 #include <Components/Player/Player.h>
 
@@ -27,6 +23,7 @@
 
 #include <CryGame/IGameFramework.h>
 #include <Cry3DEngine/IMaterial.h>
+#include <Components/Selectables/Cost.h>
 
 #include <Components/Selectables/Health.h>
 #include <Components/Selectables/Visibility.h>
@@ -53,33 +50,6 @@ namespace
 
 void BuildingComponent::Initialize()
 {
-	//AnimationComponent Initialization
-	m_pAnimationComponent = m_pEntity->GetComponent<Cry::DefaultComponents::CAdvancedAnimationComponent>();
-
-	//trussMsehComponent Initialization
-	m_pTrussMeshComponent = m_pEntity->GetComponent<Cry::DefaultComponents::CStaticMeshComponent>();
-
-	//BoxComponent Initialization
-	m_pBboxComponent = m_pEntity->GetComponent<Cry::DefaultComponents::CBoxPrimitiveComponent>();
-
-	//DecalComponent(Placement) Initialization
-	m_pDecalComponent = m_pEntity->GetComponent<Cry::DefaultComponents::CDecalComponent>();
-
-	//ActionManager Initializations
-	m_pActionManagerComponent = m_pEntity->GetOrCreateComponent<ActionManagerComponent>();
-	m_pActionManagerComponent->SetIsBuilding(true);
-
-	//OwnerInfoComponent Initialization
-	m_pOwnerInfoComponent = m_pEntity->GetComponent<OwnerInfoComponent>();
-
-	//ExitPointAttachment Initialization
-	m_pExitPointAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("exitPoint");
-
-	//SkinAttachment Initialization
-	m_pSkinAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByIndex(0);
-
-	//Materials Initializations
-	m_pDefaultMaterial = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByIndex(0)->GetIAttachmentObject()->GetBaseMaterial();
 }
 
 
@@ -102,9 +72,6 @@ void BuildingComponent::ProcessEvent(const SEntityEvent& event)
 	case Cry::Entity::EEvent::Update: {
 		//f32 DeltaTime = event.fParam[0];
 
-		UpdateMaterial();
-		RotateSelectionDecal();
-
 	}break;
 	case Cry::Entity::EEvent::PhysicsCollision: {
 		CryLog("collision building");
@@ -120,21 +87,26 @@ void BuildingComponent::ProcessEvent(const SEntityEvent& event)
 
 void BuildingComponent::UpdateMaterial()
 {
-	if (!m_pDecalComponent || bIsPlaced) {
+	if (!m_pSkinAttachment || !m_pDecalComponent || bIsPlaced) {
+		return;
+	}
+
+	IAttachmentObject* pAttachmentObject = m_pSkinAttachment->GetIAttachmentObject();
+	if (!pAttachmentObject) {
 		return;
 	}
 
 	if (CanBePlaced()) {
 		m_pDecalComponent->SetMaterialFileName(BUILDING_PLACEMENT_GREEN_DECAL_MATERIAL);
 
-		IMaterial* m_pGreenMaterial = gEnv->p3DEngine->GetMaterialManager()->LoadMaterial("Materials/buildings/building_placement_green_material.mtl");
-		m_pSkinAttachment->GetIAttachmentObject()->SetReplacementMaterial(m_pGreenMaterial);
+		IMaterial* m_pGreenMaterial = gEnv->p3DEngine->GetMaterialManager()->LoadMaterial(BUILDING_PLACEMENT_GREEN_MATERIAL);
+		pAttachmentObject->SetReplacementMaterial(m_pGreenMaterial);
 	}
 	else {
 		m_pDecalComponent->SetMaterialFileName(BUILDING_PLACEMENT_RED_DECAL_MATERIAL);
 
-		IMaterial* m_pRedMaterial = gEnv->p3DEngine->GetMaterialManager()->LoadMaterial("Materials/buildings/building_placement_red_material.mtl");
-		m_pSkinAttachment->GetIAttachmentObject()->SetReplacementMaterial(m_pRedMaterial);
+		IMaterial* m_pRedMaterial = gEnv->p3DEngine->GetMaterialManager()->LoadMaterial(BUILDING_PLACEMENT_RED_MATERIAL);
+		pAttachmentObject->SetReplacementMaterial(m_pRedMaterial);
 	}
 }
 
@@ -243,9 +215,6 @@ bool BuildingComponent::CanBePlaced()
 	IPersistantDebug* pd = gEnv->pGameFramework->GetIPersistantDebug();
 	IEntityItPtr entityItPtr = gEnv->pEntitySystem->GetEntityIterator();
 
-	//DynArray<IPhysicalEntity**> pEntities;
-	//CryLog("size %i : ", gEnv->pPhysicalWorld->GetEntitiesInBox(aabb.min, aabb.max, *pEntities.data(), ent_rigid | ent_sleeping_rigid | ent_water | ent_living | ent_static));
-
 	entityItPtr->MoveFirst();
 	while (!entityItPtr->IsEnd())
 	{
@@ -315,7 +284,7 @@ void BuildingComponent::AddUIItem(IBaseUIItem* item)
 
 Vec3 BuildingComponent::GetExitPoint()
 {
-	Vec3 pos = m_pExitPointAttachment->GetAttWorldAbsolute().t;
+	Vec3 pos = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName(BUILDING_EXIT_POINT_ATTACHMENT_NAME)->GetAttWorldAbsolute().t;
 	pos.z = m_pEntity->GetWorldPos().z;
 	return pos;
 }
@@ -337,7 +306,6 @@ bool BuildingComponent::IsWorkplace()
 
 void BuildingComponent::SetMaxHealth(f32 maxHealth)
 {
-	// this->m_pHealthComponent->SetMaxHealth(maxHealth);
 	this->m_maxHealth = maxHealth;
 }
 

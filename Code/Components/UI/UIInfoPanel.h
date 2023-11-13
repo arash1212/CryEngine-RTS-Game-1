@@ -34,7 +34,8 @@ public:
 	void AddItem(IBaseInfoPanelUIItem* item);
 	void Clear();
 	void SetCount(int32 index, int32 count);
-	void SetMainIcon(string imagePath, string text);
+	void SetMainIcon(string imagePath);
+	void SetMainIconText(string text);
 
 	void ExecuteItem(int32 index);
 

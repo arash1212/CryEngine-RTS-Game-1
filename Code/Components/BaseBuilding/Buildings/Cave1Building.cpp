@@ -65,7 +65,7 @@ void Cave1BuildingComponent::Initialize()
 	m_pAnimationComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CAdvancedAnimationComponent>();
 	m_pAnimationComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), IDENTITY, Vec3(0, 0, 0)));
 	m_pAnimationComponent->SetCharacterFile(CAVE_BUILDING_1_MODEL_PATH);
-	m_pAnimationComponent->SetMannequinAnimationDatabaseFile("Animations/Mannequin/ADB/house1.adb");
+	m_pAnimationComponent->SetMannequinAnimationDatabaseFile("Animations/Mannequin/ADB/cave1.adb");
 	m_pAnimationComponent->SetControllerDefinitionFile("Animations/Mannequin/ADB/FirstPersonControllerDefinition.xml");
 	m_pAnimationComponent->SetDefaultScopeContextName("ThirdPersonCharacter");
 	m_pAnimationComponent->SetDefaultFragmentName("Idle");
@@ -87,14 +87,13 @@ void Cave1BuildingComponent::Initialize()
 	m_pDecalComponent->Spawn();
 
 	//BuildingComponent initialization
-	m_pBuildingComponent = m_pEntity->GetOrCreateComponent<BuildingComponent>();
-	m_pBuildingComponent->SetPathToTrussMesh(CAVE_BUILDING_1_TRUSS_MODEL_PATH);
-	m_pBuildingComponent->SetIsHouse(false);
-	m_pBuildingComponent->SetImagePath(Cave1BuildingComponent::GetDescription().sIcon);
+	SetPathToTrussMesh(CAVE_BUILDING_1_TRUSS_MODEL_PATH);
+	SetIsHouse(false);
+	SetImagePath(Cave1BuildingComponent::GetDescription().sIcon);
 
 	SBuildingInfo buildingInfo;
 	buildingInfo.m_populationProduces = 10;
-	m_pBuildingComponent->SetBuildingInfo(buildingInfo);
+	SetBuildingInfo(buildingInfo);
 	//UIItems
 
 	//Update bounding box
@@ -109,10 +108,21 @@ void Cave1BuildingComponent::Initialize()
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
 	m_pCostComponent->SetCost(Cave1BuildingComponent::GetDescription().price);
 
+	//ActionManager Initializations
+	m_pActionManagerComponent = m_pEntity->GetOrCreateComponent<ActionManagerComponent>();
+	m_pActionManagerComponent->SetIsBuilding(true);
+
+	//SkinAttachment Initialization
+	m_pSkinAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByIndex(0);
+
+	//Materials Initializations
+	m_pDefaultMaterial = m_pSkinAttachment->GetIAttachmentObject()->GetBaseMaterial();
+
 	//ResourceManagerComponent initialization
 	m_pResourceManagerComponent = m_pEntity->GetOrCreateComponent<ResourceManagerComponent>();
 	m_pResourceManagerComponent->SetIsPlayer(false);
 	m_pResourceManagerComponent->AddOwnedEntity(m_pEntity);
+
 }
 
 
@@ -138,7 +148,7 @@ void Cave1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 		m_pOwnerInfoComponent->SetOwner(m_pEntity);
 
 		//m_pBuildingComponent->SetMaxHealth(300.f);
-		m_pBuildingComponent->SetBuilt();
+		SetBuilt();
 
 		bIsGameStarted = true;
 
@@ -146,6 +156,8 @@ void Cave1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 	case Cry::Entity::EEvent::Update: {
 		f32 DeltaTime = event.fParam[0];
 
+		UpdateMaterial();
+		RotateSelectionDecal();
 		CommandUnitsToAttack();
 
 		//Timers

@@ -30,6 +30,7 @@ void UIElementEventListener::OnUIEvent(IUIElement* pSender, const SUIEventDesc& 
 		else if (eventName == "info_panel_button_click") {
 			int index = -1;
 			args.GetArg(0).GetValueWithConversion(index);
+			CryLog("info index clicked %i ", index);
 			m_pPlayerComponent->ExecuteInfoPanelItem(index);
 		}
 

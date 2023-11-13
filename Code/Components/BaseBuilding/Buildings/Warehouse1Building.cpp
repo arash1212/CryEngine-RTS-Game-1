@@ -87,28 +87,27 @@ void Warehouse1BuildingComponent::Initialize()
 	m_pDecalComponent->Spawn();
 
 	//BuildingComponent initialization
-	m_pBuildingComponent = m_pEntity->GetOrCreateComponent<BuildingComponent>();
-	m_pBuildingComponent->SetPathToTrussMesh(WAREHOUSE_BUILDING_1_TRUSS_MODEL_PATH);
+	SetPathToTrussMesh(WAREHOUSE_BUILDING_1_TRUSS_MODEL_PATH);
 	SBuildingInfo buildingInfo;
 	buildingInfo.m_populationProduces = 0;
-	m_pBuildingComponent->SetBuildingInfo(buildingInfo);
-	m_pBuildingComponent->SetMaxHealth(800.f);
-	m_pBuildingComponent->SetImagePath(Warehouse1BuildingComponent::GetDescription().sIcon);
+	SetBuildingInfo(buildingInfo);
+	SetMaxHealth(800.f);
+	SetImagePath(Warehouse1BuildingComponent::GetDescription().sIcon);
 	//UIItems
-	m_pBuildingComponent->AddUIItem(new UIBuyOilItem(m_pEntity));
-	m_pBuildingComponent->AddUIItem(new UISellOilItem(m_pEntity));
-	m_pBuildingComponent->AddUIItem(new UIBuyWheatItem(m_pEntity));
-	m_pBuildingComponent->AddUIItem(new UISellWheatItem(m_pEntity));
-	m_pBuildingComponent->AddUIItem(new UIBuyFlourItem(m_pEntity));
-	m_pBuildingComponent->AddUIItem(new UISellFlourItem(m_pEntity));
-	m_pBuildingComponent->AddUIItem(new UIBuyWoodItem(m_pEntity));
-	m_pBuildingComponent->AddUIItem(new UISellWoodItem(m_pEntity));
-	m_pBuildingComponent->AddUIItem(new UIBuyBreadItem(m_pEntity));
-	m_pBuildingComponent->AddUIItem(new UISellBreadItem(m_pEntity));
-	m_pBuildingComponent->AddUIItem(new UIBuyIronItem(m_pEntity));
-	m_pBuildingComponent->AddUIItem(new UISellIronItem(m_pEntity));
-	m_pBuildingComponent->AddUIItem(new UIBuyBulletItem(m_pEntity));
-	m_pBuildingComponent->AddUIItem(new UISellBulletItem(m_pEntity));
+	AddUIItem(new UIBuyOilItem(m_pEntity));
+	AddUIItem(new UISellOilItem(m_pEntity));
+	AddUIItem(new UIBuyWheatItem(m_pEntity));
+	AddUIItem(new UISellWheatItem(m_pEntity));
+	AddUIItem(new UIBuyFlourItem(m_pEntity));
+	AddUIItem(new UISellFlourItem(m_pEntity));
+	AddUIItem(new UIBuyWoodItem(m_pEntity));
+	AddUIItem(new UISellWoodItem(m_pEntity));
+	AddUIItem(new UIBuyBreadItem(m_pEntity));
+	AddUIItem(new UISellBreadItem(m_pEntity));
+	AddUIItem(new UIBuyIronItem(m_pEntity));
+	AddUIItem(new UISellIronItem(m_pEntity));
+	AddUIItem(new UIBuyBulletItem(m_pEntity));
+	AddUIItem(new UISellBulletItem(m_pEntity));
 
 	//ResourceStorageComponent Initialization
 	m_pResourceStorageComponent = m_pEntity->GetOrCreateComponent<ResourceStorageComponent>();
@@ -124,6 +123,17 @@ void Warehouse1BuildingComponent::Initialize()
 	//CostComponent Initializations
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
 	m_pCostComponent->SetCost(Warehouse1BuildingComponent::GetDescription().price);
+
+	//ActionManager Initializations
+	m_pActionManagerComponent = m_pEntity->GetOrCreateComponent<ActionManagerComponent>();
+	m_pActionManagerComponent->SetIsBuilding(true);
+
+	//SkinAttachment Initialization
+	m_pSkinAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByIndex(0);
+
+	//Materials Initializations
+	m_pDefaultMaterial = m_pSkinAttachment->GetIAttachmentObject()->GetBaseMaterial();
+
 }
 
 
@@ -145,7 +155,8 @@ void Warehouse1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 	case Cry::Entity::EEvent::Update: {
 		//f32 DeltaTime = event.fParam[0];
 
-
+		UpdateMaterial();
+		RotateSelectionDecal();
 
 	}break;
 	case Cry::Entity::EEvent::Reset: {

@@ -83,14 +83,13 @@ void Windmill1BuildingComponent::Initialize()
 	m_pDecalComponent->Spawn();
 
 	//BuildingComponent initialization
-	m_pBuildingComponent = m_pEntity->GetOrCreateComponent<BuildingComponent>();
-	m_pBuildingComponent->SetPathToTrussMesh(WINDMILL_BUILDING_1_TRUSS_MODEL_PATH);
-	m_pBuildingComponent->SetImagePath(Windmill1BuildingComponent::GetDescription().sIcon);
+	SetPathToTrussMesh(WINDMILL_BUILDING_1_TRUSS_MODEL_PATH);
+	SetImagePath(Windmill1BuildingComponent::GetDescription().sIcon);
 
 	SBuildingInfo buildingInfo;
 	buildingInfo.m_populationProduces = 0;
-	m_pBuildingComponent->SetBuildingInfo(buildingInfo);
-	m_pBuildingComponent->SetMaxHealth(600.f);
+	SetBuildingInfo(buildingInfo);
+	SetMaxHealth(600.f);
 	//UIItems
 
 
@@ -105,6 +104,16 @@ void Windmill1BuildingComponent::Initialize()
 	//CostComponent Initializations
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
 	m_pCostComponent->SetCost(Windmill1BuildingComponent::GetDescription().price);
+
+	//ActionManager Initializations
+	m_pActionManagerComponent = m_pEntity->GetOrCreateComponent<ActionManagerComponent>();
+	m_pActionManagerComponent->SetIsBuilding(true);
+
+	//SkinAttachment Initialization
+	m_pSkinAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByIndex(0);
+
+	//Materials Initializations
+	m_pDefaultMaterial = m_pSkinAttachment->GetIAttachmentObject()->GetBaseMaterial();
 
 	//WorkplaceComponent  Initializations
 	m_pWorkplaceComponent = m_pEntity->GetOrCreateComponent<WorkplaceComponent>();
@@ -130,6 +139,8 @@ void Windmill1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 	case Cry::Entity::EEvent::Update: {
 		//f32 DeltaTime = event.fParam[0];
 
+		UpdateMaterial();
+		RotateSelectionDecal();
 		UpdateAssignedWorkers();
 
 	}break;
@@ -143,10 +154,7 @@ void Windmill1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 
 void Windmill1BuildingComponent::UpdateAssignedWorkers()
 {
-	if (!m_pBuildingComponent) {
-		return;
-	}
-	if (!m_pBuildingComponent->IsBuilt()) {
+	if (!IsBuilt()) {
 		return;
 	}
 	IEntity* pWorker = m_pWorkplaceComponent->GetWorkers()[0];
@@ -165,7 +173,7 @@ void Windmill1BuildingComponent::UpdateAssignedWorkers()
 	int32 productionWaitAmount = 5;
 	int32 WheatRequestAmount = 30;
 	int32 FlourProducedAmount = 10;
-	Vec3 workPosition = m_pBuildingComponent->GetExitPoint();
+	Vec3 workPosition = GetExitPoint();
 
 	//**********************************Move to Warehouse and pickup some wheat And Transer to mill
 	if (!bIsCollectedWheatAndTransferedWheatToMill) {

@@ -80,12 +80,11 @@ void Alchemy1BuildingComponent::Initialize()
 	m_pDecalComponent->Spawn();
 
 	//BuildingComponent initialization
-	m_pBuildingComponent = m_pEntity->GetOrCreateComponent<BuildingComponent>();
-	m_pBuildingComponent->SetPathToTrussMesh(ALCHEMY_BUILDING_1_TRUSS_MODEL_PATH);
+	SetPathToTrussMesh(ALCHEMY_BUILDING_1_TRUSS_MODEL_PATH);
 	SBuildingInfo buildingInfo;
 	buildingInfo.m_populationProduces = 0;
-	m_pBuildingComponent->SetBuildingInfo(buildingInfo);
-	m_pBuildingComponent->SetImagePath(Alchemy1BuildingComponent::GetDescription().sIcon);
+	SetBuildingInfo(buildingInfo);
+	SetImagePath(Alchemy1BuildingComponent::GetDescription().sIcon);
 	//m_pBuildingComponent->SetMaxHealth(700.f);
 	//UIItems
 
@@ -100,6 +99,16 @@ void Alchemy1BuildingComponent::Initialize()
 	//CostComponent Initializations
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
 	m_pCostComponent->SetCost(Alchemy1BuildingComponent::GetDescription().price);
+
+	//ActionManager Initializations
+	m_pActionManagerComponent = m_pEntity->GetOrCreateComponent<ActionManagerComponent>();
+	m_pActionManagerComponent->SetIsBuilding(true);
+
+	//SkinAttachment Initialization
+	m_pSkinAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByIndex(0);
+
+	//Materials Initializations
+	m_pDefaultMaterial = m_pSkinAttachment->GetIAttachmentObject()->GetBaseMaterial();
 
 	//WorkplaceComponent  Initializations
 	m_pWorkplaceComponent = m_pEntity->GetOrCreateComponent<WorkplaceComponent>();
@@ -128,6 +137,8 @@ void Alchemy1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 	case Cry::Entity::EEvent::Update: {
 		//f32 DeltaTime = event.fParam[0];
 
+		UpdateMaterial();
+		RotateSelectionDecal();
 		UpdateAssignedWorkers();
 
 	}break;
@@ -142,10 +153,7 @@ void Alchemy1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 
 void Alchemy1BuildingComponent::UpdateAssignedWorkers()
 {
-	if (!m_pBuildingComponent) {
-		return;
-	}
-	if (!m_pBuildingComponent->IsBuilt()) {
+	if (!IsBuilt()) {
 		return;
 	}
 	IEntity* pWorker = m_pWorkplaceComponent->GetWorkers()[0];
@@ -164,7 +172,7 @@ void Alchemy1BuildingComponent::UpdateAssignedWorkers()
 	int32 productionWaitAmount = 5;
 	int32 OilRequestAmount = 30;
 	int32 SulfurProducedAmount = 10;
-	Vec3 workPosition = m_pBuildingComponent->GetExitPoint();
+	Vec3 workPosition = GetExitPoint();
 
 	//**********************************Move to Warehouse and pickup some Flour And Transfer To Alchemy
 	if (!bIsCollectedOilAndTransferedToAlchemy) {

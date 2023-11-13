@@ -73,15 +73,14 @@ void House1BuildingComponent::Initialize()
 	m_pDecalComponent->Spawn();
 
 	//BuildingComponent initialization
-	m_pBuildingComponent = m_pEntity->GetOrCreateComponent<BuildingComponent>();
-	m_pBuildingComponent->SetPathToTrussMesh(HOUSE_BUILDING_1_TRUSS_MODEL_PATH);
-	m_pBuildingComponent->SetIsHouse(true);
-	m_pBuildingComponent->SetMaxHealth(300.f);
+	SetPathToTrussMesh(HOUSE_BUILDING_1_TRUSS_MODEL_PATH);
+	SetIsHouse(true);
+	SetMaxHealth(300.f);
 
 	SBuildingInfo buildingInfo;
 	buildingInfo.m_populationProduces = 10;
-	m_pBuildingComponent->SetBuildingInfo(buildingInfo);
-	m_pBuildingComponent->SetImagePath(House1BuildingComponent::GetDescription().sIcon);
+	SetBuildingInfo(buildingInfo);
+	SetImagePath(House1BuildingComponent::GetDescription().sIcon);
 	//UIItems
 
 	//Update bounding box
@@ -95,6 +94,17 @@ void House1BuildingComponent::Initialize()
 	//CostComponent Initializations
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
 	m_pCostComponent->SetCost(House1BuildingComponent::GetDescription().price);
+
+	//ActionManager Initializations
+	m_pActionManagerComponent = m_pEntity->GetOrCreateComponent<ActionManagerComponent>();
+	m_pActionManagerComponent->SetIsBuilding(true);
+
+	//SkinAttachment Initialization
+	m_pSkinAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByIndex(0);
+
+	//Materials Initializations
+	m_pDefaultMaterial = m_pSkinAttachment->GetIAttachmentObject()->GetBaseMaterial();
+
 }
 
 
@@ -116,7 +126,8 @@ void House1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 	case Cry::Entity::EEvent::Update: {
 		//f32 DeltaTime = event.fParam[0];
 
-
+		UpdateMaterial();
+		RotateSelectionDecal();
 
 	}break;
 	case Cry::Entity::EEvent::Reset: {

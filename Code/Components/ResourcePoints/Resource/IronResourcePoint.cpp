@@ -7,7 +7,8 @@
 #include <UIItems/Items/UIChangeStanceItem.h>
 #include <UIItems/Items/Buildings/UIHQ1BuildItem.h>
 #include <Resources/IResource.h>
-#include <Components/ResourcePoints/ResourcePoint.h>
+#include <Components/ResourcePoints/BaseResourcePoint.h>
+#include <Components/Selectables/Selectable.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -42,10 +43,9 @@ void IronResourcePointComponent::Initialize()
 	m_pAnimationComponent->ResetCharacter();
 
 	//ResourceComponent Initialization
-	m_pResourcePointComponent = m_pEntity->GetOrCreateComponent<ResourcePointComponent>();
-	m_pResourcePointComponent->SetType(EResourceType::IRON);
-	m_pResourcePointComponent->SetIsSingleUse(false);
-	m_pResourcePointComponent->SetHasCollectingLocation(false);
+	SetType(EResourceType::IRON);
+	SetIsSingleUse(false);
+	SetHasCollectingLocation(false);
 
 	//BoxComponent Initialization
 	m_pBboxComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CBoxPrimitiveComponent>();
@@ -59,6 +59,18 @@ void IronResourcePointComponent::Initialize()
 	Vec3 max = Vec3(aabb.max.x + 3.f, aabb.max.y + 2.0f, aabb.max.z);
 	AABB newAABB = AABB(min, max);
 	m_pEntity->SetLocalBounds(newAABB, true);
+
+	//AnimationComponent Initialization
+	m_pAnimationComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CAdvancedAnimationComponent>();
+
+	//SelectableComponent Initialization
+	m_pSelectableComponent = m_pEntity->GetOrCreateComponent<SelectableComponent>();
+	m_pSelectableComponent->SetIsBuilding(true);
+
+	//CollectingLocationAttachment Initialization
+	if (bHasCollectingLocation) {
+		m_pCollectingLocationAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("collectingLocation");
+	}
 
 	//Physicalize
 	SEntityPhysicalizeParams physParams;

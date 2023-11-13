@@ -5,7 +5,7 @@
 class AIControllerComponent;
 class EngineerComponent;
 class UnitStateManagerComponent;
-class ResourcePointComponent;
+class BaseResourcePointComponent;
 class UnitAnimationComponent;
 class ResourceCollectorComponent;
 
@@ -18,7 +18,7 @@ private:
 	AIControllerComponent* m_pAiControllerComponent = nullptr;
 	EngineerComponent* m_pEngineerComponent = nullptr;
 	UnitStateManagerComponent* m_pStateManagerComponent = nullptr;
-	ResourcePointComponent* m_pResourcePointComponent = nullptr;
+	BaseResourcePointComponent* m_pResourcePointComponent = nullptr;
 	UnitAnimationComponent* m_pAnimationComponent = nullptr;
 	ResourceCollectorComponent* m_pResourceCollectorComponent = nullptr;
 

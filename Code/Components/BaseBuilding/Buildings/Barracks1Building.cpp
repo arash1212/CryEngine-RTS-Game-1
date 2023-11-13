@@ -61,7 +61,7 @@ void Barracks1BuildingComponent::Initialize()
 
 	//BoxComponent Initialization
 	m_pBboxComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CBoxPrimitiveComponent>();
-	m_pBboxComponent->m_size = Vec3(2.7f, 6.2f, 1.3f);
+	m_pBboxComponent->m_size = Vec3(2.5f, 6.1f, 1.3f);
 	m_pBboxComponent->m_bReactToCollisions = true;
 
 	//DecalComponent(Placement) Initialization
@@ -73,16 +73,15 @@ void Barracks1BuildingComponent::Initialize()
 	m_pDecalComponent->Spawn();
 
 	//BuildingComponent initialization
-	m_pBuildingComponent = m_pEntity->GetOrCreateComponent<BuildingComponent>();
-	m_pBuildingComponent->SetPathToTrussMesh(BARRACKS_BUILDING_1_TRUSS_MODEL_PATH);
+	SetPathToTrussMesh(BARRACKS_BUILDING_1_TRUSS_MODEL_PATH);
 	SBuildingInfo buildingInfo;
 	buildingInfo.m_populationProduces = 0;
-	m_pBuildingComponent->SetBuildingInfo(buildingInfo);
-	m_pBuildingComponent->SetImagePath(Barracks1BuildingComponent::GetDescription().sIcon);
+	SetBuildingInfo(buildingInfo);
+	SetImagePath(Barracks1BuildingComponent::GetDescription().sIcon);
 	//m_pBuildingComponent->SetMaxHealth(700.f);
 	//UIItems
-	m_pBuildingComponent->AddUIItem(new UITrainEngineer1Item(m_pEntity));
-	m_pBuildingComponent->AddUIItem(new UITrainSoldier1Item(m_pEntity));
+	AddUIItem(new UITrainEngineer1Item(m_pEntity));
+	AddUIItem(new UITrainSoldier1Item(m_pEntity));
 
 	//Update bounding box
 	AABB aabb;
@@ -95,6 +94,16 @@ void Barracks1BuildingComponent::Initialize()
 	//CostComponent Initializations
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
 	m_pCostComponent->SetCost(Barracks1BuildingComponent::GetDescription().price);
+
+	//ActionManager Initializations
+	m_pActionManagerComponent = m_pEntity->GetOrCreateComponent<ActionManagerComponent>();
+	m_pActionManagerComponent->SetIsBuilding(true);
+
+	//SkinAttachment Initialization
+	m_pSkinAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByIndex(0);
+
+	//Materials Initializations
+	m_pDefaultMaterial = m_pSkinAttachment->GetIAttachmentObject()->GetBaseMaterial();
 
 }
 
@@ -117,7 +126,8 @@ void Barracks1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 	case Cry::Entity::EEvent::Update: {
 		//f32 DeltaTime = event.fParam[0];
 
-
+		UpdateMaterial();
+		RotateSelectionDecal();
 
 	}break;
 	case Cry::Entity::EEvent::Reset: {

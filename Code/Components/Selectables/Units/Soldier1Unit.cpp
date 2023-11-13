@@ -4,7 +4,6 @@
 
 #include <Components/Selectables/Attacker.h>
 
-#include <Components/Selectables/InfoPanelUIDetail.h>
 #include <UIItems/InfoPanel/IBaseInfoPanelUIItem.h>
 #include <UIItems/InfoPanel/Items/UIUnitInfoPanelItem.h>
 
@@ -120,10 +119,6 @@ void Soldier1UnitComponent::Initialize()
 	m_pHealthComponent = m_pEntity->GetOrCreateComponent<HealthComponent>();
 	m_pHealthComponent->SetConsumesFood(true);
 
-	//InfoPanelUIDetailComponent Initialization
-	InfoPanelUIDetailComponent* m_pInfoPanelUIDetailComponent = m_pEntity->GetOrCreateComponent<InfoPanelUIDetailComponent>();
-	m_pInfoPanelUIDetailComponent->SetInfoPanelUIItem(new UIUnitInfoPanelItem(m_pEntity, "soldier_1_icon.png"));
-
 	//VisibilityComponent Initialization
 	m_pVisibilityComponent = m_pEntity->GetOrCreateComponent<VisibilityComponent>();
 }
@@ -173,4 +168,9 @@ SDescription Soldier1UnitComponent::GetDescription()
 	m_pDescription.sIcon = "soldier_1_icon.png";
 
 	return m_pDescription;
+}
+
+IBaseInfoPanelUIItem* Soldier1UnitComponent::GetInfoPanelItem()
+{
+	return new UIUnitInfoPanelItem(m_pEntity, "soldier_1_icon.png");
 }

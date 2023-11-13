@@ -72,7 +72,7 @@ void Bakery1BuildingComponent::Initialize()
 	m_pBboxComponent->m_bReactToCollisions = true;
 
 	//DecalComponent(Placement) Initialization
-	m_pDecalComponent = m_pEntity->CreateComponent<Cry::DefaultComponents::CDecalComponent>();
+	m_pDecalComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CDecalComponent>();
 	m_pDecalComponent->SetTransformMatrix(Matrix34::Create(Vec3(4.f, 5.7f, 3), IDENTITY, Vec3(0.3f, -2.4, 0)));
 	m_pDecalComponent->SetMaterialFileName(BUILDING_PLACEMENT_GREEN_DECAL_MATERIAL);
 	m_pDecalComponent->SetSortPriority(50);
@@ -80,14 +80,13 @@ void Bakery1BuildingComponent::Initialize()
 	m_pDecalComponent->Spawn();
 
 	//BuildingComponent initialization
-	m_pBuildingComponent = m_pEntity->GetOrCreateComponent<BuildingComponent>();
-	m_pBuildingComponent->SetPathToTrussMesh(BAKERY_BUILDING_1_TRUSS_MODEL_PATH);
+	SetPathToTrussMesh(BAKERY_BUILDING_1_TRUSS_MODEL_PATH);
 	SBuildingInfo buildingInfo;
 	buildingInfo.m_populationProduces = 0;
-	m_pBuildingComponent->SetBuildingInfo(buildingInfo);
-	m_pBuildingComponent->SetImagePath(Bakery1BuildingComponent::GetDescription().sIcon);
+	SetBuildingInfo(buildingInfo);
+	SetImagePath(Bakery1BuildingComponent::GetDescription().sIcon);
 	//UIItems
-	m_pBuildingComponent->SetMaxHealth(500.f);
+	SetMaxHealth(500.f);
 
 	//Update bounding box
 	AABB aabb;
@@ -100,6 +99,16 @@ void Bakery1BuildingComponent::Initialize()
 	//CostComponent Initializations
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
 	m_pCostComponent->SetCost(Bakery1BuildingComponent::GetDescription().price);
+
+	//ActionManager Initializations
+	m_pActionManagerComponent = m_pEntity->GetOrCreateComponent<ActionManagerComponent>();
+	m_pActionManagerComponent->SetIsBuilding(true);
+
+	//SkinAttachment Initialization
+	m_pSkinAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByIndex(0);
+
+	//Materials Initializations
+	m_pDefaultMaterial = m_pSkinAttachment->GetIAttachmentObject()->GetBaseMaterial();
 
 	//WorkplaceComponent  Initializations
 	m_pWorkplaceComponent = m_pEntity->GetOrCreateComponent<WorkplaceComponent>();
@@ -134,6 +143,8 @@ void Bakery1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 	case Cry::Entity::EEvent::Update: {
 		//f32 DeltaTime = event.fParam[0];
 
+		UpdateMaterial();
+		RotateSelectionDecal();
 		UpdateAssignedWorkers();
 
 	}break;
@@ -147,10 +158,7 @@ void Bakery1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 
 void Bakery1BuildingComponent::UpdateAssignedWorkers()
 {
-	if (!m_pBuildingComponent) {
-		return;
-	}
-	if (!m_pBuildingComponent->IsBuilt()) {
+	if (!IsBuilt()) {
 		return;
 	}
 	IEntity* pWorker = m_pWorkplaceComponent->GetWorkers()[0];

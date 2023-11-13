@@ -1,13 +1,10 @@
 #pragma once
 
+#include <Components/ResourcePoints/BaseResourcePoint.h>
 #include <DefaultComponents/Geometry/AdvancedAnimationComponent.h>
-#include <DefaultComponents/Physics/BoxPrimitiveComponent.h>
-
 #include <Components/Managers/ResourceManager.h>
 
-class ResourcePointComponent;
-
-class IronResourcePointComponent final : public IEntityComponent
+class IronResourcePointComponent final : public BaseResourcePointComponent
 {
 
 public:
@@ -25,14 +22,10 @@ public:
 	{
 		desc.SetGUID("{E7D9A867-E0B8-44D3-9EDB-50DD2F2871B6}"_cry_guid);
 		desc.SetEditorCategory("ResourcePoint");
+		desc.AddBase< BaseResourcePointComponent>();
 	}
 
-
 private:
-	Cry::DefaultComponents::CAdvancedAnimationComponent* m_pAnimationComponent = nullptr;
-	Cry::DefaultComponents::CBoxPrimitiveComponent* m_pBboxComponent = nullptr;
-
-	ResourcePointComponent* m_pResourcePointComponent = nullptr;
 
 public:
 };

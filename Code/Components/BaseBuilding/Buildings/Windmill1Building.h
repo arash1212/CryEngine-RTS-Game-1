@@ -17,7 +17,7 @@ struct SDescription;
 static string WINDMILL_BUILDING_1_MODEL_PATH = "Objects/buildings/windmill/windmill.cdf";
 static string WINDMILL_BUILDING_1_TRUSS_MODEL_PATH = "Objects/buildings/windmill/truss/windmill_truss.cgf";
 
-class Windmill1BuildingComponent final : public IEntityComponent
+class Windmill1BuildingComponent final : public BuildingComponent
 {
 
 public:
@@ -35,17 +35,10 @@ public:
 	{
 		desc.SetGUID("{CC63C580-FBA7-4285-A38C-F3EEAC305717}"_cry_guid);
 		desc.SetEditorCategory("Building");
+		desc.AddBase<BuildingComponent>();
 	}
 
 private:
-	Cry::DefaultComponents::CAdvancedAnimationComponent* m_pAnimationComponent = nullptr;
-	Cry::DefaultComponents::CStaticMeshComponent* m_pTrussMeshComponent = nullptr;
-	Cry::DefaultComponents::CBoxPrimitiveComponent* m_pBboxComponent = nullptr;
-	Cry::DefaultComponents::CDecalComponent* m_pDecalComponent = nullptr;
-
-	SelectableComponent* m_pSelectableComponent = nullptr;
-	BuildingComponent* m_pBuildingComponent = nullptr;
-	CostComponent* m_pCostComponent = nullptr;
 	WorkplaceComponent* m_pWorkplaceComponent = nullptr;
 
 	IEntity* m_pWarehouseEntity = nullptr;

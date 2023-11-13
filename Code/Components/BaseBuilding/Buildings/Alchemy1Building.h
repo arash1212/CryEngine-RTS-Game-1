@@ -16,7 +16,7 @@ struct SDescription;
 static string ALCHEMY_BUILDING_1_MODEL_PATH = "Objects/buildings/alchemy1/alchemy1.cdf";
 static string ALCHEMY_BUILDING_1_TRUSS_MODEL_PATH = "Objects/buildings/alchemy1/truss/alchemy1_truss.cgf";
 
-class Alchemy1BuildingComponent final : public IEntityComponent
+class Alchemy1BuildingComponent final : public BuildingComponent
 {
 
 public:
@@ -34,19 +34,10 @@ public:
 	{
 		desc.SetGUID("{4371C932-5D06-401B-B58E-CEFFD305BD11}"_cry_guid);
 		desc.SetEditorCategory("Building");
+		desc.AddBase<BuildingComponent>();
 	}
 
-
-
 private:
-	Cry::DefaultComponents::CAdvancedAnimationComponent* m_pAnimationComponent = nullptr;
-	Cry::DefaultComponents::CStaticMeshComponent* m_pTrussMeshComponent = nullptr;
-	Cry::DefaultComponents::CBoxPrimitiveComponent* m_pBboxComponent = nullptr;
-	Cry::DefaultComponents::CDecalComponent* m_pDecalComponent = nullptr;
-
-	SelectableComponent* m_pSelectableComponent = nullptr;
-	BuildingComponent* m_pBuildingComponent = nullptr;
-	CostComponent* m_pCostComponent = nullptr;
 	WorkplaceComponent* m_pWorkplaceComponent = nullptr;
 
 	IEntity* m_pWarehouseEntity = nullptr;

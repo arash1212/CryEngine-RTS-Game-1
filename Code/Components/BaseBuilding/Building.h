@@ -12,6 +12,7 @@ class IBaseUIItem;
 class OwnerInfoComponent;
 class HealthComponent;
 class VisibilityComponent;
+class CostComponent;
 
 struct SBuildingInfo {
 public:
@@ -19,10 +20,13 @@ public:
 	int32 m_populationProduces = 0;
 };
 
+static const string BUILDING_EXIT_POINT_ATTACHMENT_NAME = "exitPoint";
+static const string BUILDING_PLACEMENT_GREEN_MATERIAL = "Materials/buildings/building_placement_green_material.mtl";
+static const string BUILDING_PLACEMENT_RED_MATERIAL = "Materials/buildings/building_placement_red_material.mtl";
 static const string BUILDING_PLACEMENT_GREEN_DECAL_MATERIAL = "Materials/buildings/building_placement_green_material.mtl";
 static const string BUILDING_PLACEMENT_RED_DECAL_MATERIAL = "Materials/buildings/building_placement_red_material.mtl";
 
-class BuildingComponent final : public IEntityComponent
+class BuildingComponent : public IEntityComponent
 {
 
 public:
@@ -42,7 +46,7 @@ public:
 		desc.SetEditorCategory("Building");
 	}
 
-private:
+protected:
 	Cry::DefaultComponents::CAdvancedAnimationComponent* m_pAnimationComponent = nullptr;
 	Cry::DefaultComponents::CStaticMeshComponent* m_pTrussMeshComponent = nullptr;
 	Cry::DefaultComponents::CBoxPrimitiveComponent* m_pBboxComponent = nullptr;
@@ -51,14 +55,13 @@ private:
 	ActionManagerComponent* m_pActionManagerComponent = nullptr;
 	SelectableComponent* m_pSelectableComponent = nullptr;
 	OwnerInfoComponent* m_pOwnerInfoComponent = nullptr;
+	CostComponent* m_pCostComponent = nullptr;
 	HealthComponent* m_pHealthComponent = nullptr;
 	VisibilityComponent* m_pVisibilityComponent = nullptr;
 
 	SBuildingInfo m_pBuildingInfo;
 
-	IAttachment* m_pExitPointAttachment = nullptr;
 	IAttachment* m_pSkinAttachment = nullptr;
-
 	IMaterial* m_pDefaultMaterial = nullptr;
 
 private:
@@ -77,7 +80,7 @@ private:
 
 	string m_imagePath = "cancel.png";
 
-private:
+protected:
 	void UpdateMaterial();
 	void RotateSelectionDecal();
 

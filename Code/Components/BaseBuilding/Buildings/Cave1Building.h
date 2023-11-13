@@ -18,7 +18,7 @@ struct SDescription;
 static string CAVE_BUILDING_1_MODEL_PATH = "Objects/buildings/cave1/cave1.cdf";
 static string CAVE_BUILDING_1_TRUSS_MODEL_PATH = "Objects/buildings/house1/truss/house1_truss.cgf";
 
-class Cave1BuildingComponent final : public IEntityComponent
+class Cave1BuildingComponent final : public BuildingComponent
 {
 
 public:
@@ -36,19 +36,11 @@ public:
 	{
 		desc.SetGUID("{3395C71B-2CD0-4795-BF45-96F5B6C1784F}"_cry_guid);
 		desc.SetEditorCategory("Building");
+		desc.AddBase<BuildingComponent>();
 	}
 
 private:
-	Cry::DefaultComponents::CAdvancedAnimationComponent* m_pAnimationComponent = nullptr;
-	Cry::DefaultComponents::CStaticMeshComponent* m_pTrussMeshComponent = nullptr;
-	Cry::DefaultComponents::CBoxPrimitiveComponent* m_pBboxComponent = nullptr;
-	Cry::DefaultComponents::CDecalComponent* m_pDecalComponent = nullptr;
-
-	OwnerInfoComponent* m_pOwnerInfoComponent = nullptr;
 	ResourceManagerComponent* m_pResourceManagerComponent = nullptr;
-
-	SelectableComponent* m_pSelectableComponent = nullptr;
-	BuildingComponent* m_pBuildingComponent = nullptr;
 	CostComponent* m_pCostComponent = nullptr;
 
 private:

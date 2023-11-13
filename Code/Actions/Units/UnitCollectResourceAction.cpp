@@ -6,7 +6,7 @@
 
 #include <CryEntitySystem/IEntitySystem.h>
 #include <Components/Selectables/ResourceStorage.h>
-#include <Components/ResourcePoints/ResourcePoint.h>
+#include <Components/ResourcePoints/BaseResourcePoint.h>
 #include <Components/Selectables/Engineer.h>
 #include <Components/Controller/AIController.h>
 #include <Components/Managers/UnitStateManager.h>
@@ -21,7 +21,7 @@ UnitCollectResourceAction::UnitCollectResourceAction(IEntity* entity, IEntity* r
 	this->m_pEngineerComponent = m_pEntity->GetComponent<EngineerComponent>();
 	this->m_pAiControllerComponent = m_pEntity->GetComponent<AIControllerComponent>();
 	this->m_pStateManagerComponent = m_pEntity->GetComponent<UnitStateManagerComponent>();
-	this->m_pResourcePointComponent = resourceEntity->GetComponent<ResourcePointComponent>();
+	this->m_pResourcePointComponent = resourceEntity->GetComponent<BaseResourcePointComponent>();
 	this->m_pAnimationComponent = m_pEntity->GetComponent<UnitAnimationComponent>();
 	this->m_pResourceCollectorComponent = m_pEntity->GetComponent<ResourceCollectorComponent>();
 
@@ -63,7 +63,7 @@ void UnitCollectResourceAction::Execute()
 
 	//*********************************Collecting location
 	if (m_pResourcePointComponent->HasCollectingLocation()) {
-		collectingLocationPos = m_pResourcePointEntity->GetComponent<ResourcePointComponent>()->GetCollectingLocation();
+		collectingLocationPos = m_pResourcePointEntity->GetComponent<BaseResourcePointComponent>()->GetCollectingLocation();
 		distanceToResource = EntityUtils::GetDistance(m_pEntity->GetWorldPos(), m_pResourcePointComponent->GetCollectingLocation(), nullptr);
 	}
 	else {

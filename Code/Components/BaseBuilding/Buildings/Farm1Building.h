@@ -17,7 +17,7 @@ static string FARM_BUILDING_1_MODEL_PATH = "Objects/buildings/farm1/farm1.cdf";
 static string WHEAT_1_FARM_1_MODEL_PATH = "Objects/buildings/farm1/wheat/wheat1.cgf";
 static string FARM_BUILDING_1_TRUSS_MODEL_PATH = "Objects/buildings/farm1/truss/farm1_truss.cgf";
 
-class Farm1BuildingComponent final : public IEntityComponent
+class Farm1BuildingComponent final : public BuildingComponent
 {
 
 public:
@@ -35,18 +35,11 @@ public:
 	{
 		desc.SetGUID("{1E299424-AC01-4684-8EBF-E8E685CDDFA6}"_cry_guid);
 		desc.SetEditorCategory("Building");
+		desc.AddBase<BuildingComponent>();
 	}
 
 
 private:
-	Cry::DefaultComponents::CAdvancedAnimationComponent* m_pAnimationComponent = nullptr;
-	Cry::DefaultComponents::CStaticMeshComponent* m_pTrussMeshComponent = nullptr;
-	Cry::DefaultComponents::CBoxPrimitiveComponent* m_pBboxComponent = nullptr;
-	Cry::DefaultComponents::CDecalComponent* m_pDecalComponent = nullptr;
-
-	SelectableComponent* m_pSelectableComponent = nullptr;
-	BuildingComponent* m_pBuildingComponent = nullptr;
-	CostComponent* m_pCostComponent = nullptr;
 	WorkplaceComponent* m_pWorkplaceComponent = nullptr;
 
 

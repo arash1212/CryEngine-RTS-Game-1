@@ -17,7 +17,7 @@ struct SDescription;
 static string BAKERY_BUILDING_1_MODEL_PATH = "Objects/buildings/bakery1/bakery1.cdf";
 static string BAKERY_BUILDING_1_TRUSS_MODEL_PATH = "Objects/buildings/bakery1/truss/bakery1_truss.cgf";
 
-class Bakery1BuildingComponent final : public IEntityComponent
+class Bakery1BuildingComponent final : public BuildingComponent
 {
 
 public:
@@ -35,19 +35,11 @@ public:
 	{
 		desc.SetGUID("{6C50F53F-20BA-4CE0-BA6C-ED37F7D867EB}"_cry_guid);
 		desc.SetEditorCategory("Building");
+		desc.AddBase<BuildingComponent>();
 	}
 
-
 private:
-	Cry::DefaultComponents::CAdvancedAnimationComponent* m_pAnimationComponent = nullptr;
-	Cry::DefaultComponents::CStaticMeshComponent* m_pTrussMeshComponent = nullptr;
-	Cry::DefaultComponents::CBoxPrimitiveComponent* m_pBboxComponent = nullptr;
-	Cry::DefaultComponents::CDecalComponent* m_pDecalComponent = nullptr;
 	Cry::DefaultComponents::CParticleComponent* m_pParticleComponent = nullptr;
-
-	SelectableComponent* m_pSelectableComponent = nullptr;
-	BuildingComponent* m_pBuildingComponent = nullptr;
-	CostComponent* m_pCostComponent = nullptr;
 	WorkplaceComponent* m_pWorkplaceComponent = nullptr;
 
 	IEntity* m_pWarehouseEntity = nullptr;
