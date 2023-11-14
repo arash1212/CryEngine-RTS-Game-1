@@ -43,6 +43,5 @@ string UISellFlourItem::GetImagePath()
 
 SDescription UISellFlourItem::GetDescrption()
 {
-	FlourResource pFlourResource;
-	return pFlourResource.GetDescription();
+	return RESOURCE_FLOUR->GetDescription();
 }

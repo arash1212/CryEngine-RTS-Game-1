@@ -2,37 +2,37 @@
 #include "AK47Resource.h"
 #include "GamePlugin.h"
 
-int32 AK47Resource::GetPrice()
+int32 AK47Resource::GetPrice() const
 {
 	return nPrice;
 }
 
-string AK47Resource::GetName()
+string AK47Resource::GetName() const
 {
 	return sName;
 }
 
-string AK47Resource::GetIcon()
+string AK47Resource::GetIcon() const
 {
 	return sIcon;
 }
 
-string AK47Resource::GetBuyIcon()
+string AK47Resource::GetBuyIcon() const
 {
 	return sBuyIcon;
 }
 
-string AK47Resource::GetSellIcon()
+string AK47Resource::GetSellIcon() const
 {
 	return sSellIcon;
 }
 
-string AK47Resource::GetAttachmentName()
+string AK47Resource::GetAttachmentName() const
 {
 	return sAttachmentName;
 }
 
-EResourceType AK47Resource::GetType()
+EResourceType AK47Resource::GetType() const
 {
 	return mResourceType;
 }

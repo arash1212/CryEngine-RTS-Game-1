@@ -2,32 +2,37 @@
 #include "SulfurResource.h"
 #include "GamePlugin.h"
 
-string SulfurResource::GetName()
+int32 SulfurResource::GetPrice() const
+{
+	return  nPrice;
+}
+
+string SulfurResource::GetName() const
 {
 	return sName;
 }
 
-string SulfurResource::GetIcon()
+string SulfurResource::GetIcon() const
 {
 	return sIcon;
 }
 
-string SulfurResource::GetBuyIcon()
+string SulfurResource::GetBuyIcon() const
 {
 	return sBuyIcon;
 }
 
-string SulfurResource::GetSellIcon()
+string SulfurResource::GetSellIcon() const
 {
 	return sSellIcon;
 }
 
-string SulfurResource::GetAttachmentName()
+string SulfurResource::GetAttachmentName() const
 {
 	return sAttachmentName;
 }
 
-EResourceType SulfurResource::GetType()
+EResourceType SulfurResource::GetType() const
 {
 	return mResourceType;
 }

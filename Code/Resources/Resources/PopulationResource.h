@@ -2,7 +2,7 @@
 
 #include <Resources/IResource.h>
 
-class PopulationResource : IResource {
+class PopulationResource :public IResource {
 private:
 	int32 nPrice = 1;
 	string sName = "Population";
@@ -10,23 +10,23 @@ private:
 	string sBuyDescription = "Buy Population.";
 	string sSellDescription = "Sell Population.";
 	string sIcon = "population_Icon_ui.png";
-	string sBuyIcon = "population_buy_icon.png";
-	string sSellIcon = "population_sell_icon.png";
+	string sBuyIcon = "population_Icon_ui.png";
+	string sSellIcon = "population_Icon_ui.png";
 	string sAttachmentName = "";
 	EResourceType mResourceType = EResourceType::POPULATION;
 
 public:
-	virtual int32 GetPrice() override;
-	virtual string GetName() override;
-	virtual string GetIcon() override;
-	virtual string GetBuyIcon() override;
-	virtual string GetSellIcon() override;
-	virtual string GetAttachmentName() override;
-	virtual EResourceType GetType() override;
+	virtual int32 GetPrice() const override;
+	virtual string GetName() const override;
+	virtual string GetIcon() const override;
+	virtual string GetBuyIcon() const override;
+	virtual string GetSellIcon() const override;
+	virtual string GetAttachmentName() const override;
+	virtual EResourceType GetType() const override;
 
-	virtual SDescription GetDescription() override {
+	virtual SDescription GetDescription() const override {
 		SResourceInfo price;
-		price.m_moneyAmount = 1;
+		price.m_moneyAmount = nPrice;
 
 		SResourceInfo sellPrice;
 		sellPrice.m_sulfurAmount = 1;
@@ -45,3 +45,5 @@ public:
 		return description;
 	}
 };
+
+static IResource* RESOURCE_POPULATION = new PopulationResource();

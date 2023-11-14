@@ -91,6 +91,10 @@ private:
 	f32 m_timeBetweenMouseOverCheck = 0.03f;
 	f32 m_mouseOverCheckTimePassed = 0.0f;
 
+	int32 m_lastActionbarMouseOverIndex = -1;
+	f32 m_timeBetweenUpdatingDescription = 0.1f;
+	f32 m_descriptionUpdateTimePassed = 0.0f;
+
 	int32 m_lastIndecCheck = -1;
 	//
 	//bool bIsLeftClickWorks = false;

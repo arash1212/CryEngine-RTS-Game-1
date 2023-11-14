@@ -2,7 +2,7 @@
 
 #include <UIItems/InfoPanel/IBaseInfoPanelUIItem.h>
 
-class IUIInfoPanelItem {
+class IUIInfoPanelItemProvider {
 public:
 	virtual IBaseInfoPanelUIItem* GetInfoPanelItem() = 0;
 };

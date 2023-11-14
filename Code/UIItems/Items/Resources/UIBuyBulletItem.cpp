@@ -4,7 +4,6 @@
 
 #include <Components/Info/OwnerInfo.h>
 #include <Components/Managers/ResourceManager.h>
-#include <Resources/Resources/BulletResource.h>
 
 UIBuyBulletItem::UIBuyBulletItem(IEntity* entity)
 {
@@ -43,6 +42,5 @@ string UIBuyBulletItem::GetImagePath()
 
 SDescription UIBuyBulletItem::GetDescrption()
 {
-	BulletResource pBulletResource;
-	return pBulletResource.GetDescription();
+	return RESOURCE_BULLET->GetDescription();
 }

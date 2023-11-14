@@ -11,6 +11,8 @@ protected:
 
 public:
 	virtual void Execute() = 0;
+
+	//TODO : bashe chun har item momkene ye chiz khast be onvan image bekhad
 	virtual string GetImagePath() = 0;
 
 	virtual SDescription GetDescrption() {

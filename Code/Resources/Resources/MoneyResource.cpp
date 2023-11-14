@@ -2,37 +2,37 @@
 #include "MoneyResource.h"
 #include "GamePlugin.h"
 
-int32 MoneyResource::GetPrice()
+int32 MoneyResource::GetPrice() const
 {
 	return nPrice;
 }
 
-string MoneyResource::GetName()
+string MoneyResource::GetName() const
 {
 	return sName;
 }
 
-string MoneyResource::GetIcon()
+string MoneyResource::GetIcon() const
 {
 	return sIcon;
 }
 
-string MoneyResource::GetBuyIcon()
+string MoneyResource::GetBuyIcon() const
 {
 	return sBuyIcon;
 }
 
-string MoneyResource::GetSellIcon()
+string MoneyResource::GetSellIcon() const
 {
 	return sSellIcon;
 }
 
-string MoneyResource::GetAttachmentName()
+string MoneyResource::GetAttachmentName() const
 {
 	return sAttachmentName;
 }
 
-EResourceType MoneyResource::GetType()
+EResourceType MoneyResource::GetType() const
 {
 	return mResourceType;
 }

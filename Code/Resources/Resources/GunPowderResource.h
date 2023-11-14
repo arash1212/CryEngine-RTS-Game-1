@@ -2,9 +2,9 @@
 
 #include <Resources/IResource.h>
 
-class GunPowderResource : IResource {
+class GunPowderResource :public IResource {
 private:
-	int32 nPrice = 1;
+	int32 nPrice = 4;
 	string sName = "GunPowder";
 	string sDescription = "GunPowder.";
 	string sBuyDescription = "Buy GunPowder.";
@@ -16,17 +16,17 @@ private:
 	EResourceType mResourceType = EResourceType::GUN_POWDER;
 
 public:
-	virtual int32 GetPrice() override;
-	virtual string GetName() override;
-	virtual string GetIcon() override;
-	virtual string GetBuyIcon() override;
-	virtual string GetSellIcon() override;
-	virtual string GetAttachmentName() override;
-	virtual EResourceType GetType() override;
+	virtual int32 GetPrice() const override;
+	virtual string GetName() const override;
+	virtual string GetIcon() const override;
+	virtual string GetBuyIcon() const override;
+	virtual string GetSellIcon() const override;
+	virtual string GetAttachmentName() const override;
+	virtual EResourceType GetType() const override;
 
-	virtual SDescription GetDescription() override {
+	virtual SDescription GetDescription() const override {
 		SResourceInfo price;
-		price.m_moneyAmount = 1;
+		price.m_moneyAmount = nPrice;
 
 		SResourceInfo sellPrice;
 		sellPrice.m_sulfurAmount = 1;
@@ -46,3 +46,4 @@ public:
 	}
 };
 
+static IResource* RESOURCE_GUN_POWDER = new GunPowderResource();

@@ -2,37 +2,37 @@
 #include "PopulationResource.h"
 #include "GamePlugin.h"
 
-int32 PopulationResource::GetPrice()
+int32 PopulationResource::GetPrice() const
 {
 	return nPrice;
 }
 
-string PopulationResource::GetName()
+string PopulationResource::GetName() const
 {
 	return sName;
 }
 
-string PopulationResource::GetIcon()
+string PopulationResource::GetIcon() const
 {
 	return sIcon;
 }
 
-string PopulationResource::GetBuyIcon()
+string PopulationResource::GetBuyIcon() const
 {
 	return sBuyIcon;
 }
 
-string PopulationResource::GetSellIcon()
+string PopulationResource::GetSellIcon() const
 {
 	return sSellIcon;
 }
 
-string PopulationResource::GetAttachmentName()
+string PopulationResource::GetAttachmentName() const
 {
 	return sAttachmentName;
 }
 
-EResourceType PopulationResource::GetType()
+EResourceType PopulationResource::GetType() const
 {
 	return mResourceType;
 }

@@ -79,7 +79,7 @@ void UIDescriptionsPanelComponent::AddItem(BaseDescriptionPanelItem* item)
 	}
 
 	SUIArguments args;
-	args.AddArgument(item->GetImagePath());
+	args.AddArgument(item->GetResource()->GetBuyIcon());
 	args.AddArgument(item->GetAmount());
 	args.AddArgument("");
 
@@ -98,7 +98,7 @@ void UIDescriptionsPanelComponent::Clear()
 	m_items.clear();
 }
 
-void UIDescriptionsPanelComponent::SetAmount(int32 index, int32 amount)
+void UIDescriptionsPanelComponent::SetAmount(int32 index, string amount)
 {
 	if (!m_pDescriptionPanelUIElement) {
 		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "UIInfoPanelComponent : (SetAmount) DescriptionPanelUIElement is null !");
@@ -126,4 +126,9 @@ void UIDescriptionsPanelComponent::SetDescriptionText(string description)
 void UIDescriptionsPanelComponent::SetEventListener(IUIElementEventListener* eventListener)
 {
 	this->m_pDescriptionPanelUIElement->AddEventListener(eventListener, "description-panel-event-listener");
+}
+
+DynArray<BaseDescriptionPanelItem*> UIDescriptionsPanelComponent::GetItems()
+{
+	return m_items;
 }

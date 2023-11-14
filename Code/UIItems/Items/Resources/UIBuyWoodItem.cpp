@@ -43,6 +43,5 @@ string UIBuyWoodItem::GetImagePath()
 
 SDescription UIBuyWoodItem::GetDescrption()
 {
-	WoodResource pWoodResource;
-	return pWoodResource.GetDescription();
+	return RESOURCE_WOOD->GetDescription();
 }

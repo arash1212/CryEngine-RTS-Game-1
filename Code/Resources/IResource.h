@@ -18,12 +18,14 @@ enum class EResourceType {
 };
 
 class IResource {
-	virtual int32 GetPrice() = 0;
-	virtual string GetName() = 0;
-	virtual string GetIcon() = 0;
-	virtual string GetBuyIcon() = 0;
-	virtual string GetSellIcon() = 0;
-	virtual EResourceType GetType() = 0;
-	virtual string GetAttachmentName() = 0;
-	virtual SDescription GetDescription() = 0;
+public:
+	virtual int32 GetPrice() const = 0;
+	virtual string GetName() const = 0;
+	virtual string GetIcon() const = 0;
+	virtual string GetBuyIcon() const = 0;
+	virtual string GetSellIcon() const = 0;
+	virtual EResourceType GetType() const = 0;
+	virtual string GetAttachmentName() const = 0;
+	virtual SDescription GetDescription() const = 0;
 };
+

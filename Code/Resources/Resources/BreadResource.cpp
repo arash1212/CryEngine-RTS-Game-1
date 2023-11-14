@@ -1,39 +1,38 @@
-
 #include "StdAfx.h"
 #include "BreadResource.h"
 #include "GamePlugin.h"
 
-int32 BreadResource::GetPrice()
+int32 BreadResource::GetPrice() const
 {
 	return nPrice;
 }
 
-string BreadResource::GetName()
+string BreadResource::GetName() const
 {
 	return sName;
 }
 
-string BreadResource::GetIcon()
+string BreadResource::GetIcon() const
 {
 	return sIcon;
 }
 
-string BreadResource::GetBuyIcon()
+string BreadResource::GetBuyIcon() const
 {
 	return sBuyIcon;
 }
 
-string BreadResource::GetSellIcon()
+string BreadResource::GetSellIcon() const
 {
 	return sSellIcon;
 }
 
-string BreadResource::GetAttachmentName()
+string BreadResource::GetAttachmentName() const
 {
 	return sAttachmentName;
 }
 
-EResourceType BreadResource::GetType()
+EResourceType BreadResource::GetType() const
 {
 	return mResourceType;
 }

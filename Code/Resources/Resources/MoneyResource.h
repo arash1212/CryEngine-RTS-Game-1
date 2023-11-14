@@ -2,7 +2,7 @@
 
 #include <Resources/IResource.h>
 
-class MoneyResource : IResource {
+class MoneyResource :public IResource {
 private:
 	int32 nPrice = 1;
 	string sName = "Money";
@@ -16,17 +16,17 @@ private:
 	EResourceType mResourceType = EResourceType::Money;
 
 public:
-	virtual int32 GetPrice() override;
-	virtual string GetName() override;
-	virtual string GetIcon() override;
-	virtual string GetBuyIcon() override;
-	virtual string GetSellIcon() override;
-	virtual string GetAttachmentName() override;
-	virtual EResourceType GetType() override;
+	virtual int32 GetPrice() const override;
+	virtual string GetName() const override;
+	virtual string GetIcon() const override;
+	virtual string GetBuyIcon() const override;
+	virtual string GetSellIcon() const override;
+	virtual string GetAttachmentName() const override;
+	virtual EResourceType GetType() const override;
 
-	virtual SDescription GetDescription() override {
+	virtual SDescription GetDescription() const override {
 		SResourceInfo price;
-		price.m_moneyAmount = 1;
+		price.m_moneyAmount = nPrice;
 
 		SResourceInfo sellPrice;
 		sellPrice.m_sulfurAmount = 1;
@@ -45,3 +45,5 @@ public:
 		return description;
 	}
 };
+
+static IResource* RESOURCE_MONEY = new MoneyResource();

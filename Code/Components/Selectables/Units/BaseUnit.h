@@ -1,8 +1,8 @@
 #pragma once
 
-#include <Interfaces/IUIInfoPanelItem.h>
+#include <Interfaces/IUIInfoPanelItemProvider.h>
 
-class BaseUnitComponent : public IEntityComponent, public IUIInfoPanelItem
+class BaseUnitComponent : public IEntityComponent, public IUIInfoPanelItemProvider
 {
 
 public:

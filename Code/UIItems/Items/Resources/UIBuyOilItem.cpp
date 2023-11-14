@@ -43,6 +43,5 @@ string UIBuyOilItem::GetImagePath()
 
 SDescription UIBuyOilItem::GetDescrption()
 {
-	OilResource pOilResource;
-	return pOilResource.GetDescription();
+	return RESOURCE_OIL->GetDescription();
 }

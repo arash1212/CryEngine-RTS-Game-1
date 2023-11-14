@@ -2,18 +2,18 @@
 #include "BaseDescriptionPanelItem.h"
 #include "GamePlugin.h"
 
-BaseDescriptionPanelItem::BaseDescriptionPanelItem(string imagePath, int32 amount)
+BaseDescriptionPanelItem::BaseDescriptionPanelItem(const IResource* resource, string amount)
 {
-	this->m_imagePath = imagePath;
-	this->m_amount = amount;
+	this->m_pResource = resource;
+	this->sAmount = amount;
 }
 
-string BaseDescriptionPanelItem::GetImagePath()
+const IResource* BaseDescriptionPanelItem::GetResource()
 {
-	return m_imagePath;
+	return m_pResource;
 }
 
-int32 BaseDescriptionPanelItem::GetAmount()
+string BaseDescriptionPanelItem::GetAmount()
 {
-	return m_amount;
+	return sAmount;
 }

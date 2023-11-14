@@ -1,9 +1,9 @@
 #pragma once
 
 #include <UIItems/InfoPanel/IBaseInfoPanelUIItem.h>
-#include <Interfaces/IUIInfoPanelItem.h>
+#include <Interfaces/IUIInfoPanelItemProvider.h>
 
-class IBaseAction :public IUIInfoPanelItem {
+class IBaseAction :public IUIInfoPanelItemProvider {
 
 protected:
 	IEntity* m_pEntity = nullptr;

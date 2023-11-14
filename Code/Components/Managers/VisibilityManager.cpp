@@ -68,16 +68,16 @@ void VisibilityManagerComponent::CheckVisibility()
 		ResourceManagerComponent* pResourceManagerComponent = m_pEntity->GetComponent<ResourceManagerComponent>();
 
 		for (IEntity* enemyEntity : pOtherResourceManagerComponent->GetOwnedEntities()) {
+			bool bIsVisible = false;
+			VisibilityComponent* pVisibiliComponent = enemyEntity->GetComponent<VisibilityComponent>();
 			for (IEntity* entity : pResourceManagerComponent->GetOwnedEntities()) {
 				f32 distanceToEnemyEntity = EntityUtils::GetDistance(entity->GetWorldPos(), enemyEntity->GetWorldPos(), enemyEntity);
-				VisibilityComponent* pVisibiliComponent = enemyEntity->GetComponent<VisibilityComponent>();
-				if (distanceToEnemyEntity > 30) {
-					pVisibiliComponent->SetVisible(false);
-				}
-				else {
-					pVisibiliComponent->SetVisible(true);
+				if (distanceToEnemyEntity <= 30) {
+					bIsVisible = true;
+					break;
 				}
 			}
+			pVisibiliComponent->SetVisible(bIsVisible);
 		}
 	}
 }

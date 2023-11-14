@@ -238,12 +238,13 @@ add_sources("Weapons_uber.cpp"
 add_sources("Interfaces_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "Interfaces"
-		"Interfaces/IUIInfoPanelItem.h"
+		"Interfaces/IUIInfoPanelItemProvider.h"
 )
 add_sources("Resources_uber.cpp"
     PROJECTS Game
     SOURCE_GROUP "Resources"
 		"Resources/IResource.h"
+		"Resources/ResourceConstants.h"
 )
 add_sources("Resources_uber.cpp"
     PROJECTS Game

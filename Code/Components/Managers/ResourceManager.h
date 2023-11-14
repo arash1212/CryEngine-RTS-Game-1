@@ -2,6 +2,7 @@
 
 class UIResourcesPanelComponent;
 enum class EResourceType;
+class IResource;
 
 struct SResourceInfo {
 public:
@@ -21,8 +22,12 @@ public:
 };
 
 struct SResourceRequestParams {
-	EResourceType m_pResourceType;
-	int32 m_amountRequested = 0;
+	SResourceRequestParams(IResource* resource, int32 amount) {
+		this->m_pResource = resource;
+		this->nAmount = amount;
+	}
+	IResource* m_pResource;
+	int32 nAmount = 0;
 };
 
 struct SDescription {

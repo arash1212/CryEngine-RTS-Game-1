@@ -43,6 +43,5 @@ string UISellBreadItem::GetImagePath()
 
 SDescription UISellBreadItem::GetDescrption()
 {
-	BreadResource pBreadResource;
-	return pBreadResource.GetDescription();
+	return RESOURCE_BREAD->GetDescription();
 }

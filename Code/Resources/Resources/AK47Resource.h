@@ -2,9 +2,9 @@
 
 #include <Resources/IResource.h>
 
-class AK47Resource : IResource {
+class AK47Resource :public IResource {
 private:
-	int32 nPrice = 1;
+	int32 nPrice = 10;
 	string sName = "AK47";
 	string sDescription = "AK47.";
 	string sBuyDescription = "Buy AK47.";
@@ -16,17 +16,17 @@ private:
 	EResourceType mResourceType = EResourceType::AK47;
 
 public:
-	virtual int32 GetPrice() override;
-	virtual string GetName() override;
-	virtual string GetIcon() override;
-	virtual string GetBuyIcon() override;
-	virtual string GetSellIcon() override;
-	virtual EResourceType GetType() override;
-	virtual string GetAttachmentName() override;
+	virtual int32 GetPrice() const override;
+	virtual string GetName() const override;
+	virtual string GetIcon() const override;
+	virtual string GetBuyIcon() const override;
+	virtual string GetSellIcon() const override;
+	virtual EResourceType GetType() const override;
+	virtual string GetAttachmentName() const override;
 
-	virtual SDescription GetDescription() override {
+	virtual SDescription GetDescription() const override {
 		SResourceInfo price;
-		price.m_moneyAmount = 1;
+		price.m_moneyAmount = nPrice;
 
 		SResourceInfo sellPrice;
 		sellPrice.m_sulfurAmount = 1;
@@ -45,3 +45,5 @@ public:
 		return description;
 	}
 };
+
+static IResource* RESOURCE_AK47 = new AK47Resource();

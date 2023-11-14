@@ -2,37 +2,37 @@
 #include "IronResource.h"
 #include "GamePlugin.h"
 
-int32 IronResource::GetPrice()
+int32 IronResource::GetPrice() const
 {
 	return nPrice;
 }
 
-string IronResource::GetName()
+string IronResource::GetName() const
 {
 	return sName;
 }
 
-string IronResource::GetIcon()
+string IronResource::GetIcon() const
 {
 	return sIcon;
 }
 
-string IronResource::GetBuyIcon()
+string IronResource::GetBuyIcon() const
 {
 	return sBuyIcon;
 }
 
-string IronResource::GetSellIcon()
+string IronResource::GetSellIcon() const
 {
 	return sSellIcon;
 }
 
-string IronResource::GetAttachmentName()
+string IronResource::GetAttachmentName() const
 {
 	return sAttachmentName;
 }
 
-EResourceType IronResource::GetType()
+EResourceType IronResource::GetType() const
 {
 	return mResourceType;
 }

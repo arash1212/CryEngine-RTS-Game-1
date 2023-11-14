@@ -2,6 +2,7 @@
 #include "ResourceManager.h"
 #include "GamePlugin.h"
 
+#include <Resources/IResource.h>
 #include <Actions/IBaseAction.h>
 #include <Components/UI/UIResourcesPanel.h>
 #include <Resources/IResource.h>

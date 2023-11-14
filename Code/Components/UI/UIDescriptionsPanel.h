@@ -34,9 +34,11 @@ private:
 public:
 	void AddItem(BaseDescriptionPanelItem* item);
 	void Clear();
-	void SetAmount(int32 index, int32 amount);
+	void SetAmount(int32 index, string amount);
 	void SetDescriptionText(string text);
 
 	void SetEventListener(IUIElementEventListener* eventListener);
+
+	DynArray<BaseDescriptionPanelItem*> GetItems();
 };
 

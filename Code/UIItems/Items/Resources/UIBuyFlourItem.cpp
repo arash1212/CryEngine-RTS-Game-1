@@ -43,6 +43,5 @@ string UIBuyFlourItem::GetImagePath()
 
 SDescription UIBuyFlourItem::GetDescrption()
 {
-	FlourResource pFlourResource;
-	return pFlourResource.GetDescription();
+	return RESOURCE_FLOUR->GetDescription();
 }

@@ -43,6 +43,5 @@ string UISellOilItem::GetImagePath()
 
 SDescription UISellOilItem::GetDescrption()
 {
-	OilResource pOilResource;
-	return pOilResource.GetDescription();
+	return RESOURCE_OIL->GetDescription();
 }

@@ -156,8 +156,8 @@ void Cave1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 	case Cry::Entity::EEvent::Update: {
 		f32 DeltaTime = event.fParam[0];
 
-		UpdateMaterial();
-		RotateSelectionDecal();
+		//UpdateMaterial();
+		//RotateSelectionDecal();
 		CommandUnitsToAttack();
 
 		//Timers

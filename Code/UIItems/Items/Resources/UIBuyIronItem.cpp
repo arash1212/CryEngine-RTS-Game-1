@@ -43,6 +43,5 @@ string UIBuyIronItem::GetImagePath()
 
 SDescription UIBuyIronItem::GetDescrption()
 {
-	IronResource pIronResource;
-	return pIronResource.GetDescription();
+	return RESOURCE_IRON->GetDescription();
 }

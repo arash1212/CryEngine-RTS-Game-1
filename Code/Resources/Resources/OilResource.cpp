@@ -2,37 +2,37 @@
 #include "OilResource.h"
 #include "GamePlugin.h"
 
-int32 OilResource::GetPrice()
+int32 OilResource::GetPrice() const
 {
 	return nPrice;
 }
 
-string OilResource::GetName()
+string OilResource::GetName() const
 {
 	return sName;
 }
 
-string OilResource::GetIcon()
+string OilResource::GetIcon() const
 {
 	return sIcon;
 }
 
-string OilResource::GetBuyIcon()
+string OilResource::GetBuyIcon() const
 {
 	return sBuyIcon;
 }
 
-string OilResource::GetSellIcon()
+string OilResource::GetSellIcon() const
 {
 	return sSellIcon;
 }
 
-string OilResource::GetAttachmentName()
+string OilResource::GetAttachmentName() const
 {
 	return sAttachmentName;
 }
 
-EResourceType OilResource::GetType()
+EResourceType OilResource::GetType() const
 {
 	return mResourceType;
 }

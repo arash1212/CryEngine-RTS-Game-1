@@ -43,6 +43,5 @@ string UISellWheatItem::GetImagePath()
 
 SDescription UISellWheatItem::GetDescrption()
 {
-	WheatResource pWheatResource;
-	return pWheatResource.GetDescription();
+	return RESOURCE_WHEAT->GetDescription();
 }

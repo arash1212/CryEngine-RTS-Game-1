@@ -1,12 +1,14 @@
 #pragma once
 
+#include <Resources/IResource.h>
+
 class BaseDescriptionPanelItem {
 public:
-	BaseDescriptionPanelItem(string imagePath, int32 amount);
+	BaseDescriptionPanelItem(const IResource* resource, string amount);
 protected:
-	string m_imagePath = "";
-	int32 m_amount = 0;
+	const IResource* m_pResource = nullptr;
+	string sAmount = 0;
 public:
-	string GetImagePath();
-	int32 GetAmount();
+	const IResource* GetResource();
+	string GetAmount();
 };

@@ -47,8 +47,22 @@
 
 #include <Components/Managers/VisibilityManager.h>
 
-#include <Interfaces/IUIInfoPanelItem.h>
+#include <Interfaces/IUIInfoPanelItemProvider.h>
 #include <Components/Selectables/Units/BaseUnit.h>
+
+
+#include <Resources/Resources/AK47Resource.h>
+#include <Resources/Resources/BreadResource.h>
+#include <Resources/Resources/BulletResource.h>
+#include <Resources/Resources/FlourResource.h>
+#include <Resources/Resources/GunPowderResource.h>
+#include <Resources/Resources/IronResource.h>
+#include <Resources/Resources/MoneyResource.h>
+#include <Resources/Resources/OilResource.h>
+#include <Resources/Resources/PopulationResource.h>
+#include <Resources/Resources/SulfurResource.h>
+#include <Resources/Resources/WheatResource.h>
+#include <Resources/Resources/WoodResource.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
@@ -177,9 +191,22 @@ void PlayerComponent::ProcessEvent(const SEntityEvent& event)
 		if (m_mouseOverCheckTimePassed < m_timeBetweenMouseOverCheck) {
 			m_mouseOverCheckTimePassed += 0.5f * DeltaTime;
 		}
+		if (m_descriptionUpdateTimePassed < m_timeBetweenUpdatingDescription) {
+			
+		}
 
 		if (!m_pUIElementEventListener->IsMouseOverUI()) {
 			m_pUIDescriptionsPanelComponent->Clear();
+			m_lastActionbarMouseOverIndex = -1;
+		}
+		else {
+			if (m_descriptionUpdateTimePassed < m_timeBetweenUpdatingDescription) {
+				m_descriptionUpdateTimePassed += 0.5f * DeltaTime;
+			}
+			else {
+				UpdateDescriptionPanel(m_lastActionbarMouseOverIndex);
+				m_descriptionUpdateTimePassed = 0;
+			}
 		}
 
 	}break;
@@ -740,53 +767,90 @@ void PlayerComponent::ExecuteInfoPanelItem(int32 index)
 //TODO :++++++++++++++++++++++++
 void PlayerComponent::UpdateDescriptionPanel(int32 index)
 {
-	//bIsLeftClickWorks = false;
-	m_pUIDescriptionsPanelComponent->Clear();
-	IBaseUIItem* pUIItem = m_currentUIItems[index];
+	bool bShouldUpdateIcons = false;
+	if (m_lastActionbarMouseOverIndex != index) {
+		bShouldUpdateIcons = true;
+	}
+
+	m_lastActionbarMouseOverIndex = index;
+	if (m_lastActionbarMouseOverIndex == -1) {
+		return;
+	}
+
+	IBaseUIItem* pUIItem = m_currentUIItems[m_lastActionbarMouseOverIndex];
 	if (!pUIItem) {
 		return;
 	}
-	CryLog("count items %i : %i", index, m_currentUIItems.size());
 	SDescription pDescription = pUIItem->GetDescrption();
-	if (pDescription.price.m_moneyAmount > 0) {
-		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("money_Icon_ui.png", pDescription.price.m_moneyAmount));
+	if (bShouldUpdateIcons) {
+		m_pUIDescriptionsPanelComponent->Clear();
+		if (pDescription.price.m_moneyAmount > 0) {
+			string text = "";
+			text.AppendFormat("%i (%i)", pDescription.price.m_moneyAmount, m_pResourceManagerComponent->GetAvailableResourcesInfo().m_moneyAmount);
+			m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem(RESOURCE_MONEY, text));
+		}
+		if (pDescription.price.m_ironAmount > 0) {
+			string text = "";
+			text.AppendFormat("%i (%i)", pDescription.price.m_ironAmount, m_pResourceManagerComponent->GetAvailableResourcesInfo().m_ironAmount);
+			m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem(RESOURCE_IRON, text));
+		}
+		if (pDescription.price.m_woodAmount > 0) {
+			string text = "";
+			text.AppendFormat("%i (%i)", pDescription.price.m_woodAmount, m_pResourceManagerComponent->GetAvailableResourcesInfo().m_woodAmount);
+			m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem(RESOURCE_WOOD, text));
+		}
+		if (pDescription.price.m_oilAmount > 0) {
+			string text = "";
+			text.AppendFormat("%i (%i)", pDescription.price.m_oilAmount, m_pResourceManagerComponent->GetAvailableResourcesInfo().m_oilAmount);
+			m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem(RESOURCE_OIL, text));
+		}
+		if (pDescription.price.m_breadAmount > 0) {
+			string text = "";
+			text.AppendFormat("%i (%i)", pDescription.price.m_breadAmount, m_pResourceManagerComponent->GetAvailableResourcesInfo().m_breadAmount);
+			m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem(RESOURCE_BREAD, text));
+		}
+		if (pDescription.price.m_wheatAmount > 0) {
+			string text = "";
+			text.AppendFormat("%i (%i)", pDescription.price.m_wheatAmount, m_pResourceManagerComponent->GetAvailableResourcesInfo().m_wheatAmount);
+			m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem(RESOURCE_WHEAT, text));
+		}
+		if (pDescription.price.m_ak47Amount > 0) {
+			string text = "";
+			text.AppendFormat("%i (%i)", pDescription.price.m_ak47Amount, m_pResourceManagerComponent->GetAvailableResourcesInfo().m_ak47Amount);
+			m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem(RESOURCE_AK47, text));
+		}
+		if (pDescription.price.m_bulletAmount > 0) {
+			string text = "";
+			text.AppendFormat("%i (%i)", pDescription.price.m_bulletAmount, m_pResourceManagerComponent->GetAvailableResourcesInfo().m_bulletAmount);
+			m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem(RESOURCE_BULLET, text));
+		}
+		if (pDescription.price.m_flourAmount > 0) {
+			string text = "";
+			text.AppendFormat("%i (%i)", pDescription.price.m_flourAmount, m_pResourceManagerComponent->GetAvailableResourcesInfo().m_flourAmount);
+			m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem(RESOURCE_FLOUR, text));
+		}
+		if (pDescription.price.m_gunPowderAmount > 0) {
+			string text = "";
+			text.AppendFormat("%i (%i)", pDescription.price.m_gunPowderAmount, m_pResourceManagerComponent->GetAvailableResourcesInfo().m_gunPowderAmount);
+			m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem(RESOURCE_GUN_POWDER, text));
+		}
+		if (pDescription.price.m_populationAmount > 0) {
+			string text = "";
+			text.AppendFormat("%i (%i)", pDescription.price.m_populationAmount, m_pResourceManagerComponent->GetAvailableResourcesInfo().m_populationAmount);
+			m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem(RESOURCE_POPULATION, text));
+		}
+		if (pDescription.price.m_sulfurAmount > 0) {
+			string text = "";
+			text.AppendFormat("%i (%i)", pDescription.price.m_sulfurAmount, m_pResourceManagerComponent->GetAvailableResourcesInfo().m_sulfurAmount);
+			m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem(RESOURCE_SULFUR, text));
+		}
+		m_pUIDescriptionsPanelComponent->SetDescriptionText(pDescription.sBuyDescription);
 	}
-	if (pDescription.price.m_ironAmount > 0) {
-		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("iron_buy_icon.png", pDescription.price.m_ironAmount));
+	else {
+		//Update Amounts
 	}
-	if (pDescription.price.m_woodAmount > 0) {
-		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("wood_buy_icon.png", pDescription.price.m_woodAmount));
-	}
-	if (pDescription.price.m_oilAmount > 0) {
-		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("oil_barrel_icon.png", pDescription.price.m_oilAmount));
-	}
-	if (pDescription.price.m_breadAmount > 0) {
-		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("bread_buy_icon.png", pDescription.price.m_breadAmount));
-	}
-	if (pDescription.price.m_wheatAmount > 0) {
-		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("wheat_buy_icon.png", pDescription.price.m_wheatAmount));
-	}
-	if (pDescription.price.m_ak47Amount > 0) {
-		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("ak47_buy_icon.png", pDescription.price.m_ak47Amount));
-	}
-	if (pDescription.price.m_bulletAmount > 0) {
-		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("bullet_buy_icon.png", pDescription.price.m_bulletAmount));
-	}
-	if (pDescription.price.m_flourAmount > 0) {
-		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("flour_buy_icon.png", pDescription.price.m_flourAmount));
-	}
-	if (pDescription.price.m_gunPowderAmount > 0) {
-		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("gun_powder_buy_icon.png", pDescription.price.m_gunPowderAmount));
-	}
-	if (pDescription.price.m_populationAmount > 0) {
-		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("population_Icon_ui.png", pDescription.price.m_populationAmount));
-	}
-	if (pDescription.price.m_sulfurAmount > 0) {
-		m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem("sulfur_buy_icon.png", pDescription.price.m_sulfurAmount));
-	}
-	m_pUIDescriptionsPanelComponent->SetDescriptionText(pDescription.sBuyDescription);
 
-	CryLog("index over : %i", index);
+	CryLog("index over : %i", m_lastActionbarMouseOverIndex);
 }
 
 bool PlayerComponent::AreSelectedUnitsSameType()
@@ -879,15 +943,15 @@ void PlayerComponent::UpdateInfoPanel()
 		if (!pUnitTypeManagerComponent) {
 			continue;
 		}
-		IUIInfoPanelItem* pInfoPanelItem = entity->GetComponent<BaseUnitComponent>();
-		if (!pInfoPanelItem) {
+		IUIInfoPanelItemProvider* pInfoPanelItemProvider = entity->GetComponent<BaseUnitComponent>();
+		if (!pInfoPanelItemProvider) {
 			return;
 		}
 
 		EUnitType type = pUnitTypeManagerComponent->GetUnitType();
 		if (types.empty()) {
 			types.append(type);
-			items.append(pInfoPanelItem->GetInfoPanelItem());
+			items.append(pInfoPanelItemProvider->GetInfoPanelItem());
 		}
 		else {
 			bool bShouldAddNewItem = false;
@@ -901,7 +965,7 @@ void PlayerComponent::UpdateInfoPanel()
 			}
 			if (bShouldAddNewItem) {
 				types.append(type);
-				items.append(pInfoPanelItem->GetInfoPanelItem());
+				items.append(pInfoPanelItemProvider->GetInfoPanelItem());
 			}
 		}
 	}
@@ -928,17 +992,17 @@ void PlayerComponent::UpdateInfoPanel()
 		//TODO : agar ziad anjam behse error : pure function call zaman clear mide 
 		if (m_lastBuildingActionsCheckSize != pActionManagerComponet->GetActiveActionsCount()) {
 			m_pUIInfoPanelComponent->Clear();
+			m_pUIInfoPanelComponent->SetMainIcon(pBuildingComponent->GetImagePath());
 			m_lastMainIconHealthAmount = -1;
 			for (IBaseAction* action : queue) {
 				if (action->IsDone()) {
 					continue;
 				}
 
-				IUIInfoPanelItem* item = action;
-				m_pUIInfoPanelComponent->AddItem(item->GetInfoPanelItem());
+				IUIInfoPanelItemProvider* pInfoPanelItemProvider = action;
+				m_pUIInfoPanelComponent->AddItem(pInfoPanelItemProvider->GetInfoPanelItem());
 			}
 			m_lastBuildingActionsCheckSize = pActionManagerComponet->GetActiveActionsCount();
-			m_pUIInfoPanelComponent->SetMainIcon(pBuildingComponent->GetImagePath());
 		}
 
 		//update action progress
@@ -951,7 +1015,6 @@ void PlayerComponent::UpdateInfoPanel()
 			string text = "";
 			text.AppendFormat("%6.0lf / %6.0lf", crymath::floor(pHealthComponent->GetCurrentHealth()), crymath::floor(pHealthComponent->GetMaxHealth()));
 			m_pUIInfoPanelComponent->SetMainIconText(text);
-			CryLog(text);
 		}
 	}
 }

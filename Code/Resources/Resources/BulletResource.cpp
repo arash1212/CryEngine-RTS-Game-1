@@ -2,37 +2,37 @@
 #include "BulletResource.h"
 #include "GamePlugin.h"
 
-int32 BulletResource::GetPrice()
+int32 BulletResource::GetPrice() const
 {
 	return nPrice;
 }
 
-string BulletResource::GetName()
+string BulletResource::GetName() const
 {
 	return sName;
 }
 
-string BulletResource::GetIcon()
+string BulletResource::GetIcon() const
 {
 	return sIcon;
 }
 
-string BulletResource::GetBuyIcon()
+string BulletResource::GetBuyIcon() const
 {
 	return sBuyIcon;
 }
 
-string BulletResource::GetSellIcon()
+string BulletResource::GetSellIcon() const
 {
 	return sSellIcon;
 }
 
-string BulletResource::GetAttachmentName()
+string BulletResource::GetAttachmentName() const
 {
 	return sAttachmentName;
 }
 
-EResourceType BulletResource::GetType()
+EResourceType BulletResource::GetType() const
 {
 	return mResourceType;
 }

@@ -43,6 +43,5 @@ string UISellBulletItem::GetImagePath()
 
 SDescription UISellBulletItem::GetDescrption()
 {
-	BulletResource pBulletResource;
-	return pBulletResource.GetDescription();
+	return RESOURCE_BULLET->GetDescription();
 }
