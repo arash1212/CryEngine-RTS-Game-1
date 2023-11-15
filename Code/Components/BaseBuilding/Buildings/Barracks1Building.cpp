@@ -91,6 +91,9 @@ void Barracks1BuildingComponent::Initialize()
 	AABB newAABB = AABB(min, max);
 	m_pEntity->SetLocalBounds(newAABB, true);
 
+	//OwnerComponent Initialization
+	m_pOwnerInfoComponent = m_pEntity->GetComponent<OwnerInfoComponent>();
+
 	//CostComponent Initializations
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
 	m_pCostComponent->SetCost(Barracks1BuildingComponent::GetDescription().price);

@@ -1,8 +1,11 @@
 #pragma once
 
+class OwnerInfoComponent;
+class ActionManagerComponent;
+
 struct SEngineerInfo {
 public:
-	f32 m_timeBetweenBuilds = 1.f;
+	f32 m_timeBetweenBuilds = 0.8f;
 	f32 m_timeBetweenCollecting = 1.f;
 	f32 m_maxBuildDistance = 1.f;
 };
@@ -28,9 +31,22 @@ public:
 	}
 
 private:
+	//OwnerShip
+	OwnerInfoComponent* m_pOwnerInfoComponent = nullptr;
+	ActionManagerComponent* m_pActionManagerComponent = nullptr;
+
 	IEntity* m_pBuildingAssigned = nullptr;
 
 	SEngineerInfo m_pEngineerInfo;
+
+private:
+	f32 fTimeBetweenLookingForBuildingToBuild = 1.f;
+	f32 fLookingForBuildingToBuildTimePassed = 0.f;
+
+private:
+	IEntity* FindClosestUnBuildBuilding();
+	void FindBuildingToBuild();
+
 public:
 	void AssignBuilding(IEntity* buildingEntity);
 	bool HasBuildingAssigned();

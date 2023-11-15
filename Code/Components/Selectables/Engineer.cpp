@@ -9,6 +9,8 @@
 #include <Components/Selectables/UnitAnimation.h>
 #include <Components/Managers/ActionManager.h>
 
+#include <Actions/Units/UnitBuildAction.h>
+
 #include <Utils/MathUtils.h>
 
 #include <CryRenderer/IRenderAuxGeom.h>
@@ -33,7 +35,11 @@ namespace
 
 void EngineerComponent::Initialize()
 {
+	//ActionManager Initializations
+	m_pActionManagerComponent = m_pEntity->GetComponent<ActionManagerComponent>();
 
+	//OwnerComponent Initialization
+	m_pOwnerInfoComponent = m_pEntity->GetComponent<OwnerInfoComponent>();
 }
 
 
@@ -53,8 +59,13 @@ void EngineerComponent::ProcessEvent(const SEntityEvent& event)
 
 	}break;
 	case Cry::Entity::EEvent::Update: {
-		//f32 DeltaTime = event.fParam[0];
+		f32 DeltaTime = event.fParam[0];
 
+		if (fLookingForBuildingToBuildTimePassed < fTimeBetweenLookingForBuildingToBuild) {
+			fLookingForBuildingToBuildTimePassed += 0.5f * DeltaTime;
+		}
+
+		FindBuildingToBuild();
 	}break;
 	case Cry::Entity::EEvent::Reset: {
 
@@ -87,4 +98,56 @@ void EngineerComponent::SetEngineerInfo(SEngineerInfo engineerInfo)
 SEngineerInfo EngineerComponent::GetEngineerInfo()
 {
 	return m_pEngineerInfo;
+}
+
+IEntity* EngineerComponent::FindClosestUnBuildBuilding()
+{
+	if (!m_pOwnerInfoComponent) {
+		return nullptr;;
+	}
+	if (!m_pActionManagerComponent) {
+		return nullptr;;
+	}
+	if (m_pActionManagerComponent->IsProcessingAnAction()) {
+		return nullptr;;
+	}
+	IEntity* pOwner = m_pOwnerInfoComponent->GetOwner();
+	if (!pOwner) {
+		return nullptr;
+	}
+	ResourceManagerComponent* pResourceManagerComponent = pOwner->GetComponent<ResourceManagerComponent>();
+	if (!pResourceManagerComponent) {
+		return nullptr;;
+	}
+	DynArray<IEntity*> resultArray;
+	for (IEntity* entity : pResourceManagerComponent->GetOwnedEntities()) {
+		BuildingComponent* pBuildingComponent = entity->GetComponent<BuildingComponent>();
+		if (!pBuildingComponent) {
+			continue;
+		}
+		if (!pBuildingComponent->IsPlaced() || pBuildingComponent->IsBuilt()) {
+			continue;
+		}
+		resultArray.append(entity);
+	}
+	return EntityUtils::GetClosestEntity(resultArray, m_pEntity->GetWorldPos());
+}
+
+void EngineerComponent::FindBuildingToBuild()
+{
+	if (fLookingForBuildingToBuildTimePassed < fTimeBetweenLookingForBuildingToBuild) {
+		return;
+	}
+	if (!m_pActionManagerComponent) {
+		return;
+	}
+	if (m_pActionManagerComponent->IsProcessingAnAction()) {
+		return;
+	}
+	IEntity* pBuildingEntity = this->FindClosestUnBuildBuilding();
+	if (!pBuildingEntity) {
+		return;
+	}
+	m_pActionManagerComponent->AddAction(new UnitBuildAction(m_pEntity, pBuildingEntity));
+	fLookingForBuildingToBuildTimePassed = 0;
 }

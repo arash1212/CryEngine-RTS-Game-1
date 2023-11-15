@@ -20,6 +20,7 @@
 #include <UIItems/Items/Buildings/UIGunPowderFactory1BuildItem.h>
 #include <UIItems/Items/Buildings/UIBulletFactory1BuildItem.h>
 #include <UIItems/Items/Buildings/UIAK47Factory1BuildItem.h>
+#include <UIItems/Items/Buildings/UIGuardTower1BuildItem.h>
 
 #include <UIItems/InfoPanel/IBaseInfoPanelUIItem.h>
 #include <UIItems/InfoPanel/Items/UIUnitInfoPanelItem.h>
@@ -104,6 +105,7 @@ void Engineer1UnitComponent::Initialize()
 	m_pSelectableComponent->AddUIItem(new UIGunPowderFactory1BuildItem(m_pEntity));
 	m_pSelectableComponent->AddUIItem(new UIBulletFactory1BuildItem(m_pEntity));
 	m_pSelectableComponent->AddUIItem(new UIAK47Factory1BuildItem(m_pEntity));
+	m_pSelectableComponent->AddUIItem(new UIGuardTower1BuildItem(m_pEntity));
 	m_pSelectableComponent->AddUIItem(new UILight1BuildItem(m_pEntity));
 
 	//ActionManager Initializations

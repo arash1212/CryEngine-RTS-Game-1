@@ -89,6 +89,9 @@ void Light1BuildingComponent::Initialize()
 	AABB newAABB = AABB(min, max);
 	m_pEntity->SetLocalBounds(newAABB, true);
 
+	//OwnerComponent Initialization
+	m_pOwnerInfoComponent = m_pEntity->GetComponent<OwnerInfoComponent>();
+
 	//CostComponent Initialization
 	m_pCostComponent = m_pEntity->GetOrCreateComponent<CostComponent>();
 	m_pCostComponent->SetCost(Light1BuildingComponent::GetDescription().price);
@@ -111,7 +114,7 @@ void Light1BuildingComponent::Initialize()
 	m_pPointLightComponent->SetTransformMatrix(Matrix34::Create(Vec3(2), IDENTITY, Vec3(0, -2, 5)));
 	m_pPointLightComponent->GetColorParameters().m_diffuseMultiplier = 2.f;
 	m_pPointLightComponent->GetColorParameters().m_color = ColorF(1, 1, 1.f);
-	m_pPointLightComponent->GetOptions().m_attenuationBulbSize = 250.f;
+	m_pPointLightComponent->GetOptions().m_attenuationBulbSize = 100.f;
 	m_pPointLightComponent->GetShadowParameters().m_castShadowSpec = Cry::DefaultComponents::EMiniumSystemSpec::High;
 	m_pPointLightComponent->Enable(true);
 }

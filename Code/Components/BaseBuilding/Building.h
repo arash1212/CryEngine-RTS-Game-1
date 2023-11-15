@@ -16,7 +16,7 @@ class CostComponent;
 
 struct SBuildingInfo {
 public:
-	f32 m_maxBuildAmount = 20.f;
+	f32 m_maxBuildAmount = 10.f;
 	int32 m_populationProduces = 0;
 };
 
@@ -85,7 +85,7 @@ protected:
 	void RotateSelectionDecal();
 
 public:
-	void Place(Vec3 at);
+	virtual void Place(Vec3 at);
 	void Build();
 	void SetBuildingInfo(SBuildingInfo buildingInfo);
 	SBuildingInfo GetBuildingInfos();

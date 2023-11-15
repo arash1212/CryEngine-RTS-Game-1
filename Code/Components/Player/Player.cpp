@@ -50,7 +50,6 @@
 #include <Interfaces/IUIInfoPanelItemProvider.h>
 #include <Components/Selectables/Units/BaseUnit.h>
 
-
 #include <Resources/Resources/AK47Resource.h>
 #include <Resources/Resources/BreadResource.h>
 #include <Resources/Resources/BulletResource.h>
