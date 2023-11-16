@@ -9,6 +9,19 @@
 #include <Components/BaseBuilding/Building.h>
 #include <Components/Selectables/Health.h>
 
+#include <Resources/Resources/AK47Resource.h>
+#include <Resources/Resources/BreadResource.h>
+#include <Resources/Resources/BulletResource.h>
+#include <Resources/Resources/FlourResource.h>
+#include <Resources/Resources/GunPowderResource.h>
+#include <Resources/Resources/IronResource.h>
+#include <Resources/Resources/MoneyResource.h>
+#include <Resources/Resources/OilResource.h>
+#include <Resources/Resources/PopulationResource.h>
+#include <Resources/Resources/SulfurResource.h>
+#include <Resources/Resources/WheatResource.h>
+#include <Resources/Resources/WoodResource.h>
+
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
 #include <CrySchematyc/Env/IEnvRegistrar.h>
@@ -549,4 +562,50 @@ bool ResourceManagerComponent::IsPlayer()
 DynArray<IEntity*> ResourceManagerComponent::GetOwnedEntities()
 {
 	return m_pOwnedEntities;
+}
+
+SResourceRequestParams ResourceManagerComponent::GetResourceInfo(EResourceType type)
+{
+	switch (type)
+	{
+	case EResourceType::Money: {
+		return SResourceRequestParams(RESOURCE_MONEY, m_pResouceInfo.m_moneyAmount);
+	}break;
+	case EResourceType::OIL: {
+		return SResourceRequestParams(RESOURCE_OIL, m_pResouceInfo.m_oilAmount);
+	}break;
+	case EResourceType::WHEAT: {
+		return SResourceRequestParams(RESOURCE_WHEAT, m_pResouceInfo.m_wheatAmount);
+	}break;
+	case EResourceType::FLOUR: {
+		return SResourceRequestParams(RESOURCE_FLOUR, m_pResouceInfo.m_flourAmount);
+	}break;
+	case EResourceType::WOOD: {
+		return SResourceRequestParams(RESOURCE_WOOD, m_pResouceInfo.m_woodAmount);
+	}break;
+	case EResourceType::BREAD: {
+		return SResourceRequestParams(RESOURCE_WOOD, m_pResouceInfo.m_breadAmount);
+	}break;
+	case EResourceType::SULFUR: {
+		return SResourceRequestParams(RESOURCE_SULFUR, m_pResouceInfo.m_sulfurAmount);
+	}break;
+	case EResourceType::GUN_POWDER: {
+		return SResourceRequestParams(RESOURCE_GUN_POWDER, m_pResouceInfo.m_gunPowderAmount);
+	}break;
+	case EResourceType::IRON: {
+		return SResourceRequestParams(RESOURCE_IRON, m_pResouceInfo.m_ironAmount);
+	}break;
+	case EResourceType::BULLET: {
+		return SResourceRequestParams(RESOURCE_BULLET, m_pResouceInfo.m_bulletAmount);
+	}break;
+	case EResourceType::AK47: {
+		return SResourceRequestParams(RESOURCE_AK47, m_pResouceInfo.m_ak47Amount);
+	}break;
+	case EResourceType::POPULATION: {
+		return SResourceRequestParams(RESOURCE_POPULATION, m_pResouceInfo.m_populationAmount);
+	}break;
+	default:
+		return SResourceRequestParams(nullptr, 0);
+		break;
+	}
 }

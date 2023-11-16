@@ -1,5 +1,8 @@
 #pragma once
 
+#include <thread>
+#include <future>
+
 class ResourceManagerComponent;
 
 class FogOfWarComponent final : public IEntityComponent
@@ -28,6 +31,8 @@ private:
 private:
 	int num = 0;
 
+	std::thread thread1;
+	bool bIsDone = true;
 private:
 
 	void Test();

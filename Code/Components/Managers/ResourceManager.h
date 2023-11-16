@@ -113,4 +113,6 @@ public:
 	bool IsPlayer();
 
 	DynArray<IEntity*> GetOwnedEntities();
+
+	SResourceRequestParams GetResourceInfo(EResourceType type);
 };

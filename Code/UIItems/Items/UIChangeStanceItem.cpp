@@ -33,6 +33,7 @@ SDescription UIChangeStanceItem::GetDescrption()
 
 	SDescription description;
 	description.sDescription = "Change Selected Units Stance";
+	description.sBuyDescription = "Change Selected Units Stance";
 	description.sIcon = "ui_stance_Icon.png";
 	return description;
 }

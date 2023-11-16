@@ -32,6 +32,7 @@ SDescription UICancelItem::GetDescrption()
 
 	SDescription description;
 	description.sDescription = "Cancel Selected Units Action";
+	description.sBuyDescription = "Cancel Selected Units Action";
 	description.sIcon = "cancel.png";
 	return description;
 }

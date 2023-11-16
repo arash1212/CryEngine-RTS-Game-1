@@ -59,6 +59,8 @@ void FogOfWarComponent::ProcessEvent(const SEntityEvent& event)
 		//f32 DeltaTime = event.fParam[0];
 
 		//Test();
+		
+
 	}break;
 	case Cry::Entity::EEvent::Reset: {
 
@@ -90,14 +92,17 @@ void FogOfWarComponent::Test()
 	if (!renderMesh) {
 		return;
 	}
+	bIsDone = false;
+	CryLog("Fog 3!????");
 	IIndexedMesh* indexedMesh = renderMesh->GetIndexedMesh();
 	CMesh* mesh = indexedMesh->GetMesh();
 	CryLog("count vertex : %i", mesh->GetVertexCount());
 
 	Vec3* const vertices = mesh->GetStreamPtr<Vec3>(CMesh::POSITIONS);
 	SMeshColor* const colors = mesh->GetStreamPtr<SMeshColor>(CMesh::COLORS_0);
+	int32 vertexCount = mesh->GetVertexCount();
 
-	int max = num + 250 <= mesh->GetVertexCount() ? num + 250 : mesh->GetVertexCount();
+	int max = num + 250 <= vertexCount ? num + 250 : vertexCount;
 	for (int i = num; i < max; i++) {
 		for (IEntity* ownedEntity : m_pResourceManagerComponent->GetOwnedEntities()) {
 			float distance = ownedEntity->GetWorldPos().GetDistance(entity->GetWorldPos() + vertices[i]);
@@ -122,4 +127,6 @@ void FogOfWarComponent::Test()
 	mIndexedMesh->SetMesh(*mesh);
 	pStatObj2->Invalidate();
 	entity->SetStatObj(pStatObj2, 0, false);
+
+	bIsDone = true;
 }

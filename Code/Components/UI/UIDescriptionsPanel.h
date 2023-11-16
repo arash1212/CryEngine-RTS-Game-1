@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Components/Managers/ResourceManager.h>
+
 struct IUIElement;
 struct IUIElementEventListener;
 
@@ -25,8 +27,8 @@ public:
 		desc.SetEditorCategory("UI");
 	}
 
-
 private:
+	ResourceManagerComponent* m_pResourceManagerComponent = nullptr;
 	IUIElement* m_pDescriptionPanelUIElement = nullptr;
 	DynArray<BaseDescriptionPanelItem*> m_items;
 
@@ -34,8 +36,11 @@ private:
 public:
 	void AddItem(BaseDescriptionPanelItem* item);
 	void Clear();
-	void SetAmount(int32 index, string amount);
+	void SetText(int32 index, string text, bool isRed);
 	void SetDescriptionText(string text);
+
+	void AddDescription(SDescription description);
+	void UpdateDescriptions();
 
 	void SetEventListener(IUIElementEventListener* eventListener);
 

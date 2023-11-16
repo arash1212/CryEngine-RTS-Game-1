@@ -50,19 +50,6 @@
 #include <Interfaces/IUIInfoPanelItemProvider.h>
 #include <Components/Selectables/Units/BaseUnit.h>
 
-#include <Resources/Resources/AK47Resource.h>
-#include <Resources/Resources/BreadResource.h>
-#include <Resources/Resources/BulletResource.h>
-#include <Resources/Resources/FlourResource.h>
-#include <Resources/Resources/GunPowderResource.h>
-#include <Resources/Resources/IronResource.h>
-#include <Resources/Resources/MoneyResource.h>
-#include <Resources/Resources/OilResource.h>
-#include <Resources/Resources/PopulationResource.h>
-#include <Resources/Resources/SulfurResource.h>
-#include <Resources/Resources/WheatResource.h>
-#include <Resources/Resources/WoodResource.h>
-
 #include <CryRenderer/IRenderAuxGeom.h>
 #include <CrySchematyc/Env/Elements/EnvComponent.h>
 #include <CrySchematyc/Env/IEnvRegistrar.h>
@@ -727,6 +714,9 @@ void PlayerComponent::CheckSelectablesMouseOver()
 		//Turn highligh color back to black on entity if mouse is not over anyomore
 		else if (m_pEntityUnderCursor) {
 			SelectableComponent* selectable = m_pEntityUnderCursor->GetComponent<SelectableComponent>();
+			if (selectable->IsSelected()) {
+				return;
+			}
 			selectable->HighLightBlack();
 			m_pEntityUnderCursor = nullptr;
 		}
@@ -763,7 +753,6 @@ void PlayerComponent::ExecuteInfoPanelItem(int32 index)
 	m_pUIInfoPanelComponent->ExecuteItem(index);
 }
 
-//TODO :++++++++++++++++++++++++
 void PlayerComponent::UpdateDescriptionPanel(int32 index)
 {
 	bool bShouldUpdateIcons = false;
@@ -782,74 +771,11 @@ void PlayerComponent::UpdateDescriptionPanel(int32 index)
 	}
 	SDescription pDescription = pUIItem->GetDescrption();
 	if (bShouldUpdateIcons) {
-		m_pUIDescriptionsPanelComponent->Clear();
-		if (pDescription.price.m_moneyAmount > 0) {
-			string text = "";
-			text.AppendFormat("%i (%i)", pDescription.price.m_moneyAmount, m_pResourceManagerComponent->GetAvailableResourcesInfo().m_moneyAmount);
-			m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem(RESOURCE_MONEY, text));
-		}
-		if (pDescription.price.m_ironAmount > 0) {
-			string text = "";
-			text.AppendFormat("%i (%i)", pDescription.price.m_ironAmount, m_pResourceManagerComponent->GetAvailableResourcesInfo().m_ironAmount);
-			m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem(RESOURCE_IRON, text));
-		}
-		if (pDescription.price.m_woodAmount > 0) {
-			string text = "";
-			text.AppendFormat("%i (%i)", pDescription.price.m_woodAmount, m_pResourceManagerComponent->GetAvailableResourcesInfo().m_woodAmount);
-			m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem(RESOURCE_WOOD, text));
-		}
-		if (pDescription.price.m_oilAmount > 0) {
-			string text = "";
-			text.AppendFormat("%i (%i)", pDescription.price.m_oilAmount, m_pResourceManagerComponent->GetAvailableResourcesInfo().m_oilAmount);
-			m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem(RESOURCE_OIL, text));
-		}
-		if (pDescription.price.m_breadAmount > 0) {
-			string text = "";
-			text.AppendFormat("%i (%i)", pDescription.price.m_breadAmount, m_pResourceManagerComponent->GetAvailableResourcesInfo().m_breadAmount);
-			m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem(RESOURCE_BREAD, text));
-		}
-		if (pDescription.price.m_wheatAmount > 0) {
-			string text = "";
-			text.AppendFormat("%i (%i)", pDescription.price.m_wheatAmount, m_pResourceManagerComponent->GetAvailableResourcesInfo().m_wheatAmount);
-			m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem(RESOURCE_WHEAT, text));
-		}
-		if (pDescription.price.m_ak47Amount > 0) {
-			string text = "";
-			text.AppendFormat("%i (%i)", pDescription.price.m_ak47Amount, m_pResourceManagerComponent->GetAvailableResourcesInfo().m_ak47Amount);
-			m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem(RESOURCE_AK47, text));
-		}
-		if (pDescription.price.m_bulletAmount > 0) {
-			string text = "";
-			text.AppendFormat("%i (%i)", pDescription.price.m_bulletAmount, m_pResourceManagerComponent->GetAvailableResourcesInfo().m_bulletAmount);
-			m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem(RESOURCE_BULLET, text));
-		}
-		if (pDescription.price.m_flourAmount > 0) {
-			string text = "";
-			text.AppendFormat("%i (%i)", pDescription.price.m_flourAmount, m_pResourceManagerComponent->GetAvailableResourcesInfo().m_flourAmount);
-			m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem(RESOURCE_FLOUR, text));
-		}
-		if (pDescription.price.m_gunPowderAmount > 0) {
-			string text = "";
-			text.AppendFormat("%i (%i)", pDescription.price.m_gunPowderAmount, m_pResourceManagerComponent->GetAvailableResourcesInfo().m_gunPowderAmount);
-			m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem(RESOURCE_GUN_POWDER, text));
-		}
-		if (pDescription.price.m_populationAmount > 0) {
-			string text = "";
-			text.AppendFormat("%i (%i)", pDescription.price.m_populationAmount, m_pResourceManagerComponent->GetAvailableResourcesInfo().m_populationAmount);
-			m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem(RESOURCE_POPULATION, text));
-		}
-		if (pDescription.price.m_sulfurAmount > 0) {
-			string text = "";
-			text.AppendFormat("%i (%i)", pDescription.price.m_sulfurAmount, m_pResourceManagerComponent->GetAvailableResourcesInfo().m_sulfurAmount);
-			m_pUIDescriptionsPanelComponent->AddItem(new BaseDescriptionPanelItem(RESOURCE_SULFUR, text));
-		}
-		m_pUIDescriptionsPanelComponent->SetDescriptionText(pDescription.sBuyDescription);
+		m_pUIDescriptionsPanelComponent->AddDescription(pDescription);
 	}
 	else {
-		//Update Amounts
+		m_pUIDescriptionsPanelComponent->UpdateDescriptions();
 	}
-
-	CryLog("index over : %i", m_lastActionbarMouseOverIndex);
 }
 
 bool PlayerComponent::AreSelectedUnitsSameType()
@@ -933,7 +859,7 @@ int32 PlayerComponent::CountSelectedUnitType(EUnitType type)
 
 void PlayerComponent::UpdateInfoPanel()
 {
-	//InfoPanel (Units)**********************************************************************************
+	//InfoPanel (Units)*****************************************************************************************************
 	DynArray<EUnitType> types;
 	DynArray<IBaseInfoPanelUIItem*> items;
 	for (int32 i = 0; i < m_selectedUnits.size(); i++) {
@@ -976,7 +902,7 @@ void PlayerComponent::UpdateInfoPanel()
 		m_lastTypesSizeCheck = types.size();
 	}
 
-	//Buildings infoPanelItems (Actions)
+	//Buildings infoPanelItems (Actions))***********************************************************************************
 	if (m_selectedUnits.size() == 1) {
 		IEntity* entity = m_selectedUnits[0];
 		BuildingComponent* pBuildingComponent = entity->GetComponent<BuildingComponent>();
@@ -985,9 +911,9 @@ void PlayerComponent::UpdateInfoPanel()
 		}
 		//Main icon
 		HealthComponent* pHealthComponent = entity->GetComponent<HealthComponent>();
-
 		ActionManagerComponent* pActionManagerComponet = entity->GetComponent<ActionManagerComponent>();
 		std::deque<IBaseAction*> queue = pActionManagerComponet->GetActionsQueue();
+
 		//TODO : agar ziad anjam behse error : pure function call zaman clear mide 
 		if (m_lastBuildingActionsCheckSize != pActionManagerComponet->GetActiveActionsCount()) {
 			m_pUIInfoPanelComponent->Clear();
