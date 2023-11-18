@@ -64,6 +64,7 @@ protected:
 	IAttachment* m_pSkinAttachment = nullptr;
 	IMaterial* m_pDefaultMaterial = nullptr;
 
+	DynArray<IEntity*> m_builders;
 private:
 	bool bIsPlaced = false;
 	bool bIsBuilt = false;
@@ -114,4 +115,7 @@ public:
 
 	void SetImagePath(string imagePath);
 	string GetImagePath();
+
+	void AddBuilder(IEntity* builderEntity);
+	DynArray<IEntity*> GetBuilders();
 };

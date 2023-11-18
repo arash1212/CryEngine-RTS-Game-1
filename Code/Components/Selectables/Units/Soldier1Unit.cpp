@@ -16,6 +16,7 @@
 #include <Components/Controller/AIController.h>
 #include <Components/Managers/ActionManager.h>
 #include <Components/Managers/UnitStateManager.h>
+#include <Components/Selectables/Guard.h>
 
 #include <CryAnimation/ICryAnimation.h>
 #include <Components/Weapons/BaseWeapon.h>
@@ -103,8 +104,8 @@ void Soldier1UnitComponent::Initialize()
 	pAttckInfo.bIsHumanoid = true;
 	pAttckInfo.bIsFollower = false;
 	pAttckInfo.m_maxAttackDistance = 25.f;
-	pAttckInfo.m_maxAttackCount = 3;
-	pAttckInfo.m_timeBetweenAttacks = 0.08f;
+	pAttckInfo.m_maxAttackCount = 7;
+	pAttckInfo.m_timeBetweenAttacks = 0.04f;
 	m_pAttackerComponent->SetAttackInfo(pAttckInfo);
 
 	//CostComponent Initializations
@@ -121,6 +122,11 @@ void Soldier1UnitComponent::Initialize()
 
 	//VisibilityComponent Initialization
 	m_pVisibilityComponent = m_pEntity->GetOrCreateComponent<VisibilityComponent>();
+
+	//GuardComponent Initialization
+	m_pGuardComponent = m_pEntity->GetOrCreateComponent<GuardComponent>();
+
+	m_pEntity->SetName("Unit-Soldier-1");
 }
 
 
@@ -157,7 +163,7 @@ SDescription Soldier1UnitComponent::GetDescription()
 	SResourceInfo price;
 	price.m_moneyAmount = 120;
 	price.m_populationAmount = 1;
-	price.m_bulletAmount = 50;
+	price.m_bulletAmount = 25;
 	price.m_ak47Amount = 1;
 
 	SDescription m_pDescription;

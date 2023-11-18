@@ -11,6 +11,9 @@
 #include <Components/Effects/BulletTracer.h>
 #include <Components/BaseBuilding/Building.h>
 #include <Actions/IBaseAction.h>
+#include <Components/Effects/BulletTracer.h>
+#include <Components/Selectables/GuardPost.h>
+#include <Components/Selectables/Guard.h>
 
 #include <Components/Managers/ResourceManager.h>
 #include <Utils/MathUtils.h>
@@ -44,7 +47,7 @@ void AttackerComponent::Initialize()
 	m_pAnimationComponent = m_pEntity->GetComponent<Cry::DefaultComponents::CAdvancedAnimationComponent>();
 
 	//AIController Initialization
-	m_pAIController = m_pEntity->GetComponent<AIControllerComponent>();
+	m_pAIControllerComponent = m_pEntity->GetComponent<AIControllerComponent>();
 
 	//tateManagerComponent Initialization
 	m_pStateManagerComponent = m_pEntity->GetComponent<UnitStateManagerComponent>();
@@ -124,7 +127,7 @@ void AttackerComponent::Attack(IEntity* target)
 	if (!target) {
 		return;
 	}
-	if (m_attackTimePassed < m_pAttackInfo.m_timeBetweenAttacks || m_pAttackInfo.m_attackCount >= m_pAttackInfo.m_maxAttackCount) {
+	if (m_pAttackInfo.m_pAttackType == EAttackType::MELEE && m_attackTimePassed < m_pAttackInfo.m_timeBetweenAttacks || m_pAttackInfo.m_attackCount >= m_pAttackInfo.m_maxAttackCount) {
 		return;
 	}
 
@@ -147,8 +150,7 @@ void AttackerComponent::Attack(IEntity* target)
 break;
 	}
 
-	m_attackTimePassed = MathUtils::GetRandomFloat(0, 0.07f);
-	m_pAttackInfo.m_attackCount++;
+	m_attackTimePassed = 0;
 	m_attackCountResetTimePassed = 0.f;
 }
 
@@ -162,9 +164,9 @@ void AttackerComponent::AttackRandomTarget()
 
 	//Attack RandomAttackTarget if it's in unit's Attack range
 	if (CanAttack()) {
-		Attack(m_pRandomAttackTarget);
+		this->Attack(m_pRandomAttackTarget);
 		this->LookAt(m_pRandomAttackTarget->GetWorldPos());
-		this->m_pAIController->StopMoving();
+		this->m_pAIControllerComponent->StopMoving();
 	}
 
 	else {
@@ -175,8 +177,8 @@ void AttackerComponent::AttackRandomTarget()
 
 		//If is a follwer follow random target if it's not in unit attack range
 		else {
-			this->m_pAIController->MoveTo(EntityUtils::GetClosetPointOnMeshBorder(m_pEntity->GetWorldPos(), m_pRandomAttackTarget), true);
-			this->m_pAIController->LookAtWalkDirection();
+			this->m_pAIControllerComponent->MoveTo(EntityUtils::GetClosetPointOnMeshBorder(m_pEntity->GetWorldPos(), m_pRandomAttackTarget), true);
+			this->m_pAIControllerComponent->LookAtWalkDirection();
 		}
 	}
 }
@@ -184,9 +186,11 @@ void AttackerComponent::AttackRandomTarget()
 void AttackerComponent::ValidateTarget()
 {
 	IEntity* target = m_pAttackTargetEntity ? m_pAttackTargetEntity : m_pRandomAttackTarget;
-	if (!target || target && target->IsGarbage()) {
+	if (!target || target && target->IsGarbage() || m_pAttackInfo.m_pAttackType == EAttackType::MELEE && !m_pAIControllerComponent->IsDestinationReachable(target->GetWorldPos()) || m_pActionManagerComponent->IsProcessingAnAction() && !m_pActionManagerComponent->GetCurrentAction()->CanBeSkipped()) {
 		m_pAttackTargetEntity = nullptr;
 		m_pRandomAttackTarget = nullptr;
+
+		m_pAttackInfo.m_attackCount = 0;
 	}
 }
 
@@ -194,14 +198,19 @@ void AttackerComponent::PerformMeleeAttack(IEntity* target)
 {
 	m_pUnitAnimationComponent->PlayRandomAttackAnimation();
 
-	ApplyDamageToTarget(target);
+	this->ApplyDamageToTarget(target);
+
+	m_pAttackInfo.m_attackCount++;
 }
 
 void AttackerComponent::PerformRangedAttack(IEntity* target)
 {
-	m_pWeaponComponent->Fire(target);
+	if (m_pWeaponComponent->Fire(target)) {
 
-	ApplyDamageToTarget(target);
+		this->ApplyDamageToTarget(target);
+
+		m_pAttackInfo.m_attackCount++;
+	}
 }
 
 void AttackerComponent::ApplyDamageToTarget(IEntity* target)
@@ -217,8 +226,7 @@ void AttackerComponent::ApplyDamageToTarget(IEntity* target)
 void AttackerComponent::FindRandomTarget()
 {
 	//|| m_pActionManagerComponent->IsProcessingAnAction()
-	if (m_pRandomAttackTarget || m_pAttackTargetEntity) {
-		//	m_pRandomAttackTarget = nullptr;
+	if (m_pRandomAttackTarget || m_pAttackTargetEntity || m_pActionManagerComponent->IsProcessingAnAction() && !m_pActionManagerComponent->GetCurrentAction()->CanBeSkipped()) {
 		return;
 	}
 	if (m_lookingForRandomTargetTimePassed < m_timeBetweenLookingForRandomTarget) {
@@ -251,9 +259,10 @@ void AttackerComponent::FindRandomTarget()
 		f32 distanceToTarget = EntityUtils::GetDistance(m_pEntity->GetWorldPos(), pEntity->GetWorldPos(), pEntity);
 		OwnerInfoComponent* otherEntityOwnerInfo = pEntity->GetComponent<OwnerInfoComponent>();
 
-		BulletTracerComponent* bulletTracerComponent = pEntity->GetComponent<BulletTracerComponent>();
+		BulletTracerComponent* pBulletTracerComponent = pEntity->GetComponent<BulletTracerComponent>();
+
 		//Ignore entity if it's not in detection range
-		if (!otherEntityOwnerInfo || distanceToTarget > m_pAttackInfo.m_detectionDistance || !otherEntityOwnerInfo->CanBeTarget() || bulletTracerComponent) {
+		if (!otherEntityOwnerInfo || distanceToTarget > m_pAttackInfo.m_detectionDistance || !otherEntityOwnerInfo->CanBeTarget() || pBulletTracerComponent) {
 			continue;
 		}
 
@@ -295,7 +304,7 @@ void AttackerComponent::LookAt(Vec3 position)
 
 		//Look Left/Right
 		//m_pAnimationComponent->SetMotionParameter(EMotionParamID::eMotionParamID_BlendWeight, forwardCross.z);
-		m_pAIController->LookAt(position);
+		m_pAIControllerComponent->LookAt(position);
 	}
 }
 
@@ -323,7 +332,7 @@ bool AttackerComponent::CanAttack()
 		return false;
 	}
 	IEntity* target = m_pAttackTargetEntity ? m_pAttackTargetEntity : m_pRandomAttackTarget;
-	if (!target || target->IsGarbage() || m_pEntity->IsGarbage()) {
+	if (!target) {
 		return false;
 	}
 
@@ -364,35 +373,36 @@ bool AttackerComponent::IsTargetVisible(IEntity* target)
 
 	Vec3 currentPos = m_pEntity->GetPos();
 
-	Vec3 origin = Vec3(currentPos.x, currentPos.y, currentPos.z + 1.0f);
+	Vec3 origin = Vec3(currentPos.x, currentPos.y, currentPos.z + 0.4f);
 
 	Vec3 targetPosition = target->GetWorldPos();
 	//targetPosition.z += 0.3f;
 	Vec3 targetPos = targetPosition;
-	Vec3 dir = targetPos - m_pEntity->GetWorldPos();
+	Vec3 dir = (targetPos - m_pEntity->GetWorldPos()).normalized();
 
-	f32 distanceToTarget = m_pEntity->GetWorldPos().GetDistance(target->GetWorldPos());
+	f32 distanceToTarget = m_pEntity->GetWorldPos().GetDistance(targetPos);
 
 	IPersistantDebug* pd = gEnv->pGameFramework->GetIPersistantDebug();
-	if (gEnv->pPhysicalWorld->RayWorldIntersection(origin, dir * distanceToTarget/10, ent_all, flags, hits.data(), 4, pSkippedEntities, 4)) {
+	if (gEnv->pPhysicalWorld->RayWorldIntersection(origin, dir * distanceToTarget, ent_all, flags, hits.data(), 4, pSkippedEntities, 4)) {
 		//for (int32 i = 0; i < hits.size(); i++) {
 			if (hits[0].pCollider) {
 
 				//Debug
 				if (pd) {
 					pd->Begin("RaycastDetectionComp", true);
-					pd->AddLine(origin, hits[0].pt, ColorF(1, 0, 0), 1);
+					pd->AddLine(origin, hits[0].pt, ColorF(1, 0, 0), 4);
 				}
 
 				//return true if hitEntity is target
 				IEntity* hitEntity = gEnv->pEntitySystem->GetEntityFromPhysics(hits[0].pCollider);
-				if (hitEntity) {
-					if (hitEntity == target || hitEntity->GetComponent<Cry::DefaultComponents::CCharacterControllerComponent>()) {
-						return true;
-					}
+				GuardComponent* pGuardComponent = m_pEntity->GetComponent<GuardComponent>();
+				if (hitEntity == m_pEntity) {
+					return true;
 				}
-
-				if (hitEntity && !hitEntity->GetComponent<AIControllerComponent>() && !hitEntity->GetComponent<BuildingComponent>()) {
+				if (hitEntity && hitEntity == target || hitEntity->GetComponent<Cry::DefaultComponents::CCharacterControllerComponent>()) {
+					return true;
+				}
+				else if (hitEntity && hitEntity != target && (pGuardComponent && !hitEntity->GetComponent<GuardPostComponent>()) && !hitEntity->GetComponent<AIControllerComponent>() && !hitEntity->GetComponent<BuildingComponent>() && !hitEntity->GetComponent<BulletTracerComponent>()) {
 					CryLog("hit name : %s", hitEntity->GetName());
 					return false;
 				}

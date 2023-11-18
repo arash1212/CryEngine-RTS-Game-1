@@ -329,6 +329,16 @@ string BuildingComponent::GetImagePath()
 	return this->m_imagePath;
 }
 
+void BuildingComponent::AddBuilder(IEntity* builderEntity)
+{
+	this->m_builders.append(builderEntity);
+}
+
+DynArray<IEntity*> BuildingComponent::GetBuilders()
+{
+	return m_builders;
+}
+
 void BuildingComponent::RotateSelectionDecal()
 {
 	if (!m_pSelectableComponent) {

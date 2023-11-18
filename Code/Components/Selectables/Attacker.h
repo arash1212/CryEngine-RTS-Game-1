@@ -57,7 +57,7 @@ public:
 private:
 	Cry::DefaultComponents::CAdvancedAnimationComponent* m_pAnimationComponent = nullptr;
 	UnitStateManagerComponent* m_pStateManagerComponent = nullptr;
-	AIControllerComponent* m_pAIController = nullptr;
+	AIControllerComponent* m_pAIControllerComponent = nullptr;
 	BaseWeaponComponent* m_pWeaponComponent = nullptr;
 	UnitAnimationComponent* m_pUnitAnimationComponent = nullptr;
 	ActionManagerComponent* m_pActionManagerComponent = nullptr;

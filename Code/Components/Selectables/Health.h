@@ -1,6 +1,7 @@
 #pragma once
 
 class OwnerInfoComponent;
+class SelectableComponent;
 
 struct IUIElement;
 
@@ -27,6 +28,7 @@ public:
 	}
 private:
 	OwnerInfoComponent* m_pOwnerInfoComponent = nullptr;
+	SelectableComponent* m_pSelectableComponent = nullptr;
 
 private:
 	f32 m_maxHealth = DEFAULT_MAX_HEALTH;
@@ -44,6 +46,8 @@ private:
 	f32 m_lastProgressbarUpdateAmount = -100;
 
 	//Timers
+	f32 m_timeBetweenHidingHealthbar = 1.f;
+	f32 m_HealthbarHidingTimePassed = 0.f;
 	f32 m_timeBetweenRemoveingEntity = 0.1f;
 	f32 m_entityRemoveTimePassed = 0.0f;
 

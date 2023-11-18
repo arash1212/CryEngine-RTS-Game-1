@@ -114,6 +114,8 @@ void Zombie1UnitComponent::Initialize()
 
 	//VisibilityComponent Initialization
 	m_pVisibilityComponent = m_pEntity->GetOrCreateComponent<VisibilityComponent>();
+
+	m_pEntity->SetName("Unit-Zombie-1");
 }
 
 

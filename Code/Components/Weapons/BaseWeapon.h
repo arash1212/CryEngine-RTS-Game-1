@@ -61,7 +61,7 @@ private:
 	void UpdateMuzzleFlashes();
 
 public:
-	void Fire(IEntity* target);
+	bool Fire(IEntity* target);
 	void Draw();
 	void PutAway();
 	Vec3 GetMuzzlePosition();

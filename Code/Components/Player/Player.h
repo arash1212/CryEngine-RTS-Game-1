@@ -130,6 +130,7 @@ private:
 	void AssignBuildingToEngineers(IEntity* buildingEntity);
 	void AssignResourceToEngineers(IEntity* resourceEntity);
 	void AssignWorkplaceToWorkers(IEntity* workplaceEntity);
+	void AssignGuardPostToGuards(IEntity* guardPosteEntity);
 	void CommandUnitsToSendResourceToWareHouse(IEntity* warehouse);
 
 	//Action bar

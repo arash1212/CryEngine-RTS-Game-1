@@ -35,6 +35,9 @@
 #include <Components/UI/UIResourcesPanel.h>
 #include <Components/Managers/UnitTypeManager.h>
 #include <Actions/Units/UnitWorkInWorkplaceAction.h>
+#include <Components/Selectables/GuardPost.h>
+#include <Components/Selectables/Guard.h>
+#include <Actions/Units/UnitGuardInGuardPostAction.h>
 
 #include <Components/UI/UIInfoPanel.h>
 
@@ -383,20 +386,26 @@ void PlayerComponent::RightMouseDown(int activationMode, float value)
 			}
 
 			//
-			BuildingComponent* building = entity->GetComponent<BuildingComponent>();
-			if (building && !building->IsBuilt()) {
+			BuildingComponent* pBuildingComponent = entity->GetComponent<BuildingComponent>();
+			if (pBuildingComponent && !pBuildingComponent->IsBuilt()) {
 				AssignBuildingToEngineers(entity);
 				return;
 			}
 
-			WorkplaceComponent* workplace = entity->GetComponent<WorkplaceComponent>();
-			if (building && building->IsBuilt() && workplace) {
+			WorkplaceComponent* pWorkplaceComponent = entity->GetComponent<WorkplaceComponent>();
+			if (pBuildingComponent && pBuildingComponent->IsBuilt() && pWorkplaceComponent) {
 				AssignWorkplaceToWorkers(entity);
 				return;
 			}
 
+			GuardPostComponent* pGuardPostComponent = entity->GetComponent<GuardPostComponent>();
+			if (pBuildingComponent && pBuildingComponent->IsBuilt() && pGuardPostComponent) {
+				AssignGuardPostToGuards(entity);
+				return;
+			}
+
 			ResourceStorageComponent* resourceStorage = entity->GetComponent<ResourceStorageComponent>();
-			if (building && building->IsBuilt() && resourceStorage) {
+			if (pBuildingComponent && pBuildingComponent->IsBuilt() && resourceStorage) {
 				CommandUnitsToSendResourceToWareHouse(entity);
 				return;
 			}
@@ -416,7 +425,7 @@ void PlayerComponent::RightMouseDown(int activationMode, float value)
 
 void PlayerComponent::RotateLeft(int activationMode, float value)
 {
-	if (activationMode == eAAM_OnHold) {
+	if (activationMode == eAAM_OnRelease) {
 		if (!m_pBaseBuildingComponent || !m_pBaseBuildingComponent->HasBuildingAssigned()) {
 			return;
 		}
@@ -427,7 +436,7 @@ void PlayerComponent::RotateLeft(int activationMode, float value)
 
 void PlayerComponent::RotateRight(int activationMode, float value)
 {
-	if (activationMode == eAAM_OnHold) {
+	if (activationMode == eAAM_OnRelease) {
 		if (!m_pBaseBuildingComponent || !m_pBaseBuildingComponent->HasBuildingAssigned()) {
 			return;
 		}
@@ -617,15 +626,43 @@ void PlayerComponent::AssignWorkplaceToWorkers(IEntity* workplaceEntity)
 		if (!workerComponent) {
 			continue;
 		}
-		WorkplaceComponent* workPlaceComponent = workplaceEntity->GetComponent<WorkplaceComponent>();
-		if (!workPlaceComponent) {
+		WorkplaceComponent* pWorkPlaceComponent = workplaceEntity->GetComponent<WorkplaceComponent>();
+		if (!pWorkPlaceComponent) {
 			return;
 		}
-		ActionManagerComponent* actionManager = entity->GetComponent<ActionManagerComponent>();
-		if (actionManager) {
+		ActionManagerComponent* pActionManagerComponent = entity->GetComponent<ActionManagerComponent>();
+		if (pActionManagerComponent) {
 			if (workplaceEntity) {
-				actionManager->AddAction(new UnitWorkInWorkplaceAction(entity, workplaceEntity));
+				pActionManagerComponent->AddAction(new UnitWorkInWorkplaceAction(entity, workplaceEntity));
 				CryLog("workplace assigned %s:", workplaceEntity->GetName());
+			}
+		}
+		else {
+			continue;
+		}
+	}
+}
+
+void PlayerComponent::AssignGuardPostToGuards(IEntity* guardPosteEntity)
+{
+	for (IEntity* entity : m_selectedUnits) {
+		if (!entity) {
+			continue;
+		}
+
+		GuardComponent* pGuardComponent = entity->GetComponent<GuardComponent>();
+		if (!pGuardComponent) {
+			continue;
+		}
+		GuardPostComponent* pGuardPostComponent = guardPosteEntity->GetComponent<GuardPostComponent>();
+		if (!pGuardPostComponent) {
+			return;
+		}
+		ActionManagerComponent* pActionManagerComponent = entity->GetComponent<ActionManagerComponent>();
+		if (pActionManagerComponent) {
+			if (pGuardPostComponent) {
+				pActionManagerComponent->AddAction(new UnitGuardInGuardPostAction(entity, guardPosteEntity));
+				CryLog("guardPost assigned %s:", guardPosteEntity->GetName());
 			}
 		}
 		else {

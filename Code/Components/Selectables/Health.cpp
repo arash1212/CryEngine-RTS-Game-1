@@ -71,9 +71,18 @@ void HealthComponent::ProcessEvent(const SEntityEvent& event)
 
 	}break;
 	case Cry::Entity::EEvent::Update: {
+
+		if (!m_pSelectableComponent) {
+			//SelectableComponent Initialization
+			m_pSelectableComponent = m_pEntity->GetComponent<SelectableComponent>();
+		}
+
 		f32 DeltaTime = event.fParam[0];
 		if (m_entityRemoveTimePassed < m_timeBetweenRemoveingEntity) {
 			m_entityRemoveTimePassed += 0.5f * DeltaTime;
+		}
+		if (m_HealthbarHidingTimePassed < m_timeBetweenHidingHealthbar) {
+			m_HealthbarHidingTimePassed += 0.5f * DeltaTime;
 		}
 
 		UpdateProgressAmount();
@@ -100,19 +109,19 @@ void HealthComponent::ProcessEvent(const SEntityEvent& event)
 			return;
 		}
 
-		if (EntityUtils::IsEntityInsideViewPort(camera, m_pEntity) && m_currentHealth > 0 && pVisibilityComponent->IsVisible()) {
+		if (EntityUtils::IsEntityInsideViewPort(camera, m_pEntity) && m_currentHealth > 0 && pVisibilityComponent->IsVisible() && (m_pSelectableComponent && m_pSelectableComponent->IsSelected() || m_HealthbarHidingTimePassed < m_timeBetweenHidingHealthbar || m_lastProgressbarUpdateAmount > 0)) {
 			ShowHealthBar();
 			m_entityRemoveTimePassed = 0;
 		}
-		else if (!EntityUtils::IsEntityInsideViewPort(camera, m_pEntity) || !pVisibilityComponent->IsVisible() || m_currentHealth <= 0) {
+		else if (!EntityUtils::IsEntityInsideViewPort(camera, m_pEntity) || !pVisibilityComponent->IsVisible() || m_currentHealth <= 0 || (m_pSelectableComponent && !m_pSelectableComponent->IsSelected()) || m_HealthbarHidingTimePassed >= m_timeBetweenHidingHealthbar && m_lastProgressbarUpdateAmount <= 0) {
 			HideHealthBar();
 			return;
 		}
 
-		if ( m_pHealthbarUIElement) {
+		if (m_pHealthbarUIElement) {
 			bool bIsRed = pPlayerOwnerInfo->GetTeam() != m_pOwnerInfoComponent->GetTeam();
 			AddHealthBar(bIsRed);
-			//ShowHealthBar();
+
 			Vec3 flashPos;
 			Vec2 borders;
 			float scale = 0;
@@ -124,9 +133,7 @@ void HealthComponent::ProcessEvent(const SEntityEvent& event)
 			}
 			SetHealthbarPosition(flashPos.x , flashPos.y - 15);
 		}
-		else {
-			//HideHealthBar();
-		}
+
 	}break;
 	case Cry::Entity::EEvent::Reset: {
 
@@ -150,26 +157,18 @@ void HealthComponent::UpdateProgressAmount()
 		return;
 	}
 
-	//if (!pActionManagerComponent->GetCurrentAction() || pActionManagerComponent->GetCurrentAction()->GetProgressAmount() == 0) {
-	//	HideProgressbar();
-	//}
-
 	if (m_lastProgressbarUpdateAmount == pActionManagerComponent->GetCurrentAction()->GetProgressAmount()) {
 		return;
 	}
 
 	SetProgressAmount(pActionManagerComponent->GetCurrentAction()->GetProgressAmount(), pActionManagerComponent->GetCurrentAction()->GetMaxProgressAmount());
 	m_lastProgressbarUpdateAmount = pActionManagerComponent->GetCurrentAction()->GetProgressAmount();
-	//ShowProgressbar();
 }
 
 void HealthComponent::ApplyDamage(f32 damage)
 {
 	this->m_currentHealth = CLAMP(m_currentHealth - damage, 0, m_maxHealth);
-
-	//if (m_currentHealth <= 0) {
-		
-	//}
+	this->m_HealthbarHidingTimePassed = 0;
 }
 
 void HealthComponent::Die()
@@ -236,6 +235,8 @@ void HealthComponent::AddHealthBar(bool isRed)
 			AddWorkerSlot(i, false);
 		}
 	}
+
+	HideHealthBar();
 }
 
 void HealthComponent::HideHealthBar()

@@ -16,6 +16,7 @@
 #include <UIItems/Items/Buildings/UIHQ1BuildItem.h>
 #include<UIItems/Items/Buildings/TrainUnits/UITrainEngineer1Item.h>
 #include<UIItems/Items/Buildings/TrainUnits/UITrainSoldier1Item.h>
+#include <Components/Selectables/GuardPost.h>
 
 #include <Components/BaseBuilding/Buildings/Wall1Building.h>
 
@@ -108,6 +109,14 @@ void GaurdTower1BuildingComponent::Initialize()
 	//Materials Initializations
 	m_pDefaultMaterial = m_pSkinAttachment->GetIAttachmentObject()->GetBaseMaterial();
 
+	//GuardPostComponent Initialization
+	m_pGuardPostComponent = m_pEntity->GetOrCreateComponent<GuardPostComponent>();
+	DynArray<IAttachment*> guardPointAttachments;
+	guardPointAttachments.append(m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("guardPoint1"));
+	guardPointAttachments.append(m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("guardPoint2"));
+	guardPointAttachments.append(m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("guardPoint3"));
+	guardPointAttachments.append(m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("guardPoint4"));
+	m_pGuardPostComponent->SetGuardPointAttachments(guardPointAttachments);
 }
 
 

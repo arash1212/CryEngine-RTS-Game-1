@@ -125,7 +125,7 @@ IEntity* EngineerComponent::FindClosestUnBuildBuilding()
 		if (!pBuildingComponent) {
 			continue;
 		}
-		if (!pBuildingComponent->IsPlaced() || pBuildingComponent->IsBuilt()) {
+		if (!pBuildingComponent->IsPlaced() || pBuildingComponent->IsBuilt() || pBuildingComponent->GetBuilders().size() > 5) {
 			continue;
 		}
 		resultArray.append(entity);

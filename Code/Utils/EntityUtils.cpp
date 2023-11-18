@@ -196,6 +196,26 @@ Vec3 EntityUtils::GetClosetPointOnMeshBorder(Vec3 from, IEntity* entity)
 	}
 }
 
+Vec3 EntityUtils::GetRandomPointOnMeshBorder(IEntity* entity)
+{
+	AABB aabb;
+	entity->GetWorldBounds(aabb);
+
+	f32 diffX = aabb.max.x - aabb.GetCenter().x;
+	f32 diffY = aabb.max.y - aabb.GetCenter().y;
+
+
+	Vec3 result = entity->GetWorldPos();
+	result.x = (aabb.GetCenter().x + MathUtils::GetRandomFloat(-diffX, diffX));
+	result.y = (aabb.GetCenter().y + MathUtils::GetRandomFloat(-diffY, diffY));
+
+	IPersistantDebug* pd = gEnv->pGameFramework->GetIPersistantDebug();
+	pd->Begin("testset2342424", true);
+	pd->AddSphere(result, 0.5f, ColorF(0, 0, 1), 0.5f);
+
+	return result;
+}
+
 /*
 Vec2 EntityUtils::GetScreenPosition(Cry::DefaultComponents::CCameraComponent* camera, IEntity* entity)
 {

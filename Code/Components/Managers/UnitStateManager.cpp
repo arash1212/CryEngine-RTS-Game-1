@@ -84,6 +84,10 @@ void UnitStateManagerComponent::UpdateCurrentSpeed()
 		return;
 	}
 
+	if (!m_pCharacterControllerComponent->IsWalking() && m_pUnitStance == EUnitStance::RUNNING) {
+		m_pUnitStance = EUnitStance::WALKING;
+	}
+
 	//f32 speed = crymath::abs(m_pCharacterControllerComponent->GetVelocity().GetLength());
 	if (m_pUnitStance == EUnitStance::WALKING) {
 		m_currentSpeed = m_walkSpeed;

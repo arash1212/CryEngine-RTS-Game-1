@@ -17,6 +17,7 @@ class CostComponent;
 class UnitTypeManagerComponent;
 class HealthComponent;
 class VisibilityComponent;
+class GuardComponent;
 
 struct SOwnerInfo;
 struct SResourceInfo;
@@ -59,6 +60,7 @@ private:
 	VisibilityComponent* m_pVisibilityComponent = nullptr;
 	//OwnerShip
 	OwnerInfoComponent* m_pOwnerInfoComponent = nullptr;
+	GuardComponent* m_pGuardComponent = nullptr;
 
 public:
 	static SDescription GetDescription();

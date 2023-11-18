@@ -2,7 +2,10 @@
 #include "UnitBuildAction.h"
 #include "GamePlugin.h"
 
+#include <Utils/MathUtils.h>
 #include <Utils/EntityUtils.h>
+
+#include <CryGame/IGameFramework.h>
 
 #include <Components/BaseBuilding/Building.h>
 #include <Components/Selectables/Engineer.h>
@@ -12,18 +15,25 @@
 #include <Components/Managers/ResourceManager.h>
 #include <Components/Selectables/Cost.h>
 
-UnitBuildAction::UnitBuildAction(IEntity* entity, IEntity* buildiingEntity)
+UnitBuildAction::UnitBuildAction(IEntity* entity, IEntity* buildingEntity)
 {
 	this->m_pEntity = entity;
-	this->m_pBuildingEntity = buildiingEntity;
+	this->m_pBuildingEntity = buildingEntity;
 	this->m_pEngineerComponent = m_pEntity->GetComponent<EngineerComponent>();
 	this->m_pAiControllerComponent = m_pEntity->GetComponent<AIControllerComponent>();
 	this->m_pStateManagerComponent = m_pEntity->GetComponent<UnitStateManagerComponent>();
-	this->m_pBuildingComponent = buildiingEntity->GetComponent<BuildingComponent>();
+	this->m_pBuildingComponent = buildingEntity->GetComponent<BuildingComponent>();
 	this->m_pAnimationComponent = m_pEntity->GetComponent<UnitAnimationComponent>();
 
-	this->m_pEngineerComponent->AssignBuilding(buildiingEntity);
+	this->m_pEngineerComponent->AssignBuilding(buildingEntity);
+	this->m_pBuildingComponent->AddBuilder(m_pEntity);
 	m_builtTimePassed = m_pEngineerComponent->GetEngineerInfo().m_timeBetweenBuilds;
+
+	m_movePosition = EntityUtils::GetClosetPointOnMeshBorder(m_pEntity->GetWorldPos(), m_pBuildingEntity);
+
+	if (m_pBuildingComponent->GetBuilders().size() > 5) {
+		Cancel();
+	}
 }
 
 void UnitBuildAction::Execute()
@@ -58,7 +68,8 @@ void UnitBuildAction::Execute()
 		this->m_builtTimePassed = 0;
 	}
 	else {
-		this->m_pAiControllerComponent->MoveTo(EntityUtils::GetClosetPointOnMeshBorder(m_pEntity->GetWorldPos(), m_pBuildingEntity), true);
+		m_movePosition = GetClosestPointAvailableCloseToBilding();
+		this->m_pAiControllerComponent->MoveTo(m_movePosition, true);
 		this->m_pAiControllerComponent->LookAtWalkDirection();
 	}
 }
@@ -83,4 +94,27 @@ f32 UnitBuildAction::GetProgressAmount()
 f32 UnitBuildAction::GetMaxProgressAmount()
 {
 	return this->m_pBuildingComponent->GetBuildingInfos().m_maxBuildAmount;
+}
+
+bool UnitBuildAction::IsMoveToPointAvailable()
+{
+	for (IEntity* builder : m_pBuildingComponent->GetBuilders()) {
+		if (builder == m_pEntity) {
+			continue;
+		}
+
+		f32 distanceToBuilder = m_movePosition.GetDistance(builder->GetWorldPos());
+		if (distanceToBuilder <= 1) {
+			return false;
+		}
+	}
+	return true;
+}
+
+Vec3 UnitBuildAction::GetClosestPointAvailableCloseToBilding()
+{
+	if (IsMoveToPointAvailable() && m_pAiControllerComponent->IsDestinationReachable(m_movePosition)) {
+		return m_movePosition;
+	}
+	return EntityUtils::GetRandomPointOnMeshBorder(m_pBuildingEntity);
 }

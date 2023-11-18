@@ -8,6 +8,7 @@
 
 class SelectableComponent;
 class CostComponent;
+class GuardPostComponent;
 
 struct SResourceInfo;
 struct SDescription;
@@ -38,6 +39,9 @@ public:
 
 private:
 	CostComponent* m_pCostComponent = nullptr;
+	GuardPostComponent* m_pGuardPostComponent = nullptr;
+
+private:
 	DynArray<IEntity*> m_pWalls;
 	Vec3 m_lastCheckPos = ZERO;
 

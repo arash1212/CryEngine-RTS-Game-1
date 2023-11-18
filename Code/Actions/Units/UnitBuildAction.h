@@ -29,6 +29,9 @@ private:
 	//Timers
 	f32 m_builtTimePassed = 0.f;
 
+private:
+	bool IsMoveToPointAvailable();
+	Vec3 GetClosestPointAvailableCloseToBilding();
 public:
 	virtual void Execute() override;
 	virtual void Cancel() override;

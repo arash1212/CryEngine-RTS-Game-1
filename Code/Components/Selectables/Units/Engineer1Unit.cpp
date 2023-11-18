@@ -157,6 +157,8 @@ void Engineer1UnitComponent::Initialize()
 
 	//VisibilityComponent Initialization
 	m_pVisibilityComponent = m_pEntity->GetOrCreateComponent<VisibilityComponent>();
+
+	m_pEntity->SetName("Unit-Engineer-1");
 }
 
 

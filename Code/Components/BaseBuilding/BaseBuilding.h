@@ -29,6 +29,9 @@ private:
 	IEntity* m_pBuildingEntity = nullptr;
 
 private:
+	int32 nCurrentRotationIndex = 0;
+
+private:
 	//Sounds
 	CryAudio::ControlId m_buildingPlacementSound;
 

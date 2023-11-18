@@ -128,6 +128,7 @@ void BaseBuildingComponent::CancelAssignedBuilding()
 	resourceManager->RefundResources(m_pBuildingEntity->GetComponent<CostComponent>()->GetCost());
 	EntityUtils::RemoveEntity(m_pBuildingEntity);
 	m_pBuildingEntity = nullptr;
+	nCurrentRotationIndex = 0;
 }
 
 void BaseBuildingComponent::CancelBuilding()
@@ -176,8 +177,8 @@ void BaseBuildingComponent::RotateBuildingToLeft()
 	if (!HasBuildingAssigned()) {
 		return;
 	}
-
-	Quat rotation = Quat::CreateRotationZ(m_pBuildingEntity->GetRotation().GetRotZ() - 0.01f);
+	nCurrentRotationIndex++;
+	Quat rotation = Quat::CreateRotationZ(DEG2RAD(90 * nCurrentRotationIndex));
 	m_pBuildingEntity->SetRotation(rotation);
 }
 
@@ -187,6 +188,7 @@ void BaseBuildingComponent::RotateBuildingToRight()
 		return;
 	}
 
-	Quat rotation = Quat::CreateRotationZ(m_pBuildingEntity->GetRotation().GetRotZ() + 0.01f);
+	nCurrentRotationIndex--;
+	Quat rotation = Quat::CreateRotationZ(DEG2RAD(90 * nCurrentRotationIndex));
 	m_pBuildingEntity->SetRotation(-rotation);
 }

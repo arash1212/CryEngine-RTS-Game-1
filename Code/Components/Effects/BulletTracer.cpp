@@ -52,6 +52,8 @@ void BulletTracerComponent::Initialize()
 	physParams.type = PE_RIGID;
 	physParams.mass = 18000.f;
 	m_pEntity->Physicalize(physParams);
+
+	m_pEntity->SetName("BulletTracer");
 }
 
 Cry::Entity::EventFlags BulletTracerComponent::GetEventMask() const

@@ -165,7 +165,7 @@ void BaseWeaponComponent::SpawnProjectile(IEntity* target)
 	bullet->SetTarget(target);
 }
 
-void BaseWeaponComponent::Fire(IEntity* target)
+bool BaseWeaponComponent::Fire(IEntity* target)
 {
 	if (m_shotTimePassed >= m_timeBetweenShots) {
 		//Raycast(pos);
@@ -175,7 +175,9 @@ void BaseWeaponComponent::Fire(IEntity* target)
 
 		//MuzzleFlash
 		m_MuzzleFlashDeActivationTimePassed = 0;
+		return true;
 	}
+	return false;
 }
 
 
