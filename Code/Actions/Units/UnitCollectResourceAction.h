@@ -27,9 +27,16 @@ private:
 private:
 	Vec3 m_movePosition = ZERO;
 	bool bRun = false;
+	bool bResourcesAddedToCollector = false;
+	int32 nCollectedAmount = 0;
 
 	//Timers
-	f32 m_collectingTimePassed = 0.f;
+	f32 fCollectingTimePassed = 0.f;
+
+private:
+	bool IsMoveToPointAvailable();
+	Vec3 GetClosestPointAvailableCloseToBuilding();
+
 public:
 	virtual void Execute() override;
 	virtual void Cancel() override;

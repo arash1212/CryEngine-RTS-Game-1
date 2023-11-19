@@ -54,8 +54,10 @@ protected:
 
 
 	//Shot Timers/Info
-	f32 m_timeBetweenShots = 0.04f;
+	f32 m_timeBetweenShots = 0.045f;
 	f32 m_shotTimePassed = 0.f;
+	f32 m_timeBetweenSpawningProjectile = 0.09f;
+	f32 m_projectileSpawnTimePassed = 0.f;
 
 private:
 	void UpdateMuzzleFlashes();

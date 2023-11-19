@@ -46,8 +46,8 @@ private:
 private:
 	bool bIsGameStarted = false;
 
-	f32 m_timeBetweenAttacks = 400.f;
-	f32 m_attackTimePassed = 0.f;
+	f32 fTimeBetweenAttacks = 400.f;
+	f32 fAttackTimePassed = 0.f;
 
 	DynArray<IEntity*> m_hostilePlayers;
 	bool bIsCheckedForHostiles = false;

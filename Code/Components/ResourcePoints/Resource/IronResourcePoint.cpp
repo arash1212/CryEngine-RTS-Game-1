@@ -49,14 +49,14 @@ void IronResourcePointComponent::Initialize()
 
 	//BoxComponent Initialization
 	m_pBboxComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CBoxPrimitiveComponent>();
-	m_pBboxComponent->m_size = Vec3(2.2f, 2.4f, 1.4f);
+	m_pBboxComponent->m_size = Vec3(1.6f, 1.6f, 1.4f);
 	m_pBboxComponent->m_bReactToCollisions = true;
 
 	//Update bounding box
 	AABB aabb;
 	m_pEntity->GetLocalBounds(aabb);
-	Vec3 min = Vec3(aabb.min.x - 2.5f, aabb.min.y - 2.5f, aabb.min.z);
-	Vec3 max = Vec3(aabb.max.x + 3.f, aabb.max.y + 2.0f, aabb.max.z);
+	Vec3 min = Vec3(aabb.min.x - 1.8f, aabb.min.y - 1.8f, aabb.min.z);
+	Vec3 max = Vec3(aabb.max.x + 1.8f, aabb.max.y + 1.6f, aabb.max.z);
 	AABB newAABB = AABB(min, max);
 	m_pEntity->SetLocalBounds(newAABB, true);
 

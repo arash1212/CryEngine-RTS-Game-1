@@ -206,6 +206,7 @@ void AttackerComponent::PerformMeleeAttack(IEntity* target)
 void AttackerComponent::PerformRangedAttack(IEntity* target)
 {
 	if (m_pWeaponComponent->Fire(target)) {
+		m_pUnitAnimationComponent->PlayRandomAttackAnimation();
 
 		this->ApplyDamageToTarget(target);
 

@@ -334,6 +334,19 @@ void BuildingComponent::AddBuilder(IEntity* builderEntity)
 	this->m_builders.append(builderEntity);
 }
 
+void BuildingComponent::RemoveBuilder(IEntity* builderEntity)
+{
+	DynArray<IEntity*> result;
+	for (IEntity* entity : m_builders) {
+		if (entity != builderEntity) {
+			result.append(entity);
+		}
+	}
+
+	m_builders.clear();
+	m_builders = result;
+}
+
 DynArray<IEntity*> BuildingComponent::GetBuilders()
 {
 	return m_builders;

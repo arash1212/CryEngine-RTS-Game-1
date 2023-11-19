@@ -149,3 +149,8 @@ void UnitAnimationComponent::PlayRandomAttackAnimation()
 	IActionPtr action = new TAction<SAnimationContext>(30U, attackingFragmentId);
 	m_pAnimationComponent->QueueCustomFragment(*action);
 }
+
+void UnitAnimationComponent::SetAttackAnimations(DynArray<FragmentID> attackAnimations)
+{
+	this->m_pAttackAnimations = attackAnimations;
+}

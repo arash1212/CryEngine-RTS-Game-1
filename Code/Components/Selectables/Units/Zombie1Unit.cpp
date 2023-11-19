@@ -89,7 +89,7 @@ void Zombie1UnitComponent::Initialize()
 
 	//////////AttackerComponent Initializations
 	m_pAttackerComponent = m_pEntity->GetOrCreateComponent<AttackerComponent>();
-	m_pAttackerComponent->SetDamageAmount(3.f);
+	m_pAttackerComponent->SetDamageAmount(7.f);
 	//attack info
 	SUnitAttackInfo pAttckInfo;
 	pAttckInfo.m_pAttackType = EAttackType::MELEE;

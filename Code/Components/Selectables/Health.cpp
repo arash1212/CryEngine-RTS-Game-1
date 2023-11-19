@@ -53,6 +53,11 @@ void HealthComponent::Initialize()
 
 	//OwnerInfoComponent Initialization
 	m_pOwnerInfoComponent = m_pEntity->GetComponent<OwnerInfoComponent>();
+
+	if (!m_pEntity->GetComponent<BuildingComponent>()) {
+		m_pBloodParticleComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CParticleComponent>();
+		m_pBloodParticleComponent->SetEffectName("Objects/effects/bloodsplatter/smoke_particle_1.pfx");
+	}
 }
 
 Cry::Entity::EventFlags HealthComponent::GetEventMask() const
@@ -68,7 +73,7 @@ void HealthComponent::ProcessEvent(const SEntityEvent& event)
 	switch (event.event)
 	{
 	case Cry::Entity::EEvent::GameplayStarted: {
-
+		//Objects/effects/bloodsplatter/smoke_particle_1.pfx
 	}break;
 	case Cry::Entity::EEvent::Update: {
 
@@ -78,11 +83,19 @@ void HealthComponent::ProcessEvent(const SEntityEvent& event)
 		}
 
 		f32 DeltaTime = event.fParam[0];
-		if (m_entityRemoveTimePassed < m_timeBetweenRemoveingEntity) {
-			m_entityRemoveTimePassed += 0.5f * DeltaTime;
+		if (fEntityRemoveTimePassed < fTimeBetweenRemoveingEntity) {
+			fEntityRemoveTimePassed += 0.5f * DeltaTime;
 		}
-		if (m_HealthbarHidingTimePassed < m_timeBetweenHidingHealthbar) {
-			m_HealthbarHidingTimePassed += 0.5f * DeltaTime;
+		if (fHealthbarHidingTimePassed < fTimeBetweenHidingHealthbar) {
+			fHealthbarHidingTimePassed += 0.5f * DeltaTime;
+		}
+		if (fBloodParticleRestartTimePassed < fTimeBetweenRestartingBloodParticle) {
+			fBloodParticleRestartTimePassed += 0.5f * DeltaTime;
+		}
+		else {
+			if (m_pBloodParticleComponent) {
+				m_pBloodParticleComponent->Activate(false);
+			}
 		}
 
 		UpdateProgressAmount();
@@ -109,11 +122,11 @@ void HealthComponent::ProcessEvent(const SEntityEvent& event)
 			return;
 		}
 
-		if (EntityUtils::IsEntityInsideViewPort(camera, m_pEntity) && m_currentHealth > 0 && pVisibilityComponent->IsVisible() && (m_pSelectableComponent && m_pSelectableComponent->IsSelected() || m_HealthbarHidingTimePassed < m_timeBetweenHidingHealthbar || m_lastProgressbarUpdateAmount > 0)) {
+		if (EntityUtils::IsEntityInsideViewPort(camera, m_pEntity) && m_currentHealth > 0 && pVisibilityComponent->IsVisible() && (m_pSelectableComponent && m_pSelectableComponent->IsSelected() || fHealthbarHidingTimePassed < fTimeBetweenHidingHealthbar || m_lastProgressbarUpdateAmount > 0)) {
 			ShowHealthBar();
-			m_entityRemoveTimePassed = 0;
+			fEntityRemoveTimePassed = 0;
 		}
-		else if (!EntityUtils::IsEntityInsideViewPort(camera, m_pEntity) || !pVisibilityComponent->IsVisible() || m_currentHealth <= 0 || (m_pSelectableComponent && !m_pSelectableComponent->IsSelected()) || m_HealthbarHidingTimePassed >= m_timeBetweenHidingHealthbar && m_lastProgressbarUpdateAmount <= 0) {
+		else if (!EntityUtils::IsEntityInsideViewPort(camera, m_pEntity) || !pVisibilityComponent->IsVisible() || m_currentHealth <= 0 || (m_pSelectableComponent && !m_pSelectableComponent->IsSelected()) || fHealthbarHidingTimePassed >= fTimeBetweenHidingHealthbar && m_lastProgressbarUpdateAmount <= 0) {
 			HideHealthBar();
 			return;
 		}
@@ -168,12 +181,14 @@ void HealthComponent::UpdateProgressAmount()
 void HealthComponent::ApplyDamage(f32 damage)
 {
 	this->m_currentHealth = CLAMP(m_currentHealth - damage, 0, m_maxHealth);
-	this->m_HealthbarHidingTimePassed = 0;
+	this->fHealthbarHidingTimePassed = 0;
+	this->m_pBloodParticleComponent->Activate(true);
+	fBloodParticleRestartTimePassed = 0;
 }
 
 void HealthComponent::Die()
 {
-	if (m_currentHealth <= 0 && m_entityRemoveTimePassed >= m_timeBetweenRemoveingEntity) {
+	if (m_currentHealth <= 0 && fEntityRemoveTimePassed >= fTimeBetweenRemoveingEntity) {
 		HideHealthBar();
 		EntityUtils::RemoveEntity(m_pEntity);
 	}

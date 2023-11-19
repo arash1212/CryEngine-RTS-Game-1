@@ -22,6 +22,7 @@ public:
 	{
 		desc.SetGUID("{67BAE116-7A99-4323-B257-339303AAC59F}"_cry_guid);
 		desc.SetEditorCategory("ResourcePoint");
+		desc.AddBase< BaseResourcePointComponent>();
 	}
 
 private:

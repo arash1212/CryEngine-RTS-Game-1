@@ -25,7 +25,11 @@ UnitCollectResourceAction::UnitCollectResourceAction(IEntity* entity, IEntity* r
 	this->m_pAnimationComponent = m_pEntity->GetComponent<UnitAnimationComponent>();
 	this->m_pResourceCollectorComponent = m_pEntity->GetComponent<ResourceCollectorComponent>();
 
-	m_collectingTimePassed = this->m_pEngineerComponent->GetEngineerInfo().m_timeBetweenCollecting;
+	this->m_pResourcePointComponent->AddCollector(m_pEntity);
+
+	fCollectingTimePassed = this->m_pEngineerComponent->GetEngineerInfo().m_timeBetweenCollecting;
+
+	m_movePosition = EntityUtils::GetClosetPointOnMeshBorder(m_pEntity->GetWorldPos(), m_pResourcePointEntity);
 }
 
 
@@ -53,8 +57,8 @@ void UnitCollectResourceAction::Execute()
 	}
 
 	//Timer
-	if (m_collectingTimePassed < m_pEngineerComponent->GetEngineerInfo().m_timeBetweenCollecting) {
-		m_collectingTimePassed += 0.5f * gEnv->pTimer->GetFrameTime();
+	if (fCollectingTimePassed < m_pEngineerComponent->GetEngineerInfo().m_timeBetweenCollecting) {
+		fCollectingTimePassed += 0.5f * gEnv->pTimer->GetFrameTime();
 		return;
 	}
 	
@@ -70,7 +74,7 @@ void UnitCollectResourceAction::Execute()
 		distanceToResource = EntityUtils::GetDistance(m_pEntity->GetWorldPos(), EntityUtils::GetClosetPointOnMeshBorder(m_pEntity->GetWorldPos(), m_pResourcePointEntity), nullptr);
 	}
 
-	if (distanceToResource <= m_pEngineerComponent->GetEngineerInfo().m_maxBuildDistance && m_pResourceCollectorComponent->CanCollectResource()) {
+	if (distanceToResource <= m_pEngineerComponent->GetEngineerInfo().m_maxBuildDistance && m_pResourceCollectorComponent->CanCollectResource(nCollectedAmount)) {
 		if (m_pResourcePointComponent->IsSingleUse() && m_pResourcePointComponent->IsInUse() && m_pResourcePointComponent->GetCurrentCollector()->GetId() != m_pEntity->GetId()) {
 			return;
 		}
@@ -90,15 +94,17 @@ void UnitCollectResourceAction::Execute()
 		}
 
 		this->m_pAnimationComponent->PlayRandomAttackAnimation();
-		this->m_collectingTimePassed = 0;
-		this->m_pResourceCollectorComponent->AddResource(1);
+		this->fCollectingTimePassed = 0;
+		//old
+		//this->m_pResourceCollectorComponent->AddResource(1);
+		this->nCollectedAmount += 1;
 
 		this->m_pResourcePointComponent->SetIsInUse(true);
 		this->m_pResourcePointComponent->SetCurrentCollector(m_pEntity);
 	}
-	else if (distanceToResource > m_pEngineerComponent->GetEngineerInfo().m_maxBuildDistance && m_pResourceCollectorComponent->CanCollectResource()) {
+	else if (distanceToResource > m_pEngineerComponent->GetEngineerInfo().m_maxBuildDistance && m_pResourceCollectorComponent->CanCollectResource(nCollectedAmount)) {
 		if (!m_pResourcePointComponent->HasCollectingLocation() || m_pResourcePointComponent->HasCollectingLocation()&& m_pResourcePointComponent->IsSingleUse() && m_pResourcePointComponent->IsInUse() && m_pResourcePointComponent->GetCurrentCollector()->GetId() != m_pEntity->GetId()) {
-			this->m_pAiControllerComponent->MoveTo(EntityUtils::GetClosetPointOnMeshBorder(m_pEntity->GetWorldPos(), m_pResourcePointEntity), true);
+			this->m_pAiControllerComponent->MoveTo(GetClosestPointAvailableCloseToBuilding(), true);
 			this->m_pAiControllerComponent->LookAtWalkDirection();
 		}
 		else {
@@ -108,7 +114,12 @@ void UnitCollectResourceAction::Execute()
 	}
 
 	//If Can't collect resources anymore
-	else if (!m_pResourceCollectorComponent->CanCollectResource()) {
+	else if (!m_pResourceCollectorComponent->CanCollectResource(nCollectedAmount)) {
+		if (!bResourcesAddedToCollector) {
+			this->m_pResourceCollectorComponent->AddResource(nCollectedAmount);
+			this->bResourcesAddedToCollector = true;
+		}
+
 		if (m_pResourcePointComponent->IsInUse() && m_pResourcePointComponent->GetCurrentCollector() == m_pEntity) {
 			this->m_pResourcePointComponent->SetIsInUse(false);
 			this->m_pResourcePointComponent->SetCurrentCollector(nullptr);
@@ -116,7 +127,7 @@ void UnitCollectResourceAction::Execute()
 
 		if (!m_pWarehouseEntity) {
 			m_pWarehouseEntity = EntityUtils::FindClosestWarehouse(m_pEntity);
-			this->m_collectingTimePassed = 0.2f;
+			this->fCollectingTimePassed = 0.2f;
 			return;
 		}
 
@@ -124,14 +135,16 @@ void UnitCollectResourceAction::Execute()
 		//Move closer to warehouse if it's not close
 		f32 distanceToWareHouse = EntityUtils::GetDistance(m_pEntity->GetWorldPos(), warehouseExitPoint, nullptr);
 		if (m_pWarehouseEntity && distanceToWareHouse > m_pEngineerComponent->GetEngineerInfo().m_maxBuildDistance) {
-			this->m_pAiControllerComponent->MoveTo(warehouseExitPoint, true);
+			this->m_pAiControllerComponent->MoveTo(warehouseExitPoint, false);
 			this->m_pAiControllerComponent->LookAtWalkDirection();
 		}
 		//Deliver Resource to Warehouse
 		else {
 			this->m_pAiControllerComponent->StopMoving();
-			this->m_pAiControllerComponent->LookAt(EntityUtils::GetClosetPointOnMeshBorder(m_pEntity->GetWorldPos(), m_pWarehouseEntity));
+			this->m_pAiControllerComponent->LookAt(m_pEntity->GetWorldPos());
 			this->m_pResourceCollectorComponent->SendResourceToWareHouse();
+			this->bResourcesAddedToCollector = false;
+			this->nCollectedAmount = 0;
 		}
 	}
 }
@@ -145,9 +158,33 @@ void UnitCollectResourceAction::Cancel()
 	this->m_pEngineerComponent->CancelBuildingAssigned();
 	this->m_pAiControllerComponent->StopMoving();
 	bIsDone = true;
+	this->m_pResourcePointComponent->RemoveCollector(m_pEntity);
 }
 
 bool UnitCollectResourceAction::IsDone()
 {
 	return bIsDone;
+}
+
+bool UnitCollectResourceAction::IsMoveToPointAvailable()
+{
+	for (IEntity* builder : m_pResourcePointComponent->GetCollectors()) {
+		if (builder == m_pEntity) {
+			continue;
+		}
+
+		f32 distanceToBuilder = m_movePosition.GetDistance(builder->GetWorldPos());
+		if (distanceToBuilder <= 1) {
+			return false;
+		}
+	}
+	return true;
+}
+
+Vec3 UnitCollectResourceAction::GetClosestPointAvailableCloseToBuilding()
+{
+	if (IsMoveToPointAvailable() && m_pAiControllerComponent->IsDestinationReachable(m_movePosition)) {
+		return m_movePosition;
+	}
+	return EntityUtils::GetRandomPointOnMeshBorder(m_pResourcePointEntity);
 }

@@ -47,6 +47,9 @@ private :
 	IAttachment* m_pBulletAttachment = nullptr;
 	IAttachment* m_pAK47Attachment = nullptr;
 
+	IAttachment* m_pRightHandPosAttachment = nullptr;
+	IAttachment* m_pLeftHandPosAttachment = nullptr;
+
 private:
 	int32 m_amountResourceCollected = 0;
 	int32 m_maxResouceCanBeCollected = 10;
@@ -64,6 +67,8 @@ public:
 	void SetCurrentResourceType(EResourceType resourceType);
 	EResourceType GetCurrentResourceType();
 
-	bool CanCollectResource();
+	bool CanCollectResource(int32 amountColected);
 	void EmptyResources();
+
+	void MoveHandsToHoldingResourcePosition();
 };

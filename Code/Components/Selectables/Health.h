@@ -1,5 +1,7 @@
 #pragma once
 
+#include <DefaultComponents/Effects/ParticleComponent.h>
+
 class OwnerInfoComponent;
 class SelectableComponent;
 
@@ -27,6 +29,7 @@ public:
 		desc.SetEditorCategory("Selectables");
 	}
 private:
+	Cry::DefaultComponents::CParticleComponent* m_pBloodParticleComponent = nullptr;
 	OwnerInfoComponent* m_pOwnerInfoComponent = nullptr;
 	SelectableComponent* m_pSelectableComponent = nullptr;
 
@@ -46,11 +49,13 @@ private:
 	f32 m_lastProgressbarUpdateAmount = -100;
 
 	//Timers
-	f32 m_timeBetweenHidingHealthbar = 1.f;
-	f32 m_HealthbarHidingTimePassed = 0.f;
-	f32 m_timeBetweenRemoveingEntity = 0.1f;
-	f32 m_entityRemoveTimePassed = 0.0f;
+	f32 fTimeBetweenHidingHealthbar = 1.f;
+	f32 fHealthbarHidingTimePassed = 0.f;
+	f32 fTimeBetweenRemoveingEntity = 0.1f;
+	f32 fEntityRemoveTimePassed = 0.0f;
 
+	f32 fTimeBetweenRestartingBloodParticle = 0.05f;
+	f32 fBloodParticleRestartTimePassed = 0.0f;
 private:
 	void UpdateProgressAmount();
 

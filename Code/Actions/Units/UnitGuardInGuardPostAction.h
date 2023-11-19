@@ -19,10 +19,10 @@ private:
 	GuardComponent* m_pGuardComponent = nullptr;
 
 	IEntity* m_pGuardPostEntity = nullptr;
-	int32 nGuardIndex = -1;
 
 private:
 	bool isAssignedToWorkplace = false;
+	int32 nGuardIndex = -1;
 
 private:
 

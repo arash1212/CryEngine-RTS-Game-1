@@ -211,7 +211,7 @@ Vec3 EntityUtils::GetRandomPointOnMeshBorder(IEntity* entity)
 
 	IPersistantDebug* pd = gEnv->pGameFramework->GetIPersistantDebug();
 	pd->Begin("testset2342424", true);
-	pd->AddSphere(result, 0.5f, ColorF(0, 0, 1), 0.5f);
+	pd->AddSphere(result, 0.5f, ColorF(0, 0, 1), 5.5f);
 
 	return result;
 }

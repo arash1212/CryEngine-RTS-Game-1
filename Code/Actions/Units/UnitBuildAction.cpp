@@ -68,7 +68,7 @@ void UnitBuildAction::Execute()
 		this->m_builtTimePassed = 0;
 	}
 	else {
-		m_movePosition = GetClosestPointAvailableCloseToBilding();
+		m_movePosition = GetClosestPointAvailableCloseToBuilding();
 		this->m_pAiControllerComponent->MoveTo(m_movePosition, true);
 		this->m_pAiControllerComponent->LookAtWalkDirection();
 	}
@@ -79,6 +79,7 @@ void UnitBuildAction::Cancel()
 	this->m_pEngineerComponent->CancelBuildingAssigned();
 	this->m_pAiControllerComponent->StopMoving();
 	bIsDone = true;
+	m_pBuildingComponent->RemoveBuilder(m_pEntity);
 }
 
 bool UnitBuildAction::IsDone()
@@ -111,7 +112,7 @@ bool UnitBuildAction::IsMoveToPointAvailable()
 	return true;
 }
 
-Vec3 UnitBuildAction::GetClosestPointAvailableCloseToBilding()
+Vec3 UnitBuildAction::GetClosestPointAvailableCloseToBuilding()
 {
 	if (IsMoveToPointAvailable() && m_pAiControllerComponent->IsDestinationReachable(m_movePosition)) {
 		return m_movePosition;

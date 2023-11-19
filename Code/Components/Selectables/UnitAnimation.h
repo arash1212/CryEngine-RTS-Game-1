@@ -57,4 +57,6 @@ private:
 
 public:
 	void PlayRandomAttackAnimation();
+
+	void SetAttackAnimations(DynArray<FragmentID> attackAnimations);
 };

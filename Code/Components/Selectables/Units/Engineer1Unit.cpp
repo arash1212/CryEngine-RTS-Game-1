@@ -158,6 +158,10 @@ void Engineer1UnitComponent::Initialize()
 	//VisibilityComponent Initialization
 	m_pVisibilityComponent = m_pEntity->GetOrCreateComponent<VisibilityComponent>();
 
+	m_pWrenchAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("wrench");
+	m_pAxeAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("axe");
+	m_pPickAxeAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("pickaxe");
+
 	m_pEntity->SetName("Unit-Engineer-1");
 }
 
@@ -180,12 +184,41 @@ void Engineer1UnitComponent::ProcessEvent(const SEntityEvent& event)
 	case Cry::Entity::EEvent::Update: {
 		//f32 DeltaTime = event.fParam[0];
 
+		UpdateAttachment();
+
 	}break;
 	case Cry::Entity::EEvent::Reset: {
 		m_pAnimationComponent->ResetCharacter();
 
 	}break;
 	default:
+		break;
+	}
+}
+
+void Engineer1UnitComponent::UpdateAttachment()
+{
+	if (!m_pResourceCollectorComponent) {
+		return;
+	}
+
+	EResourceType type = m_pResourceCollectorComponent->GetCurrentResourceType();
+	switch (type)
+	{
+	case EResourceType::WOOD: {
+		m_pWrenchAttachment->HideAttachment(true);
+		m_pAxeAttachment->HideAttachment(false);
+		m_pPickAxeAttachment->HideAttachment(true);
+	}break;
+	case EResourceType::IRON: {
+		m_pWrenchAttachment->HideAttachment(true);
+		m_pAxeAttachment->HideAttachment(true);
+		m_pPickAxeAttachment->HideAttachment(false);
+	}break;
+	default:
+		m_pWrenchAttachment->HideAttachment(false);
+		m_pAxeAttachment->HideAttachment(true);
+		m_pPickAxeAttachment->HideAttachment(true);
 		break;
 	}
 }

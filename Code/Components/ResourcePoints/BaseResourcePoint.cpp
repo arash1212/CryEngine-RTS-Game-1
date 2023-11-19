@@ -114,3 +114,26 @@ bool BaseResourcePointComponent::HasCollectingLocation()
 	return this->bHasCollectingLocation;
 }
 
+void BaseResourcePointComponent::AddCollector(IEntity* collectorEntity)
+{
+	this->m_collectors.append(collectorEntity);
+}
+
+void BaseResourcePointComponent::RemoveCollector(IEntity* collectorEntity)
+{
+	DynArray<IEntity*> result;
+	for (IEntity* entity : m_collectors) {
+		if (entity != collectorEntity) {
+			result.append(entity);
+		}
+	}
+
+	m_collectors.clear();
+	m_collectors = result;
+}
+
+DynArray<IEntity*> BaseResourcePointComponent::GetCollectors()
+{
+	return m_collectors;
+}
+

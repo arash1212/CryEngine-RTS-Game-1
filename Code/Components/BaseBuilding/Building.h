@@ -117,5 +117,6 @@ public:
 	string GetImagePath();
 
 	void AddBuilder(IEntity* builderEntity);
+	void RemoveBuilder(IEntity* builderEntity);
 	DynArray<IEntity*> GetBuilders();
 };

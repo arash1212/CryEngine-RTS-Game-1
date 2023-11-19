@@ -75,7 +75,7 @@ void PlayerComponent::Initialize()
 {
 	//Camera initialization
 	m_pCameraComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CCameraComponent>();
-	m_pCameraComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), Quat::CreateRotationX(DEG2RAD(-65)), Vec3(0, 0, m_cameraDefaultHeight)));
+	m_pCameraComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), Quat::CreateRotationX(DEG2RAD(-60)), Vec3(0, 0, m_cameraDefaultHeight)));
 
 	//Inputs initialization
 	m_pInputComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CInputComponent>();
@@ -496,7 +496,8 @@ void PlayerComponent::SelectSelectables()
 void PlayerComponent::CommandUnitsToMove(Vec3 position)
 {
 	int32 row = 0, column = 0;
-	for (int32 i = 0; i < m_selectedUnits.size(); i++) {
+	int32 unitsCount = m_selectedUnits.size();
+	for (int32 i = 0; i < unitsCount; i++) {
 		if (!m_selectedUnits[i]) {
 			continue;
 		}
@@ -506,6 +507,10 @@ void PlayerComponent::CommandUnitsToMove(Vec3 position)
 		if (actionManager) {
 			f32 diffX = crymath::abs(position.x - closestUnit->GetWorldPos().x);
 			f32 diffY = crymath::abs(position.y - closestUnit->GetWorldPos().y);
+			int32 rowSize = unitsCount / 2;
+			if (unitsCount < 4) {
+				rowSize = 2;
+			}
 
 			if (diffX > diffY) {
 				//int32 temp = row;
@@ -515,7 +520,7 @@ void PlayerComponent::CommandUnitsToMove(Vec3 position)
 				if (i != 0) {
 					row++;
 				}
-				if (i != 0 && i % 4 == 0) {
+				if (i != 0 && i % rowSize == 0) {
 					column++;
 					row = 0;
 				}
@@ -524,7 +529,7 @@ void PlayerComponent::CommandUnitsToMove(Vec3 position)
 				if (i != 0) {
 					column++;
 				}
-				if (i != 0 && i % 4 == 0) {
+				if (i != 0 && i % rowSize == 0) {
 					row++;
 					column = 0;
 				}
@@ -607,6 +612,7 @@ void PlayerComponent::AssignResourceToEngineers(IEntity* resourceEntity)
 		if (actionManager) {
 			if (resourceEntity) {
 				actionManager->AddAction(new UnitCollectResourceAction(entity, resourceEntity));
+				CryLog("Resource assigned to collector.");
 			}
 		}
 		else {

@@ -164,8 +164,8 @@ void Cave1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 		CommandUnitsToAttack();
 
 		//Timers
-		if (m_attackTimePassed < m_timeBetweenAttacks) {
-			m_attackTimePassed += 0.5f * DeltaTime;
+		if (fAttackTimePassed < fTimeBetweenAttacks) {
+			fAttackTimePassed += 0.5f * DeltaTime;
 		}
 
 		//Add action for spawning zombies
@@ -174,7 +174,7 @@ void Cave1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 			if (!pActionManagerComponent) {
 				return;
 			}
-			pActionManagerComponent->AddAction(new BuildingSpawnZombiesAction(m_pEntity, 40));
+			pActionManagerComponent->AddAction(new BuildingSpawnZombiesAction(m_pEntity, 50));
 			bSpawnZombiesActionAdded = true;
 
 			//Find Hostiles
@@ -198,8 +198,8 @@ void Cave1BuildingComponent::CommandUnitsToAttack()
 		return;
 	}
 
-	if (m_attackTimePassed >= m_timeBetweenAttacks) {
-		if (m_pResourceManagerComponent->GetOwnedEntities().size() >= 4) {
+	if (fAttackTimePassed >= fTimeBetweenAttacks) {
+		if (m_pResourceManagerComponent->GetOwnedEntities().size() >= 10) {
 			int32 unitsCommanded = 0;
 			for (IEntity* entity : m_pResourceManagerComponent->GetOwnedEntities()) {
 				AttackerComponent* pAttackerComponent = entity->GetComponent<AttackerComponent>();
@@ -211,11 +211,11 @@ void Cave1BuildingComponent::CommandUnitsToAttack()
 				ActionManagerComponent* pActionManagerComponent = entity->GetComponent<ActionManagerComponent>();
 				pActionManagerComponent->AddAction(new UnitAttackEnemyBaseAction(entity, m_hostilePlayers[0]));
 
-				if (unitsCommanded >= 4) {
+				if (unitsCommanded >= 10) {
 					break;
 				}
 			}
-			m_attackTimePassed = 0;
+			fAttackTimePassed = 0;
 		}
 	}
 }

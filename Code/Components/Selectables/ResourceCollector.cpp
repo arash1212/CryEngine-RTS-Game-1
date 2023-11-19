@@ -50,6 +50,9 @@ void ResourceCollectorComponent::Initialize()
 	m_pIronAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("iron");
 	m_pBulletAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("bullet");
 	m_pAK47Attachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("ak47");
+
+	m_pRightHandPosAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("RightHandPos");
+	m_pLeftHandPosAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("LeftHandPos");
 }
 
 Cry::Entity::EventFlags ResourceCollectorComponent::GetEventMask() const
@@ -71,6 +74,8 @@ void ResourceCollectorComponent::ProcessEvent(const SEntityEvent& event)
 		//f32 DeltaTime = event.fParam[0];
 
 		UpdateResourceAttachment();
+
+		MoveHandsToHoldingResourcePosition();
 
 	}break;
 	case Cry::Entity::EEvent::Reset: {
@@ -315,12 +320,24 @@ EResourceType ResourceCollectorComponent::GetCurrentResourceType()
 	return m_pCurrentResourceType;
 }
 
-bool ResourceCollectorComponent::CanCollectResource()
+bool ResourceCollectorComponent::CanCollectResource(int32 amountColected)
 {
-	return m_amountResourceCollected < m_maxResouceCanBeCollected;
+	return amountColected < m_maxResouceCanBeCollected;
 }
 
 void ResourceCollectorComponent::EmptyResources()
 {
 	m_amountResourceCollected = 0;
+}
+
+void ResourceCollectorComponent::MoveHandsToHoldingResourcePosition()
+{
+	if (!m_pAnimationComponent) {
+		return;
+	}
+	if (m_amountResourceCollected <= 0) {
+		return;
+	}
+	m_pAnimationComponent->GetCharacter()->GetISkeletonPose()->SetHumanLimbIK(m_pRightHandPosAttachment->GetAttWorldAbsolute().t, "RightHand01");
+	m_pAnimationComponent->GetCharacter()->GetISkeletonPose()->SetHumanLimbIK(m_pLeftHandPosAttachment->GetAttWorldAbsolute().t, "LeftHand01");
 }

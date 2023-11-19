@@ -31,7 +31,7 @@ private:
 
 private:
 	bool IsMoveToPointAvailable();
-	Vec3 GetClosestPointAvailableCloseToBilding();
+	Vec3 GetClosestPointAvailableCloseToBuilding();
 public:
 	virtual void Execute() override;
 	virtual void Cancel() override;

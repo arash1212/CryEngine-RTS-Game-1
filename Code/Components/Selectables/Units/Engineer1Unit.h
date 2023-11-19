@@ -65,7 +65,12 @@ private:
 	//OwnerShip
 	OwnerInfoComponent* m_pOwnerInfoComponent = nullptr;
 
+	//
+	IAttachment* m_pWrenchAttachment = nullptr;
+	IAttachment* m_pAxeAttachment = nullptr;
+	IAttachment* m_pPickAxeAttachment = nullptr;
 private:
+	void UpdateAttachment();
 
 public:
 	static SDescription GetDescription();

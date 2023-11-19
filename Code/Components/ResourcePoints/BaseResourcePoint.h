@@ -41,6 +41,7 @@ protected:
 	IEntity* m_pCurrentCollector = nullptr;
 
 	bool bHasCollectingLocation = false;
+	DynArray<IEntity*> m_collectors;
 public:
 
 	Vec3 GetCollectingLocation();
@@ -59,4 +60,8 @@ public:
 
 	void SetHasCollectingLocation(bool hasCollectingLocation);
 	bool HasCollectingLocation();
+
+	void AddCollector(IEntity* collectorEntity);
+	void RemoveCollector(IEntity* collectorEntity);
+	DynArray<IEntity*> GetCollectors();
 };

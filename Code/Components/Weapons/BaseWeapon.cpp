@@ -118,6 +118,10 @@ void BaseWeaponComponent::ProcessEvent(const SEntityEvent& event)
 			m_MuzzleFlashDeActivationTimePassed += 0.5f * DeltaTime;
 		}
 
+		if (m_projectileSpawnTimePassed < m_timeBetweenSpawningProjectile) {
+			m_projectileSpawnTimePassed += 0.5f * DeltaTime;
+		}
+
 	}break;
 	case Cry::Entity::EEvent::Reset: {
 
@@ -156,13 +160,17 @@ void BaseWeaponComponent::SpawnProjectile(IEntity* target)
 		return;
 	}
 
-	Vec3 origin = this->GetMuzzlePosition();
-	Vec3 dir = target->GetWorldPos() - origin;
-	Quat Rotation = Quat::CreateRotationVDir(dir.normalized());
-	IEntity* projectileEntity = EntityUtils::SpawnEntity(origin, Rotation, nullptr);
-	BulletTracerComponent* bullet = projectileEntity->GetOrCreateComponent<BulletTracerComponent>();
-	bullet->SetOwner(m_pEntity);
-	bullet->SetTarget(target);
+	if (m_projectileSpawnTimePassed > m_timeBetweenSpawningProjectile) {
+		Vec3 origin = this->GetMuzzlePosition();
+		Vec3 dir = target->GetWorldPos() - origin;
+		Quat Rotation = Quat::CreateRotationVDir(dir.normalized());
+		IEntity* projectileEntity = EntityUtils::SpawnEntity(origin, Rotation, nullptr);
+		BulletTracerComponent* bullet = projectileEntity->GetOrCreateComponent<BulletTracerComponent>();
+		bullet->SetOwner(m_pEntity);
+		bullet->SetTarget(target);
+
+		m_projectileSpawnTimePassed = 0;
+	}
 }
 
 bool BaseWeaponComponent::Fire(IEntity* target)

@@ -94,10 +94,13 @@ void Soldier1UnitComponent::Initialize()
 
 	//UnitAnimationComponent Initialization
 	m_pUnitAnimationComponent = m_pEntity->GetOrCreateComponent<UnitAnimationComponent>();
+	DynArray<FragmentID> attackAnimatons;
+	attackAnimatons.append(m_pAnimationComponent->GetFragmentId("Attack1"));
+	m_pUnitAnimationComponent->SetAttackAnimations(attackAnimatons);
 
 	//AttackerComponent Initialization
 	m_pAttackerComponent = m_pEntity->GetOrCreateComponent<AttackerComponent>();
-	m_pAttackerComponent->SetDamageAmount(4.f);
+	m_pAttackerComponent->SetDamageAmount(2.f);
 	//attack info
 	SUnitAttackInfo pAttckInfo;
 	pAttckInfo.m_pAttackType = EAttackType::RANGED;

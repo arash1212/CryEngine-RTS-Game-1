@@ -55,8 +55,8 @@ void WoodResourcePointComponent::Initialize()
 	//Update bounding box
 	AABB aabb;
 	m_pEntity->GetLocalBounds(aabb);
-	Vec3 min = Vec3(aabb.min.x - 1.1f, aabb.min.y - 1.1f, aabb.min.z);
-	Vec3 max = Vec3(aabb.max.x + 1.5f, aabb.max.y + 1, aabb.max.z);
+	Vec3 min = Vec3(aabb.min.x - 1.0f, aabb.min.y - 1.0f, aabb.min.z);
+	Vec3 max = Vec3(aabb.max.x + 1.3f, aabb.max.y + 1, aabb.max.z);
 	AABB newAABB = AABB(min, max);
 	m_pEntity->SetLocalBounds(newAABB, true);
 
