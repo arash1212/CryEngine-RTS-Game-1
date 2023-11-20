@@ -4,7 +4,7 @@
 
 class FlourResource :public IResource {
 private:
-	int32 nPrice = 2;
+	int32 nPrice = 12;
 	string sName = "Flour";
 	string sDescription = "Flour.";
 	string sBuyDescription = "Buy Flour.";

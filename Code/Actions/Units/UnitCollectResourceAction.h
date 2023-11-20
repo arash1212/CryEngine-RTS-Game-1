@@ -28,6 +28,8 @@ private:
 	Vec3 m_movePosition = ZERO;
 	bool bRun = false;
 	bool bResourcesAddedToCollector = false;
+	bool bIsResourcePointAssigned = false;
+
 	int32 nCollectedAmount = 0;
 
 	//Timers

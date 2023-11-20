@@ -221,10 +221,10 @@ void GunPowderFactory1BuildingComponent::UpdateAssignedWorkers()
 SDescription GunPowderFactory1BuildingComponent::GetDescription()
 {
 	SResourceInfo price;
-	price.m_moneyAmount = 300;
-	price.m_oilAmount = 600;
-	price.m_ironAmount = 800;
-	price.m_woodAmount = 300;
+	price.m_moneyAmount = 100;
+	price.m_oilAmount = 200;
+	price.m_ironAmount = 300;
+	price.m_woodAmount = 100;
 
 	SDescription m_pDescription;
 	m_pDescription.sName = "GunPowder Factory 1";

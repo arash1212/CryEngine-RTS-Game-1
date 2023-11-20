@@ -213,7 +213,7 @@ void AK47Factory1BuildingComponent::UpdateAssignedWorkers()
 SDescription AK47Factory1BuildingComponent::GetDescription()
 {
 	SResourceInfo price;
-	price.m_moneyAmount = 400;
+	price.m_moneyAmount = 150;
 	price.m_oilAmount = 400;
 	price.m_woodAmount = 800;
 	price.m_ironAmount = 700;

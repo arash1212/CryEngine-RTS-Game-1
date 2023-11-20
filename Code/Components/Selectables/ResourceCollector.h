@@ -52,7 +52,7 @@ private :
 
 private:
 	int32 m_amountResourceCollected = 0;
-	int32 m_maxResouceCanBeCollected = 10;
+	int32 m_maxResouceCanBeCollected = 30;
 
 private:
 	void UpdateResourceAttachment();

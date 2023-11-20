@@ -69,16 +69,16 @@ void ResourceManagerComponent::ProcessEvent(const SEntityEvent& event)
 
 			//Set Resources Amount
 			m_pResouceInfo.m_moneyAmount = 1500;
-			m_pResouceInfo.m_oilAmount = 1000;
+			m_pResouceInfo.m_oilAmount = 1500;
 			m_pResouceInfo.m_populationAmount = 20;
 			m_pResouceInfo.m_populationUsed = 0;
 			m_pResouceInfo.m_wheatAmount = 100;
 			m_pResouceInfo.m_flourAmount = 50;
-			m_pResouceInfo.m_woodAmount = 1000;
+			m_pResouceInfo.m_woodAmount = 2000;
 			m_pResouceInfo.m_breadAmount = 50;
 			m_pResouceInfo.m_sulfurAmount = 50;
 			m_pResouceInfo.m_gunPowderAmount = 90;
-			m_pResouceInfo.m_ironAmount = 1000;
+			m_pResouceInfo.m_ironAmount = 2000;
 			m_pResouceInfo.m_bulletAmount = 100;
 			m_pResouceInfo.m_ak47Amount = 10;
 

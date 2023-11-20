@@ -221,10 +221,10 @@ void BulletFactory1BuildingComponent::UpdateAssignedWorkers()
 SDescription BulletFactory1BuildingComponent::GetDescription()
 {
 	SResourceInfo price;
-	price.m_moneyAmount = 400;
-	price.m_oilAmount = 400;
-	price.m_woodAmount = 900;
-	price.m_ironAmount = 800;
+	price.m_moneyAmount = 170;
+	price.m_oilAmount = 200;
+	price.m_woodAmount = 200;
+	price.m_ironAmount = 400;
 
 	SDescription m_pDescription;
 	m_pDescription.sName = "Bullet Factory 1";

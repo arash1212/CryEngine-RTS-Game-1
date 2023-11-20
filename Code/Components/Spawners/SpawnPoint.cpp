@@ -88,4 +88,7 @@ void SpawnPointComponent::SpawnPlayerHQBuilding(IEntity* owner)
 	//pHqBuildingEntity->GetComponent<BuildingComponent>()->Place(pHqBuildingEntity->GetWorldPos());
 	pHqBuildingEntity->GetComponent<BuildingComponent>()->SetBuilt();
 
+	position.y -= 18;
+	m_pPlayerEntity->SetPos(position);
+
 }

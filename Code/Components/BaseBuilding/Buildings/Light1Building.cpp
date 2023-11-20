@@ -153,9 +153,9 @@ void Light1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 SDescription Light1BuildingComponent::GetDescription()
 {
 	SResourceInfo price;
-	price.m_moneyAmount = 100;
+	price.m_moneyAmount = 50;
 	price.m_populationAmount = 0;
-	price.m_ironAmount = 300;
+	price.m_ironAmount = 100;
 
 	SDescription m_pDescription;
 	m_pDescription.sName = "Light 1";

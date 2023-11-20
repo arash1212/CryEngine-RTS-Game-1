@@ -144,7 +144,7 @@ void Barracks1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 SDescription Barracks1BuildingComponent::GetDescription()
 {
 	SResourceInfo price;
-	price.m_moneyAmount = 250;
+	price.m_moneyAmount = 100;
 	price.m_oilAmount = 0;
 	price.m_populationAmount = 0;
 	price.m_ironAmount = 500;

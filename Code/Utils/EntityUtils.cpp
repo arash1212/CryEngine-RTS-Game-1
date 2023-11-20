@@ -7,6 +7,7 @@
 #include <CryAISystem/NavigationSystem/INavigationUpdatesManager.h>
 #include <Components/BaseBuilding/Building.h>
 #include <Components/Effects/BulletTracer.h>
+#include <Components/ResourcePoints/BaseResourcePoint.h>
 
 #include <Utils/MathUtils.h>
 
@@ -122,6 +123,11 @@ f32 EntityUtils::GetDistance(Vec3 from, Vec3 to, IEntity* toEntity)
 	}
 }
 
+f32 EntityUtils::GetDistance(Vec3 from, Vec3 to)
+{
+	return from.GetDistance(to);
+}
+
 Vec3 EntityUtils::GetClosetPointOnMeshBorder(Vec3 from, IEntity* entity)
 {
 	if (entity) {
@@ -201,8 +207,8 @@ Vec3 EntityUtils::GetRandomPointOnMeshBorder(IEntity* entity)
 	AABB aabb;
 	entity->GetWorldBounds(aabb);
 
-	f32 diffX = aabb.max.x - aabb.GetCenter().x;
-	f32 diffY = aabb.max.y - aabb.GetCenter().y;
+	f32 diffX = crymath::abs(aabb.max.x - aabb.GetCenter().x);
+	f32 diffY = crymath::abs(aabb.max.y - aabb.GetCenter().y);
 
 
 	Vec3 result = entity->GetWorldPos();
@@ -307,5 +313,23 @@ DynArray<IEntity*> EntityUtils::FindHostilePlayers(IEntity* to)
 		}
 	}
 	return m_hostilePlayers;
+}
+
+IEntity* EntityUtils::FindAvailableResourcePointOfType(EResourceType type, IEntity* collector)
+{
+	IEntityItPtr entityItPtr = gEnv->pEntitySystem->GetEntityIterator();
+	entityItPtr->MoveFirst();
+
+	DynArray<IEntity*> points;
+	while (!entityItPtr->IsEnd()) {
+		IEntity* entity = entityItPtr->Next();
+		if (entity) {
+			BaseResourcePointComponent* pResourcePointComponent = entity->GetComponent<BaseResourcePointComponent>();
+			if (pResourcePointComponent && pResourcePointComponent->GetType() == type && !pResourcePointComponent->IsCollectorsSlotsFull()) {
+				points.append(entity);
+			}
+		}
+	}
+	return GetClosestEntity(points, collector->GetWorldPos());
 }
 

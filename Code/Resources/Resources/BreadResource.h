@@ -4,7 +4,7 @@
 
 class BreadResource : public IResource {
 private:
-	int32 nPrice = 3;
+	int32 nPrice = 15;
 	string sName = "Bread";
 	string sDescription = "Bread.";
 	string sBuyDescription = "Buy Bread.";

@@ -4,7 +4,7 @@
 
 class AK47Resource :public IResource {
 private:
-	int32 nPrice = 10;
+	int32 nPrice = 50;
 	string sName = "AK47";
 	string sDescription = "AK47.";
 	string sBuyDescription = "Buy AK47.";

@@ -25,8 +25,6 @@ UnitCollectResourceAction::UnitCollectResourceAction(IEntity* entity, IEntity* r
 	this->m_pAnimationComponent = m_pEntity->GetComponent<UnitAnimationComponent>();
 	this->m_pResourceCollectorComponent = m_pEntity->GetComponent<ResourceCollectorComponent>();
 
-	this->m_pResourcePointComponent->AddCollector(m_pEntity);
-
 	fCollectingTimePassed = this->m_pEngineerComponent->GetEngineerInfo().m_timeBetweenCollecting;
 
 	m_movePosition = EntityUtils::GetClosetPointOnMeshBorder(m_pEntity->GetWorldPos(), m_pResourcePointEntity);
@@ -56,6 +54,18 @@ void UnitCollectResourceAction::Execute()
 		return;
 	}
 
+	if (m_pResourcePointComponent->IsCollectorsSlotsFull() && !bIsResourcePointAssigned) {
+		m_pResourcePointEntity = EntityUtils::FindAvailableResourcePointOfType(m_pResourcePointComponent->GetType(), m_pEntity);
+		if (m_pResourcePointEntity) {
+			m_pResourcePointComponent = m_pResourcePointEntity->GetComponent<BaseResourcePointComponent>();
+		}
+		return;
+	}
+	else if (!m_pResourcePointComponent->IsCollectorsSlotsFull() && !bIsResourcePointAssigned) {
+		this->m_pResourcePointComponent->AddCollector(m_pEntity);
+		bIsResourcePointAssigned = true;
+	}
+
 	//Timer
 	if (fCollectingTimePassed < m_pEngineerComponent->GetEngineerInfo().m_timeBetweenCollecting) {
 		fCollectingTimePassed += 0.5f * gEnv->pTimer->GetFrameTime();
@@ -71,7 +81,8 @@ void UnitCollectResourceAction::Execute()
 		distanceToResource = EntityUtils::GetDistance(m_pEntity->GetWorldPos(), m_pResourcePointComponent->GetCollectingLocation(), nullptr);
 	}
 	else {
-		distanceToResource = EntityUtils::GetDistance(m_pEntity->GetWorldPos(), EntityUtils::GetClosetPointOnMeshBorder(m_pEntity->GetWorldPos(), m_pResourcePointEntity), nullptr);
+		//distanceToResource = EntityUtils::GetDistance(m_pEntity->GetWorldPos(), EntityUtils::GetClosetPointOnMeshBorder(m_pEntity->GetWorldPos(), m_pResourcePointEntity), nullptr);
+		distanceToResource = EntityUtils::GetDistance(m_pEntity->GetWorldPos(), m_movePosition);
 	}
 
 	if (distanceToResource <= m_pEngineerComponent->GetEngineerInfo().m_maxBuildDistance && m_pResourceCollectorComponent->CanCollectResource(nCollectedAmount)) {
@@ -103,8 +114,10 @@ void UnitCollectResourceAction::Execute()
 		this->m_pResourcePointComponent->SetCurrentCollector(m_pEntity);
 	}
 	else if (distanceToResource > m_pEngineerComponent->GetEngineerInfo().m_maxBuildDistance && m_pResourceCollectorComponent->CanCollectResource(nCollectedAmount)) {
+		m_movePosition = GetClosestPointAvailableCloseToBuilding();
+
 		if (!m_pResourcePointComponent->HasCollectingLocation() || m_pResourcePointComponent->HasCollectingLocation()&& m_pResourcePointComponent->IsSingleUse() && m_pResourcePointComponent->IsInUse() && m_pResourcePointComponent->GetCurrentCollector()->GetId() != m_pEntity->GetId()) {
-			this->m_pAiControllerComponent->MoveTo(GetClosestPointAvailableCloseToBuilding(), true);
+			this->m_pAiControllerComponent->MoveTo(m_movePosition, true);
 			this->m_pAiControllerComponent->LookAtWalkDirection();
 		}
 		else {
@@ -174,7 +187,7 @@ bool UnitCollectResourceAction::IsMoveToPointAvailable()
 		}
 
 		f32 distanceToBuilder = m_movePosition.GetDistance(builder->GetWorldPos());
-		if (distanceToBuilder <= 1) {
+		if (distanceToBuilder <= 1.0f) {
 			return false;
 		}
 	}
@@ -183,8 +196,10 @@ bool UnitCollectResourceAction::IsMoveToPointAvailable()
 
 Vec3 UnitCollectResourceAction::GetClosestPointAvailableCloseToBuilding()
 {
+	// || distanceToMovePos <= 1 && !IsMoveToPointAvailable()
+	//f32 distanceToMovePos = m_pEntity->GetWorldPos().GetDistance(m_movePosition);
 	if (IsMoveToPointAvailable() && m_pAiControllerComponent->IsDestinationReachable(m_movePosition)) {
-		return m_movePosition;
+		//return m_movePosition;
 	}
 	return EntityUtils::GetRandomPointOnMeshBorder(m_pResourcePointEntity);
 }

@@ -173,10 +173,10 @@ void Warehouse1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 SDescription Warehouse1BuildingComponent::GetDescription()
 {
 	SResourceInfo price;
-	price.m_moneyAmount = 100;
+	price.m_moneyAmount = 40;
 	price.m_populationAmount = 0;
-	price.m_ironAmount = 400;
-	price.m_woodAmount = 400;
+	price.m_ironAmount = 100;
+	price.m_woodAmount = 100;
 
 	SDescription m_pDescription;
 	m_pDescription.sName = "Warehouse 1";

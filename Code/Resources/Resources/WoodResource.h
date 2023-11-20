@@ -4,7 +4,7 @@
 
 class WoodResource :public IResource {
 private:
-	int32 nPrice = 1;
+	int32 nPrice = 11;
 	string sName = "Wood";
 	string sDescription = "Wood.";
 	string sBuyDescription = "Buy Wheat.";

@@ -272,7 +272,7 @@ void GaurdTower1BuildingComponent::Place(Vec3 at)
 SDescription GaurdTower1BuildingComponent::GetDescription()
 {
 	SResourceInfo price;
-	price.m_moneyAmount = 150;
+	price.m_moneyAmount = 80;
 	price.m_oilAmount = 0;
 	price.m_populationAmount = 0;
 	price.m_ironAmount = 200;

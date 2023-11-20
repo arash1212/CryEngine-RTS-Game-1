@@ -204,10 +204,10 @@ void Alchemy1BuildingComponent::UpdateAssignedWorkers()
 SDescription Alchemy1BuildingComponent::GetDescription()
 {
 	SResourceInfo price;
-	price.m_moneyAmount = 450;
-	price.m_oilAmount = 500;
-	price.m_woodAmount = 400;
-	price.m_ironAmount = 800;
+	price.m_moneyAmount = 150;
+	price.m_oilAmount = 200;
+	price.m_woodAmount = 200;
+	price.m_ironAmount = 400;
 
 	SDescription m_pDescription;
 	m_pDescription.sName = "Alchemy 1";

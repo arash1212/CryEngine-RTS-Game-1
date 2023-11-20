@@ -42,6 +42,8 @@ protected:
 
 	bool bHasCollectingLocation = false;
 	DynArray<IEntity*> m_collectors;
+
+	int32 nMaxCollectorsCount = 5;
 public:
 
 	Vec3 GetCollectingLocation();
@@ -64,4 +66,8 @@ public:
 	void AddCollector(IEntity* collectorEntity);
 	void RemoveCollector(IEntity* collectorEntity);
 	DynArray<IEntity*> GetCollectors();
+
+	void SetMaxCollectorsCount(int32 maxCount);
+	int32 GetMaxCollectorsCount();
+	bool IsCollectorsSlotsFull();
 };

@@ -174,7 +174,7 @@ void Cave1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 			if (!pActionManagerComponent) {
 				return;
 			}
-			pActionManagerComponent->AddAction(new BuildingSpawnZombiesAction(m_pEntity, 50));
+			pActionManagerComponent->AddAction(new BuildingSpawnZombiesAction(m_pEntity, 30));
 			bSpawnZombiesActionAdded = true;
 
 			//Find Hostiles
@@ -199,7 +199,7 @@ void Cave1BuildingComponent::CommandUnitsToAttack()
 	}
 
 	if (fAttackTimePassed >= fTimeBetweenAttacks) {
-		if (m_pResourceManagerComponent->GetOwnedEntities().size() >= 10) {
+		if (m_pResourceManagerComponent->GetOwnedEntities().size() >= 5) {
 			int32 unitsCommanded = 0;
 			for (IEntity* entity : m_pResourceManagerComponent->GetOwnedEntities()) {
 				AttackerComponent* pAttackerComponent = entity->GetComponent<AttackerComponent>();
@@ -211,7 +211,7 @@ void Cave1BuildingComponent::CommandUnitsToAttack()
 				ActionManagerComponent* pActionManagerComponent = entity->GetComponent<ActionManagerComponent>();
 				pActionManagerComponent->AddAction(new UnitAttackEnemyBaseAction(entity, m_hostilePlayers[0]));
 
-				if (unitsCommanded >= 10) {
+				if (unitsCommanded >= 5) {
 					break;
 				}
 			}

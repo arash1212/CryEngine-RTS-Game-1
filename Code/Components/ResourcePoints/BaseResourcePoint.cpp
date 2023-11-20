@@ -137,3 +137,18 @@ DynArray<IEntity*> BaseResourcePointComponent::GetCollectors()
 	return m_collectors;
 }
 
+void BaseResourcePointComponent::SetMaxCollectorsCount(int32 maxCount)
+{
+	this->nMaxCollectorsCount = maxCount;
+}
+
+int32 BaseResourcePointComponent::GetMaxCollectorsCount()
+{
+	return nMaxCollectorsCount;
+}
+
+bool BaseResourcePointComponent::IsCollectorsSlotsFull()
+{
+	return m_collectors.size() >= nMaxCollectorsCount;
+}
+

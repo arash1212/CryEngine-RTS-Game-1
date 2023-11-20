@@ -42,12 +42,12 @@ void AIControllerComponent::Initialize()
 	m_movementProps.normalSpeed = 4.f;
 	m_movementProps.minSpeed = 3.5;
 	m_movementProps.maxSpeed = 5;
-	m_movementProps.lookAheadDistance = 0.5f;
+	m_movementProps.lookAheadDistance = 1.0f;
 	m_pNavigationComponent->SetMovementProperties(m_movementProps);
 
 	//Collision avoidance
 	IEntityNavigationComponent::SCollisionAvoidanceProperties collisionAvoidanceProps;
-	collisionAvoidanceProps.radius = 0.2f;
+	collisionAvoidanceProps.radius = 0.02f;
 	m_pNavigationComponent->SetCollisionAvoidanceProperties(collisionAvoidanceProps);
 
 	//StateManager initialization

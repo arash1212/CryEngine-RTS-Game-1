@@ -75,7 +75,7 @@ void PlayerComponent::Initialize()
 {
 	//Camera initialization
 	m_pCameraComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CCameraComponent>();
-	m_pCameraComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), Quat::CreateRotationX(DEG2RAD(-60)), Vec3(0, 0, m_cameraDefaultHeight)));
+	m_pCameraComponent->SetTransformMatrix(Matrix34::Create(Vec3(1), Quat::CreateRotationXYZ(Ang3(DEG2RAD(-55), 0, DEG2RAD(0))), Vec3(0, 0, m_cameraDefaultHeight)));
 
 	//Inputs initialization
 	m_pInputComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CInputComponent>();

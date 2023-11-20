@@ -215,10 +215,10 @@ void Bakery1BuildingComponent::ResetWorkersJob()
 SDescription Bakery1BuildingComponent::GetDescription()
 {
 	SResourceInfo price;
-	price.m_moneyAmount = 300;
-	price.m_oilAmount = 300;
-	price.m_woodAmount = 700;
-	price.m_ironAmount = 500;
+	price.m_moneyAmount = 80;
+	price.m_oilAmount = 100;
+	price.m_woodAmount = 300;
+	price.m_ironAmount = 200;
 	price.m_bulletAmount = 0;
 
 	SDescription m_pDescription;

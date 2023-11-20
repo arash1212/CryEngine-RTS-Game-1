@@ -46,6 +46,7 @@ void IronResourcePointComponent::Initialize()
 	SetType(EResourceType::IRON);
 	SetIsSingleUse(false);
 	SetHasCollectingLocation(false);
+	SetMaxCollectorsCount(10);
 
 	//BoxComponent Initialization
 	m_pBboxComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CBoxPrimitiveComponent>();
@@ -55,8 +56,8 @@ void IronResourcePointComponent::Initialize()
 	//Update bounding box
 	AABB aabb;
 	m_pEntity->GetLocalBounds(aabb);
-	Vec3 min = Vec3(aabb.min.x - 1.8f, aabb.min.y - 1.8f, aabb.min.z);
-	Vec3 max = Vec3(aabb.max.x + 1.8f, aabb.max.y + 1.6f, aabb.max.z);
+	Vec3 min = Vec3(aabb.min.x - 2.5f, aabb.min.y - 2.f, aabb.min.z);
+	Vec3 max = Vec3(aabb.max.x + 5.f, aabb.max.y + 3.f, aabb.max.z);
 	AABB newAABB = AABB(min, max);
 	m_pEntity->SetLocalBounds(newAABB, true);
 
@@ -66,11 +67,6 @@ void IronResourcePointComponent::Initialize()
 	//SelectableComponent Initialization
 	m_pSelectableComponent = m_pEntity->GetOrCreateComponent<SelectableComponent>();
 	m_pSelectableComponent->SetIsBuilding(true);
-
-	//CollectingLocationAttachment Initialization
-	if (bHasCollectingLocation) {
-		m_pCollectingLocationAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("collectingLocation");
-	}
 
 	//Physicalize
 	SEntityPhysicalizeParams physParams;

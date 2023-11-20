@@ -56,7 +56,7 @@ void WoodResourcePointComponent::Initialize()
 	AABB aabb;
 	m_pEntity->GetLocalBounds(aabb);
 	Vec3 min = Vec3(aabb.min.x - 1.0f, aabb.min.y - 1.0f, aabb.min.z);
-	Vec3 max = Vec3(aabb.max.x + 1.3f, aabb.max.y + 1, aabb.max.z);
+	Vec3 max = Vec3(aabb.max.x + 1.5f, aabb.max.y + 1.5f, aabb.max.z);
 	AABB newAABB = AABB(min, max);
 	m_pEntity->SetLocalBounds(newAABB, true);
 
@@ -66,11 +66,6 @@ void WoodResourcePointComponent::Initialize()
 	//SelectableComponent Initialization
 	m_pSelectableComponent = m_pEntity->GetOrCreateComponent<SelectableComponent>();
 	m_pSelectableComponent->SetIsBuilding(true);
-
-	//CollectingLocationAttachment Initialization
-	if (bHasCollectingLocation) {
-		m_pCollectingLocationAttachment = m_pAnimationComponent->GetCharacter()->GetIAttachmentManager()->GetInterfaceByName("collectingLocation");
-	}
 
 	//Physicalize
 	SEntityPhysicalizeParams physParams;

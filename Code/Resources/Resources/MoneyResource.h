@@ -4,7 +4,7 @@
 
 class MoneyResource :public IResource {
 private:
-	int32 nPrice = 1;
+	int32 nPrice = 11;
 	string sName = "Money";
 	string sDescription = "Money.";
 	string sBuyDescription = "Buy Money.";

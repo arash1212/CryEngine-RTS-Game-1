@@ -205,9 +205,9 @@ void Windmill1BuildingComponent::UpdateAssignedWorkers()
 SDescription Windmill1BuildingComponent::GetDescription()
 {
 	SResourceInfo price;
-	price.m_moneyAmount = 350;
+	price.m_moneyAmount = 150;
 	price.m_oilAmount = 200;
-	price.m_woodAmount = 700;
+	price.m_woodAmount = 300;
 
 	SDescription m_pDescription;
 	m_pDescription.sName = "Windmill 1";

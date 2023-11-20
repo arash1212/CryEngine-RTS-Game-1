@@ -180,9 +180,11 @@ void HealthComponent::UpdateProgressAmount()
 
 void HealthComponent::ApplyDamage(f32 damage)
 {
+	if (m_pBloodParticleComponent) {
+		this->m_pBloodParticleComponent->Activate(true);
+	}
 	this->m_currentHealth = CLAMP(m_currentHealth - damage, 0, m_maxHealth);
 	this->fHealthbarHidingTimePassed = 0;
-	this->m_pBloodParticleComponent->Activate(true);
 	fBloodParticleRestartTimePassed = 0;
 }
 

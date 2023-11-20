@@ -337,7 +337,7 @@ void Farm1BuildingComponent::UpdateAssignedWorkers()
 SDescription Farm1BuildingComponent::GetDescription()
 {
 	SResourceInfo price;
-	price.m_moneyAmount = 250;
+	price.m_moneyAmount = 90;
 	price.m_oilAmount = 100;
 	price.m_woodAmount = 500;
 	price.m_ironAmount = 300;
