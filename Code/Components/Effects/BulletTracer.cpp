@@ -105,7 +105,7 @@ void BulletTracerComponent::Move()
 	if (auto* pPhysics = GetEntity()->GetPhysics())
 	{
 		pe_action_impulse impulseAction;
-		const float initialVelocity = 100.f;
+		const float initialVelocity = 400.f;
 		impulseAction.impulse = GetEntity()->GetWorldRotation().GetColumn1() * initialVelocity;
 
 		pPhysics->Action(&impulseAction);

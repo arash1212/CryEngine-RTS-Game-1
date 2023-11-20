@@ -135,6 +135,34 @@ void UIInfoPanelComponent::SetMainIconText(string text)
 	m_pInfoPanelUIElement->CallFunction("SetMainIconText", args);
 }
 
+void UIInfoPanelComponent::SetCircleBarProgress(int32 index, f32 amount)
+{
+	if (!m_pInfoPanelUIElement) {
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "UIInfoPanelComponent : (SetCirclBarProgress) InfoPanelUIElement is null !");
+		return;
+	}
+
+	SUIArguments args;
+	args.AddArgument(index);
+	args.AddArgument(amount);
+
+	m_pInfoPanelUIElement->CallFunction("SetCircleBarProgress", args);
+}
+
+void UIInfoPanelComponent::SetProgressAmount(int32 index, f32 amount)
+{
+	if (!m_pInfoPanelUIElement) {
+		CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "UIInfoPanelComponent : (SetCirclBarProgress) InfoPanelUIElement is null !");
+		return;
+	}
+
+	SUIArguments args;
+	args.AddArgument(index);
+	args.AddArgument(amount);
+
+	m_pInfoPanelUIElement->CallFunction("SetProgressAmount", args);
+}
+
 void UIInfoPanelComponent::ExecuteItem(int32 index)
 {
 	m_items[index]->Execute();

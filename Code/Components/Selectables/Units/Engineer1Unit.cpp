@@ -133,7 +133,7 @@ void Engineer1UnitComponent::Initialize()
 	m_pEngineerComponent = m_pEntity->GetOrCreateComponent<EngineerComponent>();
 	//engineer info
 	SEngineerInfo engineerInfo;
-	engineerInfo.m_maxBuildDistance = 0.4f;
+	engineerInfo.m_maxBuildDistance = 0.9f;
 	engineerInfo.m_timeBetweenBuilds = 1.f;
 	m_pEngineerComponent->SetEngineerInfo(engineerInfo);
 

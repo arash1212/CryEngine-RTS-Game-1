@@ -18,7 +18,7 @@ private:
 
 	f32 m_processAmount = 0.f;
 	//Timer
-	f32 m_timeBetweenProcess = 0.5f;
+	f32 m_timeBetweenProcess = 0.05f;
 	f32 m_ProcessTimePassesd = 0.0f;
 
 public:

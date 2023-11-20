@@ -35,7 +35,7 @@ void TrainSoldier1Action::Execute()
 		m_ProcessTimePassesd += 0.5f * gEnv->pTimer->GetFrameTime();
 	}
 	else {
-		m_processAmount += 10.f;
+		m_processAmount += 1.f;
 		m_ProcessTimePassesd = 0;
 	}
 	if (m_processAmount < GetMaxProgressAmount()) {

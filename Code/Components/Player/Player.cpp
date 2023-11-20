@@ -976,6 +976,7 @@ void PlayerComponent::UpdateInfoPanel()
 		//update action progress
 		for (int32 i = 0; i < pActionManagerComponet->GetActionsQueue().size(); i++) {
 			m_pUIInfoPanelComponent->SetCount(i, (int)pActionManagerComponet->GetActionsQueue()[i]->GetProgressAmount());
+			m_pUIInfoPanelComponent->SetProgressAmount(i, pActionManagerComponet->GetActionsQueue()[i]->GetProgressAmount() / pActionManagerComponet->GetActionsQueue()[i]->GetMaxProgressAmount());
 		}
 
 		if (m_lastMainIconHealthAmount != pHealthComponent->GetCurrentHealth()) {

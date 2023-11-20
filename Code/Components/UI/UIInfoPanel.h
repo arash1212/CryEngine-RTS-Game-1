@@ -36,6 +36,8 @@ public:
 	void SetCount(int32 index, int32 count);
 	void SetMainIcon(string imagePath);
 	void SetMainIconText(string text);
+	void SetCircleBarProgress(int32 index, f32 amount);
+	void SetProgressAmount(int32 index, f32 amount);
 
 	void ExecuteItem(int32 index);
 
