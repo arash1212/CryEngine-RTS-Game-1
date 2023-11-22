@@ -86,7 +86,7 @@ void House1BuildingComponent::Initialize()
 	//Update bounding box
 	AABB aabb;
 	m_pEntity->GetLocalBounds(aabb);
-	Vec3 min = Vec3(aabb.min.x - 2.1f, aabb.min.y - 2.7f, aabb.min.z - 2);
+	Vec3 min = Vec3(aabb.min.x - 2.1f, aabb.min.y - 2.7f, aabb.min.z - 1.2f);
 	Vec3 max = Vec3(aabb.max.x + 3.1f, aabb.max.y + 2.9f, aabb.max.z);
 	AABB newAABB = AABB(min, max);
 	m_pEntity->SetLocalBounds(newAABB, true);

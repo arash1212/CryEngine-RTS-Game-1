@@ -115,7 +115,7 @@ void Warehouse1BuildingComponent::Initialize()
 	//Update bounding box
 	AABB aabb;
 	m_pEntity->GetLocalBounds(aabb);
-	Vec3 min = Vec3(aabb.min.x - 4.0f, aabb.min.y - 4, aabb.min.z - 2);
+	Vec3 min = Vec3(aabb.min.x - 4.0f, aabb.min.y - 4, aabb.min.z - 0.8f);
 	Vec3 max = Vec3(aabb.max.x + 4.1f, aabb.max.y + 4.f, aabb.max.z);;
 	AABB newAABB = AABB(min, max);
 	m_pEntity->SetLocalBounds(newAABB, true);

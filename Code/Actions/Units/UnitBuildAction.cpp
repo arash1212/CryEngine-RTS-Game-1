@@ -100,12 +100,16 @@ f32 UnitBuildAction::GetMaxProgressAmount()
 bool UnitBuildAction::IsMoveToPointAvailable()
 {
 	for (IEntity* builder : m_pBuildingComponent->GetBuilders()) {
-		if (builder == m_pEntity) {
+		if (builder == m_pEntity || !builder) {
 			continue;
+		}
+		f32 distanceToBuilding = m_movePosition.GetDistance(m_pBuildingEntity->GetWorldPos());
+		if (distanceToBuilding > m_pEngineerComponent->GetEngineerInfo().m_maxBuildDistance) {
+			return false;
 		}
 
 		f32 distanceToBuilder = m_movePosition.GetDistance(builder->GetWorldPos());
-		if (distanceToBuilder <= 1) {
+		if (distanceToBuilder <= 0.5f) {
 			return false;
 		}
 	}

@@ -32,7 +32,7 @@ void AIControllerComponent::Initialize()
 {
 	//CharacterController component initialization
 	m_pCharacterControllerComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CCharacterControllerComponent>();
-	m_pCharacterControllerComponent->SetTransformMatrix(Matrix34::Create(Vec3(0.1f), IDENTITY, Vec3(0, 0, 1)));
+	m_pCharacterControllerComponent->SetTransformMatrix(Matrix34::Create(Vec3(0.01f), IDENTITY, Vec3(0, 0, 1)));
 
 	//Navigation component initializations
 	m_pNavigationComponent = m_pEntity->GetOrCreateComponent<IEntityNavigationComponent>();
@@ -42,12 +42,14 @@ void AIControllerComponent::Initialize()
 	m_movementProps.normalSpeed = 4.f;
 	m_movementProps.minSpeed = 3.5;
 	m_movementProps.maxSpeed = 5;
-	m_movementProps.lookAheadDistance = 1.0f;
+	m_movementProps.lookAheadDistance = 0.1f;
+	m_movementProps.bStopAtEnd = true;
+	m_movementProps.maxDeceleration = 12;
 	m_pNavigationComponent->SetMovementProperties(m_movementProps);
 
 	//Collision avoidance
 	IEntityNavigationComponent::SCollisionAvoidanceProperties collisionAvoidanceProps;
-	collisionAvoidanceProps.radius = 0.02f;
+	collisionAvoidanceProps.radius = 0.2f;
 	m_pNavigationComponent->SetCollisionAvoidanceProperties(collisionAvoidanceProps);
 
 	//StateManager initialization
@@ -76,6 +78,10 @@ void AIControllerComponent::ProcessEvent(const SEntityEvent& event)
 		f32 DeltaTime = event.fParam[0];
 
 		Move(DeltaTime);
+
+		if (bIsStopped) {
+			m_moveToPosition = m_pEntity->GetWorldPos();
+		}
 	}break;
 	case Cry::Entity::EEvent::Reset: {
 		m_moveToPosition = m_pEntity->GetWorldPos();
@@ -112,7 +118,7 @@ bool AIControllerComponent::MoveTo(Vec3 position, bool run)
 	}
 	if (!m_pNavigationComponent->IsDestinationReachable(position)) {
 		//CryWarning(VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, "AIControllerComponent : (MoveTo) Destination is not reachable !");
-		return false;
+		//return false;
 	}
 	if (run) {
 		m_pStateManager->SetStance(EUnitStance::RUNNING);
@@ -120,6 +126,7 @@ bool AIControllerComponent::MoveTo(Vec3 position, bool run)
 
 	//this->SnapToNavmesh() ?
 	m_moveToPosition = this->SnapToNavmesh(position);
+	bIsStopped = false;
 	return true;
 }
 
@@ -155,11 +162,12 @@ Vec3 AIControllerComponent::SnapToNavmesh(Vec3 point)
 
 void AIControllerComponent::StopMoving()
 {
-	this->m_pCharacterControllerComponent->SetVelocity(ZERO);
-	this->m_pCharacterControllerComponent->ChangeVelocity(ZERO, Cry::DefaultComponents::CCharacterControllerComponent::EChangeVelocityMode::Jump);
-	this->m_moveToPosition = m_pEntity->GetWorldPos();
+	//this->m_moveToPosition = m_pEntity->GetWorldPos();
+	//this->m_pCharacterControllerComponent->SetVelocity(ZERO);
+	//this->m_pCharacterControllerComponent->ChangeVelocity(ZERO, Cry::DefaultComponents::CCharacterControllerComponent::EChangeVelocityMode::SetAsTarget);
 	//this->m_pStateManager->SetStance(EUnitStance::WALKING);
 	//this->MoveTo(m_pEntity->GetWorldPos(), false);
+	bIsStopped = true;
 }
 
 void AIControllerComponent::LookAtWalkDirection()

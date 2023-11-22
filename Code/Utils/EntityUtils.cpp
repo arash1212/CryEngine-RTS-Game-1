@@ -207,18 +207,46 @@ Vec3 EntityUtils::GetRandomPointOnMeshBorder(IEntity* entity)
 	AABB aabb;
 	entity->GetWorldBounds(aabb);
 
-	f32 diffX = crymath::abs(aabb.max.x - aabb.GetCenter().x);
-	f32 diffY = crymath::abs(aabb.max.y - aabb.GetCenter().y);
+	f32 diffX = crymath::abs(aabb.max.x - aabb.min.x);
+	f32 diffY = crymath::abs(aabb.max.y - aabb.min.y);
 
 
-	Vec3 result = entity->GetWorldPos();
-	result.x = (aabb.GetCenter().x + MathUtils::GetRandomFloat(-diffX, diffX));
-	result.y = (aabb.GetCenter().y + MathUtils::GetRandomFloat(-diffY, diffY));
+	Vec3 result = aabb.min;
+	//result.x = (aabb.GetCenter().x + MathUtils::GetRandomFloat(-diffX, diffX));
+	//result.y = (aabb.GetCenter().y + MathUtils::GetRandomFloat(-diffY, diffY));
 
 	IPersistantDebug* pd = gEnv->pGameFramework->GetIPersistantDebug();
 	pd->Begin("testset2342424", true);
-	pd->AddSphere(result, 0.5f, ColorF(0, 0, 1), 5.5f);
 
+	//f32 minX = aabb.min.x;
+	//f32 maxX = aabb.max.x;
+	//f32 minY = aabb.min.y;
+	//f32 maxY = aabb.max.y;
+	
+	int32 n = MathUtils::GetRandomInt(1, 4);
+	//X
+	if (n == 1) {
+		//f32 xPos = minX;
+		result.y = aabb.min.y;
+		result.x += MathUtils::GetRandomFloat(0, diffX);
+	}
+	else if (n == 2) {
+		//f32 xPos = minX;
+		result.y = aabb.max.y;
+		result.x += MathUtils::GetRandomFloat(0, diffX);
+	}
+	else if (n == 3) {
+		//f32 yPos = minY;
+		result.x = aabb.min.x;
+		result.y += MathUtils::GetRandomFloat(0, diffY);
+	}
+	else if (n == 4) {
+		//f32 yPos = minY;
+		result.x = aabb.max.x;
+		result.y += MathUtils::GetRandomFloat(0, diffY);
+	}
+
+	pd->AddSphere(result, 0.5f, ColorF(0, 0, 1), 5.5f);
 	return result;
 }
 

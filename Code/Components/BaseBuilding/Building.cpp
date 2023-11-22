@@ -231,6 +231,44 @@ bool BuildingComponent::CanBePlaced()
 			pd->AddAABB(aabb.min, aabb.max, ColorF(1, 0, 0), 0.1f);
 			return false;
 		}
+
+		//Check Terrain
+		f32 minX = aabb.min.x;
+		f32 maxX = aabb.max.x;
+		f32 minY = aabb.min.y;
+		f32 maxY = aabb.max.y;
+		f32 minZ = aabb.min.z;
+
+		//X
+		f32 xPos = aabb.min.x;
+		while (xPos < aabb.max.x) {
+			if (crymath::abs(gEnv->p3DEngine->GetTerrainZ(xPos, minY) - minZ) > 0.2f) {
+				pd->AddAABB(aabb.min, aabb.max, ColorF(1, 0, 0), 0.1f);
+				return false;
+			}
+			if (crymath::abs(gEnv->p3DEngine->GetTerrainZ(xPos, maxY) - minZ) > 0.2f) {
+				pd->AddAABB(aabb.min, aabb.max, ColorF(1, 0, 0), 0.1f);
+				return false;
+			}
+			xPos += 1;
+		}
+
+		//Y
+		f32 yPos = aabb.min.y;
+		while (yPos < aabb.max.y) {
+			Vec3 p(minX, yPos, minZ);
+			pd->AddSphere(p, 0.5f, ColorF(0, 0, 1), 0.7f);
+
+			if (crymath::abs(gEnv->p3DEngine->GetTerrainZ(minX, yPos) - minZ) > 0.2f) {
+				pd->AddAABB(aabb.min, aabb.max, ColorF(1, 0, 0), 0.1f);
+				return false;
+			}
+			if (crymath::abs(gEnv->p3DEngine->GetTerrainZ(maxX, yPos) - minZ) > 0.2f) {
+				pd->AddAABB(aabb.min, aabb.max, ColorF(1, 0, 0), 0.1f);
+				return false;
+			}
+			yPos += 1;
+		}
 	}
 	pd->AddAABB(aabb.min, aabb.max, ColorF(0, 1, 0), 0.1f);
 	return true;

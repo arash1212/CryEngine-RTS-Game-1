@@ -37,6 +37,8 @@ private:
 	Vec3 m_moveToPosition = ZERO;
 	f32 m_moveSpeed = AI_CONTROLLER_DEFAULT_MOVE_SPEED;
 
+	bool bIsStopped = true;
+
 private:
 	void Move(f32 DeltaTime);
 	Vec3 SnapToNavmesh(Vec3 point);

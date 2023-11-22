@@ -21,6 +21,7 @@
 #include <UIItems/Items/Buildings/UIBulletFactory1BuildItem.h>
 #include <UIItems/Items/Buildings/UIAK47Factory1BuildItem.h>
 #include <UIItems/Items/Buildings/UIGuardTower1BuildItem.h>
+#include <UIItems/Items/Buildings/UIWall1BuildItem.h>
 
 #include <UIItems/InfoPanel/IBaseInfoPanelUIItem.h>
 #include <UIItems/InfoPanel/Items/UIUnitInfoPanelItem.h>
@@ -106,6 +107,7 @@ void Engineer1UnitComponent::Initialize()
 	m_pSelectableComponent->AddUIItem(new UIBulletFactory1BuildItem(m_pEntity));
 	m_pSelectableComponent->AddUIItem(new UIAK47Factory1BuildItem(m_pEntity));
 	m_pSelectableComponent->AddUIItem(new UIGuardTower1BuildItem(m_pEntity));
+	m_pSelectableComponent->AddUIItem(new UIWall1BuildItem(m_pEntity));
 	m_pSelectableComponent->AddUIItem(new UILight1BuildItem(m_pEntity));
 
 	//ActionManager Initializations
@@ -126,14 +128,14 @@ void Engineer1UnitComponent::Initialize()
 	pAttckInfo.bIsFollower = false;
 	pAttckInfo.bIsHumanoid = true;
 	pAttckInfo.m_timeBetweenAttacks = 0.7f;
-	pAttckInfo.m_maxAttackDistance = 1.5f;
+	pAttckInfo.m_maxAttackDistance = 0.8f;
 	m_pAttackerComponent->SetAttackInfo(pAttckInfo);
 
 	//EngineerComponent Initializations
 	m_pEngineerComponent = m_pEntity->GetOrCreateComponent<EngineerComponent>();
 	//engineer info
 	SEngineerInfo engineerInfo;
-	engineerInfo.m_maxBuildDistance = 0.9f;
+	engineerInfo.m_maxBuildDistance = 0.4f;
 	engineerInfo.m_timeBetweenBuilds = 1.f;
 	m_pEngineerComponent->SetEngineerInfo(engineerInfo);
 

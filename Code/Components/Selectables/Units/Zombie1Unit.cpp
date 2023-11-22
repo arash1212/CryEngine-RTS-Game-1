@@ -97,7 +97,7 @@ void Zombie1UnitComponent::Initialize()
 	pAttckInfo.bIsHumanoid = true;
 	pAttckInfo.m_timeBetweenAttacks = 0.7f;
 	pAttckInfo.m_maxAttackDistance = 0.7f;
-	pAttckInfo.m_detectionDistance = 29.f;
+	pAttckInfo.m_detectionDistance = 35.f;
 	m_pAttackerComponent->SetAttackInfo(pAttckInfo);
 
 	/////////CostComponent Initializations

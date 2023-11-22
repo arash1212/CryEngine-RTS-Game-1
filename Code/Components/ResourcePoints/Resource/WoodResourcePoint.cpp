@@ -46,6 +46,7 @@ void WoodResourcePointComponent::Initialize()
 	SetType(EResourceType::WOOD);
 	SetIsSingleUse(false);
 	SetHasCollectingLocation(false);
+	SetMaxCollectorsCount(4);
 
 	//BoxComponent Initialization
 	m_pBboxComponent = m_pEntity->GetOrCreateComponent<Cry::DefaultComponents::CBoxPrimitiveComponent>();
@@ -55,8 +56,8 @@ void WoodResourcePointComponent::Initialize()
 	//Update bounding box
 	AABB aabb;
 	m_pEntity->GetLocalBounds(aabb);
-	Vec3 min = Vec3(aabb.min.x - 1.0f, aabb.min.y - 1.0f, aabb.min.z);
-	Vec3 max = Vec3(aabb.max.x + 1.5f, aabb.max.y + 1.5f, aabb.max.z);
+	Vec3 min = Vec3(aabb.min.x - 0.5f, aabb.min.y - 0.5f, aabb.min.z);
+	Vec3 max = Vec3(aabb.max.x + 1.0f, aabb.max.y + 1.0f, aabb.max.z);
 	AABB newAABB = AABB(min, max);
 	m_pEntity->SetLocalBounds(newAABB, true);
 

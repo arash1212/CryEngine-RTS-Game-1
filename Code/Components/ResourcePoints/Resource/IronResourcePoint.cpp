@@ -56,8 +56,8 @@ void IronResourcePointComponent::Initialize()
 	//Update bounding box
 	AABB aabb;
 	m_pEntity->GetLocalBounds(aabb);
-	Vec3 min = Vec3(aabb.min.x - 2.5f, aabb.min.y - 2.f, aabb.min.z);
-	Vec3 max = Vec3(aabb.max.x + 5.f, aabb.max.y + 3.f, aabb.max.z);
+	Vec3 min = Vec3(aabb.min.x - 2.4f, aabb.min.y - 2.4f, aabb.min.z);
+	Vec3 max = Vec3(aabb.max.x + 2.4f, aabb.max.y + 0.1f, aabb.max.z);
 	AABB newAABB = AABB(min, max);
 	m_pEntity->SetLocalBounds(newAABB, true);
 
