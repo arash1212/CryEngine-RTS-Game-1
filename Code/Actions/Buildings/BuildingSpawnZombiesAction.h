@@ -15,7 +15,7 @@ private:
 	IEntity* m_pTarget = nullptr;
 	Vec3 m_exitPosition = ZERO;
 
-	f32 m_timeBetweenSpawningZombies = 3.f;
+	f32 m_timeBetweenSpawningZombies = 1.0f;
 	f32 m_spawnTimePassed = -0.f;
 	int32 m_maxZombiesCount = 40;
 

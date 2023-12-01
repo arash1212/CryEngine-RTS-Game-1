@@ -7,7 +7,7 @@
 #include <Components/Managers/ResourceManager.h>
 #include <Components/Managers/ActionManager.h>
 
-#include <Actions/Units/UnitWanderingRandomlyAction.h>
+#include <Actions/Units/UnitAttackEnemyBaseAction.h>
 
 #include <Utils/MathUtils.h>
 #include <Utils/EntityUtils.h>
@@ -88,6 +88,10 @@ void ZombieSpawnerComponent::SpawnZombies()
 	if (m_pResourceManagerComponent->GetOwnedEntities().size() >= m_maxZombiesCount) {
 		return;
 	}
+	if (m_zombiesSpawned >= m_maxZombiesCount) {
+		m_spawnTimePassed = -150;
+		return;
+	}
 
 	if (m_spawnTimePassed >= m_timeBetweenSpawningZombies) {
 		Vec3 position = m_pEntity->GetWorldPos();
@@ -105,9 +109,11 @@ void ZombieSpawnerComponent::SpawnZombies()
 		}
 		spawnedEntity->GetOrCreateComponent<Zombie1UnitComponent>();
 
+		DynArray<IEntity*> targets = EntityUtils::FindHostilePlayers(m_pEntity);
 		ActionManagerComponent* pActionManagerComponent = spawnedEntity->GetComponent<ActionManagerComponent>();
-		pActionManagerComponent->AddAction(new UnitWanderingRandomlyAction(spawnedEntity, point->GetWorldPos(), false));
+		pActionManagerComponent->AddAction(new UnitAttackEnemyBaseAction(spawnedEntity, targets[0]));
 		m_spawnTimePassed = 0;
+		m_zombiesSpawned++;
 	}
 }
 

@@ -51,9 +51,10 @@ private:
 private:
 	bool bIsGameStarted = false;
 
-	f32 m_timeBetweenSpawningZombies = 2.f;
+	f32 m_timeBetweenSpawningZombies = -150.f;
 	f32 m_spawnTimePassed = -0.f;
-	int32 m_maxZombiesCount = 40;
+	int32 m_maxZombiesCount = 10;
+	int32 m_zombiesSpawned = 0;
 public:
 	void SpawnZombies();
 };

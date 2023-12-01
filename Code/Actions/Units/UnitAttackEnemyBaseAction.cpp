@@ -18,7 +18,6 @@ UnitAttackEnemyBaseAction::UnitAttackEnemyBaseAction(IEntity* entity, IEntity* t
 	this->m_pTarget = target;
 	this->m_pAttackerComponent = m_pEntity->GetComponent<AttackerComponent>();
 	this->m_pAiControllerComponent = m_pEntity->GetComponent<AIControllerComponent>();
-	this->m_pStateManagerComponent = m_pEntity->GetComponent<UnitStateManagerComponent>();
 	this->m_pTargetResourceManagerComponent = target->GetComponent<ResourceManagerComponent>();
 
 	//Set Unit stance to walking if it's running

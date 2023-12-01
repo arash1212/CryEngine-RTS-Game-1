@@ -14,8 +14,8 @@
 #include <UIItems/Items/UICancelItem.h>
 #include <UIItems/Items/UIChangeStanceItem.h>
 #include <UIItems/Items/Buildings/UIHQ1BuildItem.h>
-#include<UIItems/Items/Buildings/TrainUnits/UITrainEngineer1Item.h>
-#include<UIItems/Items/Buildings/TrainUnits/UITrainSoldier1Item.h>
+#include <UIItems/Items/Buildings/TrainUnits/UITrainEngineer1Item.h>
+#include <UIItems/Items/Buildings/TrainUnits/UITrainSoldier1Item.h>
 #include <Actions/Units/UnitWanderingRandomlyAction.h>
 #include <Actions/Units/UnitAttackEnemyBaseAction.h>
 #include <Actions/Buildings/BuildingSpawnZombiesAction.h>
@@ -174,7 +174,7 @@ void Cave1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 			if (!pActionManagerComponent) {
 				return;
 			}
-			pActionManagerComponent->AddAction(new BuildingSpawnZombiesAction(m_pEntity, 30));
+			pActionManagerComponent->AddAction(new BuildingSpawnZombiesAction(m_pEntity, 10));
 			bSpawnZombiesActionAdded = true;
 
 			//Find Hostiles
@@ -199,7 +199,7 @@ void Cave1BuildingComponent::CommandUnitsToAttack()
 	}
 
 	if (fAttackTimePassed >= fTimeBetweenAttacks) {
-		if (m_pResourceManagerComponent->GetOwnedEntities().size() >= 5) {
+		if (m_pResourceManagerComponent->GetOwnedEntities().size() >= 2) {
 			int32 unitsCommanded = 0;
 			for (IEntity* entity : m_pResourceManagerComponent->GetOwnedEntities()) {
 				AttackerComponent* pAttackerComponent = entity->GetComponent<AttackerComponent>();
@@ -211,7 +211,7 @@ void Cave1BuildingComponent::CommandUnitsToAttack()
 				ActionManagerComponent* pActionManagerComponent = entity->GetComponent<ActionManagerComponent>();
 				pActionManagerComponent->AddAction(new UnitAttackEnemyBaseAction(entity, m_hostilePlayers[0]));
 
-				if (unitsCommanded >= 5) {
+				if (unitsCommanded >= 2) {
 					break;
 				}
 			}

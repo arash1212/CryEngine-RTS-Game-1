@@ -95,7 +95,7 @@ void Engineer1UnitComponent::Initialize()
 	//SelectableComponent Initializations
 	m_pSelectableComponent = m_pEntity->GetOrCreateComponent<SelectableComponent>();
 	//UIItems
-	m_pSelectableComponent->AddUIItem(new UIHQ1BuildItem(m_pEntity));
+	//m_pSelectableComponent->AddUIItem(new UIHQ1BuildItem(m_pEntity));
 	m_pSelectableComponent->AddUIItem(new UIBarracks1BuildItem(m_pEntity));
 	m_pSelectableComponent->AddUIItem(new UIWarehouse1BuildItem(m_pEntity));
 	m_pSelectableComponent->AddUIItem(new UIHouse1BuildItem(m_pEntity));

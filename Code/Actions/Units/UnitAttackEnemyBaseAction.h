@@ -16,7 +16,6 @@ private:
 	IEntity* m_pTarget = nullptr;
 	AIControllerComponent* m_pAiControllerComponent = nullptr;
 	AttackerComponent* m_pAttackerComponent = nullptr;
-	UnitStateManagerComponent* m_pStateManagerComponent = nullptr;
 	ResourceManagerComponent* m_pTargetResourceManagerComponent = nullptr;
 
 private:
