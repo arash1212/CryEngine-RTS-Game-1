@@ -48,10 +48,14 @@ void UnitWanderingRandomlyAction::Execute()
 	f32 distanceToMoveToPos = m_pEntity->GetWorldPos().GetDistance(m_movePosition);
 	if (m_movePosition == ZERO || distanceToMoveToPos < 1 || !m_pAiControllerComponent->IsDestinationReachable(m_movePosition)) {
 		m_movePosition = m_pAiControllerComponent->GetRandomPointOnNavmesh(20, m_pAround);
+		bIsMoveToExecuted = false;
 	}
 
 	if (m_pAiControllerComponent) {
-		m_pAiControllerComponent->MoveTo(m_movePosition, bRun);
+		if (!bIsMoveToExecuted) {
+			m_pAiControllerComponent->MoveTo(m_movePosition, bRun);
+			bIsMoveToExecuted = true;
+		}
 		m_pAiControllerComponent->LookAtWalkDirection();
 	}
 }

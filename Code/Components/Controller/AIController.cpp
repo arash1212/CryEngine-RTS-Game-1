@@ -102,7 +102,7 @@ void AIControllerComponent::Move(f32 DeltaTime)
 		return;
 	}
 
-	m_pNavigationComponent->NavigateTo(m_moveToPosition);
+//	m_pNavigationComponent->NavigateTo(m_moveToPosition);
 	Vec3 velocity = m_pNavigationComponent->GetRequestedVelocity();
 	m_pCharacterControllerComponent->SetVelocity(velocity.normalized() * m_pStateManager->GetCurrentSpeed());
 }
@@ -126,6 +126,8 @@ bool AIControllerComponent::MoveTo(Vec3 position, bool run)
 
 	//this->SnapToNavmesh() ?
 	m_moveToPosition = this->SnapToNavmesh(position);
+	m_pNavigationComponent->NavigateTo(m_moveToPosition);
+
 	bIsStopped = false;
 	return true;
 }

@@ -20,6 +20,7 @@ private:
 private:
 	Vec3 m_movePosition = ZERO;
 	bool bRun = false;
+	bool bIsMoveToExecuted = false;
 
 public:
 	virtual void Execute() override;
