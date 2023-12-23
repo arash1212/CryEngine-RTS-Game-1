@@ -168,7 +168,7 @@ void AIControllerComponent::StopMoving()
 	//this->m_pCharacterControllerComponent->SetVelocity(ZERO);
 	//this->m_pCharacterControllerComponent->ChangeVelocity(ZERO, Cry::DefaultComponents::CCharacterControllerComponent::EChangeVelocityMode::SetAsTarget);
 	//this->m_pStateManager->SetStance(EUnitStance::WALKING);
-	//this->MoveTo(m_pEntity->GetWorldPos(), false);
+	this->MoveTo(m_pEntity->GetWorldPos(), false);
 	bIsStopped = true;
 }
 

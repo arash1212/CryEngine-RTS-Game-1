@@ -174,7 +174,7 @@ void Cave1BuildingComponent::ProcessEvent(const SEntityEvent& event)
 			if (!pActionManagerComponent) {
 				return;
 			}
-			pActionManagerComponent->AddAction(new BuildingSpawnZombiesAction(m_pEntity, 100));
+			pActionManagerComponent->AddAction(new BuildingSpawnZombiesAction(m_pEntity, 15));
 			bSpawnZombiesActionAdded = true;
 
 			//Find Hostiles

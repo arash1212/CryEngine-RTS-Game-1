@@ -257,7 +257,7 @@ bool BuildingComponent::CanBePlaced()
 		f32 yPos = aabb.min.y;
 		while (yPos < aabb.max.y) {
 			Vec3 p(minX, yPos, minZ);
-			pd->AddSphere(p, 0.5f, ColorF(0, 0, 1), 0.7f);
+			//pd->AddSphere(p, 0.5f, ColorF(0, 0, 1), 0.7f);
 
 			if (crymath::abs(gEnv->p3DEngine->GetTerrainZ(minX, yPos) - minZ) > 0.2f) {
 				pd->AddAABB(aabb.min, aabb.max, ColorF(1, 0, 0), 0.1f);

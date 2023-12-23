@@ -194,7 +194,7 @@ Vec3 EntityUtils::GetClosetPointOnMeshBorder(Vec3 from, IEntity* entity)
 		else {
 			pos.y = from.y;
 		}
-		pd->AddSphere(pos, 0.4f, ColorF(0, 1, 0), 0.4f);
+		//pd->AddSphere(pos, 0.4f, ColorF(0, 1, 0), 0.4f);
 		return pos;
 	}
 	else {
@@ -246,7 +246,7 @@ Vec3 EntityUtils::GetRandomPointOnMeshBorder(IEntity* entity)
 		result.y += MathUtils::GetRandomFloat(0, diffY);
 	}
 
-	pd->AddSphere(result, 0.5f, ColorF(0, 0, 1), 5.5f);
+	//pd->AddSphere(result, 0.5f, ColorF(0, 0, 1), 5.5f);
 	return result;
 }
 
